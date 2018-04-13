@@ -58,7 +58,7 @@
 
     <menuitem id="partner_shipping_account_menu_main" name="Partner Shipping Accounts"
               action="delivery_partner.partner_shipping_account_action_main"
-              sequence="20" parent="contacts.res_partner_menu_config"/>
+              sequence="20" parent="delivery.sale_menu_delivery"/>
 
     <!-- Inherited -->
     <record id="view_partner_property_form_inherit" model="ir.ui.view">
