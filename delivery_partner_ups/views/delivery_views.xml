@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_shipping_account_view_form_inherit" model="ir.ui.view">
+        <field name="name">partner.shipping.account.form.inherit</field>
+        <field name="model">partner.shipping.account</field>
+        <field name="inherit_id" ref="delivery_partner.partner_shipping_account_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='carrier']" position="inside">
+                <field name="ups_zip" attrs="{'invisible': [('delivery_type', '!=', 'ups')], 'required': [('delivery_type', '=', 'ups')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
