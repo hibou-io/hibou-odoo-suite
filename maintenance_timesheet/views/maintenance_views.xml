@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="hr_equipment_view_form_inherited">
+        <field name="name">equipment.form.inherited</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']/button[1]" position="replace">
+                <button name="action_open_maintenance_requests" type="object" class="oe_stat_button" icon="fa-ticket">
+                    <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="maintenance_request_view_form_inherit_hr_inherited">
+        <field name="name">maintenance.request.view.form.inherit.hr.inherited</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="hr_maintenance.maintenance_request_view_form_inherit_hr"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="department_id"/>
+                <field name="project_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="hr_equipment_request_view_form_notebook_inherited">
+        <field name="name">equipment.request.form.notebook.inherited</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance_notebook.hr_equipment_request_view_form_notebook"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}">
+                    <field name="timesheet_ids" context="{'default_project_id': project_id}">
+                        <tree editable="bottom" string="Timesheet Activities" default_order="date">
+                            <field name="date"/>
+                            <field name="user_id" invisible="1"/>
+                            <field name="employee_id" required="1"/>
+                            <field name="name"/>
+                            <field name="unit_amount" string="Duration" widget="float_time"/>
+                            <field name="project_id" invisible="1"/>
+                        </tree>
+                    </field>
+                    <group>
+                        <group class="oe_subtotal_footer oe_right" name="project_hours">
+                            <field name="effective_hours" widget="float_time" readonly="1"/>
+                            <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator"
+                                   readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="hr_equipment_request_view_tree_inherited">
+        <field name="name">equipment.request.tree.inherited</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position="after">
+                <field name="effective_hours"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
