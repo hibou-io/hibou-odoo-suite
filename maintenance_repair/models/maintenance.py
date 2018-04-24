@@ -127,6 +127,7 @@ class MaintenanceRequestRepairLine(models.Model):
                 'origin': request.name,
                 'analytic_account_id': analytic_account_id,
             })
+            move = move.sudo()
             move._action_confirm()
             move._action_assign()
             if move.state != 'assigned':
