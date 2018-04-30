@@ -76,6 +76,7 @@ class TestUsPayslip(common.TransactionCase):
             'external_wages': external_wages,
             'futa_type': futa_type,
             'state': 'open',  # if not "Running" then no automatic selection when Payslip is created
+            'journal_id': self.env['account.journal'].search([('type', '=', 'general')], limit=1).id,
         })
 
     def _createPayslip(self, employee, date_from, date_to):
