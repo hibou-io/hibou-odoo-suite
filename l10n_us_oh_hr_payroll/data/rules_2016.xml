@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_oh_unemp_wages_2016" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_oh_unemp_wages"/>
+        <field name="name">Ohio Unemployment - Wages (2016)</field>
+        <field name="code">OH_UNEMP_WAGES_2016</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2016')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+ytd = payslip.sum('OH_UNEMP_WAGES_2016', '2016-01-01', '2017-01-01')
+ytd += contract.external_wages
+remaining = 9000.0 - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.GROSS:
+    result = remaining
+else:
+    result = categories.GROSS
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_oh_unemp_2016" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_oh_unemp"/>
+        <field name="name">Ohio Unemployment (2016)</field>
+        <field name="code">OH_UNEMP_2016</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2016')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = -contract.oh_unemp_rate(2016)
+result = categories.OH_UNEMP_WAGES
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_ohdor_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_oh_inc_withhold_2016" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_oh_income_withhold"/>
+        <field name="name">Ohio Income Withholding</field>
+        <field name="code">OH_INC_WITHHOLD_2016</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2016')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+wages = categories.GROSS
+allowances = contract.oh_income_allowances
+schedule_pay = contract.schedule_pay
+val = 0.00
+
+PP = 0
+if 'weekly' == schedule_pay:
+    PP = 52
+elif 'bi-weekly' == schedule_pay:
+    PP = 26
+elif 'semi-monthly' == schedule_pay:  # impossible
+    PP = 24
+elif 'monthly' == schedule_pay:
+    PP = 12
+elif 'quarterly' == schedule_pay:
+    PP = 4
+elif 'semi-annually' == schedule_pay:
+    PP = 2
+elif 'annually' == schedule_pay:
+    PP = 1
+else:
+    raise Exception('Invalid schedule_pay="' + schedule_pay + '" for OH Income Withholding calculation')
+
+# Algorithm from http://www.tax.ohio.gov/Portals/0/employer_withholding/August2015Rates/WTH_OptionalComputerFormula_073015.pdf
+TW = (wages * PP) - (650 * allowances)
+if TW &lt;= 5000.0:
+    WD = ((TW * 0.005) / PP) * 1.112
+elif TW &lt;= 10000.0:
+    WD = ((((TW - 5000.0) * 0.01) + 25.0) / PP) * 1.112
+elif TW &lt;= 15000.0:
+    WD = ((((TW - 10000.0) * 0.02) + 75.0) / PP) * 1.112
+elif TW &lt;= 20000.0:
+    WD = ((((TW - 15000.0) * 0.025) + 175.0) / PP) * 1.112
+elif TW &lt;= 40000.0:
+    WD = ((((TW - 20000.0) * 0.03) + 300.0) / PP) * 1.112
+elif TW &lt;= 80000.0:
+    WD = ((((TW - 40000.0) * 0.035) + 900.0) / PP) * 1.112
+elif TW &lt;= 100000.0:
+    WD = ((((TW - 80000.0) * 0.04) + 2300.0) / PP) * 1.112
+else:
+    WD = ((((TW - 100000.0) * 0.05) + 3100.0) / PP) * 1.112
+result = -WD
+        </field>
+        <field name="register_id" ref="contrib_register_ohdor_withhold"/>
+    </record>
+
+    </data>
+</openerp>

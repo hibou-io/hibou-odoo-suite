@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="hr_contract_form_l10n_us_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.form.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='struct_id']" position="after">
+                    <field name="w4_filing_status"/>
+                    <field name="w4_allowances"/>
+                    <field name="w4_additional_withholding"/>
+                    <field name="w4_is_nonresident_alien"/>
+                    <field name="external_wages"/>
+                    <field name="futa_type"/>
+                </xpath>
+            </data>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_fl_unemp_wages_2017" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_fl_unemp_wages"/>
+        <field name="name">Florida Unemployment - Wages (2017)</field>
+        <field name="code">FL_UNEMP_WAGES_2017</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2017')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+ytd = payslip.sum('FL_UNEMP_WAGES_2017', '2017-01-01', '2018-01-01')
+ytd += contract.external_wages
+remaining = 7000.0 - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.GROSS:
+    result = remaining
+else:
+    result = categories.GROSS
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_fl_unemp_2017" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_fl_unemp"/>
+        <field name="name">Florida Unemployment (2017)</field>
+        <field name="code">FL_UNEMP_2017</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2017')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = -contract.fl_unemp_rate(2017)
+result = categories.FL_UNEMP_WAGES
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_fldor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    </data>
+</openerp>

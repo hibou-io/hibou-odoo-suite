@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+<!-- CONTRIBUTION REGISTERS -->
+    <record id="res_partner_vador_unemp" model="res.partner">
+        <field name="name">Virginia Department of Taxation - Unemployment Tax</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+    <record id="res_partner_vador_withhold" model="res.partner">
+        <field name="name">Virginia Department of Taxation - Income Tax Withholding</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+    <record id="contrib_register_vador_unemp" model="hr.contribution.register">
+        <field name="name">Virginia Unemployment</field>
+        <field name="note">Virginia Department of Taxation - Unemployment</field>
+        <field name="partner_id" ref="res_partner_vador_unemp"/>
+    </record>
+    <record id="contrib_register_vador_withhold" model="hr.contribution.register">
+        <field name="name">Virginia Income Tax Withholding</field>
+        <field name="note">Virginia Department of Taxation - Income Tax Withholding</field>
+        <field name="partner_id" ref="res_partner_vador_withhold"/>
+    </record>
+
+
+<!-- HR SALARY RULE CATEGORIES-->
+    <record id="hr_payroll_va_unemp_wages" model="hr.salary.rule.category">
+        <field name="name">Virginia Unemployment - Wages</field>
+        <field name="code">VA_UNEMP_WAGES</field>
+    </record>
+
+    <record id="hr_payroll_va_unemp" model="hr.salary.rule.category">
+        <field name="name">Virginia Unemployment</field>
+        <field name="code">VA_UNEMP</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="hr_payroll_va_income_withhold" model="hr.salary.rule.category">
+        <field name="name">Virginia Income Withholding</field>
+        <field name="code">VA_INC_WITHHOLD</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    </data>
+</openerp>
