@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="payslip_line_filter_date" model="ir.ui.view">
+            <field name="name">hr.payslip.line.select</field>
+            <field name="model">hr.payslip.line</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_line_filter"/>
+            <field name="arch" type="xml">
+            <data>
+                 <xpath expr="//group" position="inside">
+                    <filter string="Account Date" name="date" context="{'group_by':'date'}"/>
+                 </xpath>
+            </data>
+            </field>
+        </record>
+    </data>
+</odoo>
