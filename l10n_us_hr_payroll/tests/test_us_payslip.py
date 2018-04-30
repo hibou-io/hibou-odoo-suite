@@ -75,6 +75,7 @@ class TestUsPayslip(common.TransactionCase):
             'w4_additional_withholding': w4_additional_withholding,
             'external_wages': external_wages,
             'futa_type': futa_type,
+            'journal_id': self.env['account.journal'].search([('type', '=', 'general')], limit=1).id,
         })
 
     def _createPayslip(self, employee, date_from, date_to):
