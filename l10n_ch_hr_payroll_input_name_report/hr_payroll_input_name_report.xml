@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="report_payslip" model="ir.ui.view">
+        <field name="name">l10n_ch_hr_payroll_input_name_report.report_payslip</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll_report.report_payslip"/>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tr/td/span[t-field='line.name']" position="replace">
+                <span t-field="line.name" t-if="not line.salary_rule_id.note and not o.input_line_ids.filtered(lambda i: i.code == line.code)"/>
+                <span t-field="o.input_line_ids.filtered(lambda i: i.code == line.code)[0].name" t-if="not line.salary_rule_id.note and o.input_line_ids.filtered(lambda i: i.code == line.code)"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

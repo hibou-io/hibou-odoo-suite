@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="report_payslip" model="ir.ui.view">
+        <field name="name">hr_payroll_input_report.report_payslip</field>
+        <field name="inherit_id" ref="hr_payroll.report_payslip"/>
+        <field name="arch" type="xml">
+            <xpath expr="//table" position="after">
+                <h3 t-if="o.worked_days_line_ids">Worked Days</h3>
+                    <table t-if="o.worked_days_line_ids" class="table table-condensed">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Days</th>
+                            <th>Hours</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr t-foreach="o.worked_days_line_ids" t-as="line">
+                            <td><span t-field="line.name" /></td>
+                            <td><span t-field="line.code" /></td>
+                            <td><span t-field="line.number_of_days" /></td>
+                            <td><span t-field="line.number_of_hours" /></td>
+                          </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 t-if="o.input_line_ids">Other Inputs</h3>
+                    <table t-if="o.input_line_ids" class="table table-condensed">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr t-foreach="o.input_line_ids" t-as="line">
+                            <td><span t-field="line.name" /></td>
+                            <td><span t-field="line.code" /></td>
+                            <td><span t-field="line.amount" /></td>
+                          </tr>
+                        </tbody>
+                    </table>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="report_payslipdetails" model="ir.ui.view">
+        <field name="name">hr_payroll_input_report.report_payslipdetails</field>
+        <field name="inherit_id" ref="hr_payroll.report_payslipdetails"/>
+        <field name="arch" type="xml">
+            <xpath expr="//table" position="after">
+                <h3 t-if="o.worked_days_line_ids">Worked Days</h3>
+                    <table t-if="o.worked_days_line_ids" class="table table-condensed">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Days</th>
+                            <th>Hours</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr t-foreach="o.worked_days_line_ids" t-as="line">
+                            <td><span t-field="line.name" /></td>
+                            <td><span t-field="line.code" /></td>
+                            <td><span t-field="line.number_of_days" /></td>
+                            <td><span t-field="line.number_of_hours" /></td>
+                          </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 t-if="o.input_line_ids">Other Inputs</h3>
+                    <table t-if="o.input_line_ids" class="table table-condensed">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr t-foreach="o.input_line_ids" t-as="line">
+                            <td><span t-field="line.name" /></td>
+                            <td><span t-field="line.code" /></td>
+                            <td><span t-field="line.amount" /></td>
+                          </tr>
+                        </tbody>
+                    </table>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_va_unemp_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_va_unemp_wages"/>
+        <field name="name">Virginia Unemployment - Wages (2018)</field>
+        <field name="code">VA_UNEMP_WAGES_2018</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+ytd = payslip.sum('VA_UNEMP_WAGES_2018', '2018-01-01', '2019-01-01')
+ytd += contract.external_wages
+remaining = 8000.0 - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.GROSS:
+    result = remaining
+else:
+    result = categories.GROSS
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_va_unemp_2018" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_va_unemp"/>
+        <field name="name">Virginia Unemployment (2018)</field>
+        <field name="code">VA_UNEMP_2018</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = -contract.va_unemp_rate(2018)
+result = categories.VA_UNEMP_WAGES
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_vador_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_va_inc_withhold_2018" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_va_income_withhold"/>
+        <field name="name">Virginia Income Withholding</field>
+        <field name="code">VA_INC_WITHHOLD_2018</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+wages = categories.GROSS
+exemptions = contract.va_va4_exemptions
+other_exemptions = contract.va_va4p_exemptions
+schedule_pay = contract.schedule_pay
+val = 0.00
+
+PP = 0
+if 'weekly' == schedule_pay:
+    PP = 52
+elif 'bi-weekly' == schedule_pay:
+    PP = 26
+elif 'semi-monthly' == schedule_pay:
+    PP = 24
+elif 'monthly' == schedule_pay:
+    PP = 12
+elif 'quarterly' == schedule_pay:
+    PP = 4
+elif 'semi-annually' == schedule_pay:
+    PP = 2
+elif 'annually' == schedule_pay:
+    PP = 1
+else:
+    raise Exception('Invalid schedule_pay="' + schedule_pay + '" for VA Income Withholding calculation')
+
+# Algorithm from https://www.tax.virginia.gov/withholding-calculator
+T = wages * PP - (3000 + (exemptions * 930) + (other_exemptions * 800))
+
+if T &lt;= 3000:
+    W = 0.02 * T
+elif T &lt;= 5000:
+    W = 60 + (0.03 * (T - 3000))
+elif T &lt;= 17000:
+    W = 120 + (0.05 * (T - 5000))
+else:
+    W = 720 + (0.0575 * (T - 17000))
+
+result = - (W / PP)
+        </field>
+        <field name="register_id" ref="contrib_register_vador_withhold"/>
+    </record>
+
+    </data>
+</odoo>
