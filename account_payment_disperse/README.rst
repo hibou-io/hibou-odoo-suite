@@ -22,6 +22,11 @@ Main Features
 * New buttons to easily fill or pre-populate amount remaining or amount due.
 * Tests to ensure that all the stock payment mechanisms work, and that we make the right reconciliations.
 
+.. image:: https://user-images.githubusercontent.com/15882954/39149575-62a0a1d6-46f4-11e8-8e59-b315cf8f9277.png
+    :alt: 'Register Payment Detail'
+    :width: 988
+    :align: left
+
 =============
 Known Issues
 =============
@@ -35,3 +40,4 @@ License
 Please see `LICENSE <https://github.com/hibou-io/hibou-odoo-suite/blob/11.0/LICENSE>`_.
 
 Copyright Hibou Corp. 2018
+

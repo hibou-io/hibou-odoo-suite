@@ -1,0 +1,3 @@
+[submodule "external/hibou-oca/account-analytic"]
+	path = external/hibou-oca/account-analytic
+	url = https://github.com/hibou-io/oca-account-analytic.git
