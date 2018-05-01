@@ -17,6 +17,7 @@
         <field name="name">equipment.form.inherited</field>
         <field name="model">maintenance.equipment</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+        <field name="priority" eval="200"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_open_usage_log"
@@ -27,16 +28,12 @@
                     <field string="Usage" name="usage_count" widget="statinfo"/>
                 </button>
             </xpath>
-            <xpath expr="//field[@name='note']" position="before">
-                <group>
-                    <group name="usage_info" string="Usage">
-                        <label for="usage_qty"/>
-                        <div class="o_row" name="usage">
-                            <field name="usage_qty" nolabel="1"/>
-                            <field name="usage_uom_id" nolabel="1" readonly="1"/>
-                        </div>
-                    </group>
-                </group>
+            <xpath expr="//form/sheet/group/group[1]" position="inside">
+                <label for="usage_qty"/>
+                <div class="o_row" name="usage">
+                    <field name="usage_qty" nolabel="1"/>
+                    <field name="usage_uom_id" nolabel="1" readonly="1"/>
+                </div>
             </xpath>
             <xpath expr="//group[@name='maintenance']" position="inside">
                 <field name="maintenance_usage"/>
