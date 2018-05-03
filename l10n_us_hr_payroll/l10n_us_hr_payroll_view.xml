@@ -9,15 +9,22 @@
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//page[@name='other']" position="before">
-                    <page string="US Filing" name="us_filing">
+                    <page string="US Federal Filing">
                         <group>
-                            <field name="w4_filing_status"/>
-                            <field name="w4_allowances"/>
-                            <field name="w4_additional_withholding"/>
-                            <field name="w4_is_nonresident_alien"/>
-                            <field name="external_wages"/>
-                            <field name="futa_type"/>
+                            <group string="W4" name="w4">
+                                <field name="w4_filing_status" string="Filing Status"/>
+                                <field name="w4_allowances" string="Allowances"/>
+                                <field name="w4_additional_withholding" string="Additional Withholding"/>
+                                <field name="w4_is_nonresident_alien" string="Non-resident Alien"/>
+                            </group>
+                            <group string="Other" name="other">
+                                <field name="external_wages" string="External YTD Wages"/>
+                                <field name="futa_type" string="Unemployment Tax Type (FUTA)"/>
+                            </group>
                         </group>
+                    </page>
+                    <page string="US State Filing">
+                        <group name="state_filing"/>
                     </page>
                 </xpath>
             </data>
