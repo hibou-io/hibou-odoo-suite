@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_nc_unemp_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_nc_unemp_wages"/>
+        <field name="name">North Carolina Unemployment - Wages (2018)</field>
+        <field name="code">NC_UNEMP_WAGES_2018</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+ytd = payslip.sum('NC_UNEMP_WAGES_2018', '2018-01-01', '2019-01-01')
+ytd += contract.external_wages
+remaining = 7000.0 - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.GROSS:
+    result = remaining
+else:
+    result = categories.GROSS
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_nc_unemp_2018" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_nc_unemp"/>
+        <field name="name">North Carolina Unemployment (2018)</field>
+        <field name="code">NC_UNEMP_2018</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = -contract.nc_unemp_rate(2018)
+result = categories.NC_UNEMP_WAGES
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_ncdor_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_nc_inc_withhold_2018" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_nc_income_withhold"/>
+        <field name="name">North Carolina Income Withholding</field>
+        <field name="code">NC_INC_WITHHOLD_2018</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+wages = categories.GROSS
+exemptions = contract.nc_nc4_allowances
+schedule_pay = contract.schedule_pay
+val = 0.00
+
+
+# PST -> Portion of standard deduction
+PST = 0.0
+allowance_multiplier = 0.0
+if 'weekly' == schedule_pay:
+    allowance_multiplier = 48.08
+    if contract.nc_nc4_filing_status == 'head_household':
+        PST = 269.23
+    else:
+        PST = 168.27
+elif 'bi-weekly' == schedule_pay:
+    allowance_multiplier = 96.15
+    if contract.nc_nc4_filing_status == 'head_household':
+        PST = 538.46
+    else:
+        PST = 336.54
+elif 'semi-monthly' == schedule_pay:
+    allowance_multiplier = 104.17
+    if contract.nc_nc4_filing_status == 'head_household':
+        PST = 583.33
+    else:
+        PST = 364.58
+elif 'monthly' == schedule_pay:
+    allowance_multiplier = 208.33
+    if contract.nc_nc4_filing_status == 'head_household':
+        PST = 1166.67
+    else:
+        PST = 729.17
+
+else:
+    raise Exception('Invalid schedule_pay="' + schedule_pay + '" for NC Income Withholding calculation')
+
+# Algorithm derived from percentage method in https://files.nc.gov/ncdor/documents/files/nc-30_book_web.pdf
+if contract.nc_nc4_filing_status == 'exempt':
+    result = 0
+else:
+    if contract.w4_is_nonresident_alien:
+        result = round(((wages - (PST + (allowance_multiplier * exemptions))) * 0.05599) - contract.nc_nc4_additional_wh)
+    else:
+        result = round((wages - (PST + (allowance_multiplier * exemptions))) * 0.05599)
+        </field>
+        <field name="register_id" ref="contrib_register_ncdor_withhold"/>
+    </record>
+
+    </data>
+</odoo>

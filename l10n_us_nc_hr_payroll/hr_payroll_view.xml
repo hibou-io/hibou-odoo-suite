@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="us_nc_view_company_form" model="ir.ui.view">
+            <field name="name">res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="priority">64</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+            <data>
+                 <xpath expr="//field[@name='currency_id']" position="after">
+                    <field name="nc_unemp_rate_2018"/>
+                 </xpath>
+            </data>
+            </field>
+        </record>
+        <record id="hr_contract_form_l10n_us_nc_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.form.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="priority">128</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//group[@name='state_filing']" position="inside">
+                    <group string="North Carolina" name="nc">
+                        <field name="nc_nc4_allowances" string="Allowances"/>
+                        <field name="nc_nc4_filing_status" string="Filing Status"/>
+                        <field name="nc_nc4_additional_wh" string="Additional Withholding"/>
+                    </group>
+                </xpath>
+            </data>
+            </field>
+        </record>
+    </data>
+</odoo>
