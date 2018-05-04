@@ -55,7 +55,7 @@ if result_rate == 0.0:
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 wages = categories.GROSS
-exemptions = contract.nc_nc4_allowances
+allowances = contract.nc_nc4_allowances
 schedule_pay = contract.schedule_pay
 val = 0.00
 
@@ -95,10 +95,8 @@ else:
 if contract.nc_nc4_filing_status == 'exempt':
     result = 0
 else:
-    if contract.w4_is_nonresident_alien:
-        result = round(((wages - (PST + (allowance_multiplier * exemptions))) * 0.05599) - contract.nc_nc4_additional_wh)
-    else:
-        result = round((wages - (PST + (allowance_multiplier * exemptions))) * 0.05599)
+    result = -round(((wages - (PST + (allowance_multiplier * allowances))) * 0.05599) + contract.nc_nc4_additional_wh)
+
         </field>
         <field name="register_id" ref="contrib_register_ncdor_withhold"/>
     </record>

@@ -12,7 +12,9 @@ class USNCHrContract(models.Model):
         ('surviving_spouse', 'Surviving Spouse'),
         ('head_household', 'Head of Household')
     ], string='NC Filing Status', default='single')
-    nc_nc4_additional_wh = fields.Float(string="Additional Witholding", default=0.0)
+    nc_nc4_additional_wh = fields.Float(string="Additional Witholding", default=0.0,
+                                        help="If you are filling out NC-4 NRA, this would be box 4; " \
+                                             "otherwise box 2.")
 
     @api.multi
     def nc_unemp_rate(self, year):

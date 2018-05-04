@@ -19,7 +19,7 @@ class TestUsNCPayslip(TestUsPayslip):
         exemption = 1
         # Algorithm derived from percentage method in https://files.nc.gov/ncdor/documents/files/nc-30_book_web.pdf
 
-        wh = round((salary - (PST + (allowance_multiplier * exemption))) * 0.05599)
+        wh = -round((salary - (PST + (allowance_multiplier * exemption))) * 0.05599)
 
         employee = self._createEmployee()
         employee.company_id.nc_unemp_rate_2018 = 0.06
@@ -119,16 +119,16 @@ class TestUsNCPayslip(TestUsPayslip):
         allowance_multiplier = 96.15
         PST = 336.54
 
-        exceptions = 2
+        allowances = 2
         # Algorithm derived from percentage method in https://files.nc.gov/ncdor/documents/files/nc-30_book_web.pdf
 
-        wh = round((salary - (PST + (allowance_multiplier * exceptions))) * 0.05599)
+        wh = -round((salary - (PST + (allowance_multiplier * allowances))) * 0.05599)
 
         employee = self._createEmployee()
         employee.company_id.nc_unemp_rate_2018 = 0.06
 
         contract = self._createContract(employee, salary, struct_id=self.ref('l10n_us_nc_hr_payroll.hr_payroll_salary_structure_us_nc_employee'), schedule_pay=schedule_pay)
-        contract.nc_nc4_allowances = exceptions
+        contract.nc_nc4_allowances = allowances
 
         self.assertEqual(contract.schedule_pay, 'bi-weekly')
 
@@ -172,17 +172,17 @@ class TestUsNCPayslip(TestUsPayslip):
         allowance_multiplier = 104.17
         PST = 583.33
 
-        exceptions = 1
+        allowances = 1
         # Algorithm derived from percentage method in https://files.nc.gov/ncdor/documents/files/nc-30_book_web.pdf
 
-        wh = round((salary - (PST + (allowance_multiplier * exceptions))) * 0.05599)
+        wh = -round((salary - (PST + (allowance_multiplier * allowances))) * 0.05599)
 
         employee = self._createEmployee()
         employee.company_id.nc_unemp_rate_2018 = 0.06
 
         contract = self._createContract(employee, salary, struct_id=self.ref(
             'l10n_us_nc_hr_payroll.hr_payroll_salary_structure_us_nc_employee'), schedule_pay=schedule_pay)
-        contract.nc_nc4_allowances = exceptions
+        contract.nc_nc4_allowances = allowances
         contract.nc_nc4_filing_status = nc_nc4_filing_status
 
         self.assertEqual(contract.schedule_pay, 'semi-monthly')
@@ -219,24 +219,23 @@ class TestUsNCPayslip(TestUsPayslip):
         self.assertPayrollEqual(cats['NC_UNEMP'], remaining_nc_unemp_wages * nc_unemp)
 
     def test_2018_taxes_monthly(self):
-        self.debug = True
         salary = 4000.0
         schedule_pay = 'monthly'
         # allowance_multiplier and Portion of Standard Deduction for weekly
         allowance_multiplier = 208.33
         PST = 729.17
 
-        exceptions = 1
+        allowances = 1
         # Algorithm derived from percentage method in https://files.nc.gov/ncdor/documents/files/nc-30_book_web.pdf
 
-        wh = round((salary - (PST + (allowance_multiplier * exceptions))) * 0.05599)
+        wh = -round((salary - (PST + (allowance_multiplier * allowances))) * 0.05599)
 
         employee = self._createEmployee()
         employee.company_id.nc_unemp_rate_2018 = 0.06
 
         contract = self._createContract(employee, salary, struct_id=self.ref(
             'l10n_us_nc_hr_payroll.hr_payroll_salary_structure_us_nc_employee'), schedule_pay=schedule_pay)
-        contract.nc_nc4_allowances = exceptions
+        contract.nc_nc4_allowances = allowances
 
         self.assertEqual(contract.schedule_pay, 'monthly')
 
@@ -312,6 +311,66 @@ class TestUsNCPayslip(TestUsPayslip):
             else salary
 
         self._log('2018 North Carolina tax second payslip:')
+        payslip = self._createPayslip(employee, '2018-02-01', '2018-02-28')
+
+        payslip.compute_sheet()
+
+        cats = self._getCategories(payslip)
+
+        self.assertPayrollEqual(cats['NC_UNEMP_WAGES'], remaining_nc_unemp_wages)
+        self.assertPayrollEqual(cats['NC_UNEMP'], remaining_nc_unemp_wages * nc_unemp)
+
+    def test_additional_withholding(self):
+        salary = 4000.0
+        schedule_pay = 'weekly'
+        # allowance_multiplier and Portion of Standard Deduction for weekly
+        allowance_multiplier = 48.08
+        PST = 168.27
+        additional_wh = 40.0
+
+        #4000 - (168.27 + (48.08 * 1)
+
+        allowances = 1
+        # Algorithm derived from percentage method in https://files.nc.gov/ncdor/documents/files/nc-30_book_web.pdf
+
+        wh = -round(((salary - (PST + (allowance_multiplier * allowances))) * 0.05599) + additional_wh)
+
+        employee = self._createEmployee()
+        employee.company_id.nc_unemp_rate_2018 = 0.06
+
+        contract = self._createContract(employee,
+                                        salary,
+                                        struct_id=self.ref('l10n_us_nc_hr_payroll.hr_payroll_salary_structure_us_nc_employee'),
+                                        schedule_pay=schedule_pay)
+        contract.w4_is_nonresident_alien = True
+        contract.nc_nc4_additional_wh = additional_wh
+        contract.nc_nc4_allowances = allowances
+
+        self.assertEqual(contract.schedule_pay, 'weekly')
+        self.assertEqual(contract.w4_is_nonresident_alien, True)
+
+        # tax rates
+        nc_unemp = contract.nc_unemp_rate(2018) / -100.0
+
+        self._log('2018 North Carolina tax first payslip weekly:')
+        payslip = self._createPayslip(employee, '2018-01-01', '2018-01-31')
+
+        payslip.compute_sheet()
+
+        cats = self._getCategories(payslip)
+
+        self.assertPayrollEqual(cats['NC_UNEMP_WAGES'], salary)
+        self.assertPayrollEqual(cats['NC_UNEMP'], cats['NC_UNEMP_WAGES'] * nc_unemp)
+        self.assertPayrollEqual(cats['NC_INC_WITHHOLD'], wh)
+
+        process_payslip(payslip)
+
+        # Make a new payslip, this one will have maximums
+
+        remaining_nc_unemp_wages = self.NC_UNEMP_MAX_WAGE - salary if (self.NC_UNEMP_MAX_WAGE - 2 * salary < salary) \
+            else salary
+
+        self._log('2018 North Carolina tax second payslip weekly:')
         payslip = self._createPayslip(employee, '2018-02-01', '2018-02-28')
 
         payslip.compute_sheet()
