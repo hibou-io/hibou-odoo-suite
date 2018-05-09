@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Warehouse -->
+    <record id="view_warehouse_inherit" model="ir.ui.view">
+        <field name="name">stock.warehouse.inherit</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[1]" position="after">
+                <page string="Delivery Routes" colspan="4">
+                    <group colspan="4">
+                        <field name="id" invisible="1"/>
+                        <field name="delivery_route_ids" context="{'default_warehouse_id': id}" nolabel="1">
+                            <tree>
+                                <field name="name"/>
+                            </tree>
+                            <form>
+                                <group>
+                                    <group>
+                                        <field name="name" required="1"/>
+                                        <field name="warehouse_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="note"/>
+                                    </group>
+                                </group>
+                            </form>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Picking -->
+    <record id="view_picking_internal_search_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.internal.search.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="delivery_route_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='picking_type']" position="after">
+                <filter name="delivery_route_id" string="Delivery Route" context="{'group_by':'delivery_route_id'}"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="vpicktree_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.tree.search.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="sequence" widget="handle"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="delivery_route_id"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_picking_form_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="warehouse_id" invisible="1"/>
+                <field name="delivery_route_id" context="{'default_warehouse_id': warehouse_id}" domain="[('warehouse_id', '=', warehouse_id)]" options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Picking Batch -->
+    <record id="stock_picking_batch_form_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.batch.form.inherit</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='picking_ids']/tree/field[@name='name']" position="before">
+                <field name="sequence" widget="handle"/>
+                <field name="partner_address" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_order_form_inherit_sale_stock_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.sale.stock.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='warehouse_id']" position="after">
+                <field name="delivery_route_id" context="{'default_warehouse_id': warehouse_id}" domain="[('warehouse_id', '=', warehouse_id)]" options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
