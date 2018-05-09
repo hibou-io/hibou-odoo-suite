@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='container_row_2']" position="after">
+                <group name="container_row_delivery_routes">
+                    <group string="Delivery Routes" name="delivery_routes">
+                        <field name="delivery_route_ids" widget="many2many_tags" nolabel="1" options="{'no_create': True}"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
