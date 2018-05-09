@@ -59,7 +59,7 @@ class TestUsPayslip(common.TransactionCase):
         if not struct_id:
             struct_id = self.ref('l10n_us_hr_payroll.hr_payroll_salary_structure_us_employee')
 
-        return self.env['hr.contract'].create({
+        values = {
             'date_start': '2016-01-01',
             'date_end': '2030-12-31',
             'name': 'Contract for Jared 2016',
@@ -76,8 +76,13 @@ class TestUsPayslip(common.TransactionCase):
             'external_wages': external_wages,
             'futa_type': futa_type,
             'state': 'open',  # if not "Running" then no automatic selection when Payslip is created
-            'journal_id': self.env['account.journal'].search([('type', '=', 'general')], limit=1).id,
-        })
+        }
+        try:
+            values['journal_id'] = self.env['account.journal'].search([('type', '=', 'general')], limit=1).id
+        except KeyError:
+            pass
+
+        return self.env['hr.contract'].create(values)
 
     def _createPayslip(self, employee, date_from, date_to):
         return self.env['hr.payslip'].create({
