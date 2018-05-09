@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="stock_picking_batch_form_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.batch.form.form</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='print_picking']" position="after">
+                <button name="print_pick_list" string="Picklist" type="object" class="oe_highlight"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
