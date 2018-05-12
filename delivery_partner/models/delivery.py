@@ -17,6 +17,7 @@ class PartnerShippingAccount(models.Model):
     _name = 'partner.shipping.account'
 
     name = fields.Char(string='Account Num.', required=True)
+    description = fields.Char(string='Description')
     partner_id = fields.Many2one('res.partner', string='Partner', help='Leave blank to allow as a generic 3rd party shipper.')
     delivery_type = fields.Selection([
         ('other', 'Other'),
@@ -33,7 +34,10 @@ class PartnerShippingAccount(models.Model):
 
         res = []
         for acc in self:
-            res.append((acc.id, '%s: %s' % (get_name(acc.delivery_type), acc.name)))
+            if acc.description:
+                res.append((acc.id, acc.description))
+            else:
+                res.append((acc.id, '%s: %s' % (get_name(acc.delivery_type), acc.name)))
         return res
 
     @api.constrains('name', 'delivery_type')
