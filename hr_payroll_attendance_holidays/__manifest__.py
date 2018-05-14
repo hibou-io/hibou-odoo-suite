@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
-
 {
-    'name': 'Payroll Holidays',
+    'name': 'Payroll Attendance Holidays',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '11.0.0.0.0',
+    'version': '11.0.1.0.0',
     'category': 'Human Resources',
     'sequence': 95,
     'summary': 'Holiday Pay',
@@ -11,7 +9,7 @@
 Simplifies getting approved Holiday Leaves onto an employee Payslip.
     """,
     'website': 'https://hibou.io/',
-    'depends': ['hr_payroll', 'hr_holidays'],
+    'depends': ['hr_payroll_attendance', 'hr_holidays'],
     'installable': True,
     'application': False,
 }
