@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="edit_project_inherit" model="ir.ui.view">
+        <field name="name">project.project.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="note_page" string="Notes">
+                    <field name="note" nolabel="1" type="html"/>
+                    <div class="oe_clear"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_task_form2_inherit" model="ir.ui.view">
+        <field name="name">project.task.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="project_note_page" string="Project Notes">
+                    <field name="project_note" nolabel="1" type="html" readonly="1"/>
+                    <div class="oe_clear"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
