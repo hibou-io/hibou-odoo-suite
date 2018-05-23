@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="my_tasks" inherit_id='project.portal_my_tasks' name="Stage Colors etc.">
+        <xpath expr="//td/span[@class='label label-info']" position="attributes">
+            <attribute name="t-attf-class">label label-info stage stage-{{ task.stage_id.name }}</attribute>
+        </xpath>
+    </template>
+
+
+    <template id="task_tag_grid" inherit_id='project.portal_my_tasks' customize_show="True" name="Task Tags on table">
+        <xpath expr="//table/thead/tr/th[1]" position="attributes">
+            <attribute name="class">col-md-8</attribute>
+        </xpath>
+        <xpath expr="//table/thead/tr/th[2]" position="after">
+            <th>Tags</th>
+        </xpath>
+        <xpath expr="//table/tbody/t/tr/td[2]" position="after">
+            <td>
+                <t t-foreach="task.tag_ids" t-as="tag">
+                    <span t-attf-class="label tag tag-color-{{ tag.color }} tag-{{ tag.name }}"><t t-esc="tag.name"/></span>
+                </t>
+            </td>
+        </xpath>
+    </template>
+
+    <template id="my_task" inherit_id='project.portal_my_task' name="Stage Colors etc.">
+        <xpath expr="//span[@class='pull-right label label-info']" position="attributes">
+            <attribute name="t-attf-class">pull-right label label-info stage stage-{{ task.stage_id.name }}</attribute>
+        </xpath>
+        <xpath expr="//h4" position="after">
+            <p t-if="task.tag_ids">
+                <span t-foreach="task.tag_ids" t-as="tag" t-attf-class="label tag tag-color-{{ tag.color }} tag-{{ tag.name }}" t-field="tag.name" />
+            </p>
+        </xpath>
+    </template>
+
+</odoo>
