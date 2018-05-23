@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_task_form2_inherit" model="ir.ui.view">
+        <field name="name">project.task.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='timesheet_ids']" position="attributes">
+                <attribute name="context">{'default_project_id': project_id, 'default_task_id': active_id}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='timesheet_ids']/tree" position="attributes">
+                <attribute name="editable"/>
+            </xpath>
+            <xpath expr="//field[@name='timesheet_ids']" position="inside">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="project_id" invisible="1"/>
+                                <field name="task_id" invisible="1"/>
+                                <field name="user_id" invisible="1" groups="hr_timesheet.group_timesheet_manager"/>
+                                <field name="employee_id" groups="hr_timesheet.group_timesheet_manager"/>
+                            </group>
+                            <group>
+                                <field name="date"/>
+                                <field name="unit_amount" string="Time Spent" widget="float_time"/>
+                            </group>
+                        </group>
+                        <field name="name" nolabel="1" widget="text" placeholder="Describe your activity (you can use markdown)" colspan="4"/>
+                    </sheet>
+                </form>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_timesheet_line_tree_inherit" model="ir.ui.view">
+        <field name="name">account.analytic.line.tree.hr_timesheet.inherit</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="editable"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
