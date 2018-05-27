@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="auth_admin_view_users_tree" model="ir.ui.view">
+        <field name="name">auth_admin.res.users.tree</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="share" invisible="1"/>
+                <button string="Generate Login" type="object" name="admin_auth_generate_login" attrs="{'invisible': [('share', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
