@@ -15,7 +15,8 @@
         <xpath expr="//table/thead/tr/th[2]" position="after">
             <th>Tags</th>
         </xpath>
-        <xpath expr="//table/tbody/t/tr/td[2]" position="after">
+        <!-- Strange number of columns -->
+        <xpath expr="//table/tbody/t/tr/td[1]" position="after">
             <td>
                 <t t-foreach="task.tag_ids" t-as="tag">
                     <span t-attf-class="label tag tag-color-{{ tag.color }} tag-{{ tag.name }}"><t t-esc="tag.name"/></span>
