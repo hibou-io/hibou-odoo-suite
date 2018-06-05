@@ -8,7 +8,7 @@ class CRMLead(models.Model):
     expense_ids = fields.One2many('hr.expense', 'lead_id', string='Expenses')
 
     @api.multi
-    @api.depends('expense_ids.unit_amount')
+    @api.depends('expense_ids.total_amount')
     def _compute_expense_total_amount(self):
         for lead in self.sudo():
             lead.expense_total_amount = sum(lead.expense_ids.mapped('total_amount'))
