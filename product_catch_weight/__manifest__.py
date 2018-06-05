@@ -1,0 +1,19 @@
+{
+    'name': 'Product Catch Weight',
+    'version': '11.0.1.0.0',
+    'category': 'Warehouse',
+    'depends': [
+        'sale_stock',
+        'purchase',
+    ],
+    'description': """
+    """,
+    'author': 'Hibou Corp.',
+    'license': 'AGPL-3',
+    'website': 'https://hibou.io/',
+    'data': [
+        'views/stock_views.xml',
+    ],
+    'installable': True,
+    'application': False,
+}
