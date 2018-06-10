@@ -7,17 +7,32 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_id']" position="after">
                 <field name="catch_weight_ratio"/>
+                <field name="catch_weight"/>
+                <field name="catch_weight_uom_id" readonly="1"/>
             </xpath>
         </field>
     </record>
 
-    <record id="view_move_line_form_inherit" model="ir.ui.view">
-        <field name="name">stock.move.line.form.inherit</field>
-        <field name="model">stock.move.line</field>
-        <field name="inherit_id" ref="stock.view_move_line_form" />
+    <!--<record id="view_move_line_form_inherit" model="ir.ui.view">-->
+        <!--<field name="name">stock.move.line.form.inherit</field>-->
+        <!--<field name="model">stock.move.line</field>-->
+        <!--<field name="inherit_id" ref="stock.view_move_line_form" />-->
+        <!--<field name="arch" type="xml">-->
+            <!--<xpath expr="//field[@name='lot_name']" position="after">-->
+                <!--<field name="lot_catch_weight_ratio" readonly="1"/>-->
+            <!--</xpath>-->
+        <!--</field>-->
+    <!--</record>-->
+    <record id="view_stock_move_operations_inherit" model="ir.ui.view">
+        <field name="name">stock.move.operations.form.inherit</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_stock_move_operations"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='lot_name']" position="after">
-                <field name="lot_catch_weight_ratio" readonly="1"/>
+            <xpath expr="//field[@name='location_dest_id']" position="after">
+                <field name="product_catch_weight_uom_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='move_line_ids']" position="attributes">
+                <attribute name="context">{'tree_view_ref': 'stock.view_stock_move_line_operation_tree', 'default_product_uom_id': product_uom, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_catch_weight_uom_id': product_catch_weight_uom_id}</attribute>
             </xpath>
         </field>
     </record>
@@ -27,8 +42,20 @@
         <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_name']" position="after">
-                <field name="lot_catch_weight_ratio" invisible="not context.get('show_lots_text')"/>
-                <field name="lot_catch_weight_ratio_related" invisible="not context.get('show_lots_m2o')"/>
+                <field name="catch_weight" invisible="not context.get('show_lots_text') or not context.get('show_catch_weight')"/>
+                <field name="catch_weight_uom_id" invisible="not context.get('show_lots_text') or not context.get('show_catch_weight')"/>
+                <field name="lot_catch_weight" invisible="not context.get('show_lots_m2o') or not context.get('show_catch_weight')" readonly="1"/>
+                <field name="lot_catch_weight_uom_id" invisible="not context.get('show_lots_m2o') or not context.get('show_catch_weight')" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_template_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.template.common.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='uom_po_id']" position="after">
+                <field name="catch_weight_uom_id" attrs="{'invisible': [('tracking', '!=', 'serial')]}" help="Leave empty to not use catch weight."/>
             </xpath>
         </field>
     </record>
