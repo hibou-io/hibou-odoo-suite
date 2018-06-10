@@ -27,6 +27,7 @@ on the specific method's characteristics. (e.g. Do they deliver on Saturday?)
         'sale_sourced_by_line',
         'base_geolocalize',
         'delivery',
+        'resource',
     ],
     'demo': [],
     'data': [
