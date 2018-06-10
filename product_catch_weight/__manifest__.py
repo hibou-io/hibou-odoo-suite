@@ -12,6 +12,7 @@
     'license': 'AGPL-3',
     'website': 'https://hibou.io/',
     'data': [
+        'views/account_invoice_views.xml',
         'views/stock_views.xml',
     ],
     'installable': True,
