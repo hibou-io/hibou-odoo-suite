@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="invoice_form_inherit" model="ir.ui.view">
+        <field name="name">account.invoice.form.inherit</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='price_unit']" position="after">
+                <field name="catch_weight" attrs="{'invisible': [('catch_weight_uom_id', '=', False)]}"/>
+                <field name="catch_weight_uom_id" readonly="1" attrs="{'invisible': [('catch_weight_uom_id', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="invoice_supplier_form_inherit" model="ir.ui.view">
+        <field name="name">account.invoice.supplier.form.inherit</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='price_unit']" position="after">
+                <field name="catch_weight" attrs="{'invisible': [('catch_weight_uom_id', '=', False)]}"/>
+                <field name="catch_weight_uom_id" readonly="1" attrs="{'invisible': [('catch_weight_uom_id', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <template id="report_invoice_document_inherit" name="report_invoice_document_catch_weight" inherit_id="account.report_invoice_document">
+        <xpath expr="//thead/tr/th[4]" position="after">
+            <t t-if="o.invoice_line_ids.filtered(lambda l: l.catch_weight_uom_id)">
+                <th class="text-right">Catch Weight</th>
+                <th class="text-right">CW Unit Price</th>
+            </t>
+        </xpath>
+        <xpath expr="//tbody/tr[1]/td[4]" position="after">
+            <t t-if="o.invoice_line_ids.filtered(lambda l: l.catch_weight_uom_id)">
+                <t t-if="l.catch_weight_uom_id">
+                    <td class="text-right">
+                        <strong t-field="l.catch_weight"/>
+                        <span t-field="l.catch_weight_uom_id"/>
+                        <hr style="padding: 0; margin: 0;"/>
+                        <t t-if="o.type in ('out_invoice', 'out_refund')" t-set="lots" t-value="l.sale_line_ids.mapped('move_ids.move_line_ids.lot_id')"/>
+                        <t t-else="" t-set="lots" t-value="l.purchase_line_id.mapped('move_ids.move_line_ids.lot_id')"/>
+                        <ul class="list-unstyled">
+                            <li t-foreach="lots" t-as="lot">
+                                <span t-field="lot.name"/>: <span t-field="lot.catch_weight"/>
+                            </li>
+                        </ul>
+                    </td>
+                    <td class="text-right">
+                        <span t-esc="'{:0.2f}'.format(l.uom_id._compute_price(l.price_unit, l.catch_weight_uom_id))"/>
+                         /
+                        <span t-field="l.catch_weight_uom_id"/>
+                    </td>
+                </t>
+                <t t-else="">
+                    <td/>
+                    <td/>
+                </t>
+            </t>
+
+        </xpath>
+        <xpath expr="//tbody/tr[2]/td[4]" position="after">
+            <t t-if="o.invoice_line_ids.filtered(lambda l: l.catch_weight_uom_id)">
+                <td/>
+                <td/>
+            </t>
+        </xpath>
+    </template>
+</odoo>
