@@ -9,14 +9,14 @@
 USA::California Payroll Rules.
 ==============================
 
-* Contribution register and partner for California Department of Taxation - Unemployment Insurance Taz
+* Contribution register and partner for California Department of Taxation - Unemployment Insurance Tax
 * Contribution register and partner for California Department of Taxation -  Income Tax Withholding
 * Contribution register and partner for Califronia Department of Taxation - Employee Training Tax
 * Contribution register and partner for Califronia Department of Taxation - State Disability Insurance
 * Contract level California Exemptions
 * Contract level California State Disability Insurance
 * Company level California Unemployment Insurance Tax
-* Company level California Employee Training Taz
+* Company level California Employee Training Tax
     """,
 
     'auto_install': False,
