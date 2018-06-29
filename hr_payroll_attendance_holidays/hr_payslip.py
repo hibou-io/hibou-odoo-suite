@@ -25,7 +25,7 @@ class HrPayslip(models.Model):
                         'contract_id': contract.id,
                     }
 
-        res = super(HrPayslip, self).get_worked_day_lines(contracts.filtered(lambda c: not c.paid_hourly_attendance), date_from, date_to)
+        res = super(HrPayslip, self).get_worked_day_lines(contracts, date_from, date_to)
         res.extend(leaves.values())
         return res
 
