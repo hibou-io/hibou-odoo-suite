@@ -1,0 +1,3 @@
+[submodule "external/hibou-oca/server-tools"]
+	path = external/hibou-oca/server-tools
+	url = https://github.com/hibou-io/oca-server-tools.git
