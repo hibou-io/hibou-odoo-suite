@@ -42,7 +42,7 @@ class HrPayslip(models.Model):
             ('employee_id', '=', employee_id),
             ('state', '=', 'validate'),
             ('date_from', '>=', date_from),
-            ('date_to', '<=', date_to),
+            ('date_from', '<=', date_to),
             ('payslip_status', '=', False),
             ('type', '=', 'remove'),
         ]

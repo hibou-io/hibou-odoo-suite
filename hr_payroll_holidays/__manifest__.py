@@ -6,7 +6,7 @@
     'version': '11.0.0.0.0',
     'category': 'Human Resources',
     'sequence': 95,
-    'summary': 'Register payments for Payroll Payslips',
+    'summary': 'Holiday Pay',
     'description': """
 Simplifies getting approved Holiday Leaves onto an employee Payslip.
     """,

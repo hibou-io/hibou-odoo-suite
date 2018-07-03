@@ -13,6 +13,7 @@ Record related equipment charges, for example fuel charges.
     'website': 'https://www.odoo.com/page/manufacturing',
     'depends': [
         'hr_maintenance',
+        'stock'
     ],
     'data': [
         'security/ir.model.access.csv',
