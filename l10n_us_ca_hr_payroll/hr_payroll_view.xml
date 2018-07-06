@@ -23,6 +23,7 @@
             <data>
                 <xpath expr="//group[@name='state_filing']" position="inside">
                     <group string="California" name="ca">
+                        <field name="ca_de4_filing_status"/>
                         <field name="ca_de4_allowances" string="DE-4 Allowances"/>
                         <field name="ca_additional_allowances" string="Additional Allowances"/>
                     </group>
