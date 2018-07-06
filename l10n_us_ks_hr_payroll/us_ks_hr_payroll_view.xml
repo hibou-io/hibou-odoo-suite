@@ -24,6 +24,7 @@
             <data>
                 <xpath expr="//group[@name='state_filing']" position="inside">
                     <group string="Kansas" name="ks">
+                        <field name="ks_k4_filing_status"/>
                         <field name="ks_k4_allowances" string="K-4 Allowances"/>
                         <field name="ks_additional_withholding" string="Additional Withholding"/>
                     </group>
