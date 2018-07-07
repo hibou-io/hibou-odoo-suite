@@ -28,6 +28,7 @@ on the specific method's characteristics. (e.g. Do they deliver on Saturday?)
         'base_geolocalize',
         'delivery',
         'resource',
+        'stock',
     ],
     'demo': [],
     'data': [
@@ -35,6 +36,7 @@ on the specific method's characteristics. (e.g. Do they deliver on Saturday?)
         'views/sale.xml',
         'views/stock.xml',
         'views/delivery.xml',
+        'views/product.xml',
     ],
     'auto_install': False,
     'installable': True,
