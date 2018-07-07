@@ -36,7 +36,7 @@ class DeliveryCarrier(models.Model):
         while date_planned < date_delivered:
             if transit_days > 10:
                 break
-            interval = self.delivery_calendar_id.schedule_days(1, date_planned, compute_leaves=True)
+            interval = self.delivery_calendar_id.plan_days(1, date_planned, compute_leaves=True)
 
             if not interval:
                 return self._calculate_transit_days_naive(date_planned, date_delivered)
@@ -59,7 +59,7 @@ class DeliveryCarrier(models.Model):
         # date calculations needs an extra day
         effective_transit_days = transit_days + 1
 
-        interval = self.delivery_calendar_id.schedule_days(effective_transit_days, date_planned, compute_leaves=True)
+        interval = self.delivery_calendar_id.plan_days(effective_transit_days, date_planned, compute_leaves=True)
         if not interval:
             return self._calculate_date_delivered_naive(date_planned, transit_days)
 
