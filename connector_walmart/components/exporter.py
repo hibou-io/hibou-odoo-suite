@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-# © 2013 Guewen Baconnier,Camptocamp SA,Akretion
-# © 2016 Sodexis
+# © 2017,2018 Hibou Corp.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging

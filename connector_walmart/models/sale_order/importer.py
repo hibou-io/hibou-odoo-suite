@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# © 2017 Hibou Corp.
+# © 2017,2018 Hibou Corp.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
@@ -180,7 +180,7 @@ class SaleOrderImporter(Component):
         return self.env['res.partner'].create(values)
 
     def _partner_matches(self, partner, values):
-        for key, value in values.iteritems():
+        for key, value in values.items():
             if key == 'state_id':
                 if value != partner.state_id.id:
                     return False

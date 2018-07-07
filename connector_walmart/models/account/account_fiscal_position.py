@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# © 2017,2018 Hibou Corp.
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError

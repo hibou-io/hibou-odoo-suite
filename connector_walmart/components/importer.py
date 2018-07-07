@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# © 2017 Hibou Corp.
+# © 2017,2018 Hibou Corp.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 """
@@ -305,7 +305,7 @@ class DelayedBatchImporter(AbstractComponent):
 #
 #         # find the translatable fields of the model
 #         fields = self.model.fields_get()
-#         translatable_fields = [field for field, attrs in fields.iteritems()
+#         translatable_fields = [field for field, attrs in fields.items()
 #                                if attrs.get('translate')]
 #
 #         if mapper is None:
@@ -318,7 +318,7 @@ class DelayedBatchImporter(AbstractComponent):
 #             map_record = mapper.map_record(lang_record)
 #             record = map_record.values()
 #
-#             data = dict((field, value) for field, value in record.iteritems()
+#             data = dict((field, value) for field, value in record.items()
 #                         if field in translatable_fields)
 #
 #             binding.with_context(connector_no_export=True,
