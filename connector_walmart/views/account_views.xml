@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_position_walmart_inherit_from_view" model="ir.ui.view">
+        <field name="name">account.fiscal.position.form.inherit</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="inherit_id" ref="account.view_account_position_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="is_connector_walmart"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
