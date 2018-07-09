@@ -26,6 +26,7 @@
                 <xpath expr="//group[@name='state_filing']" position="inside">
                     <group string="Ohio" name="oh">
                         <field name="oh_income_allowances" string="Allowances"/>
+                        <field name="oh_additional_withholding" string="Additional Withholding"/>
                     </group>
                 </xpath>
             </data>
