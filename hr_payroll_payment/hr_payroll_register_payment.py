@@ -56,12 +56,36 @@ class HrPayrollRegisterPaymentWizard(models.TransientModel):
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True, domain=[('type', 'in', ('bank', 'cash'))])
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True, required=True)
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Type', required=True)
+    payment_method_code = fields.Char(related='payment_method_id.code',
+        help="Technical field used to adapt the interface to the payment type selected.", readonly=True)
+    payment_transaction_id = fields.Many2one('payment.transaction', string="Payment Transaction")
+    payment_token_id = fields.Many2one('payment.token', string="Saved payment token",
+                                       domain=[('acquirer_id.capture_manually', '=', False)],
+                                       help="Note that tokens from acquirers set to only authorize transactions (instead of capturing the amount) are not available.")
     amount = fields.Monetary(string='Payment Amount', required=True, default=_default_amount)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.user.company_id.currency_id)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True)
     communication = fields.Char(string='Memo', default=_default_communication)
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
         help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'")
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        res = {}
+        if self.partner_id:
+            partners = self.partner_id | self.partner_id.commercial_partner_id | self.partner_id.commercial_partner_id.child_ids
+            res['domain'] = {
+                'payment_token_id': [('partner_id', 'in', partners.ids), ('acquirer_id.capture_manually', '=', False)]}
+
+        return res
+
+    @api.onchange('payment_method_id', 'journal_id')
+    def _onchange_payment_method(self):
+        if self.payment_method_code == 'electronic':
+            self.payment_token_id = self.env['payment.token'].search(
+                [('partner_id', '=', self.partner_id.id), ('acquirer_id.capture_manually', '=', False)], limit=1)
+        else:
+            self.payment_token_id = False
 
     @api.one
     @api.constrains('amount')
@@ -106,7 +130,9 @@ class HrPayrollRegisterPaymentWizard(models.TransientModel):
             'amount': self.amount,
             'currency_id': self.currency_id.id,
             'payment_date': self.payment_date,
-            'communication': self.communication
+            'communication': self.communication,
+            'payment_transaction_id': self.payment_transaction_id.id if self.payment_transaction_id else False,
+            'payment_token_id': self.payment_token_id.id if self.payment_token_id else False,
         })
         payment.post()
 
