@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="us_fl_view_company_form" model="ir.ui.view">
+        <record id="us_pa_view_company_form" model="ir.ui.view">
             <field name="name">res.company.form</field>
             <field name="model">res.company</field>
             <field name="priority">64</field>
@@ -9,24 +9,23 @@
             <field name="arch" type="xml">
             <data>
                  <xpath expr="//field[@name='currency_id']" position="after">
-                    <field name="oh_unemp_rate_2016"/>
-                    <field name="oh_unemp_rate_2017"/>
-                    <field name="oh_unemp_rate_2018"/>
+                    <field name="pa_unemp_company_rate_2018"/>
+                    <field name="pa_unemp_employee_rate_2018"/>
+                    <field name="pa_withhold_rate_2018"/>
                  </xpath>
             </data>
             </field>
         </record>
-        <record id="hr_contract_form_l10n_us_oh_inherit" model="ir.ui.view">
+        <record id="hr_contract_form_l10n_us_pa_inherit" model="ir.ui.view">
             <field name="name">hr.contract.form.inherit</field>
             <field name="model">hr.contract</field>
-            <field name="priority">130</field>
+            <field name="priority">148</field>
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//group[@name='state_filing']" position="inside">
-                    <group string="Ohio" name="oh">
-                        <field name="oh_income_allowances" string="Allowances"/>
-                        <field name="oh_additional_withholding" string="Additional Withholding"/>
+                    <group string="Pennsylvania" name="pa">
+                        <field name="pa_additional_withholding"/>
                     </group>
                 </xpath>
             </data>

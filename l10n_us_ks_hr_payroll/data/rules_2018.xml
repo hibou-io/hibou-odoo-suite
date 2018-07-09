@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_ks_unemp_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_ks_unemp_wages"/>
+        <field name="name">Kansas Unemployment Insurance Tax - Wages (2018)</field>
+        <field name="code">KS_UNEMP_WAGES_2018</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+ytd = payslip.sum('KS_UNEMP_WAGES_2018', '2018-01-01', '2019-01-01')
+ytd += contract.external_wages
+remaining = 14000.0 - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.GROSS:
+    result = remaining
+else:
+    result = categories.GROSS
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_ks_unemp_2018" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_ks_unemp"/>
+        <field name="name">Kansas Unemployment (2018)</field>
+        <field name="code">KS_UNEMP_2018</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = -contract.ks_unemp_rate(2018)
+result = categories.KS_UNEMP_WAGES
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_ksdor_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+<!-- STATE INCOME WITHHOLDING -->
+ <record id="hr_payroll_rules_ks_inc_withhold_2018" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_ks_income_withhold"/>
+        <field name="name">Kansas Income Withholding</field>
+        <field name="code">KS_INC_WITHHOLD_2018</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+wages = categories.GROSS
+allowances = contract.ks_k4_allowances
+additional_withholding = contract.ks_additional_withholding
+schedule_pay = contract.schedule_pay
+filing_status = contract.ks_k4_filing_status
+
+# Tables are found in https://www.ksrevenue.org/pdf/kw1002017.pdf
+# First check for exemption status (Step 1)
+if filing_status == 'exempt':
+    result = 0
+
+else:
+    # Calculate Withholding Allowance Amounts using table (allowance multipliers are from table).
+    if schedule_pay == 'weekly':
+        wages -= (allowances * 43.27)
+    elif schedule_pay == 'bi-weekly':
+        wages -= (allowances * 86.54)
+    elif schedule_pay == 'semi-monthly':
+        wages -= (allowances * 93.75)
+    elif schedule_pay == 'monthly':
+        wages -= (allowances * 187.50)
+    elif schedule_pay == 'quarterly':
+        wages -= (allowances * 562.50)
+    elif schedule_pay == 'semi-annual':
+        wages -= (allowances * 1125.00)
+    elif schedule_pay == 'annually':
+        wages -= (allowances * 2250.00)
+
+    # Tax Rate Tables to calculate income withholding
+    #### WEEKLY ####
+    if schedule_pay == 'weekly':
+        if filing_status == 'head_household' or 'single' and wages > 0:
+            tax_rate_table = [
+            (58, 0.0, 0.0),
+            (346, 0.031, 0.0),
+            (635, 0.0525, 8.94),
+            (float('inf'), 0.057, 24.09),
+            ]
+
+        elif filing_status == 'married':
+            tax_rate_table = [
+            (144, 0.0, 0.0),
+            (721, 0.031, 0.0),
+            (1298, 0.0525, 17.88),
+            (float('inf'), 0.057, 48.17),
+            ]
+
+    ### BI-WEEKLY ###
+    if schedule_pay == 'bi-weekly':
+        if filing_status == 'head_household' or 'single' and wages > 0:
+            tax_rate_table = [
+            (115, 0.0, 0.0),
+            (692, 0.031, 0.0),
+            (1269, 0.0525, 17.88),
+            (float('inf'), 0.057, 48.17),
+            ]
+
+        elif filing_status == 'married':
+            tax_rate_table = [
+            (288, 0.0, 0.0),
+            (1442, 0.031, 0.0),
+            (2596, 0.0525, 35.77),
+            (float('inf'), 0.057, 96.35),
+            ]
+
+    ### SEMI-MONTHLY ###
+    if schedule_pay == 'semi-monthly':
+        if filing_status == 'head_household' or 'single' and wages > 0:
+            tax_rate_table = [
+            (125, 0.0, 0.0),
+            (750, 0.031, 0.0),
+            (1375, 0.0525, 19.38),
+            (float('inf'), 0.057, 52.19),
+            ]
+
+        elif filing_status == 'married':
+            tax_rate_table = [
+            (313, 0.0, 0.0),
+            (1563, 0.031, 0.0),
+            (2813, 0.0525, 38.75),
+            (float('inf'), 0.057, 104.38),
+            ]
+
+    ### MONTHLY ###
+    if schedule_pay == 'monthly':
+        if filing_status == 'head_household' or 'single' and wages > 0:
+            tax_rate_table = [
+            (250, 0.0, 0.0),
+            (1500, 0.031, 0.0),
+            (2750, 0.0525, 38.75),
+            (float('inf'), 0.057, 104.38),
+            ]
+
+        elif filing_status == 'married':
+            tax_rate_table = [
+            (625, 0.0, 0.0),
+            (3125, 0.031, 0.0),
+            (5625, 0.0525, 77.50),
+            (float('inf'), 0.057, 208.75),
+            ]
+
+    ### QUARTERLY ###
+    if schedule_pay == 'quarterly':
+        if filing_status == 'head_household' or 'single' and wages > 0:
+            tax_rate_table = [
+            (750, 0.0, 0.0),
+            (4500, 0.031, 0.0),
+            (8250, 0.0525, 116.25),
+            (float('inf'), 0.057, 313.13),
+            ]
+
+        elif filing_status == 'married':
+            tax_rate_table = [
+            (1875, 0.0, 0.0),
+            (9375, 0.031, 0.0),
+            (16875, 0.0525, 232.50),
+            (float('inf'), 0.057, 626.25),
+            ]
+
+    ### SEMI-ANNUAL ###
+    if schedule_pay == 'semi-annual':
+        if filing_status == 'head_household' or 'single' and wages > 0:
+            tax_rate_table = [
+            (1500, 0.0, 0.0),
+            (9000, 0.031, 0.0),
+            (16500, 0.0525, 232.50),
+            (float('inf'), 0.057, 626.25),
+            ]
+
+        elif filing_status == 'married':
+            tax_rate_table = [
+            (3750, 0.0, 0.0),
+            (18750, 0.031, 0.0),
+            (33750, 0.0525, 465.00),
+            (float('inf'), 0.057, 1252.50),
+            ]
+
+    ### ANNUAL ###
+    if schedule_pay == 'annually':
+        if filing_status == 'head_household' or 'single' and wages > 0:
+            tax_rate_table = [
+            (3000, 0.0, 0.0),
+            (18000, 0.031, 0.0),
+            (33000, 0.0525, 465.00),
+            (float('inf'), 0.057, 1252.50),
+            ]
+
+        elif filing_status == 'married':
+            tax_rate_table = [
+            (7500, 0.0, 0.0),
+            (37500, 0.031, 0.0),
+            (67500, 0.0525, 930.00),
+            (float('inf'), 0.057, 2505.00),
+            ]
+
+    over = 0.0
+    tax = 0.0
+    for row in tax_rate_table:
+        if wages &lt;= row[0]:
+            tax = ((wages - over) * row[1]) + row[2]
+            tax += additional_withholding
+            break
+        over = row[0]
+
+    result = -tax
+
+        </field>
+        <field name="register_id" ref="contrib_register_ksdor_withhold"/>
+    </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- HR PAYROLL STRUCTURE -->
+    <record id="hr_payroll_salary_structure_us_ca_employee" model="hr.payroll.structure">
+        <field name="code">US_CA_EMP</field>
+        <field name="name">USA California Employee</field>
+        <field eval="[(6, 0, [
+          ref('hr_payroll_rules_ca_uit_wages_2018'),
+          ref('hr_payroll_rules_ca_uit_2018'),
+          ref('hr_payroll_rules_ca_ett_wages_2018'),
+          ref('hr_payroll_rules_ca_ett_2018'),
+          ref('hr_payroll_rules_ca_sdi_wages_2018'),
+          ref('hr_payroll_rules_ca_sdi_2018'),
+          ref('hr_payroll_rules_ca_inc_withhold_2018'),
+          ])]" name="rule_ids"/>
+        <field name="company_id" ref="base.main_company"/>    
+        <field name="parent_id" ref="l10n_us_hr_payroll.hr_payroll_salary_structure_us_employee"/>
+    </record>
+
+    </data>
+</odoo>

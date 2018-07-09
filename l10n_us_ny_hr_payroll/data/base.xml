@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+<!-- CONTRIBUTION REGISTERS -->
+        <record id="res_partner_nydor_unemp" model="res.partner">
+            <field name="name">New York State Department of Taxation and Finance - Unemployment Insurance Tax</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_nydor_withhold" model="res.partner">
+            <field name="name">New York State Department of Taxation and Finance - Income Tax Withholding</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_nydor_rsf" model="res.partner">
+            <field name="name">New York State Department of Taxation and Finance - Re-employment Service Fund</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+            <record id="res_partner_nydor_mctmt" model="res.partner">
+            <field name="name">New York State Department of Taxation and Finance - Metropolitan Commuter Transportation Mobility Tax</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+
+        <record id="contrib_register_nydor_unemp" model="hr.contribution.register">
+            <field name="name">New York Unemployment Insurance Tax</field>
+            <field name="note">New York State Department of Taxation and Finance - Unemployment Insurance Tax</field>
+            <field name="partner_id" ref="res_partner_nydor_unemp"/>
+        </record>
+        <record id="contrib_register_nydor_withhold" model="hr.contribution.register">
+            <field name="name">New York Income Tax Withholding</field>
+            <field name="note">New York State Department of Taxation and Finance - Income Tax Withholding</field>
+            <field name="partner_id" ref="res_partner_nydor_withhold"/>
+        </record>
+        <record id="contrib_register_nydor_rsf" model="hr.contribution.register">
+            <field name="name">Re-employment Service Fund</field>
+            <field name="note">New York State Department of Taxation and Finance - Re-employment Service Fund</field>
+            <field name="partner_id" ref="res_partner_nydor_rsf"/>
+        </record>
+            <record id="contrib_register_nydor_mctmt" model="hr.contribution.register">
+            <field name="name">Metropolitan Commuter Transportation Mobility Tax</field>
+            <field name="note">New York State Department of Taxation and Finance - Metropolitan Commuter Transportation Mobility Tax</field>
+            <field name="partner_id" ref="res_partner_nydor_mctmt"/>
+        </record>
+
+
+    <!-- HR SALARY RULE CATEGORIES-->
+        <record id="hr_payroll_ny_unemp_wages" model="hr.salary.rule.category">
+            <field name="name">New York Unemployment Insurance Tax - Wages</field>
+            <field name="code">NY_UNEMP_WAGES</field>
+        </record>
+
+        <record id="hr_payroll_ny_unemp" model="hr.salary.rule.category">
+            <field name="name">New York Unemployment Insurance Tax</field>
+            <field name="code">NY_UNEMP</field>
+            <field name="parent_id" ref="hr_payroll.COMP"/>
+        </record>
+
+        <record id="hr_payroll_ny_rsf" model="hr.salary.rule.category">
+            <field name="name">New York Re-employment Service Fund</field>
+            <field name="code">NY_RSF</field>
+            <field name="parent_id" ref="hr_payroll.COMP"/>
+        </record>
+
+        <record id="hr_payroll_ny_mctmt" model="hr.salary.rule.category">
+            <field name="name">New York Metropolitan Commuter Transportation Mobility Tax</field>
+            <field name="code">NY_MCTMT</field>
+            <field name="parent_id" ref="hr_payroll.COMP"/>
+        </record>
+
+        <record id="hr_payroll_ny_income_withhold" model="hr.salary.rule.category">
+            <field name="name">New York Income Withholding</field>
+            <field name="code">NY_WITHHOLD</field>
+            <field name="parent_id" ref="hr_payroll.DED"/>
+        </record>
+    </data>
+</odoo>
