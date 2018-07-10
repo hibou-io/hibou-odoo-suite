@@ -60,7 +60,7 @@ class AccountRegisterPaymentsInvoiceLine(models.TransientModel):
     amount = fields.Float(string='Amount')
     writeoff_acc_id = fields.Many2one('account.account', string='Write-off Account')
 
-    @api.depends('invoice_id', 'invoice_id.residual', 'wizard_id.due_date_cutoff', 'invoice_id.partner_id')
+    @api.depends('invoice_id', 'wizard_id.due_date_cutoff', 'invoice_id.partner_id')
     def _compute_balances(self):
         for line in self:
             residual = line.invoice_id.residual
@@ -75,7 +75,9 @@ class AccountRegisterPaymentsInvoiceLine(models.TransientModel):
                     )):
                 amount = abs(move_line.debit - move_line.credit)
                 total_amount += amount
-                for partial_line in (move_line.matched_debit_ids + move_line.matched_credit_ids):
+                for partial_line in move_line.matched_debit_ids:
+                    total_reconciled += partial_line.amount
+                for partial_line in move_line.matched_credit_ids:
                     total_reconciled += partial_line.amount
 
             line.residual = residual
