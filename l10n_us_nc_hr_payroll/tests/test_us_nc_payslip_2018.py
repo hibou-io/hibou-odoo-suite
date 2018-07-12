@@ -379,3 +379,40 @@ class TestUsNCPayslip(TestUsPayslip):
 
         self.assertPayrollEqual(cats['NC_UNEMP_WAGES'], remaining_nc_unemp_wages)
         self.assertPayrollEqual(cats['NC_UNEMP'], remaining_nc_unemp_wages * nc_unemp)
+
+    def test_underflow(self):
+        salary = 150.0
+        schedule_pay = 'weekly'
+        # allowance_multiplier and Portion of Standard Deduction for weekly
+        allowance_multiplier = 48.08
+        PST = 168.27
+
+        exemption = 1
+
+        #  Withholding should be 0, since pay is so low it's less than PST.
+        wh = 0.0
+
+        employee = self._createEmployee()
+        employee.company_id.nc_unemp_rate_2018 = 0.06
+
+        contract = self._createContract(employee, salary, struct_id=self.ref(
+            'l10n_us_nc_hr_payroll.hr_payroll_salary_structure_us_nc_employee'), schedule_pay=schedule_pay)
+        contract.nc_nc4_allowances = exemption
+
+        self.assertEqual(contract.schedule_pay, 'weekly')
+
+        # tax rates
+        nc_unemp = contract.nc_unemp_rate(2018) / -100.0
+
+        self._log('2018 North Carolina tax first payslip weekly:')
+        payslip = self._createPayslip(employee, '2018-01-01', '2018-01-31')
+
+        payslip.compute_sheet()
+
+        cats = self._getCategories(payslip)
+
+        self.assertPayrollEqual(cats['NC_UNEMP_WAGES'], salary)
+        self.assertPayrollEqual(cats['NC_UNEMP'], cats['NC_UNEMP_WAGES'] * nc_unemp)
+        self.assertPayrollEqual(cats['NC_INC_WITHHOLD'], wh)
+
+        process_payslip(payslip)
