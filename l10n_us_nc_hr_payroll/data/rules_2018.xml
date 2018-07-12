@@ -95,7 +95,11 @@ else:
 if contract.nc_nc4_filing_status == 'exempt':
     result = 0
 else:
-    result = -round(((wages - (PST + (allowance_multiplier * allowances))) * 0.05599) + contract.nc_nc4_additional_wh)
+    withholding = round(((wages - (PST + (allowance_multiplier * allowances))) * 0.05599) + contract.nc_nc4_additional_wh)
+    if withholding > 0.0:
+        result = - withholding
+    else:
+        result = 0
 
         </field>
         <field name="register_id" ref="contrib_register_ncdor_withhold"/>
