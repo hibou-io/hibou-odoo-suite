@@ -60,10 +60,13 @@ allowances = contract.ks_k4_allowances
 additional_withholding = contract.ks_additional_withholding
 schedule_pay = contract.schedule_pay
 filing_status = contract.ks_k4_filing_status
+tax_rate_table = []
 
 # Tables are found in https://www.ksrevenue.org/pdf/kw1002017.pdf
 # First check for exemption status (Step 1)
 if filing_status == 'exempt':
+    result = 0
+elif wages &lt;= 0:
     result = 0
 
 else:
@@ -94,7 +97,7 @@ else:
             (float('inf'), 0.057, 24.09),
             ]
 
-        elif filing_status == 'married':
+        elif filing_status == 'married' and wages > 0:
             tax_rate_table = [
             (144, 0.0, 0.0),
             (721, 0.031, 0.0),
@@ -112,7 +115,7 @@ else:
             (float('inf'), 0.057, 48.17),
             ]
 
-        elif filing_status == 'married':
+        elif filing_status == 'married' and wages > 0:
             tax_rate_table = [
             (288, 0.0, 0.0),
             (1442, 0.031, 0.0),
@@ -130,7 +133,7 @@ else:
             (float('inf'), 0.057, 52.19),
             ]
 
-        elif filing_status == 'married':
+        elif filing_status == 'married' and wages > 0:
             tax_rate_table = [
             (313, 0.0, 0.0),
             (1563, 0.031, 0.0),
@@ -148,7 +151,7 @@ else:
             (float('inf'), 0.057, 104.38),
             ]
 
-        elif filing_status == 'married':
+        elif filing_status == 'married' and wages > 0:
             tax_rate_table = [
             (625, 0.0, 0.0),
             (3125, 0.031, 0.0),
@@ -166,7 +169,7 @@ else:
             (float('inf'), 0.057, 313.13),
             ]
 
-        elif filing_status == 'married':
+        elif filing_status == 'married' and wages > 0:
             tax_rate_table = [
             (1875, 0.0, 0.0),
             (9375, 0.031, 0.0),
@@ -184,7 +187,7 @@ else:
             (float('inf'), 0.057, 626.25),
             ]
 
-        elif filing_status == 'married':
+        elif filing_status == 'married' and wages > 0:
             tax_rate_table = [
             (3750, 0.0, 0.0),
             (18750, 0.031, 0.0),
@@ -202,7 +205,7 @@ else:
             (float('inf'), 0.057, 1252.50),
             ]
 
-        elif filing_status == 'married':
+        elif filing_status == 'married' and wages > 0:
             tax_rate_table = [
             (7500, 0.0, 0.0),
             (37500, 0.031, 0.0),
