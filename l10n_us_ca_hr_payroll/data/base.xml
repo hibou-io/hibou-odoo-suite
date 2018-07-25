@@ -36,12 +36,12 @@
         <record id="contrib_register_cador_ett" model="hr.contribution.register">
             <field name="name">Employment Training Tax</field>
             <field name="note">California Department of Taxation - Employment Training Tax</field>
-            <field name="partner_id" ref="res_partner_cador_withhold"/>
+            <field name="partner_id" ref="res_partner_cador_ett"/>
         </record>
             <record id="contrib_register_cador_sdi" model="hr.contribution.register">
             <field name="name">State Disability Insurance</field>
             <field name="note">California Department of Taxation - State Disability Insurance</field>
-            <field name="partner_id" ref="res_partner_cador_withhold"/>
+            <field name="partner_id" ref="res_partner_cador_sdi"/>
         </record>
 
 
