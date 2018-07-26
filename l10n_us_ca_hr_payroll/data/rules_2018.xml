@@ -87,7 +87,7 @@ result = categories.CA_ETT_WAGES
 if result_rate == 0.0:
     result = 0.0
         </field>
-        <field name="register_id" ref="contrib_register_cador_sdi"/>
+        <field name="register_id" ref="contrib_register_cador_ett"/>
         <field name="appears_on_payslip" eval="False"/>
     </record>
 
