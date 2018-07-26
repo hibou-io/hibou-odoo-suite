@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="wc_code_view_tree" model="ir.ui.view">
+        <field name="name">hr.wc_code.tree</field>
+        <field name="model">hr.wc_code</field>
+        <field name="arch" type="xml">
+            <tree string="Workers Compensation Codes">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="rate"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="wc_code_view_form" model="ir.ui.view">
+        <field name="name">hr.wc_code.form</field>
+        <field name="model">hr.wc_code</field>
+        <field name="arch" type="xml">
+            <form string="Workers Compensation Code">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="active"/>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="rate"/>
+                        </group>
+                        <group name="other"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="wc_code_view_search" model="ir.ui.view">
+        <field name="name">hr.wc_code.search</field>
+        <field name="model">hr.wc_code</field>
+        <field name="arch" type="xml">
+            <search string="Workers Compensation Search">
+                <field name="code"/>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="wc_code_action_main" model="ir.actions.act_window">
+        <field name="name">Workers Compensation Codes</field>
+        <field name="res_model">hr.wc_code</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>
+                No codes
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="wc_code_menu_main" name="Workers Comp. Codes"
+              action="wc_code_action_main"
+              sequence="20" parent="hr.menu_human_resources_configuration"/>
+
+    <!-- Inherited -->
+    <record id="hr_contract_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='type_id']" position="after">
+                <field name="wc_code_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
