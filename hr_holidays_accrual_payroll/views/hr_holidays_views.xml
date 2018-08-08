@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_holidays_edit_holiday_new_inherit_pay" model="ir.ui.view">
+        <field name="name">hr.holidays.edit.holiday.new.inherit.pay</field>
+        <field name="model">hr.holidays</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="accrue_by_pay_period"/>
+                <field name="allocation_per_period"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
