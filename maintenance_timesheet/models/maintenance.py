@@ -5,7 +5,6 @@ class AnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
     maintenance_request_id = fields.Many2one('maintenance.request')
-    employee_id = fields.Many2one('hr.employee', string="Employee")
 
 
 class MaintenanceEquipment(models.Model):
@@ -17,7 +16,6 @@ class MaintenanceEquipment(models.Model):
         action['domain'] = [('equipment_id', '=', self.id)]
         action['context'] = {
             'default_equipment_id': self.id,
-            'default_employee_id': self.employee_id.id,
             'default_department_id': self.department_id.id,
         }
         return action

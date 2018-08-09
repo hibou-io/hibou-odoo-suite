@@ -13,6 +13,7 @@ Adds Timesheets to Maintenance Requests to record time and labor costs.
     'website': 'https://hibou.io/',
     'depends': [
         'maintenance_notebook',
+        'hr_maintenance',
         'hr_department_project',
         'hr_timesheet',
     ],

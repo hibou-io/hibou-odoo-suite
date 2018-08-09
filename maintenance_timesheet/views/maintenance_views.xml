@@ -19,7 +19,7 @@
             <field name="model">maintenance.request</field>
             <field name="inherit_id" ref="hr_maintenance.maintenance_request_view_form_inherit_hr"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='employee_id']" position="after">
+                <xpath expr="//field[@name='category_id']" position="after">
                     <field name="department_id"/>
                     <field name="project_id"/>
                 </xpath>
@@ -36,8 +36,7 @@
                         <field name="timesheet_ids" context="{'default_project_id': project_id}">
                             <tree editable="bottom" string="Timesheet Activities" default_order="date">
                                 <field name="date"/>
-                                <field name="user_id" invisible="1"/>
-                                <field name="employee_id" required="1"/>
+                                <field name="user_id" required="1"/>
                                 <field name="name"/>
                                 <field name="unit_amount" string="Duration" widget="float_time"/>
                                 <field name="project_id" invisible="1"/>
