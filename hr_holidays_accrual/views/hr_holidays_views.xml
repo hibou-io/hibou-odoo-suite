@@ -5,8 +5,10 @@
         <field name="model">hr.holidays</field>
         <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='category_id']" position="after">
-                <field name="grant_by_tag" attrs="{'invisible': [('holiday_type', '=', 'employee')]}"/>
+            <xpath expr="//group/group[2]" position="after">
+                <group name="accrue" attrs="{'invisible': [('type', '!=', 'add')]}">
+                    <field name="grant_by_tag" attrs="{'invisible': [('holiday_type', '=', 'employee')]}"/>
+                </group>
             </xpath>
         </field>
     </record>
