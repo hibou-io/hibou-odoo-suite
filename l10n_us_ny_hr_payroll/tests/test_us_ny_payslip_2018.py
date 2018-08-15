@@ -150,18 +150,3 @@ class TestUsNYPayslip(TestUsPayslip):
 
         self.assertPayrollEqual(cats['NY_WITHHOLD'], wh)
 
-    def test_tax_exempt(self):
-        schedule_pay = 'monthly'
-
-        wh = 0.0
-
-        employee = self._createEmployee()
-
-        contract = self._createContract(employee,
-                                        salary,
-                                        struct_id=self.ref(
-                                            'l10n_us_ny_hr_payroll.hr_payroll_salary_structure_us_ny_employee'),
-                                        schedule_pay=schedule_pay)
-        contract.ny_it2104_filing_status = 'exempt'
-
-        self.assertPayrollEqual(cats['NY_WITHHOLD'], wh)
