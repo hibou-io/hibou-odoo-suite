@@ -201,6 +201,9 @@ else:
         <field name="amount_python_compute">
 result_rate = -contract.nj_wf_rate(2018)
 result = categories.NJ_WF_WAGES
+
+if result_rate == 0.0:
+  result = 0.0
         </field>
         <field name="register_id" ref="contrib_register_njdor_wf"/>
         <field name="appears_on_payslip" eval="False"/>
