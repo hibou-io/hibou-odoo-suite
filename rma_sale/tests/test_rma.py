@@ -6,7 +6,7 @@ class TestRMASale(TestRMA):
 
     def setUp(self):
         super(TestRMASale, self).setUp()
-        self.template2 = self.env.ref('rma_sale.template_sale_return')
+        self.template_sale_return = self.env.ref('rma_sale.template_sale_return')
 
     def test_20_sale_return(self):
         self.product1.tracking = 'serial'
@@ -27,18 +27,18 @@ class TestRMASale(TestRMA):
 
         # Try to RMA item not delivered yet
         rma = self.env['rma.rma'].create({
-            'template_id': self.template2.id,
+            'template_id': self.template_sale_return.id,
             'partner_id': self.partner1.id,
             'partner_shipping_id': self.partner1.id,
             'sale_order_id': order.id,
         })
         self.assertEqual(rma.state, 'draft')
-        rma_line = self.env['rma.line'].create({
+        wizard = self.env['rma.sale.make.lines'].create({
             'rma_id': rma.id,
-            'product_id': self.product1.id,
-            'product_uom_id': self.product1.uom_id.id,
-            'product_uom_qty': 1.0,
         })
+        wizard.line_ids.product_uom_qty = 1.0
+        wizard.add_lines()
+        self.assertEqual(len(rma.lines), 1)
         with self.assertRaises(UserError):
             rma.action_confirm()
 

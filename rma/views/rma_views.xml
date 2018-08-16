@@ -13,7 +13,12 @@
                     <field name="state" widget="statusbar" on_change="1" modifiers="{'readonly': true}"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="open_stock_picking_rmas" icon="fa-cubes"
+                                type="object" attrs="{'invisible': ['|', ('stock_picking_id', '=', False), ('stock_picking_rma_count', '&lt;=', 1)]}">
+                            <field name="stock_picking_rma_count" string="Pick RMAs" widget="statinfo" />
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1" modifiers="{'readonly': true, 'required': true}"/>
@@ -23,6 +28,9 @@
                         <group>
                             <field name="template_usage" invisible="1"/>
                             <field name="template_id" options="{'no_create': True}" attrs="{'readonly': [('state', 'in', ('confirmed', 'done', 'cancel'))]}"/>
+                            <field name="stock_picking_id" options="{'no_create': True}" attrs="{'invisible': [('template_usage', '!=', 'stock_picking')], 'required': [('template_usage', '=', 'stock_picking')], 'readonly': [('state', 'in', ('confirmed', 'done', 'cancel'))]}"/>
+                            <br/>
+                            <button string="Add lines" type="object" name="action_add_picking_lines" attrs="{'invisible': ['|', ('stock_picking_id', '=', False), ('state', '!=', 'draft')]}"/>
                         </group>
                         <group>
                             <field name="validity_date"/>
@@ -106,6 +114,7 @@
             <tree colors="blue:state == 'draft';gray:state in ('cancel', 'done');orange:validity_date and validity_date &lt; current_date;">
                 <field name="name"/>
                 <field name="template_id"/>
+                <field name="stock_picking_id"/>
                 <field name="partner_id"/>
                 <field name="create_date"/>
                 <field name="validity_date"/>
@@ -122,6 +131,7 @@
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="template_id"/>
+                <field name="stock_picking_id"/>
                 <separator/>
                 <filter string="New" name="new" domain="[('state', '=', 'draft')]"/>
                 <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
@@ -161,7 +171,6 @@
                             <field name="in_carrier_id" attrs="{'invisible': [('create_in_picking', '=', False)]}"/>
                             <field name="in_require_return" attrs="{'invisible': [('create_in_picking', '=', False)]}"/>
                             <field name="in_procure_method" attrs="{'invisible': [('create_in_picking', '=', False)]}"/>
-                            <field name="in_to_refund_so" attrs="{'invisible': [('create_in_picking', '=', False)]}"/>
                         </group>
                         <group>
                             <field name="create_out_picking"/>

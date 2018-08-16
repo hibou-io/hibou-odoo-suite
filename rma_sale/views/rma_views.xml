@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- RMA Template -->
+    <record id="view_rma_template_form_sale" model="ir.ui.view">
+        <field name="name">rma.template.form.sale</field>
+        <field name="model">rma.template</field>
+        <field name="inherit_id" ref="rma.view_rma_template_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='in_procure_method']" position="after">
+                <field name="in_to_refund_so" attrs="{'invisible': [('create_in_picking', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- RMA -->
     <record id="view_rma_rma_form_sale" model="ir.ui.view">
         <field name="name">rma.rma.form.sale</field>
         <field name="model">rma.rma</field>

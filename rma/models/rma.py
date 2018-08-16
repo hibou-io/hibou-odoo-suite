@@ -11,7 +11,9 @@ class RMATemplate(models.Model):
     _name = 'rma.template'
 
     name = fields.Char(string='Name')
-    usage = fields.Selection([], string='Applies To')
+    usage = fields.Selection([
+        ('stock_picking', 'Stock Picking'),
+    ], string='Applies To')
     description = fields.Html(string='Internal Instructions')
     customer_description = fields.Html(string='Customer Instructions')
     valid_days = fields.Integer(string='Expire in Days')
@@ -30,7 +32,6 @@ class RMATemplate(models.Model):
         ('make_to_stock', 'Take from Stock'),
         ('make_to_order', 'Apply Procurements')
         ], string="Inbound Procurement Method", default='make_to_stock')
-    in_to_refund_so = fields.Boolean(string='Inbound mark refund SO')
 
     out_location_id = fields.Many2one('stock.location', string='Outbound Source Location')
     out_location_dest_id = fields.Many2one('stock.location', string='Outbound Destination Location')
@@ -103,6 +104,8 @@ class RMA(models.Model):
         ], string='State', default='draft', copy=False)
     company_id = fields.Many2one('res.company', 'Company')
     template_id = fields.Many2one('rma.template', string='Type', required=True)
+    stock_picking_id = fields.Many2one('stock.picking', string='Stock Picking')
+    stock_picking_rma_count = fields.Integer('Number of RMAs for this Picking', compute='_compute_stock_picking_rma_count')
     partner_id = fields.Many2one('res.partner', string='Partner')
     partner_shipping_id = fields.Many2one('res.partner', string='Shipping')
     lines = fields.One2many('rma.line', 'rma_id', string='Lines')
@@ -130,9 +133,18 @@ class RMA(models.Model):
     @api.multi
     def _onchange_template_usage(self):
         now = datetime.now()
-        for rma in self.filtered(lambda r: r.template_id.valid_days):
-            rma.validity_date = now + timedelta(days=rma.template_id.valid_days)
+        for rma in self:
+            if rma.template_id.valid_days:
+                rma.validity_date = now + timedelta(days=rma.template_id.valid_days)
+            if rma.template_usage != 'stock_picking':
+                rma.stock_picking_id = False
 
+    @api.onchange('stock_picking_id')
+    @api.multi
+    def _onchange_stock_picking_id(self):
+        for rma in self.filtered(lambda rma: rma.stock_picking_id):
+            rma.partner_id = rma.stock_picking_id.partner_id
+            rma.partner_shipping_id = rma.stock_picking_id.partner_id
 
     @api.onchange('in_carrier_tracking_ref', 'validity_date')
     @api.multi
@@ -161,6 +173,29 @@ class RMA(models.Model):
             rma.in_label_url = base_url + '/rma_label?a=' + \
                 str(attachment.id) + '&e=' + str(e_expires) + \
                 '&h=' + create_hmac(secret, attachment.id, e_expires)
+
+    @api.multi
+    @api.depends('stock_picking_id')
+    def _compute_stock_picking_rma_count(self):
+        for rma in self:
+            if rma.stock_picking_id:
+                rma_data = self.read_group([('stock_picking_id', '=', rma.stock_picking_id.id), ('state', '!=', 'cancel')],
+                                           ['stock_picking_id'], ['stock_picking_id'])
+                if rma_data:
+                    rma.stock_picking_rma_count = rma_data[0]['stock_picking_id_count']
+            else:
+                rma.stock_picking_rma_count = 0.0
+
+
+    @api.multi
+    def open_stock_picking_rmas(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Picking RMAs'),
+            'res_model': 'rma.rma',
+            'view_mode': 'tree,form',
+            'context': {'search_default_stock_picking_id': self[0].stock_picking_id.id}
+        }
 
     @api.model
     def create(self, vals):
@@ -243,11 +278,131 @@ class RMA(models.Model):
                 rma.in_picking_id.send_to_shipper()
 
     @api.multi
+    def action_add_picking_lines(self):
+        make_line_obj = self.env['rma.picking.make.lines']
+        for rma in self:
+            lines = make_line_obj.create({
+                'rma_id': rma.id,
+            })
+            action = self.env.ref('rma.action_rma_add_lines').read()[0]
+            action['res_id'] = lines.id
+            return action
+
+    @api.multi
     def unlink(self):
         for rma in self:
             if rma.state not in ('draft'):
                 raise UserError(_('You can not delete a non-draft RMA.'))
         return super(RMA, self).unlink()
+
+    def _create_in_picking_stock_picking(self):
+        if not self.stock_picking_id or self.stock_picking_id.state != 'done':
+            raise UserError(_('You must have a completed stock picking for this RMA.'))
+        if not self.template_id.in_require_return:
+            group_id = self.stock_picking_id.group_id.id if self.stock_picking_id.group_id else 0
+
+            values = self.template_id._values_for_in_picking(self)
+            values.update({'group_id': group_id})
+            move_lines = []
+            for l1, l2, vals in values['move_lines']:
+                vals.update({'group_id': group_id})
+                move_lines.append((l1, l2, vals))
+            values['move_lines'] = move_lines
+            return self.env['stock.picking'].sudo().create(values)
+
+        lines = self.lines.filtered(lambda l: l.product_uom_qty >= 1)
+        if not lines:
+            raise UserError(_('You have no lines with positive quantity.'))
+
+        old_picking = self.stock_picking_id
+
+        new_picking = old_picking.copy({
+            'move_lines': [],
+            'picking_type_id': self.template_id.in_type_id.id,
+            'state': 'draft',
+            'origin': old_picking.name + ' ' + self.name,
+            'location_id': self.template_id.in_location_id.id,
+            'location_dest_id': self.template_id.in_location_dest_id.id,
+            'carrier_id': self.template_id.in_carrier_id.id if self.template_id.in_carrier_id else 0,
+            'carrier_tracking_ref': False,
+            'carrier_price': False
+        })
+        new_picking.message_post_with_view('mail.message_origin_link',
+            values={'self': new_picking, 'origin': self},
+            subtype_id=self.env.ref('mail.mt_note').id)
+
+        for l in lines:
+            return_move = old_picking.move_lines.filtered(lambda ol: ol.state == 'done' and ol.product_id.id == l.product_id.id)[0]
+            return_move.copy({
+                'name': self.name + ' IN: ' + l.product_id.name_get()[0][1],
+                'product_id': l.product_id.id,
+                'product_uom_qty': l.product_uom_qty,
+                'picking_id': new_picking.id,
+                'state': 'draft',
+                'location_id': return_move.location_dest_id.id,
+                'location_dest_id': self.template_id.in_location_dest_id.id,
+                'picking_type_id': new_picking.picking_type_id.id,
+                'warehouse_id': new_picking.picking_type_id.warehouse_id.id,
+                'origin_returned_move_id': return_move.id,
+                'procure_method': self.template_id.in_procure_method,
+                'move_dest_id': False,
+            })
+
+        return new_picking
+
+    def _create_out_picking_stock_picking(self):
+        if not self.stock_picking_id or self.stock_picking_id.state != 'done':
+            raise UserError(_('You must have a completed stock picking for this RMA.'))
+        if not self.template_id.out_require_return:
+            group_id = self.stock_picking_id.group_id.id if self.stock_picking_id.group_id else 0
+
+            values = self.template_id._values_for_out_picking(self)
+            values.update({'group_id': group_id})
+            move_lines = []
+            for l1, l2, vals in values['move_lines']:
+                vals.update({'group_id': group_id})
+                move_lines.append((l1, l2, vals))
+            values['move_lines'] = move_lines
+            return self.env['stock.picking'].sudo().create(values)
+
+        lines = self.lines.filtered(lambda l: l.product_uom_qty >= 1)
+        if not lines:
+            raise UserError(_('You have no lines with positive quantity.'))
+
+        old_picking = self.stock_picking_id
+        new_picking = old_picking.copy({
+            'move_lines': [],
+            'picking_type_id': self.template_id.out_type_id.id,
+            'state': 'draft',
+            'origin': old_picking.name + ' ' + self.name,
+            'location_id': self.template_id.out_location_id.id,
+            'location_dest_id': self.template_id.out_location_dest_id.id,
+            'carrier_id': self.template_id.out_carrier_id.id if self.template_id.out_carrier_id else 0,
+            'carrier_tracking_ref': False,
+            'carrier_price': False
+        })
+        new_picking.message_post_with_view('mail.message_origin_link',
+                                           values={'self': new_picking, 'origin': self},
+                                           subtype_id=self.env.ref('mail.mt_note').id)
+
+        for l in lines:
+            return_move = old_picking.move_lines.filtered(lambda ol: ol.state == 'done' and ol.product_id.id == l.product_id.id)[0]
+            return_move.copy({
+                'name': self.name + ' OUT: ' + l.product_id.name_get()[0][1],
+                'product_id': l.product_id.id,
+                'product_uom_qty': l.product_uom_qty,
+                'picking_id': new_picking.id,
+                'state': 'draft',
+                'location_id': self.template_id.out_location_id.id,
+                'location_dest_id': self.template_id.out_location_dest_id.id,
+                'picking_type_id': new_picking.picking_type_id.id,
+                'warehouse_id': new_picking.picking_type_id.warehouse_id.id,
+                'origin_returned_move_id': False,
+                'procure_method': self.template_id.out_procure_method,
+                'move_dest_id': False,
+            })
+
+        return new_picking
 
 
 class RMALine(models.Model):

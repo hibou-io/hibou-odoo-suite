@@ -8,6 +8,7 @@ class RMATemplate(models.Model):
     _inherit = 'rma.template'
 
     usage = fields.Selection(selection_add=[('sale_order', 'Sale Order')])
+    in_to_refund_so = fields.Boolean(string='Inbound mark refund SO')
 
 
 class RMA(models.Model):

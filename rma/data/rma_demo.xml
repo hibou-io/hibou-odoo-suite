@@ -9,4 +9,16 @@
         <field name="out_location_dest_id" ref="stock.stock_location_customers"/>
         <field name="out_procure_method">make_to_stock</field>
     </record>
+
+    <record id="template_picking_return" model="rma.template">
+        <field name="name">Picking Return</field>
+        <field name="usage">stock_picking</field>
+        <field name="valid_days" eval="10"/>
+        <field name="create_in_picking" eval="True"/>
+        <field name="in_type_id" ref="stock.picking_type_in"/>
+        <field name="in_location_id" ref="stock.stock_location_customers"/>
+        <field name="in_location_dest_id" ref="stock.stock_location_stock"/>
+        <field name="in_procure_method">make_to_stock</field>
+        <field name="in_require_return" eval="True"/>
+    </record>
 </odoo>
