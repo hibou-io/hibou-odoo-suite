@@ -52,7 +52,7 @@ class RMASaleMakeLines(models.TransientModel):
 class RMASOMakeLinesLine(models.TransientModel):
     _name = 'rma.sale.make.lines.line'
 
-    rma_make_lines_id = fields.Many2one('rma.make.lines')
+    rma_make_lines_id = fields.Many2one('rma.sale.make.lines')
     product_id = fields.Many2one('product.product', string="Product")
     qty_ordered = fields.Float(string='Ordered')
     qty_invoiced = fields.Float(string='Invoiced')

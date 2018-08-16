@@ -16,6 +16,7 @@
     ],
     'data': [
         'security/ir.model.access.csv',
+        'data/rma_demo.xml',
         'views/rma_views.xml',
         'wizard/rma_lines_views.xml',
     ],
