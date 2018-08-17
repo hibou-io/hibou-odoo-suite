@@ -23,7 +23,7 @@
                         <tree editable="bottom" create="false">
                             <field name="wizard_id" invisible="1"/>
                             <field name="partner_id" readonly="1"/>
-                            <field name="invoice_id"/>
+                            <field name="invoice_id" readonly="1" force_save="1"/>
                             <field name="residual" readonly="1" sum="Total Residual"/>
                             <field name="residual_due" readonly="1" sum="Total Due"/>
                             <field name="amount" sum="Total Amount"/>
