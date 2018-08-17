@@ -66,3 +66,21 @@ class TestRMASale(TestRMA):
         pack_opt.qty_done = 1.0
         rma.in_picking_id.do_transfer()
         rma.action_done()
+
+        # Make another RMA for the same sale order
+        rma2 = self.env['rma.rma'].create({
+            'template_id': self.template_sale_return.id,
+            'partner_id': self.partner1.id,
+            'partner_shipping_id': self.partner1.id,
+            'sale_order_id': order.id,
+        })
+        wizard = self.env['rma.sale.make.lines'].create({
+            'rma_id': rma2.id,
+        })
+        wizard.line_ids.product_uom_qty = 1.0
+        wizard.add_lines()
+        self.assertEqual(len(rma2.lines), 1)
+
+        rma2.action_confirm()
+        # Inbound picking is in state confirmed (Waiting Availability) since it reuses sale order line
+        self.assertEqual(rma2.in_picking_id.state, 'confirmed')

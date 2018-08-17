@@ -123,3 +123,24 @@ class TestRMA(common.TransactionCase):
         pack_opt.qty_done = 1.0
         rma.in_picking_id.do_transfer()
         rma.action_done()
+
+        # Make another RMA for the same picking
+        rma2 = self.env['rma.rma'].create({
+            'template_id': self.template_return.id,
+            'partner_id': self.partner1.id,
+            'partner_shipping_id': self.partner1.id,
+            'stock_picking_id': picking_out.id,
+        })
+        wizard = self.env['rma.picking.make.lines'].create({
+            'rma_id': rma2.id,
+        })
+        wizard.line_ids.product_uom_qty = 1.0
+        wizard.add_lines()
+        self.assertEqual(len(rma2.lines), 1)
+
+        rma2.action_confirm()
+        # Inbound picking is in state confirmed (Waiting Availability) since it reuses picking
+        self.assertEqual(rma2.in_picking_id.state, 'confirmed')
+        # RMA cannot be completed because the inbound picking state is confirmed
+        with self.assertRaises(UserError):
+            rma2.action_done()
