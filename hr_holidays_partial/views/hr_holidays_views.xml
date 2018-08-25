@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_holidays_edit_holiday_new_inherit" model="ir.ui.view">
+        <field name="name">hr.holidays.edit.holiday.new.inherit</field>
+        <field name="model">hr.holidays</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/group[1]" position="inside">
+                <field name="days_in_hours" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
