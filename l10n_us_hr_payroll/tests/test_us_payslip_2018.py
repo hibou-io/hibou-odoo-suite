@@ -342,3 +342,27 @@ class TestUsPayslip2018(TestUsPayslip):
         if 'FED_INC_WITHHOLD' in cats:
             fed_inc_withhold = cats['FED_INC_WITHHOLD']
         self.assertPayrollEqual(fed_inc_withhold, 0.0)
+
+    def test_2018_taxes_with_fica_exempt(self):
+        salary = 6000.0
+        schedule_pay = 'bi-weekly'
+        w4_allowances = 2
+        employee = self._createEmployee()
+        contract = self._createContract(employee, salary, schedule_pay, w4_allowances)
+        contract.fica_exempt = True
+
+        self._log('2018 tax w4 exempt payslip:')
+        payslip = self._createPayslip(employee, '2018-01-01', '2018-01-31')
+
+        payslip.compute_sheet()
+
+        cats = self._getCategories(payslip)
+
+        ss_wages = cats.get('FICA_EMP_SS_WAGES', 0.0)
+        med_wages = cats.get('FICA_EMP_M_WAGES', 0.0)
+        ss = cats.get('FICA_EMP_SS', 0.0)
+        med = cats.get('FICA_EMP_M', 0.0)
+        self.assertPayrollEqual(ss_wages, 0.0)
+        self.assertPayrollEqual(med_wages, 0.0)
+        self.assertPayrollEqual(ss, 0.0)
+        self.assertPayrollEqual(med, 0.0)
