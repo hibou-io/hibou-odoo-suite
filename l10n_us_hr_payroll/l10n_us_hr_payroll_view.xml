@@ -20,6 +20,7 @@
                             <group string="Other" name="other">
                                 <field name="external_wages" string="External YTD Wages"/>
                                 <field name="futa_type" string="Unemployment Tax Type (FUTA)"/>
+                                <field name="fica_exempt"/>
                             </group>
                         </group>
                     </page>

@@ -3,7 +3,10 @@
     'author': 'Hibou Corp. <hello@hibou.io>',
     'license': 'AGPL-3',
     'category': 'Human Resources',
-    'depends': ['hr_contract'],
+    'depends': [
+        'hr_payroll',
+        'hr_workers_comp',
+    ],
     'version': '11.0.0.0.0',
     'description': """
 Workers' Compensation Class - Payroll
