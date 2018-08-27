@@ -4,7 +4,7 @@
     'license': 'AGPL-3',
     'category': 'Human Resources',
     'depends': [
-        'hr_contract',
+        'hr_payroll',
         'hr_workers_comp',
     ],
     'version': '11.0.0.0.0',
