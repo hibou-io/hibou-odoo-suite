@@ -9,9 +9,9 @@
     :license: BSD, see LICENSE for more details.
 """
 
-from ConfigParser import NoOptionError, NoSectionError, SafeConfigParser
-from urllib import pathname2url
-from urlparse import urljoin
+from configparser import NoOptionError, NoSectionError, SafeConfigParser
+from urllib.request import pathname2url
+from urllib.parse import urljoin
 import os
 
 

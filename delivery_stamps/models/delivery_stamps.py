@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
 from datetime import date
 from logging import getLogger
-import urllib2
+from urllib.request import urlopen
 from suds import WebFault
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
-from api.config import StampsConfiguration
-from api.services import StampsService
+from .api.config import StampsConfiguration
+from .api.services import StampsService
 
 _logger = getLogger(__name__)
 
@@ -105,16 +104,16 @@ class ProviderStamps(models.Model):
         return ret_val
 
     def _get_order_for_picking(self, picking):
-        if picking.group_id and picking.group_id.procurement_ids and picking.group_id.procurement_ids[0].sale_line_id:
-            return picking.group_id.procurement_ids[0].sale_line_id.order_id
+        if picking.sale_id:
+            return picking.sale_id
         return None
 
     def _get_company_for_order(self, order):
         company = order.company_id
         if order.team_id and order.team_id.subcompany_id:
             company = order.team_id.subcompany_id.company_id
-        elif order.project_id and order.project_id.subcompany_id:
-            company = order.project_id.subcompany_id.company_id
+        elif order.analytic_account_id and order.analytic_account_id.subcompany_id:
+            company = order.analytic_account_id.subcompany_id.company_id
         return company
 
     def _get_company_for_picking(self, picking):
@@ -273,7 +272,7 @@ class ProviderStamps(models.Model):
                     carrier_price += float(label.Rate.Amount)
                     url = label.URL
 
-                    response = urllib2.urlopen(url)
+                    response = urlopen(url)
                     attachment = response.read()
                     picking.message_post(body=body, attachments=[('LabelStamps-%s.%s' % (label.TrackingNumber, self.stamps_image_type), attachment)])
                 shipping_data = {'exact_price': carrier_price, 'tracking_number': ','.join(tracking_numbers)}

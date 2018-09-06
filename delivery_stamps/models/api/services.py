@@ -285,7 +285,7 @@ class XDecimal(XBuiltin):
             value for python.
         """
         if topython:
-            if isinstance(value, basestring) and len(value):
+            if isinstance(value, str) and len(value):
                 ret_val = Decimal(value)
             else:
                 ret_val = None
