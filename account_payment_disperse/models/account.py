@@ -10,9 +10,10 @@ class AccountPayment(models.Model):
             wizard = self.env['account.register.payments'].browse(wizard_id)
             assert wizard
             if wizard.is_manual_disperse:
-                return self._create_payment_entry_manual_disperse(
-                    -sum(wizard.invoice_line_ids.filtered(lambda p: p.partner_id == self.partner_id).mapped('amount')),
-                    wizard)
+                payment_amount = sum(wizard.invoice_line_ids.filtered(lambda p: p.partner_id == self.partner_id).mapped('amount'))
+                if amount < 0:
+                    payment_amount = -payment_amount
+                return self._create_payment_entry_manual_disperse(payment_amount, wizard)
 
         return super(AccountPayment, self)._create_payment_entry(amount)
 

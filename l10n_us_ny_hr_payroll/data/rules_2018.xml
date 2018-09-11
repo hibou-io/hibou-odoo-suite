@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- HR SALARY RULES-->
+<!-- UNEMPLOYMENT -->
+    <record id="hr_payroll_rules_ny_unemp_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_ny_unemp_wages"/>
+        <field name="name">New York Unemployment Insurance Tax - Wages (2018)</field>
+        <field name="code">NY_UNEMP_WAGES_2018</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+ytd = payslip.sum('NY_UNEMP_WAGES_2018', '2018-01-01', '2019-01-01')
+ytd += contract.external_wages
+remaining = 11100.00 - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.GROSS:
+    result = remaining
+else:
+    result = categories.GROSS
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_ny_unemp_2018" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_ny_unemp"/>
+        <field name="name">New York Unemployment Insurance Tax(2018)</field>
+        <field name="code">NY_UNEMP_2018</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = -contract.ny_unemp_rate(2018)
+result = categories.NY_UNEMP_WAGES
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_nydor_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+<!-- RSF -->
+    <record id="hr_payroll_rules_ny_rsf_2018" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_ny_rsf"/>
+        <field name="name">New York Re-employment Service Fund(2018)</field>
+        <field name="code">NY_RSF_2018</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = -contract.ny_rsf_rate(2018)
+result = categories.NY_UNEMP_WAGES
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_nydor_rsf"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+<!-- MCTMT-->
+    <record id="hr_payroll_rules_ny_mctmt_2018" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="category_id" ref="hr_payroll_ny_mctmt"/>
+        <field name="name">New York Metropolitan Commuter Transportation Mobility Tax(2018)</field>
+        <field name="code">NY_MCTMT_2018</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = -contract.ny_mctmt_rate(2018)
+result = categories.MCTMT_WAGES
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_nydor_mctmt"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+<!-- STATE INCOME WITHHOLDING -->
+    <record id="hr_payroll_rules_ny_inc_withhold_2018" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_ny_income_withhold"/>
+        <field name="name">New York Income Withholding</field>
+        <field name="code">NY_INC_WITHHOLD_2018</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+wages = categories.GROSS
+allowances = contract.ny_it2104_allowances
+additional_withholding = contract.ny_additional_withholding
+schedule_pay = contract.schedule_pay
+filing_status = contract.ny_it2104_filing_status
+
+if filing_status == 'exempt':
+    result = 0.0
+
+# Tables are found in https://www.tax.ny.gov/pdf/publications/withholding/nys50_t_nys.pdf
+# Table A - Combined deduction and exemption allowance (Step 1)
+deduction_exemption_table_single = {
+'weekly':       (142.30, 161.55, 180.80, 200.05, 219.30, 238.55, 257.80, 277.05, 296.30, 315.55, 334.80),
+'bi-weekly':    (284.60, 323.10, 361.60, 400.10, 438.60, 477.10, 515.60, 544.10, 592.60, 631.10, 669.60),
+'semi-monthly': (308.35, 350.0, 391.65, 433.30, 474.95, 516.60, 558.25, 599.90, 641.55, 683.20, 724.85),
+'monthly':      (616.70, 700, 783.30, 866.60, 949.90, 1033.20, 1116.50, 1199.80, 1283.10, 1366.40, 1449.70),
+'annually':     (7400, 8400, 9400, 10400, 11400, 12400, 13400, 14400, 15400, 16400, 17400),
+}
+
+deduction_exemption_table_married = {
+'weekly':       (152.90, 172.15, 191.40, 210.65, 229.90, 249.15, 268.40, 287.65, 306.90, 326.15, 345.40),
+'bi-weekly':    (305.80, 344.30, 382.80, 421.30, 459.80, 498.30, 536.80, 575.30, 613.80, 652.30, 690.80),
+'semi-monthly': (331.25, 372.90, 414.55, 456.20, 497.85, 539.50, 581.15, 622.80, 664.45, 706.10, 747.75),
+'monthly':      (662.50, 745.80, 829.10, 912.40, 995.70, 1079.00, 1162.30, 1245.60, 1328.90, 1412.20, 1495.50),
+'annually':     (7950, 8950, 9950, 10950, 11950, 12950, 13950, 14950, 15950, 16950, 17950),
+}
+
+# For greater than 10 exemptions, from tables B and C
+over_10_deduction_table = {
+'weekly':       (142.30, 152.90, 19.25),
+'bi-weekly':    (284.60, 305.80, 38.50),
+'semi-monthly': (308.35, 331.25, 41.65),
+'monthly':      (616.70, 662.50, 83.30),
+'annual':       (7400, 7950, 1000),
+}
+
+if allowances > 10:
+    if filing_status == 'single':
+        wages -= over_10_deduction_table[schedule_pay][0] + over_10_deduction_table[schedule_pay][2] * allowances
+    elif filing_status == 'married':
+        wages -= over_10_deduction_table[schedule_pay][1] + over_10_deduction_table[schedule_pay][2] * allowances
+
+else:
+    if filing_status == 'single':
+        wages -= deduction_exemption_table_single[schedule_pay][allowances]
+    elif filing_status == 'married':
+        wages -= deduction_exemption_table_married[schedule_pay][allowances]
+
+# Tax Rate Tables
+#### SINGLE ####
+if filing_status == 'single':
+    if schedule_pay == 'weekly':
+        tax_rate_table = [
+        (163, 0.0400, 0.0),
+        (225, 0.0450, 6.54),
+        (267, 0.0525, 9.31),
+        (412, 0.0590, 11.54),
+        (1551, 0.0633, 20.04),
+        (1862, 0.0657, 92.17),
+        (2070, 0.0758, 112.58),
+        (3032, 0.0808, 128.38),
+        (4142, 0.0707, 206.08),
+        (5104, 0.0856, 284.60),
+        (20722, 0.0735, 366.90),
+        (21684, 0.5208, 1514.85),
+        (float('inf'), 0.0962, 2015.62),
+        ]
+
+    elif schedule_pay == 'bi-weekly':
+        tax_rate_table = [
+        (327, 0.0400, 0.0),
+        (450, 0.0450, 13.08),
+        (535, 0.0525, 18.62),
+        (823, 0.0590, 23.08),
+        (3102, 0.0633, 40.08),
+        (3723, 0.0657, 184.35),
+        (4140, 0.0758, 225.15),
+        (6063, 0.0808, 256.77),
+        (8285, 0.0707, 412.15),
+        (10208, 0.0856, 569.19),
+        (41444, 0.0735, 733.81),
+        (43367, 0.5208, 3029.69),
+        (float('inf'), 0.0962, 4021.23),
+        ]
+
+    elif schedule_pay == 'semi-monthly':
+        tax_rate_table = [
+        (354, 0.0400, 0.0),
+        (488, 0.0450, 14.17),
+        (579, 0.0525, 20.17),
+        (892, 0.0590, 25.00),
+        (3360, 0.0633, 43.42),
+        (4033, 0.0657, 199.71),
+        (4485, 0.0758, 243.92),
+        (6569, 0.0808, 278.17),
+        (8975, 0.0707, 446.50),
+        (11058, 0.0856, 616.63),
+        (44898, 0.0735, 794.96),
+        (46981, 0.5208, 3282.17),
+        (float('inf'), 0.0962, 4367.17),
+        ]
+
+    elif schedule_pay == 'monthly':
+        tax_rate_table = [
+        (708, 0.0400, 0.0),
+        (975, 0.0450, 28.33),
+        (1158, 0.0525, 40.33),
+        (1783, 0.0590, 50.00),
+        (6721, 0.0633, 86.83),
+        (8067, 0.0657, 399.42),
+        (8971, 0.0758, 487.83),
+        (13138, 0.0808, 556.33),
+        (17950, 0.0707, 893.00),
+        (22117, 0.0856, 1233.25),
+        (89796, 0.0735, 1589.92),
+        (93963, 0.5208, 6564.33),
+        (float('inf'), 0.0962, 8734.33),
+        ]
+
+    elif schedule_pay == 'annually':
+        tax_rate_table = [
+        (8500, 0.0400, 0.0),
+        (11700, 0.0450, 340.00),
+        (13900, 0.0525, 484.00),
+        (21400, 0.0590, 600.00),
+        (80650, 0.0633, 1042.00),
+        (96800, 0.0657, 4793.00),
+        (107650, 0.0758, 5854.00),
+        (157650, 0.0808, 6676.00),
+        (215400, 0.0707, 10716.00),
+        (265400, 0.0856, 14799.00),
+        (1077550, 0.0735, 19079.00),
+        (1127550, 0.5208, 78772.00),
+        (float('inf'), 0.0962, 104812.00),
+        ]
+
+#### MARRIED ####
+elif filing_status == 'married':
+    if schedule_pay == 'weekly':
+        tax_rate_table = [
+        (163, 0.0400, 0.0),
+        (225, 0.0450, 6.54),
+        (267, 0.0525, 9.31),
+        (412, 0.0590, 11.54),
+        (1551, 0.0633, 20.04),
+        (1862, 0.0657, 92.17),
+        (2070, 0.0783, 112.58),
+        (3032, 0.0833, 128.90),
+        (4068, 0.0785, 209.00),
+        (6215, 0.0707, 290.37),
+        (7177, 0.0916, 442.17),
+        (20722, 0.0735, 530.25),
+        (41449, 0.0765, 1525.83),
+        (42411, 0.9454, 3111.42),
+        (float('inf'), 0.0962, 4020.46),
+        ]
+
+    elif schedule_pay == 'bi-weekly':
+        tax_rate_table = [
+        (327, 0.0400, 0.0),
+        (450, 0.0450, 13.08),
+        (535, 0.0525, 18.62),
+        (823, 0.0590, 23.08),
+        (3102, 0.0633, 40.08),
+        (3723, 0.0657, 184.35),
+        (4140, 0.0783, 225.15),
+        (6063, 0.0833, 257.81),
+        (8137, 0.0785, 418.00),
+        (12431, 0.0707, 580.73),
+        (14354, 0.0916, 884.35),
+        (41444, 0.0735, 1060.50),
+        (82898, 0.0765, 3051.65),
+        (84821, 0.9454, 6222.85),
+        (float('inf'), 0.0962, 8040.92),
+        ]
+
+    elif schedule_pay == 'semi-monthly':
+        tax_rate_table = [
+        (354, 0.0400, 0.0),
+        (488, 0.0450, 14.17),
+        (579, 0.0525, 20.17),
+        (892, 0.0590, 25.00),
+        (3360, 0.0633, 43.42),
+        (4033, 0.0657, 199.71),
+        (4485, 0.0783, 243.92),
+        (6569, 0.0833, 279.29),
+        (8815, 0.0785, 452.83),
+        (13476, 0.0707, 629.13),
+        (15550, 0.0916, 958.04),
+        (44898, 0.0735, 1148.88),
+        (89806, 0.0765, 3305.96),
+        (91890, 0.9454, 6741.42),
+        (float('inf'), 0.0962, 8711.00),
+        ]
+
+    elif schedule_pay == 'monthly':
+        tax_rate_table = [
+        (708, 0.0400, 0.0),
+        (975, 0.0450, 28.33),
+        (1158, 0.0525, 40.33),
+        (1783, 0.0590, 50.00),
+        (6721, 0.0633, 86.83),
+        (8067, 0.0657, 399.42),
+        (8971, 0.0783, 487.83),
+        (13138, 0.0833, 558.58),
+        (17629, 0.0785, 905.67),
+        (26933, 0.0707, 1258.25),
+        (31100, 0.0916, 1916.08),
+        (89796, 0.0735, 2297.75),
+        (179613, 0.0765, 6611.92),
+        (183779, 0.9454, 13482.83),
+        (float('inf'), 0.0962, 17422.00),
+        ]
+
+    elif schedule_pay == 'annually':
+        tax_rate_table = [
+        (8500, 0.0400, 0.0),
+        (11700, 0.0450, 340.00),
+        (13900, 0.0525, 484.00),
+        (21400, 0.0590, 600.00),
+        (80650, 0.0633, 1042.00),
+        (96800, 0.0657, 4793.00),
+        (107650, 0.0783, 5854.00),
+        (157650, 0.0833, 6703.00),
+        (211550, 0.0785, 10868.00),
+        (323200, 0.0707, 15099.00),
+        (373200, 0.0916, 22993.00),
+        (1077550, 0.0735, 27573.00),
+        (2155350, 0.0765, 79343.00),
+        (2205350, 0.9454, 161794.00),
+        (float('inf'), 0.0962, 209064.00),
+        ]
+
+over = 0.0
+tax = 0.0
+for row in tax_rate_table:
+    if wages &lt;= row[0]:
+        tax = ((wages - over) * row[1]) + row[2]
+        break
+    over = row[0]
+
+tax += additional_withholding
+result = -tax
+        </field>
+        <field name="register_id" ref="contrib_register_nydor_withhold"/>
+    </record>
+
+    </data>
+</odoo>

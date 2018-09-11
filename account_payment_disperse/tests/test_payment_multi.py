@@ -122,3 +122,35 @@ class PaymentMultiTest(TestPayment):
 
         self.assertEqual(inv_1.residual_signed, 0.0)
         self.assertEqual(inv_2.residual_signed, 200.0)
+
+    def test_vendor_multiple_payments_write_off(self):
+        inv_1 = self.create_invoice(amount=100, type='in_invoice', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        inv_2 = self.create_invoice(amount=500, type='in_invoice', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        ids = [inv_1.id, inv_2.id]
+        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'journal_id': self.bank_journal_euro.id,
+            'payment_method_id': self.payment_method_manual_out.id,
+        })
+        register_payments.amount = 400.0
+        register_payments.is_manual_disperse = True
+        register_payments.writeoff_journal_id = inv_1.journal_id
+
+        with self.assertRaises(ValidationError):
+            register_payments.create_payments()
+
+        for line in register_payments.invoice_line_ids:
+            if line.invoice_id == inv_1:
+                line.amount = 100.0
+            if line.invoice_id == inv_2:
+                line.amount = 300.0
+                line.writeoff_acc_id = self.account_revenue
+
+        register_payments.create_payments()
+
+        payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
+        self.assertEqual(len(payment_ids), 1, 'Need only one payment.')
+        self.assertEqual(payment_ids.amount, 400.0)
+
+        self.assertEqual(inv_1.residual_signed, 0.0)
+        self.assertEqual(inv_2.residual_signed, 0.0)

@@ -53,17 +53,17 @@ class AccountRegisterPaymentsInvoiceLine(models.TransientModel):
 
     wizard_id = fields.Many2one('account.register.payments')
     invoice_id = fields.Many2one('account.invoice', string='Invoice', required=True)
-    partner_id = fields.Many2one('res.partner', string='Partner', compute='_compute_balances')
-    residual = fields.Float(string='Remaining', compute='_compute_balances')
-    residual_due = fields.Float(string='Due', compute='_compute_balances')
+    partner_id = fields.Many2one('res.partner', string='Partner', compute='_compute_balances', compute_sudo=True)
+    residual = fields.Float(string='Remaining', compute='_compute_balances', compute_sudo=True)
+    residual_due = fields.Float(string='Due', compute='_compute_balances', compute_sudo=True)
     difference = fields.Float(string='Difference', default=0.0)
     amount = fields.Float(string='Amount')
     writeoff_acc_id = fields.Many2one('account.account', string='Write-off Account')
 
-    @api.depends('invoice_id.residual', 'wizard_id.due_date_cutoff', 'invoice_id.partner_id')
+    @api.depends('invoice_id', 'wizard_id.due_date_cutoff', 'invoice_id.partner_id')
     def _compute_balances(self):
         for line in self:
-            line.residual = line.invoice_id.residual
+            residual = line.invoice_id.residual
 
             cutoff_date = line.wizard_id.due_date_cutoff
             total_amount = 0.0
@@ -75,10 +75,14 @@ class AccountRegisterPaymentsInvoiceLine(models.TransientModel):
                     )):
                 amount = abs(move_line.debit - move_line.credit)
                 total_amount += amount
-                for partial_line in (move_line.matched_debit_ids + move_line.matched_credit_ids):
+                for partial_line in move_line.matched_debit_ids:
                     total_reconciled += partial_line.amount
+                for partial_line in move_line.matched_credit_ids:
+                    total_reconciled += partial_line.amount
+
+            line.residual = residual
             line.residual_due = total_amount - total_reconciled
-            line.difference = line.residual - line.amount
+            line.difference = residual - (line.amount or 0.0)
             line.partner_id = line.invoice_id.partner_id
 
     @api.onchange('amount')
