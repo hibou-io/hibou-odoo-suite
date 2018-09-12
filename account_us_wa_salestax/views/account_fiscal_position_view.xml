@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_position_us_wa_inherit_from_view" model="ir.ui.view">
+        <field name="name">account.fiscal.position.form.inherit</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="inherit_id" ref="account.view_account_position_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="is_us_wa"/>
+                <field name="wa_base_tax_id" attrs="{'invisible': [('is_us_wa', '=', False)]}" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_tax_form" model="ir.ui.view">
+        <field name="name">account.tax.form.inherit</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description']" position="after">
+                <field name="wa_location_code" />
+                <field name="wa_location_zips" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
