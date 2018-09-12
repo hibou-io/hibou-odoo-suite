@@ -44,6 +44,7 @@ class AddProductionItem(models.TransientModel):
 
             move = item.production_id._generate_raw_move(bom_line, {'qty': item.product_qty, 'parent_line': None})
             item.production_id._adjust_procure_method()
+            move.write({'unit_factor': 0.0})
             move._action_confirm()
 
         return True
