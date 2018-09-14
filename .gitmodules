@@ -29,3 +29,9 @@
 [submodule "external/hibou-shipbox"]
 	path = external/hibou-shipbox
 	url = https://github.com/hibou-io/shipbox.git
+[submodule "external/hibou-oca/purchase-workflow"]
+	path = external/hibou-oca/purchase-workflow
+	url = https://github.com/hibou-io/oca-purchase-workflow.git
+[submodule "external/hibou-oca/stock-logistics-workflow"]
+	path = external/hibou-oca/stock-logistics-workflow
+	url = https://github.com/hibou-io/oca-stock-logistics-workflow.git
