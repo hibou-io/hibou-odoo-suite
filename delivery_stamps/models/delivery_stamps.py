@@ -169,11 +169,6 @@ class ProviderStamps(models.Model):
         service = self._get_stamps_service()
 
         for order in orders:
-            # has product with usps_exclude
-            if sum(1 for l in order.order_line if l.product_id.usps_exclude):
-                res.append(None)
-                continue
-
             shipping = self._get_stamps_shipping_for_order(service, order, date_planned)
             rates = service.get_rates(shipping)
             if rates and len(rates) >= 1:
