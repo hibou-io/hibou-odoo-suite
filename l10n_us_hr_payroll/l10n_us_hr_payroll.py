@@ -26,6 +26,8 @@ class USHrContract(models.Model):
 
     external_wages = fields.Float(string='External Existing Wages', default=0.0)
 
+    fica_exempt = fields.Boolean(string='FICA Exempt', help="Exempt from Social Security and "
+                                                            "Medicare e.g. F1 Student Visa")
     futa_type = fields.Selection([
         (FUTA_TYPE_EXEMPT, 'Exempt (0%)'),
         (FUTA_TYPE_NORMAL, 'Normal Net Rate (0.6%)'),

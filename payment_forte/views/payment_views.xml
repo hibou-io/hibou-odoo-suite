@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="acquirer_form_forte" model="ir.ui.view">
+            <field name="name">acquirer.form.forte</field>
+            <field name="model">payment.acquirer</field>
+            <field name="inherit_id" ref="payment.acquirer_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//group[@name="acquirer"]' position='after'>
+                    <group attrs="{'invisible': [('provider', '!=', 'forte')]}">
+                        <field name="forte_organization_id"/>
+                        <field name="forte_location_id"/>
+                        <field name="forte_access_id"/>
+                        <field name="forte_secure_key" password="True"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="token_form_forte" model="ir.ui.view">
+            <field name='name'>payment.token.form</field>
+            <field name='model'>payment.token</field>
+            <field name="inherit_id" ref="payment.payment_token_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr='//field[@name="acquirer_ref"]' position='after'>
+                    <field name="forte_account_type" attrs="{'invisible':[('provider', '!=', 'forte')]}"/>
+                    <field name="forte_routing_number" attrs="{'invisible':[('provider', '!=', 'forte')]}"/>
+                    <field name="forte_account_number" attrs="{'invisible':[('provider', '!=', 'forte')]}"/>
+                    <field name="forte_account_holder" attrs="{'invisible':[('provider', '!=', 'forte')]}"/>
+                    <field name="provider" invisible='1'/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

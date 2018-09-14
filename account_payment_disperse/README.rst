@@ -27,11 +27,6 @@ Main Features
     :width: 988
     :align: left
 
-=============
-Known Issues
-=============
-
-* It is technically possible, but *not* recommended, to change which invoices are in the wizard.  You've been warned.
 
 =======
 License

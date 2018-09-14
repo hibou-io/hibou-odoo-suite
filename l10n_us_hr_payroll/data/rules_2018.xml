@@ -10,7 +10,7 @@
         <field name="name">FICA Employee Social Security Wages (2018)</field>
         <field name="code">FICA_EMP_SS_WAGES_2018</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018') and not contract.fica_exempt</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 ###
@@ -32,7 +32,7 @@ else:
         <field name="name">FICA Employee Medicare Wages (2018)</field>
         <field name="code">FICA_EMP_M_WAGES_2018</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018') and not contract.fica_exempt</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result = categories.GROSS</field>
         <field name="appears_on_payslip" eval="False"/>
@@ -43,7 +43,7 @@ else:
         <field name="name">FICA Employee Medicare Additional Wages (2018)</field>
         <field name="code">FICA_EMP_M_ADD_WAGES_2018</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="condition_python">result = (payslip.date_to[:4] == '2018') and not contract.fica_exempt</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 ###

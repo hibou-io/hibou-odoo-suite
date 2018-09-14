@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+<!-- CONTRIBUTION REGISTERS -->
+        <record id="res_partner_cador_uit" model="res.partner">
+            <field name="name">California Department of Taxation - Unemployment Insurance Tax</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_cador_withhold" model="res.partner">
+            <field name="name">California Department of Taxation - Income Tax Withholding</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_cador_ett" model="res.partner">
+            <field name="name">California Department of Taxation - Employment Training Tax</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+            <record id="res_partner_cador_sdi" model="res.partner">
+            <field name="name">California Department of Taxation - State Disability Insurance</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+
+        <record id="contrib_register_cador_uit" model="hr.contribution.register">
+            <field name="name">California Unemployment Insurance Tax</field>
+            <field name="note">California Department of Taxation - Unemployment Insurance Tax</field>
+            <field name="partner_id" ref="res_partner_cador_uit"/>
+        </record>
+        <record id="contrib_register_cador_withhold" model="hr.contribution.register">
+            <field name="name">California Income Tax Withholding</field>
+            <field name="note">California Department of Taxation - Income Tax Withholding</field>
+            <field name="partner_id" ref="res_partner_cador_withhold"/>
+        </record>
+        <record id="contrib_register_cador_ett" model="hr.contribution.register">
+            <field name="name">Employment Training Tax</field>
+            <field name="note">California Department of Taxation - Employment Training Tax</field>
+            <field name="partner_id" ref="res_partner_cador_ett"/>
+        </record>
+            <record id="contrib_register_cador_sdi" model="hr.contribution.register">
+            <field name="name">State Disability Insurance</field>
+            <field name="note">California Department of Taxation - State Disability Insurance</field>
+            <field name="partner_id" ref="res_partner_cador_sdi"/>
+        </record>
+
+
+    <!-- HR SALARY RULE CATEGORIES-->
+        <record id="hr_payroll_ca_uit_wages" model="hr.salary.rule.category">
+            <field name="name">California Unemployment Insurance Tax  - Wages</field>
+            <field name="code">CA_UIT_WAGES</field>
+        </record>
+
+        <record id="hr_payroll_ca_uit" model="hr.salary.rule.category">
+            <field name="name">California Unemployment Insurance Tax</field>
+            <field name="code">CA_UIT</field>
+            <field name="parent_id" ref="hr_payroll.COMP"/>
+        </record>
+
+        <record id="hr_payroll_ca_ett_wages" model="hr.salary.rule.category">
+            <field name="name">California Employee Training Tax  - Wages</field>
+            <field name="code">CA_ETT_WAGES</field>
+        </record>
+
+        <record id="hr_payroll_ca_ett" model="hr.salary.rule.category">
+            <field name="name">California Employee Training Tax</field>
+            <field name="code">CA_ETT</field>
+            <field name="parent_id" ref="hr_payroll.COMP"/>
+        </record>
+
+        <record id="hr_payroll_ca_sdi_wages" model="hr.salary.rule.category">
+            <field name="name">California State Disability Insurance  - Wages</field>
+            <field name="code">CA_SDI_WAGES</field>
+        </record>
+
+        <record id="hr_payroll_ca_sdi" model="hr.salary.rule.category">
+            <field name="name">California State Disability Insurance</field>
+            <field name="code">CA_SDI</field>
+            <field name="parent_id" ref="hr_payroll.DED"/>
+        </record>
+
+        <record id="hr_payroll_ca_income_withhold" model="hr.salary.rule.category">
+            <field name="name">California Income Withholding</field>
+            <field name="code">CA_WITHHOLD</field>
+            <field name="parent_id" ref="hr_payroll.DED"/>
+        </record>
+    </data>
+</odoo>

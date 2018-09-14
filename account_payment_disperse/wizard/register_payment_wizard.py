@@ -60,11 +60,10 @@ class AccountRegisterPaymentsInvoiceLine(models.TransientModel):
     amount = fields.Float(string='Amount')
     writeoff_acc_id = fields.Many2one('account.account', string='Write-off Account')
 
-    @api.depends('invoice_id.residual', 'wizard_id.due_date_cutoff', 'invoice_id.partner_id')
+    @api.depends('invoice_id', 'wizard_id.due_date_cutoff', 'invoice_id.partner_id')
     def _compute_balances(self):
-        sudo_self = self.sudo()
-        for line in sudo_self:
-            line.residual = line.invoice_id.residual
+        for line in self:
+            residual = line.invoice_id.residual
 
             cutoff_date = line.wizard_id.due_date_cutoff
             total_amount = 0.0
@@ -76,14 +75,17 @@ class AccountRegisterPaymentsInvoiceLine(models.TransientModel):
                     )):
                 amount = abs(move_line.debit - move_line.credit)
                 total_amount += amount
-                for partial_line in (move_line.matched_debit_ids + move_line.matched_credit_ids):
+                for partial_line in move_line.matched_debit_ids:
                     total_reconciled += partial_line.amount
+                for partial_line in move_line.matched_credit_ids:
+                    total_reconciled += partial_line.amount
+
+            line.residual = residual
             line.residual_due = total_amount - total_reconciled
-            line.difference = line.residual - line.amount
+            line.difference = residual - (line.amount or 0.0)
             line.partner_id = line.invoice_id.partner_id
 
     @api.onchange('amount')
     def _onchange_amount(self):
-        sudo_self = self.sudo()
-        for line in sudo_self:
+        for line in self:
             line.difference = line.residual - line.amount
