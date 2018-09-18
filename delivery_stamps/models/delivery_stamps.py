@@ -193,6 +193,30 @@ class ProviderStamps(models.Model):
             res = res + [(0.0, 0, None)]
         return res
 
+    def stamps_rate_shipment(self, order):
+        self.ensure_one()
+        result = {
+            'success': False,
+            'price': 0.0,
+            'error_message': 'Error Retrieving Response from Stamps.com',
+            'warning_message': False
+        }
+        date_planned = None
+        if self.env.context.get('date_planned'):
+            date_planned = self.env.context.get('date_planned')
+        rate = self.stamps_get_shipping_price_for_plan(order, date_planned)
+        if rate:
+            price, transit_time, date_delivered = rate[0]
+            result.update({
+                'success': True,
+                'price': price,
+                'error_message': False,
+                'transit_time': transit_time,
+                'date_delivered': date_delivered,
+            })
+            return result
+        return result
+
     def stamps_send_shipping(self, pickings):
         res = []
         service = self._get_stamps_service()
