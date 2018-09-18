@@ -51,7 +51,6 @@ class FakePartner():
         self.partner_longitude = 0.0
         self.is_company = False
         for attr, value in kwargs.items():
-            _logger.warn('  ' + str(attr) + ': ' + str(value))
             setattr(self, attr, value)
 
     @property
@@ -220,6 +219,8 @@ class SaleOrderMakePlan(models.TransientModel):
         planner = super(SaleOrderMakePlan, self).create(values)
 
         for option_vals in self.generate_order_options(planner.order_id):
+            if type(option_vals) != dict:
+                continue
             option_vals['plan_id'] = planner.id
             planner.planning_option_ids |= self.env['sale.order.planning.option'].create(option_vals)
 
@@ -570,82 +571,6 @@ class SaleOrderMakePlan(models.TransientModel):
         order_fake.warehouse_id = self.get_warehouses(warehouse_id=base_option['warehouse_id'])
         return base_option
 
-
-
-        # Collapse by warehouse_id
-
-
-
-
-        # warehouses = self.get_warehouses()
-        # product_stock = self._fetch_product_stock(warehouses, products)
-        # sub_options = {}
-        # wh_date_planning = {}
-        #
-        # p_len = len(products)
-        # full_candidates = set()
-        # partial_candidates = set()
-        # for wh_id, stock in product_stock.items():
-        #     available = sum(1 for p_id, p_vals in stock.items() if self._is_in_stock(p_vals, buy_qty[p_id]))
-        #     if available == p_len:
-        #         full_candidates.add(wh_id)
-        #     elif available > 0:
-        #         partial_candidates.add(wh_id)
-        #
-        # if full_candidates:
-        #     if len(full_candidates) == 1:
-        #         warehouse = warehouses.filtered(lambda wh: wh.id in full_candidates)
-        #         date_planned = self._next_warehouse_shipping_date(warehouse)
-        #         order_fake.warehouse_id = warehouse
-        #         return {'warehouse_id': warehouse.id, 'date_planned': date_planned}
-        #
-        #     warehouse = self._find_closest_warehouse_by_partner(
-        #         warehouses.filtered(lambda wh: wh.id in full_candidates), order_fake.partner_shipping_id)
-        #     date_planned = self._next_warehouse_shipping_date(warehouse)
-        #     order_fake.warehouse_id = warehouse
-        #     return {'warehouse_id': warehouse.id, 'date_planned': date_planned}
-        #
-        # if partial_candidates:
-        #     if len(partial_candidates) == 1:
-        #         warehouse = warehouses.filtered(lambda wh: wh.id in partial_candidates)
-        #         order_fake.warehouse_id = warehouse
-        #         return {'warehouse_id': warehouse.id}
-        #
-        #     sorted_warehouses = self._sort_warehouses_by_partner(warehouses.filtered(lambda wh: wh.id in partial_candidates), order_fake.partner_shipping_id)
-        #     primary_wh = sorted_warehouses[0] #partial_candidates means there is at least one warehouse
-        #     primary_wh_date_planned = self._next_warehouse_shipping_date(primary_wh)
-        #     wh_date_planning[primary_wh.id] = primary_wh_date_planned
-        #     for wh in sorted_warehouses:
-        #         if not buy_qty:
-        #             continue
-        #         stock = product_stock[wh.id]
-        #         for p_id, p_vals in stock.items():
-        #             if p_id in buy_qty and self._is_in_stock(p_vals, buy_qty[p_id]):
-        #                 if wh.id not in sub_options:
-        #                     sub_options[wh.id] = {
-        #                         'date_planned': self._next_warehouse_shipping_date(wh),
-        #                         'product_ids': [],
-        #                         'product_skus': [],
-        #                     }
-        #                 sub_options[wh.id]['product_ids'].append(p_id)
-        #                 sub_options[wh.id]['product_skus'].append(p_vals['sku'])
-        #                 del buy_qty[p_id]
-        #
-        #     if not buy_qty:
-        #         # item_details can fulfil all items.
-        #         # this is good!!
-        #         order_fake.warehouse_id = primary_wh
-        #         return {'warehouse_id': primary_wh.id, 'date_planned': primary_wh_date_planned, 'sub_options': sub_options}
-        #
-        #     # warehouses cannot fulfil all requested items!!
-        #     order_fake.warehouse_id = primary_wh
-        #     return {'warehouse_id': primary_wh.id}
-        #
-        # # nobody has stock!
-        # primary_wh = self._find_closest_warehouse_by_partner(warehouses, order_fake.partner_shipping_id)
-        # order_fake.warehouse_id = primary_wh
-        # return {'warehouse_id': primary_wh.id}
-
     def _is_in_stock(self, p_stock, buy_qty):
         return p_stock['real_qty_available'] >= buy_qty
 
@@ -700,6 +625,7 @@ class SaleOrderMakePlan(models.TransientModel):
             if policy and policy.carrier_filter_id:
                 domain.extend(tools.safe_eval(policy.carrier_filter_id.domain))
         carriers = self.get_shipping_carriers(base_option.get('carrier_id'), domain=domain)
+        _logger.info('generate_shipping_options:: base_optoin: ' + str(base_option) + ' order_fake: ' + str(order_fake) + ' carriers: ' + str(carriers))
 
         if not carriers:
             return base_option
@@ -711,8 +637,9 @@ class SaleOrderMakePlan(models.TransientModel):
                 option = self._generate_shipping_carrier_option(base_option, order_fake, carrier)
                 if option:
                     options.append(option)
-
-            return options
+            if options:
+                return options
+            return [base_option]
         else:
             warehouses = self.get_warehouses()
             original_order_fake_warehouse_id = order_fake.warehouse_id
@@ -776,14 +703,33 @@ class SaleOrderMakePlan(models.TransientModel):
 
         # this logic comes from "delivery.models.sale_order.SaleOrder"
         try:
+            result = None
             date_delivered = None
             transit_days = 0
             if carrier.delivery_type not in ['fixed', 'base_on_rule']:
-                result = carrier.get_shipping_price_for_plan(order_fake, base_option.get('date_planned'))
-                if result:
+                if hasattr(carrier, 'rate_shipment_date_planned'):
+                    # New API
+                    result = carrier.rate_shipment_date_planned(order_fake, base_option.get('date_planned'))
+                    if result:
+                        if not result.get('success'):
+                            return None
+                        price_unit, transit_days, date_delivered = result['price'], result.get('transit_days'), result.get('date_delivered')
+                elif hasattr(carrier, 'get_shipping_price_for_plan'):
+                    # Old API
+                    result = carrier.get_shipping_price_for_plan(order_fake, base_option.get('date_planned'))
+                if result and isinstance(result, list):
                     price_unit, transit_days, date_delivered = result[0]
-                else:
-                    price_unit = carrier.get_shipping_price_from_so(order_fake)[0]
+                elif not result:
+                    rate = carrier.rate_shipment(order_fake)
+                    if rate and rate.get('success'):
+                        price_unit = rate['price']
+                        if rate.get('transit_days'):
+                            transit_days = rate.get('transit_days')
+                        if rate.get('date_delivered'):
+                            date_delivered = rate.get('date_delivered')
+                    else:
+                        _logger.warn('returning None because carrier: ' + str(carrier))
+                        return None
             else:
                 carrier = carrier.verify_carrier(order_fake.partner_shipping_id)
                 if not carrier:
@@ -802,13 +748,13 @@ class SaleOrderMakePlan(models.TransientModel):
             option = deepcopy(base_option)
             option['carrier_id'] = carrier.id
             option['shipping_price'] = final_price
-            option['requested_date'] = fields.Datetime.to_string(date_delivered) if date_delivered and isinstance(date_delivered, datetime) else date_delivered
+            option['requested_date'] = fields.Datetime.to_string(date_delivered) if (date_delivered and isinstance(date_delivered, datetime)) else date_delivered
             option['transit_days'] = transit_days
             return option
         except Exception as e:
-            # _logger.warn("Exception collecting carrier rates: " + str(e))
+            _logger.info("Exception collecting carrier rates: " + str(e))
+            # Want to see more?
             # _logger.exception(e)
-            pass
 
         return None
 
