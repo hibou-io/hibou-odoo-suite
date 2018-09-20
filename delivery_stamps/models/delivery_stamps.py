@@ -36,6 +36,7 @@ class ProductPackaging(models.Model):
     _inherit = 'product.packaging'
 
     package_carrier_type = fields.Selection(selection_add=[('stamps', 'Stamps.com')])
+    stamps_cubic_pricing = fields.Boolean(string="Stamps.com Use Cubic Pricing")
 
 
 class ProviderStamps(models.Model):
@@ -71,6 +72,18 @@ class ProviderStamps(models.Model):
         if not package:
             return self.stamps_default_packaging_id.shipper_package_code
         return package.packaging_id.shipper_package_code if package.packaging_id.shipper_package_code in STAMPS_PACKAGE_TYPES else 'Package'
+
+    def _stamps_package_is_cubic_pricing(self, package=None):
+        if not package:
+            return self.stamps_default_packaging_id.stamps_cubic_pricing
+        return package.packaging_id.stamps_cubic_pricing
+
+    def _stamps_package_dimensions(self, package=None):
+        if not package:
+            package_type = self.stamps_default_packaging_id
+        else:
+            package_type = package.packaging_id
+        return package_type.length, package_type.width, package_type.height
 
     def _get_stamps_service(self):
         sudoself = self.sudo()
@@ -136,23 +149,33 @@ class ProviderStamps(models.Model):
 
         for package in picking.package_ids:
             weight = self._stamps_convert_weight(package.shipping_weight)
+            l, w, h = self._stamps_package_dimensions(package=package)
 
             ret_val = service.create_shipping()
             ret_val.ShipDate = date.today().isoformat()
             ret_val.FromZIPCode = from_partner.zip
             ret_val.ToZIPCode = to_partner.zip
             ret_val.PackageType = self._stamps_package_type(package=package)
+            ret_val.CubicPricing = self._stamps_package_is_cubic_pricing(package=package)
+            ret_val.Length = l
+            ret_val.Width = w
+            ret_val.Height = h
             ret_val.ServiceType = self.stamps_service_type
             ret_val.WeightLb = weight
             ret.append((package.name + ret_val.ShipDate + str(ret_val.WeightLb), ret_val))
         if not ret:
             weight = self._stamps_convert_weight(picking.shipping_weight)
+            l, w, h = self._stamps_package_dimensions()
 
             ret_val = service.create_shipping()
             ret_val.ShipDate = date.today().isoformat()
             ret_val.FromZIPCode = from_partner.zip
             ret_val.ToZIPCode = to_partner.zip
             ret_val.PackageType = self._stamps_package_type()
+            ret_val.CubicPricing = self._stamps_package_is_cubic_pricing()
+            ret_val.Length = l
+            ret_val.Width = w
+            ret_val.Height = h
             ret_val.ServiceType = self.stamps_service_type
             ret_val.WeightLb = weight
             ret.append((picking.name + ret_val.ShipDate + str(ret_val.WeightLb), ret_val))
@@ -168,11 +191,6 @@ class ProviderStamps(models.Model):
         service = self._get_stamps_service()
 
         for order in orders:
-            # has product with usps_exclude
-            if sum(1 for l in order.order_line if l.product_id.usps_exclude):
-                res.append(None)
-                continue
-
             shipping = self._get_stamps_shipping_for_order(service, order, date_planned)
             rates = service.get_rates(shipping)
             if rates and len(rates) >= 1:
@@ -197,6 +215,30 @@ class ProviderStamps(models.Model):
                 continue
             res = res + [(0.0, 0, None)]
         return res
+
+    def stamps_rate_shipment(self, order):
+        self.ensure_one()
+        result = {
+            'success': False,
+            'price': 0.0,
+            'error_message': 'Error Retrieving Response from Stamps.com',
+            'warning_message': False
+        }
+        date_planned = None
+        if self.env.context.get('date_planned'):
+            date_planned = self.env.context.get('date_planned')
+        rate = self.stamps_get_shipping_price_for_plan(order, date_planned)
+        if rate:
+            price, transit_time, date_delivered = rate[0]
+            result.update({
+                'success': True,
+                'price': price,
+                'error_message': False,
+                'transit_time': transit_time,
+                'date_delivered': date_delivered,
+            })
+            return result
+        return result
 
     def stamps_send_shipping(self, pickings):
         res = []

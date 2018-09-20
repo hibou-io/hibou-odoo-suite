@@ -39,10 +39,11 @@ class HrPayrollRegisterPaymentWizard(models.TransientModel):
         context = dict(self._context or {})
         active_ids = context.get('active_ids', [])
         payslip = self.env['hr.payslip'].browse(active_ids)
-        amount = 0.0
-        for line in payslip.move_id.line_ids:
-            if line.account_id.internal_type == 'payable' and line.partner_id.id == payslip.employee_id.address_home_id.id:
-                amount += abs(line.balance)
+        amount = -sum(payslip.move_id.line_ids.filtered(lambda l: (
+                l.account_id.internal_type == 'payable'
+                and l.partner_id.id == payslip.employee_id.address_home_id.id
+                and not l.reconciled)
+                                                        ).mapped('balance'))
         return amount
 
     @api.model
@@ -142,7 +143,7 @@ class HrPayrollRegisterPaymentWizard(models.TransientModel):
             if line.account_id.internal_type == 'payable':
                 account_move_lines_to_reconcile |= line
         for line in payslip.move_id.line_ids:
-            if line.account_id.internal_type == 'payable' and line.partner_id.id == self.partner_id.id:
+            if line.account_id.internal_type == 'payable' and line.partner_id.id == self.partner_id.id and not line.reconciled:
                 account_move_lines_to_reconcile |= line
 
         account_move_lines_to_reconcile.reconcile()

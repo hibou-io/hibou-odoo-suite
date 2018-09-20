@@ -2,6 +2,7 @@ from math import sin, cos, sqrt, atan2, radians
 from json import dumps, loads
 from copy import deepcopy
 from datetime import datetime
+from collections import defaultdict
 from logging import getLogger
 
 _logger = getLogger(__name__)
@@ -50,7 +51,6 @@ class FakePartner():
         self.partner_longitude = 0.0
         self.is_company = False
         for attr, value in kwargs.items():
-            _logger.warn('  ' + str(attr) + ': ' + str(value))
             setattr(self, attr, value)
 
     @property
@@ -219,6 +219,8 @@ class SaleOrderMakePlan(models.TransientModel):
         planner = super(SaleOrderMakePlan, self).create(values)
 
         for option_vals in self.generate_order_options(planner.order_id):
+            if type(option_vals) != dict:
+                continue
             option_vals['plan_id'] = planner.id
             planner.planning_option_ids |= self.env['sale.order.planning.option'].create(option_vals)
 
@@ -255,59 +257,70 @@ class SaleOrderMakePlan(models.TransientModel):
 
         return options
 
-    def get_warehouses(self, warehouse_id=None):
+    def get_warehouses(self, warehouse_id=None, domain=None):
         warehouse = self.env['stock.warehouse'].sudo()
         if warehouse_id:
-            return warehouse.search([('id', '=', warehouse_id)])
+            return warehouse.browse(warehouse_id)
+
+        if domain:
+            if not isinstance(domain, (list, tuple)):
+                domain = tools.safe_eval(domain)
+        else:
+            domain = []
 
         if self.env.context.get('warehouse_domain'):
-            #potential bug here if this is textual
-            return warehouse.search(self.env.context.get('warehouse_domain'))
+            domain.extend(self.env.context.get('warehouse_domain'))
 
         irconfig_parameter = self.env['ir.config_parameter'].sudo()
         if irconfig_parameter.get_param('sale.order.planner.warehouse_domain'):
-            domain = tools.safe_eval(irconfig_parameter.get_param('sale.order.planner.warehouse_domain'))
-            return warehouse.search(domain)
+            domain.extend(tools.safe_eval(irconfig_parameter.get_param('sale.order.planner.warehouse_domain')))
 
-        return warehouse.search([])
+        return warehouse.search(domain)
 
-    def get_shipping_carriers(self, carrier_id=None):
+    def get_shipping_carriers(self, carrier_id=None, domain=None):
         Carrier = self.env['delivery.carrier'].sudo()
         if carrier_id:
-            return Carrier.search([('id', '=', carrier_id)])
+            return Carrier.browse(carrier_id)
+
+        if domain:
+            if not isinstance(domain, (list, tuple)):
+                domain = tools.safe_eval(domain)
+        else:
+            domain = []
 
         if self.env.context.get('carrier_domain'):
             # potential bug here if this is textual
-            return Carrier.search(self.env.context.get('carrier_domain'))
+            domain.extend(self.env.context.get('carrier_domain'))
 
         irconfig_parameter = self.env['ir.config_parameter'].sudo()
         if irconfig_parameter.get_param('sale.order.planner.carrier_domain'):
-            domain = tools.safe_eval(irconfig_parameter.get_param('sale.order.planner.carrier_domain'))
-            return Carrier.search(domain)
+            domain.extend(tools.safe_eval(irconfig_parameter.get_param('sale.order.planner.carrier_domain')))
 
-        return Carrier.search([])
+        return Carrier.search(domain)
 
-    def generate_base_option(self, order_fake):
-        product_lines = list(filter(lambda line: line.product_id.type == 'product', order_fake.order_line))
-        if not product_lines:
-            return {}
+    def _generate_base_option(self, order_fake, policy_group):
+        policy = False
+        flag_force_closest = False
+        warehouse_domain = False
+        if 'policy' in policy_group:
+            policy = policy_group['policy']
+            flag_force_closest = policy.always_closest_warehouse
+            warehouse_domain = policy.warehouse_filter_id.domain
+            # Need to look at warehouse filter.
+            # Eventually need to look at shipping filter....
 
-        buy_qty = {line.product_id.id: line.product_uom_qty for line in product_lines}
-
-        products = self.env['product.product']
-        for line in product_lines:
-            products |= line.product_id
-
-        warehouses = self.get_warehouses()
-        product_stock = self._fetch_product_stock(warehouses, products)
+        warehouses = self.get_warehouses(domain=warehouse_domain)
+        if flag_force_closest:
+            warehouses = self._find_closest_warehouse_by_partner(warehouses, order_fake.partner_shipping_id)
+        product_stock = self._fetch_product_stock(warehouses, policy_group['products'])
         sub_options = {}
         wh_date_planning = {}
 
-        p_len = len(products)
+        p_len = len(policy_group['products'])
         full_candidates = set()
         partial_candidates = set()
         for wh_id, stock in product_stock.items():
-            available = sum(1 for p_id, p_vals in stock.items() if self._is_in_stock(p_vals, buy_qty[p_id]))
+            available = sum(1 for p_id, p_vals in stock.items() if self._is_in_stock(p_vals, policy_group['buy_qty'][p_id]))
             if available == p_len:
                 full_candidates.add(wh_id)
             elif available > 0:
@@ -316,32 +329,35 @@ class SaleOrderMakePlan(models.TransientModel):
         if full_candidates:
             if len(full_candidates) == 1:
                 warehouse = warehouses.filtered(lambda wh: wh.id in full_candidates)
-                date_planned = self._next_warehouse_shipping_date(warehouse)
-                order_fake.warehouse_id = warehouse
-                return {'warehouse_id': warehouse.id, 'date_planned': date_planned}
-
-            warehouse = self._find_closest_warehouse_by_partner(
-                warehouses.filtered(lambda wh: wh.id in full_candidates), order_fake.partner_shipping_id)
+            else:
+                warehouse = self._find_closest_warehouse_by_partner(
+                    warehouses.filtered(lambda wh: wh.id in full_candidates), order_fake.partner_shipping_id)
             date_planned = self._next_warehouse_shipping_date(warehouse)
-            order_fake.warehouse_id = warehouse
+            #order_fake.warehouse_id = warehouse
             return {'warehouse_id': warehouse.id, 'date_planned': date_planned}
 
+        _logger.error('      partial_candidates: ' + str(partial_candidates))
         if partial_candidates:
+            _logger.error('      using...')
             if len(partial_candidates) == 1:
                 warehouse = warehouses.filtered(lambda wh: wh.id in partial_candidates)
-                order_fake.warehouse_id = warehouse
+                #order_fake.warehouse_id = warehouse
                 return {'warehouse_id': warehouse.id}
 
-            sorted_warehouses = self._sort_warehouses_by_partner(warehouses.filtered(lambda wh: wh.id in partial_candidates), order_fake.partner_shipping_id)
-            primary_wh = sorted_warehouses[0] #partial_candidates means there is at least one warehouse
+            sorted_warehouses = self._sort_warehouses_by_partner(
+                warehouses.filtered(lambda wh: wh.id in partial_candidates), order_fake.partner_shipping_id)
+            _logger.error('      sorted_warehouses: ' + str(sorted_warehouses) + ' warehouses: ' + str(warehouses))
+            primary_wh = sorted_warehouses[0]  # partial_candidates means there is at least one warehouse
             primary_wh_date_planned = self._next_warehouse_shipping_date(primary_wh)
             wh_date_planning[primary_wh.id] = primary_wh_date_planned
             for wh in sorted_warehouses:
-                if not buy_qty:
+                _logger.error('      wh: ' + str(wh) + ' buy_qty: ' + str(policy_group['buy_qty']))
+                if not policy_group['buy_qty']:
                     continue
                 stock = product_stock[wh.id]
                 for p_id, p_vals in stock.items():
-                    if p_id in buy_qty and self._is_in_stock(p_vals, buy_qty[p_id]):
+                    _logger.error('      p_id: ' + str(p_id) + ' p_vals: ' + str(p_vals))
+                    if p_id in policy_group['buy_qty'] and self._is_in_stock(p_vals, policy_group['buy_qty'][p_id]):
                         if wh.id not in sub_options:
                             sub_options[wh.id] = {
                                 'date_planned': self._next_warehouse_shipping_date(wh),
@@ -350,22 +366,210 @@ class SaleOrderMakePlan(models.TransientModel):
                             }
                         sub_options[wh.id]['product_ids'].append(p_id)
                         sub_options[wh.id]['product_skus'].append(p_vals['sku'])
-                        del buy_qty[p_id]
+                        _logger.error('        removing: ' + str(p_id))
+                        del policy_group['buy_qty'][p_id]
 
-            if not buy_qty:
+            if not policy_group['buy_qty']:
                 # item_details can fulfil all items.
                 # this is good!!
-                order_fake.warehouse_id = primary_wh
-                return {'warehouse_id': primary_wh.id, 'date_planned': primary_wh_date_planned, 'sub_options': sub_options}
+                #order_fake.warehouse_id = primary_wh
+                return {'warehouse_id': primary_wh.id, 'date_planned': primary_wh_date_planned,
+                        'sub_options': sub_options}
 
             # warehouses cannot fulfil all requested items!!
-            order_fake.warehouse_id = primary_wh
+            #order_fake.warehouse_id = primary_wh
             return {'warehouse_id': primary_wh.id}
 
         # nobody has stock!
         primary_wh = self._find_closest_warehouse_by_partner(warehouses, order_fake.partner_shipping_id)
-        order_fake.warehouse_id = primary_wh
+        #order_fake.warehouse_id = primary_wh
         return {'warehouse_id': primary_wh.id}
+
+    def generate_base_option(self, order_fake):
+        _logger.error('generate_base_option:')
+        product_lines = list(filter(lambda line: line.product_id.type == 'product', order_fake.order_line))
+        if not product_lines:
+            return {}
+
+        buy_qty = defaultdict(int)
+        for line in product_lines:
+            buy_qty[line.product_id.id] += line.product_uom_qty
+
+        products = self.env['product.product']
+        for line in product_lines:
+            products |= line.product_id
+
+        policy_groups = defaultdict(lambda: {'products': [], 'buy_qty': {}})
+        for p in products:
+            policy = p.product_tmpl_id.get_planning_policy()
+            if policy:
+                policy_groups[policy.id]['products'].append(p)
+                policy_groups[policy.id]['buy_qty'][p.id] = buy_qty[p.id]
+                policy_groups[policy.id]['policy'] = policy
+            else:
+                policy_groups[0]['products'].append(p)
+                policy_groups[0]['buy_qty'][p.id] = buy_qty[p.id]
+
+
+        for _, policy_group in policy_groups.items():
+            product_set = self.env['product.product'].browse()
+            for p in policy_group['products']:
+                product_set += p
+            policy_group['products'] = product_set
+            policy_group['base_option'] = self._generate_base_option(order_fake, policy_group)
+
+
+        option_policy_groups = defaultdict(lambda: {'products': self.env['product.product'].browse(), 'policies': self.env['sale.order.planning.policy'].browse(), 'date_planned': '1900', 'sub_options': [],})
+        for policy_id, policy_group in policy_groups.items():
+            base_option = policy_group['base_option']
+            _logger.error('  base_option: ' + str(base_option))
+            b_wh_id = base_option['warehouse_id']
+            if 'policy' in policy_group:
+                option_policy_groups[b_wh_id]['policies'] += policy_group['policy']
+            if option_policy_groups[b_wh_id].get('date_planned'):
+                # The first base_option without a date clears it
+                if base_option.get('date_planned'):
+                    if base_option['date_planned'] > option_policy_groups[b_wh_id]['date_planned']:
+                        option_policy_groups[b_wh_id]['date_planned'] = base_option['date_planned']
+                else:
+                    # One of our options has no plan date.  Remove it.
+                    del option_policy_groups[b_wh_id]['date_planned']
+            if 'sub_options' in base_option:
+                option_policy_groups[b_wh_id]['sub_options'].append(base_option['sub_options'])
+            option_policy_groups[b_wh_id]['products'] += policy_group['products']
+            option_policy_groups[b_wh_id]['warehouse_id'] = b_wh_id
+
+        # clean up unused sub_options and collapse used ones
+        for o_wh_id, option_group in option_policy_groups.items():
+            if not option_group['sub_options']:
+                del option_group['sub_options']
+            else:
+                sub_options = defaultdict(lambda: {'date_planned': '1900', 'product_ids': [], 'product_skus': []})
+                remaining_products = option_group['products']
+                for options in option_group['sub_options']:
+                    for wh_id, option in options.items():
+                        if sub_options[wh_id].get('date_planned'):
+                            # The first option without a date clears it
+                            if option.get('date_planned'):
+                                if option['date_planned'] > sub_options[wh_id]['date_planned']:
+                                    sub_options[wh_id]['date_planned'] = option['date_planned']
+                            else:
+                                del sub_options[wh_id]['date_planned']
+                        sub_options[wh_id]['product_ids'] += option['product_ids']
+                        sub_options[wh_id]['product_skus'] += option['product_skus']
+                        remaining_products = remaining_products.filtered(lambda p: p.id not in sub_options[wh_id]['product_ids'])
+                option_group['sub_options'] = sub_options
+                if remaining_products:
+                    option_group['sub_options'][o_wh_id]['product_ids'] += remaining_products.ids
+                    option_group['sub_options'][o_wh_id]['product_skus'] += remaining_products.mapped('default_code')
+
+
+        # At this point we should have all of the policy options collapsed.
+        # Collapse warehouse options.
+        base_option = {'date_planned': '1900', 'products': self.env['product.product'].browse()}
+        for wh_id, intermediate_option in option_policy_groups.items():
+            _logger.error('    base_option: ' + str(base_option))
+            _logger.error('    intermediate_option: ' + str(intermediate_option))
+            if 'warehouse_id' not in base_option:
+                base_option['warehouse_id'] = wh_id
+            b_wh_id = base_option['warehouse_id']
+
+            if base_option.get('date_planned'):
+                if intermediate_option.get('date_planned'):
+                    if intermediate_option['date_planned'] > base_option['date_planned']:
+                        base_option['date_planned'] = intermediate_option['date_planned']
+                else:
+                    del base_option['date_planned']
+                    if 'sub_options' in base_option:
+                        for _, option in base_option['sub_options'].items():
+                            del option['date_planned']
+            if b_wh_id == wh_id:
+                if 'sub_options' in intermediate_option and 'sub_options' not in base_option:
+                    # Base option will get new sub_options
+                    intermediate_option['sub_options'][wh_id]['product_ids'] += base_option['products'].ids
+                    intermediate_option['sub_options'][wh_id]['product_skus'] += base_option['products'].mapped('default_code')
+                    base_option['sub_options'] = intermediate_option['sub_options']
+                elif 'sub_options' in intermediate_option and 'sub_options' in base_option:
+                    # Both have sub_options, merge
+                    for o_wh_id, option in intermediate_option['sub_options'].items():
+                        if o_wh_id not in base_option['sub_options']:
+                            base_option['sub_options'][o_wh_id] = option
+                        else:
+                            base_option['sub_options'][o_wh_id]['product_ids'] += option['product_ids']
+                            base_option['sub_options'][o_wh_id]['product_skus'] += option['product_skus']
+                        if base_option.get('date_planned'):
+                            if option['date_planned'] > base_option['sub_options'][o_wh_id]['date_planned']:
+                                base_option['sub_options'][o_wh_id]['date_planned'] = intermediate_option['date_planned']
+                elif 'sub_options' in base_option:
+                    # merge products from intermediate into base_option's sub_options
+                    base_option['sub_options'][wh_id]['product_ids'] += intermediate_option['products'].ids
+                    base_option['sub_options'][wh_id]['product_skus'] += intermediate_option['products'].mapped('default_code')
+                base_option['products'] += intermediate_option['products']
+            else:
+                # Promote
+                if 'sub_options' not in intermediate_option and 'sub_options' not in base_option:
+                    base_option['sub_options'] = {
+                        wh_id: {
+                            'product_ids': intermediate_option['products'].ids,
+                            'product_skus': intermediate_option['products'].mapped('default_code'),
+                        },
+                        b_wh_id: {
+                            'product_ids': base_option['products'].ids,
+                            'product_skus': base_option['products'].mapped('default_code'),
+                        },
+                    }
+                    if base_option.get('date_planned'):
+                        base_option['sub_options'][wh_id]['date_planned'] = intermediate_option['date_planned']
+                        base_option['sub_options'][b_wh_id]['date_planned'] = base_option['date_planned']
+                elif 'sub_options' in base_option and 'sub_options' not in intermediate_option:
+                    if wh_id not in base_option['sub_options']:
+                        base_option['sub_options'][wh_id] = {
+                            'product_ids': intermediate_option['products'].ids,
+                            'product_skus': intermediate_option['products'].mapped('default_code'),
+                        }
+                        if base_option.get('date_planned'):
+                            base_option['sub_options'][wh_id]['date_planned'] = intermediate_option['date_planned']
+                    else:
+                        base_option['sub_options'][wh_id]['product_ids'] += intermediate_option['products'].ids
+                        base_option['sub_options'][wh_id]['product_skus'] += intermediate_option['products'].mapped('default_code')
+                        if base_option.get('date_planned'):
+                            if intermediate_option['date_planned'] > base_option['sub_options'][wh_id]['date_planned']:
+                                base_option['sub_options'][wh_id]['date_planned'] = intermediate_option['date_planned']
+                elif 'sub_options' in intermediate_option and 'sub_options' in base_option:
+                    # Both have sub_options, merge
+                    for o_wh_id, option in intermediate_option['sub_options'].items():
+                        if o_wh_id not in base_option['sub_options']:
+                            base_option['sub_options'][o_wh_id] = option
+                        else:
+                            base_option['sub_options'][o_wh_id]['product_ids'] += option['product_ids']
+                            base_option['sub_options'][o_wh_id]['product_skus'] += option['product_skus']
+                        if base_option.get('date_planned'):
+                            if option['date_planned'] > base_option['sub_options'][o_wh_id]['date_planned']:
+                                base_option['sub_options'][o_wh_id]['date_planned'] = intermediate_option['date_planned']
+                else:
+                    # intermediate_option has sub_options but base_option doesn't
+                    base_option['sub_options'] = {
+                        b_wh_id: {
+                            'product_ids': base_option['products'].ids,
+                            'product_skus': base_option['products'].mapped('default_code'),
+                        }
+                    }
+                    if base_option.get('date_planned'):
+                        base_option['sub_options'][b_wh_id]['date_planned'] = base_option['date_planned']
+                    for o_wh_id, option in intermediate_option['sub_options'].items():
+                        if o_wh_id not in base_option['sub_options']:
+                            base_option['sub_options'][o_wh_id] = option
+                        else:
+                            base_option['sub_options'][o_wh_id]['product_ids'] += option['product_ids']
+                            base_option['sub_options'][o_wh_id]['product_skus'] += option['product_skus']
+                        if base_option.get('date_planned'):
+                            if option['date_planned'] > base_option['sub_options'][o_wh_id]['date_planned']:
+                                base_option['sub_options'][o_wh_id]['date_planned'] = intermediate_option['date_planned']
+
+        del base_option['products']
+        _logger.error('  returning: ' + str(base_option))
+        order_fake.warehouse_id = self.get_warehouses(warehouse_id=base_option['warehouse_id'])
+        return base_option
 
     def _is_in_stock(self, p_stock, buy_qty):
         return p_stock['real_qty_available'] >= buy_qty
@@ -391,9 +595,9 @@ class SaleOrderMakePlan(models.TransientModel):
         return [warehouses.filtered(lambda wh: wh.id == distances[d]) for d in wh_distances]
 
     def _next_warehouse_shipping_date(self, warehouse):
-        return fields.Datetime.to_string(warehouse.shipping_calendar_id.plan_days(0.01,
-                                                                                  fields.Datetime.from_string(fields.Datetime.now()),
-                                                                                  compute_leaves=True))
+        if warehouse.shipping_calendar_id:
+            return fields.Datetime.to_string(warehouse.shipping_calendar_id.plan_days(0.01, fields.Datetime.from_string(fields.Datetime.now()), compute_leaves=True))
+        return False
 
     @api.model
     def _fetch_product_stock(self, warehouses, products):
@@ -414,7 +618,17 @@ class SaleOrderMakePlan(models.TransientModel):
     def generate_shipping_options(self, base_option, order_fake):
         # generate a carrier_id, amount, requested_date (promise date)
         # if base_option['carrier_id'] then that is the only carrier we want to collect rates for.
-        carriers = self.get_shipping_carriers(base_option.get('carrier_id'))
+        product_lines = list(filter(lambda line: line.product_id.type == 'product', order_fake.order_line))
+        domain = []
+        for line in product_lines:
+            policy = line.product_id.product_tmpl_id.get_planning_policy()
+            if policy and policy.carrier_filter_id:
+                domain.extend(tools.safe_eval(policy.carrier_filter_id.domain))
+        carriers = self.get_shipping_carriers(base_option.get('carrier_id'), domain=domain)
+        _logger.info('generate_shipping_options:: base_optoin: ' + str(base_option) + ' order_fake: ' + str(order_fake) + ' carriers: ' + str(carriers))
+
+        if not carriers:
+            return base_option
 
         if not base_option.get('sub_options'):
             options = []
@@ -423,8 +637,9 @@ class SaleOrderMakePlan(models.TransientModel):
                 option = self._generate_shipping_carrier_option(base_option, order_fake, carrier)
                 if option:
                     options.append(option)
-
-            return options
+            if options:
+                return options
+            return [base_option]
         else:
             warehouses = self.get_warehouses()
             original_order_fake_warehouse_id = order_fake.warehouse_id
@@ -488,14 +703,33 @@ class SaleOrderMakePlan(models.TransientModel):
 
         # this logic comes from "delivery.models.sale_order.SaleOrder"
         try:
+            result = None
             date_delivered = None
             transit_days = 0
             if carrier.delivery_type not in ['fixed', 'base_on_rule']:
-                result = carrier.get_shipping_price_for_plan(order_fake, base_option.get('date_planned'))
-                if result:
+                if hasattr(carrier, 'rate_shipment_date_planned'):
+                    # New API
+                    result = carrier.rate_shipment_date_planned(order_fake, base_option.get('date_planned'))
+                    if result:
+                        if not result.get('success'):
+                            return None
+                        price_unit, transit_days, date_delivered = result['price'], result.get('transit_days'), result.get('date_delivered')
+                elif hasattr(carrier, 'get_shipping_price_for_plan'):
+                    # Old API
+                    result = carrier.get_shipping_price_for_plan(order_fake, base_option.get('date_planned'))
+                if result and isinstance(result, list):
                     price_unit, transit_days, date_delivered = result[0]
-                else:
-                    price_unit = carrier.get_shipping_price_from_so(order_fake)[0]
+                elif not result:
+                    rate = carrier.rate_shipment(order_fake)
+                    if rate and rate.get('success'):
+                        price_unit = rate['price']
+                        if rate.get('transit_days'):
+                            transit_days = rate.get('transit_days')
+                        if rate.get('date_delivered'):
+                            date_delivered = rate.get('date_delivered')
+                    else:
+                        _logger.warn('returning None because carrier: ' + str(carrier))
+                        return None
             else:
                 carrier = carrier.verify_carrier(order_fake.partner_shipping_id)
                 if not carrier:
@@ -514,13 +748,13 @@ class SaleOrderMakePlan(models.TransientModel):
             option = deepcopy(base_option)
             option['carrier_id'] = carrier.id
             option['shipping_price'] = final_price
-            option['requested_date'] = fields.Datetime.to_string(date_delivered) if date_delivered and isinstance(date_delivered, datetime) else date_delivered
+            option['requested_date'] = fields.Datetime.to_string(date_delivered) if (date_delivered and isinstance(date_delivered, datetime)) else date_delivered
             option['transit_days'] = transit_days
             return option
         except Exception as e:
-            # _logger.warn("Exception collecting carrier rates: " + str(e))
+            _logger.info("Exception collecting carrier rates: " + str(e))
+            # Want to see more?
             # _logger.exception(e)
-            pass
 
         return None
 
