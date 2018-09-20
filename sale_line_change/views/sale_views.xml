@@ -11,8 +11,8 @@
                         attrs="{'invisible': [('state', 'in', ('draft', 'sent', 'cancel'))]}"
                         string="Line Change"
                         class="btn-secondary"
-                        context="{'default_order_id': active_id}"/>
-                        <!--class="oe_highlight"/>-->
+                        context="{'default_order_id': active_id}"
+                        groups="sales_team.group_sale_manager"/>
             </xpath>
         </field>
     </record>
