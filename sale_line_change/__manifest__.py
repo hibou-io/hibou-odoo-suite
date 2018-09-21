@@ -13,6 +13,7 @@
     'depends': [
         'sale_sourced_by_line',
         'sale_stock',
+        'stock_dropshipping',
     ],
     'demo': [],
     'data': [
