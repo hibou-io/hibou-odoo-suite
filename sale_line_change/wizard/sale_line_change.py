@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class SaleLineChangeOrder(models.TransientModel):
@@ -53,9 +54,18 @@ class SaleLineChangeOrderLine(models.TransientModel):
         }
 
     def _apply(self):
+        self._apply_clean_dropship()
         self._apply_clean_existing_moves()
         self._apply_new_values()
         self._apply_procurement()
+
+    def _apply_clean_dropship(self):
+        po_line_model = self.env['purchase.order.line'].sudo()
+        po_lines = po_line_model.search([('sale_line_id', 'in', self.mapped('sale_line_id.id'))])
+
+        if po_lines and po_lines.filtered(lambda l: l.order_id.state != 'cancel'):
+            names = ', '.join(po_lines.filtered(lambda l: l.order_id.state != 'cancel').mapped('order_id.name'))
+            raise ValidationError('One or more lines has existing non-cancelled Purchase Orders associated: ' + names)
 
     def _apply_clean_existing_moves(self):
         moves = self.mapped('sale_line_id.move_ids').filtered(lambda m: m.state != 'done')
