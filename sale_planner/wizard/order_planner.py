@@ -60,8 +60,8 @@ class FakePartner():
             # The fast way.
             if ZipcodeSearchEngine and self.zip:
                 with ZipcodeSearchEngine() as search:
-                    zipcode = search.by_zipcode(self.zip)
-                    if zipcode:
+                    zipcode = search.by_zipcode(str(self.zip).split('-')[0])
+                    if zipcode and zipcode['Latitude']:
                         self.partner_latitude = zipcode['Latitude']
                         self.partner_longitude = zipcode['Longitude']
                         return self.date_localization
