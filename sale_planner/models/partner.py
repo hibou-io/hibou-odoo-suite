@@ -15,8 +15,8 @@ class Partner(models.Model):
         for partner in self.with_context(lang='en_US'):
             if ZipcodeSearchEngine and partner.zip:
                 with ZipcodeSearchEngine() as search:
-                    zipcode = search.by_zipcode(partner.zip)
-                    if zipcode:
+                    zipcode = search.by_zipcode(str(self.zip).split('-')[0])
+                    if zipcode and zipcode['Latitude']:
                         partner.write({
                             'partner_latitude': zipcode['Latitude'],
                             'partner_longitude': zipcode['Longitude'],
