@@ -1,9 +1,12 @@
+from odoo.addons.purchase_by_sale_history.tests import test_purchase_by_sale_history
 from odoo import fields
-from odoo.tests import common
 from datetime import datetime, timedelta
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
-class TestPurchaseBySaleHistory(common.TransactionCase):
+class MTestPurchaseBySaleHistoryMRP(test_purchase_by_sale_history.TestPurchaseBySaleHistory):
 
     def test_00_wizard(self):
         wh1 = self.env.ref('stock.warehouse0')
@@ -35,6 +38,23 @@ class TestPurchaseBySaleHistory(common.TransactionCase):
             'partner_id': purchase_partner.id,
         })
 
+        product_raw = self.env['product.product'].create({
+            'name': 'Product Raw',
+            'type': 'product',
+        })
+        _logger.warn('product_raw: ' + str(product_raw))
+
+        product11_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product11.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'product_uom_id': product11.uom_id.id,
+            'bom_line_ids': [(0, 0, {
+                'product_id': product_raw.id,
+                'product_qty': 2.0,
+                'product_uom_id': product_raw.uom_id.id,
+            })]
+        })
+
         # Create initial wizard, it won't apply to any products because the PO is empty, and the vendor
         # doesn't supply any products yet.
         wiz = self.env['purchase.sale.history.make'].create({
@@ -46,8 +66,8 @@ class TestPurchaseBySaleHistory(common.TransactionCase):
         # Assign vendor to products created earlier.
         self.env['product.supplierinfo'].create({
             'name': purchase_partner.id,
-            'product_tmpl_id': product11.product_tmpl_id.id,
-            'product_id': product11.id,
+            'product_tmpl_id': product_raw.product_tmpl_id.id,
+            'product_id': product_raw.id,
         })
         self.env['product.supplierinfo'].create({
             'name': purchase_partner.id,
@@ -84,7 +104,9 @@ class TestPurchaseBySaleHistory(common.TransactionCase):
         })
         self.assertEqual(wiz.history_days, days)
         wiz.action_confirm()
-        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product11).product_qty, 3.0 + 3.0)  # 3 from Sales History, 3 from Demand (from the sale)
+        self.assertTrue(po1.order_line.filtered(lambda l: l.product_id == product_raw))
+        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product_raw).product_qty, 24.0)  # x
+        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product11).product_qty, 0.0)
         self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product12).product_qty, 0.0)
         self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product2).product_qty, 3.0 + 3.0)
 
@@ -103,7 +125,8 @@ class TestPurchaseBySaleHistory(common.TransactionCase):
         }).action_confirm()
 
         wiz.action_confirm()
-        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product11).product_qty, 6.0 + 6.0)
+        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product_raw).product_qty, 48.0)
+        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product11).product_qty, 0.0)
         self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product12).product_qty, 0.0)
         self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product2).product_qty, 6.0 + 6.0)
 
@@ -123,7 +146,8 @@ class TestPurchaseBySaleHistory(common.TransactionCase):
         }).action_confirm()
 
         wiz.action_confirm()
-        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product11).product_qty, 6.0 + 6.0)
+        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product_raw).product_qty, 48.0)
+        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product11).product_qty, 0.0)
         self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product12).product_qty, 0.0)
         self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product2).product_qty, 6.0 + 6.0)
 
@@ -142,21 +166,19 @@ class TestPurchaseBySaleHistory(common.TransactionCase):
         }).action_confirm()
 
         wiz.action_confirm()
-        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product11).product_qty, 6.0 + 9.0)
+        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product_raw).product_qty, 60.0)
+        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product11).product_qty, 0.0)
         self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product12).product_qty, 0.0)
         self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product2).product_qty, 6.0 + 9.0)
 
         # Test that the wizard will only use the existing PO line products now that we have lines.
         po1.order_line.filtered(lambda l: l.product_id == product2).unlink()
-        wiz.action_confirm()
-        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product11).product_qty, 6.0 + 9.0)
-        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product12).product_qty, 0.0)
-        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product2).product_qty, 0.0)
 
         # Plan for 1/2 the days of inventory
         wiz.procure_days = days / 2.0
         wiz.action_confirm()
-        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product11).product_qty, 3.0 + 9.0)
+        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product_raw).product_qty, 48.0)
+        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product11).product_qty, 0.0)
 
         # Cause Inventory on existing product to make sure we don't order it.
         adjust_product11 = self.env['stock.inventory'].create({
@@ -175,6 +197,7 @@ class TestPurchaseBySaleHistory(common.TransactionCase):
         adjust_product11.action_done()
 
         wiz.action_confirm()
-        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product11).product_qty, 0.0)  # Because we have so much in stock now.
+        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product_raw).product_qty, 24.0)  # No longer have needs on product11 but we still have them for product12
+        self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product11).product_qty, 0.0)
         self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product12).product_qty, 0.0)
         self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product2).product_qty, 0.0)
