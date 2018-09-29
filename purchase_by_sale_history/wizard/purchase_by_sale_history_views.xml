@@ -13,6 +13,7 @@
                             <field name="history_start"/>
                             <field name="history_end"/>
                             <field name="history_days"/>
+                            <field name="history_warehouse_ids" widget="many2many_tags"/>
                         </group>
                         <group>
                             <field name="procure_days"/>
