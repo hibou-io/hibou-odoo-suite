@@ -11,7 +11,7 @@ from ...components.api.walmart import Walmart
 
 _logger = getLogger(__name__)
 
-IMPORT_DELTA_BUFFER = 60  # seconds
+IMPORT_DELTA_BUFFER = 600  # seconds
 
 
 class WalmartBackend(models.Model):
