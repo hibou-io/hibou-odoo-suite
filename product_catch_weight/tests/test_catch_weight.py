@@ -30,6 +30,7 @@ class TestPicking(TransactionCase):
             'uom_po_id': self.product_uom_id.id,
             'catch_weight_uom_id': self.ref_uom_id.id,
         })
+        self.pricelist = self.env.ref('product.list0')
 
 
     # def test_creation(self):
@@ -69,6 +70,7 @@ class TestPicking(TransactionCase):
             'partner_invoice_id': self.partner1.id,
             'partner_shipping_id': self.partner1.id,
             'order_line': [(0, 0, {'product_id': self.product1.id})],
+            'pricelist_id': self.pricelist.id,
         })
         so.action_confirm()
         self.assertTrue(so.state in ('sale', 'done'))
@@ -104,6 +106,7 @@ class TestPicking(TransactionCase):
             'partner_invoice_id': self.partner1.id,
             'partner_shipping_id': self.partner1.id,
             'order_line': [(0, 0, {'product_id': self.product1.id, 'product_uom_qty': 2.0})],
+            'pricelist_id': self.pricelist.id,
         })
         so.action_confirm()
         self.assertTrue(so.state in ('sale', 'done'))
