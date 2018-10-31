@@ -16,6 +16,11 @@ class PurchaseBySaleHistory(models.TransientModel):
                                        'and then multiplied by the days you wish to procure for.')
     product_count = fields.Integer(string='Product Count', compute='_compute_product_count',
                                    help='Products on the PO or that the Vendor provides.')
+    history_warehouse_ids = fields.Many2many('stock.warehouse', string='Warehouses',
+                                             help='Sales are calculated by these warehouses. '
+                                                  'Current Inventory is summed from these warehouses. '
+                                                  'If it is left blank then all warehouses and inventory '
+                                                  'will be considered.')
 
     @api.multi
     @api.depends('history_start', 'history_end')
@@ -54,18 +59,48 @@ class PurchaseBySaleHistory(models.TransientModel):
         return [r[0] for r in rows if r[0]]
 
     def _sale_history(self, product_ids):
-        self.env.cr.execute("""SELECT product_id, sum(product_uom_qty)
-                               FROM sale_report 
-                               WHERE date BETWEEN %s AND %s AND product_id IN %s
-                               GROUP BY 1""", (self.history_start, self.history_end, tuple(product_ids)))
+        p_ids = tuple(product_ids)
+        if self.history_warehouse_ids:
+            wh_ids = tuple(self.history_warehouse_ids.ids)
+            self.env.cr.execute("""SELECT product_id, sum(product_uom_qty)
+                                   FROM sale_report 
+                                   WHERE date BETWEEN %s AND %s AND product_id IN %s AND warehouse_id IN %s
+                                   GROUP BY 1""",
+                                (self.history_start, self.history_end, p_ids, wh_ids))
+        else:
+            self.env.cr.execute("""SELECT product_id, sum(product_uom_qty)
+                                   FROM sale_report 
+                                   WHERE date BETWEEN %s AND %s AND product_id IN %s
+                                   GROUP BY 1""",
+                                (self.history_start, self.history_end, p_ids))
         return self.env.cr.fetchall()
 
-    def _apply_history(self, history):
+    def _apply_history_product(self, product, history):
+        qty = ceil(history['sold_qty'] * self.procure_days / self.history_days)
+        history['buy_qty'] = max((0.0, qty - product.virtual_available))
+
+    def _apply_history(self, history, product_ids):
         line_model = self.env['purchase.order.line']
         updated_lines = line_model.browse()
-        for pid, sold_qty in history:
+
+        # Collect stock to consider against the sales demand.
+        product_model = self.env['product.product']
+        if self.history_warehouse_ids:
+            product_model = self.env['product.product']\
+                .with_context({'location': [wh.lot_stock_id.id for wh in self.history_warehouse_ids]})
+        products = product_model.browse(product_ids)
+
+        #product_available_stock = {p.id: p.virtual_available for p in products}
+        history_dict = {pid: {'sold_qty': sold_qty} for pid, sold_qty in history}
+        for p in products:
+            if p.id not in history_dict:
+                history_dict[p.id] = {'sold_qty': 0.0}
+            self._apply_history_product(p, history_dict[p.id])
+
+        for pid, history in history_dict.items():
             # TODO: Should convert from Sale UOM to Purchase UOM
-            qty = ceil(sold_qty * self.procure_days / self.history_days)
+            qty = history.get('buy_qty', 0.0)
+
             # Find line that already exists on PO
             line = self.purchase_id.order_line.filtered(lambda l: l.product_id.id == pid)
             if line:
@@ -95,6 +130,6 @@ class PurchaseBySaleHistory(models.TransientModel):
         self.ensure_one()
         history_product_ids = self._history_product_ids()
         history = self._sale_history(history_product_ids)
-        self._apply_history(history)
+        self._apply_history(history, history_product_ids)
 
 
