@@ -109,36 +109,17 @@ class ProviderStamps(models.Model):
 
         ret_val = service.create_shipping()
         ret_val.ShipDate = date_planned.split()[0] if date_planned else date.today().isoformat()
-        ret_val.FromZIPCode = order.warehouse_id.partner_id.zip
+        ret_val.FromZIPCode = self.get_shipper_warehouse(order=order).zip
         ret_val.ToZIPCode = order.partner_shipping_id.zip
         ret_val.PackageType = self._stamps_package_type()
         ret_val.ServiceType = self.stamps_service_type
         ret_val.WeightLb = weight
         return ret_val
 
-    def _get_order_for_picking(self, picking):
-        if picking.sale_id:
-            return picking.sale_id
-        return None
-
-    def _get_company_for_order(self, order):
-        company = order.company_id
-        if order.team_id and order.team_id.subcompany_id:
-            company = order.team_id.subcompany_id.company_id
-        elif order.analytic_account_id and order.analytic_account_id.subcompany_id:
-            company = order.analytic_account_id.subcompany_id.company_id
-        return company
-
-    def _get_company_for_picking(self, picking):
-        order = self._get_order_for_picking(picking)
-        if order:
-            return self._get_company_for_order(order)
-        return picking.company_id
-
     def _stamps_get_addresses_for_picking(self, picking):
-        company = self._get_company_for_picking(picking)
-        from_ = picking.picking_type_id.warehouse_id.partner_id
-        to = picking.partner_id
+        company = self.get_shipper_company(picking=picking)
+        from_ = self.get_shipper_warehouse(picking=picking)
+        to = self.get_recipient(picking=picking)
         return company, from_, to
 
     def _stamps_get_shippings_for_picking(self, service, picking):
@@ -251,7 +232,7 @@ class ProviderStamps(models.Model):
             company, from_partner, to_partner = self._stamps_get_addresses_for_picking(picking)
 
             from_address = service.create_address()
-            from_address.FullName = company.partner_id.name
+            from_address.FullName = company.name
             from_address.Address1 = from_partner.street
             if from_partner.street2:
                 from_address.Address2 = from_partner.street2
