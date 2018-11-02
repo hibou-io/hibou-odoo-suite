@@ -41,6 +41,22 @@ New Payslip Categories for:
 * California Unemployment Insurance Tax
 * California Employee Training Tax
 
+Upgrading to 11.0.2018.1.0
+==========================
+
+If you were using this prior to November 2018, then you have more Contribution registers
+and partners than you need!  Simply run the following before installing the new code and upgrading.
+
+Odoo Shell code::
+
+    main_cr = env.ref('l10n_us_ca_hr_payroll.contrib_register_cador_uit')
+    old_1 = env.ref('l10n_us_ca_hr_payroll.contrib_register_cador_withhold')
+    old_2 = env.ref('l10n_us_ca_hr_payroll.contrib_register_cador_ett')
+    old_3 = env.ref('l10n_us_ca_hr_payroll.contrib_register_cador_sdi')
+    lines = env['hr.payslip.line'].search([('register_id', 'in', [old_1.id, old_2.id, old_3.id])])
+    lines.write({'register_id': main_cr.id})
+    env.cr.commit()
+
 
 =======
 License

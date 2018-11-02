@@ -4,7 +4,7 @@
     'license': 'AGPL-3',
     'category': 'Localization',
     'depends': ['l10n_us_hr_payroll'],
-    'version': '11.0.2018.0.0',
+    'version': '11.0.2018.1.0',
     'description': """
 USA::California Payroll Rules.
 ==============================
