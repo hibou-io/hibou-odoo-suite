@@ -11,7 +11,11 @@ class ProjectTask(models.Model):
     def _compute_subtask_count(self):
         for task in self:
             task.subtask_count = self.search_count([('id', 'child_of', task.id), ('id', '!=', task.id)])
-            task.subtask_count_done = self.search_count([('id', 'child_of', task.id), ('id', '!=', task.id), ('stage_id.fold', '=', True)])
+            if task.subtask_count:
+                task.subtask_count_done = self.search_count([('id', 'child_of', task.id), ('id', '!=', task.id),
+                                                             ('stage_id.fold', '=', True)])
+            else:
+                task.subtask_count_done = 0
 
 
 class ProjectTaskLine(models.Model):
