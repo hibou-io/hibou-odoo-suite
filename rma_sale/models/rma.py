@@ -71,7 +71,7 @@ class RMA(models.Model):
             raise UserError(_('You must have a sale order for this RMA.'))
         if not self.template_id.in_require_return:
             group_id = self.sale_order_id.procurement_group_id.id if self.sale_order_id.procurement_group_id else 0
-            sale_id = self.sale_order_id
+            sale_id = self.sale_order_id.id
             values = self.template_id._values_for_in_picking(self)
             update = {'sale_id': sale_id, 'group_id': group_id}
             update_lines = {'group_id': group_id}
@@ -95,7 +95,7 @@ class RMA(models.Model):
             raise UserError(_('You must have a sale order for this RMA.'))
         if not self.template_id.out_require_return:
             group_id = self.sale_order_id.procurement_group_id.id if self.sale_order_id.procurement_group_id else 0
-            sale_id = self.sale_order_id
+            sale_id = self.sale_order_id.id
             values = self.template_id._values_for_out_picking(self)
             update = {'sale_id': sale_id, 'group_id': group_id}
             update_lines = {'to_refund_so': self.template_id.in_to_refund_so, 'group_id': group_id}
