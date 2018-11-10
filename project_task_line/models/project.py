@@ -21,7 +21,7 @@ class ProjectTask(models.Model):
 class ProjectTaskLine(models.Model):
     _name = 'project.task.line'
     _description = 'Task Todos'
-    _order = 'sequence, id desc'
+    _order = 'sequence, id asc'
 
     task_id = fields.Many2one('project.task', required=True)
     name = fields.Char(string='Name')
