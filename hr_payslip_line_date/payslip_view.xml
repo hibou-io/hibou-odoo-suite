@@ -8,6 +8,18 @@
             <field name="inherit_id" ref="hr_payroll.view_hr_payslip_line_filter"/>
             <field name="arch" type="xml">
             <data>
+                <xpath expr="//group" position="before">
+                    <separator string="Date Account"/>
+                    <filter string="This Year Q1" domain="[('date', '&gt;=', datetime.datetime.now().strftime('%Y-01-01')), ('date', '&lt;', datetime.datetime.now().strftime('%Y-04-01'))]" />
+                    <filter string="This Year Q2" domain="[('date', '&gt;=', datetime.datetime.now().strftime('%Y-04-01')), ('date', '&lt;', datetime.datetime.now().strftime('%Y-07-01'))]" />
+                    <filter string="This Year Q3" domain="[('date', '&gt;=', datetime.datetime.now().strftime('%Y-07-01')), ('date', '&lt;', datetime.datetime.now().strftime('%Y-10-01'))]" />
+                    <filter string="This Year Q4" domain="[('date', '&gt;=', datetime.datetime.now().strftime('%Y-10-01')), ('date', '&lt;=', datetime.datetime.now().strftime('%Y-12-31'))]" />
+                    <separator string="Last Year"/>
+                    <filter string="Last Year Q1" domain="[('date', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-01-01')), ('date', '&lt;', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-04-01'))]" />
+                    <filter string="Last Year Q2" domain="[('date', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-04-01')), ('date', '&lt;', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-07-01'))]" />
+                    <filter string="Last Year Q3" domain="[('date', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-07-01')), ('date', '&lt;', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-10-01'))]" />
+                    <filter string="Last Year Q4" domain="[('date', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-10-01')), ('date', '&lt;=', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-12-31'))]" />
+                </xpath>
                  <xpath expr="//group" position="inside">
                     <filter string="Account Date" name="date" context="{'group_by':'date'}"/>
                  </xpath>
