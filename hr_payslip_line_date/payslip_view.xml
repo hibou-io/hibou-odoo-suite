@@ -10,19 +10,26 @@
             <data>
                 <xpath expr="//group" position="before">
                     <separator string="Date Account"/>
-                    <filter string="This Year Q1" domain="[('date', '&gt;=', datetime.datetime.now().strftime('%Y-01-01')), ('date', '&lt;', datetime.datetime.now().strftime('%Y-04-01'))]" />
-                    <filter string="This Year Q2" domain="[('date', '&gt;=', datetime.datetime.now().strftime('%Y-04-01')), ('date', '&lt;', datetime.datetime.now().strftime('%Y-07-01'))]" />
-                    <filter string="This Year Q3" domain="[('date', '&gt;=', datetime.datetime.now().strftime('%Y-07-01')), ('date', '&lt;', datetime.datetime.now().strftime('%Y-10-01'))]" />
-                    <filter string="This Year Q4" domain="[('date', '&gt;=', datetime.datetime.now().strftime('%Y-10-01')), ('date', '&lt;=', datetime.datetime.now().strftime('%Y-12-31'))]" />
+                    <filter name="this_week" string="This Week" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d')), ('date', '&lt;', (context_today() - datetime.timedelta(days=0)).strftime('%Y-%m-%d'))]"/>
+                    <filter name="last_week" string="Last Week" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=14)).strftime('%Y-%m-%d')), ('date', '&lt;', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                    <filter name="last_two_week" string="Two Weeks Ago" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=21)).strftime('%Y-%m-%d')), ('date', '&lt;', (context_today() - datetime.timedelta(days=14)).strftime('%Y-%m-%d'))]"/>
+                    <filter name="last_three_week" string="Three Weeks Ago" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=28)).strftime('%Y-%m-%d')), ('date', '&lt;', (context_today() - datetime.timedelta(days=21)).strftime('%Y-%m-%d'))]"/>
+                    <filter name="this_month" string="This Month" domain="[('date', '&gt;=', context_today().strftime('%Y-%m-01')), ('date', '&lt;=', (context_today().replace(day=28) + datetime.timedelta(days=4)).strftime('%Y-%m-01'))]"/>
+                    <filter name="last_month" string="Last Month" domain="[('date', '&lt;', context_today().strftime('%Y-%m-01')), ('date', '&gt;=', (context_today().replace(day=1) - datetime.timedelta(days=1)).strftime('%Y-%m-01'))]"/>
+                    <separator string="This Year"/>
+                    <filter name="this_year_q1" string="This Year Q1" domain="[('date', '&gt;=', context_today().strftime('%Y-01-01')), ('date', '&lt;', context_today().strftime('%Y-04-01'))]" />
+                    <filter name="this_year_q2" string="This Year Q2" domain="[('date', '&gt;=', context_today().strftime('%Y-04-01')), ('date', '&lt;', context_today().strftime('%Y-07-01'))]" />
+                    <filter name="this_year_q3" string="This Year Q3" domain="[('date', '&gt;=', context_today().strftime('%Y-07-01')), ('date', '&lt;', context_today().strftime('%Y-10-01'))]" />
+                    <filter name="this_year_q4" string="This Year Q4" domain="[('date', '&gt;=', context_today().strftime('%Y-10-01')), ('date', '&lt;=', context_today().strftime('%Y-12-31'))]" />
                     <separator string="Last Year"/>
-                    <filter string="Last Year Q1" domain="[('date', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-01-01')), ('date', '&lt;', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-04-01'))]" />
-                    <filter string="Last Year Q2" domain="[('date', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-04-01')), ('date', '&lt;', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-07-01'))]" />
-                    <filter string="Last Year Q3" domain="[('date', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-07-01')), ('date', '&lt;', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-10-01'))]" />
-                    <filter string="Last Year Q4" domain="[('date', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-10-01')), ('date', '&lt;=', (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-12-31'))]" />
+                    <filter name="this_year_q1" string="Last Year Q1" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=365)).strftime('%Y-01-01')), ('date', '&lt;', (context_today() - datetime.timedelta(days=365)).strftime('%Y-04-01'))]" />
+                    <filter name="this_year_q2" string="Last Year Q2" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=365)).strftime('%Y-04-01')), ('date', '&lt;', (context_today() - datetime.timedelta(days=365)).strftime('%Y-07-01'))]" />
+                    <filter name="this_year_q3" string="Last Year Q3" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=365)).strftime('%Y-07-01')), ('date', '&lt;', (context_today() - datetime.timedelta(days=365)).strftime('%Y-10-01'))]" />
+                    <filter name="this_year_q4" string="Last Year Q4" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=365)).strftime('%Y-10-01')), ('date', '&lt;=', (context_today() - datetime.timedelta(days=365)).strftime('%Y-12-31'))]" />
                 </xpath>
-                 <xpath expr="//group" position="inside">
+                <xpath expr="//group" position="inside">
                     <filter string="Account Date" name="date" context="{'group_by':'date'}"/>
-                 </xpath>
+                </xpath>
             </data>
             </field>
         </record>
