@@ -3,7 +3,7 @@
     <data>
 <!-- CONTRIBUTION REGISTERS -->
         <record id="res_partner_cador_uit" model="res.partner">
-            <field name="name">California Department of Taxation - Unemployment Insurance Tax</field>
+            <field name="name">California Department of Taxation (CA DE88)</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
         </record>
@@ -11,38 +11,44 @@
             <field name="name">California Department of Taxation - Income Tax Withholding</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
+            <field eval="False" name="active"/>
         </record>
         <record id="res_partner_cador_ett" model="res.partner">
             <field name="name">California Department of Taxation - Employment Training Tax</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
+            <field eval="False" name="active"/>
         </record>
             <record id="res_partner_cador_sdi" model="res.partner">
             <field name="name">California Department of Taxation - State Disability Insurance</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
+            <field eval="False" name="active"/>
         </record>
 
         <record id="contrib_register_cador_uit" model="hr.contribution.register">
-            <field name="name">California Unemployment Insurance Tax</field>
-            <field name="note">California Department of Taxation - Unemployment Insurance Tax</field>
+            <field name="name">California (CA DE88)</field>
+            <field name="note">California Department of Taxation (CA DE88)</field>
             <field name="partner_id" ref="res_partner_cador_uit"/>
         </record>
-        <record id="contrib_register_cador_withhold" model="hr.contribution.register">
-            <field name="name">California Income Tax Withholding</field>
-            <field name="note">California Department of Taxation - Income Tax Withholding</field>
-            <field name="partner_id" ref="res_partner_cador_withhold"/>
-        </record>
-        <record id="contrib_register_cador_ett" model="hr.contribution.register">
-            <field name="name">Employment Training Tax</field>
-            <field name="note">California Department of Taxation - Employment Training Tax</field>
-            <field name="partner_id" ref="res_partner_cador_ett"/>
-        </record>
-            <record id="contrib_register_cador_sdi" model="hr.contribution.register">
-            <field name="name">State Disability Insurance</field>
-            <field name="note">California Department of Taxation - State Disability Insurance</field>
-            <field name="partner_id" ref="res_partner_cador_sdi"/>
-        </record>
+
+        <!-- These are deprecated in favor of a single grouped register for CA DE88 -->
+        <!-- They are left here in case their details or structure is needed later. -->
+        <!--<record id="contrib_register_cador_withhold" model="hr.contribution.register">-->
+            <!--<field name="name">California Income Tax Withholding</field>-->
+            <!--<field name="note">California Department of Taxation - Income Tax Withholding</field>-->
+            <!--<field name="partner_id" ref="res_partner_cador_withhold"/>-->
+        <!--</record>-->
+        <!--<record id="contrib_register_cador_ett" model="hr.contribution.register">-->
+            <!--<field name="name">Employment Training Tax</field>-->
+            <!--<field name="note">California Department of Taxation - Employment Training Tax</field>-->
+            <!--<field name="partner_id" ref="res_partner_cador_ett"/>-->
+        <!--</record>-->
+            <!--<record id="contrib_register_cador_sdi" model="hr.contribution.register">-->
+            <!--<field name="name">State Disability Insurance</field>-->
+            <!--<field name="note">California Department of Taxation - State Disability Insurance</field>-->
+            <!--<field name="partner_id" ref="res_partner_cador_sdi"/>-->
+        <!--</record>-->
 
 
     <!-- HR SALARY RULE CATEGORIES-->
