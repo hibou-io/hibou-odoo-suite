@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_expense_change_form_inherit" model="ir.ui.view">
+        <field name="name">hr.expense.change.form.inherit</field>
+        <field name="model">hr.expense.change</field>
+        <field name="inherit_id" ref="hr_expense_change.hr_expense_change_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_right']" position="inside">
+                <field name="analytic_account_id" domain="[('company_id', '=', expense_company_id)]"/>
+                <field name="analytic_account_warning" attrs="{'invisible': [('analytic_account_warning', '=', '')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
