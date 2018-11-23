@@ -54,3 +54,11 @@ class StockPicking(models.Model):
     def _compute_has_catch_weight(self):
         for picking in self:
             picking.has_catch_weight = any(picking.mapped('move_lines.product_catch_weight_uom_id'))
+
+
+class StockQuant(models.Model):
+    _inherit = 'stock.quant'
+
+    lot_catch_weight_ratio = fields.Float(related='lot_id.catch_weight_ratio')
+    lot_catch_weight = fields.Float(related='lot_id.catch_weight')
+    lot_catch_weight_uom_id = fields.Many2one('product.uom', related='lot_id.catch_weight_uom_id')
