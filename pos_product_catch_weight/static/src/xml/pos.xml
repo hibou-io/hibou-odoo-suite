@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Tecnativa - David Vidal
+     Copyright 2018 Hibou Corp. - Jared Kipe
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl). -->
+
+<templates>
+
+    <t t-extend="PackLotLinePopupWidget">
+        <t t-jquery=".title" t-operation="append">
+            <div class="packlot-select">
+                <t t-if="widget.options.pack_lot_lines and widget.options.pack_lot_lines.product_quants">
+                    <select class="packlot-line-select">
+                        <option disabled="" selected="" value="">Select a Serial/Lot Number</option>
+                        <t t-foreach="widget.options.pack_lot_lines.product_quants" t-as="q">
+                            <option t-att-value="q.lot_id[1]">
+                                <t t-esc="q.lot_id[1]"/> : <t t-esc="q.lot_catch_weight"/> <t t-esc="q.lot_catch_weight_uom_id[1]"/>
+                            </option>
+                        </t>
+                    </select>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-extend="Orderline">
+        <t t-jquery=".info-list" t-operation="append">
+            <t t-set="lots" t-value="line.pack_lot_lines.get_valid_lots()"/>
+            <t t-if="lots" t-foreach="lots" t-as="lot">
+                <li class="info">
+                    -- <t t-esc="lot.get_lot_name()"/>
+                    <t t-if="lot.get('lot_catch_weight_uom_id')">
+                        @ <t t-esc="lot.get('lot_catch_weight')"/>
+                        <t t-esc="lot.get('lot_catch_weight_uom_id')[1]"/>
+                    </t>
+                </li>
+            </t>
+        </t>
+    </t>
+
+</templates>
