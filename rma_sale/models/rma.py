@@ -2,10 +2,24 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    def _get_protected_fields(self):
+        res = super(SaleOrderLine, self)._get_protected_fields()
+        context = self._context or {}
+        if context.get('rma_done') and 'product_uom_qty' in res:
+            res.remove('product_uom_qty')
+        return res
+
+
 class RMATemplate(models.Model):
     _inherit = 'rma.template'
 
     usage = fields.Selection(selection_add=[('sale_order', 'Sale Order')])
+    so_decrement_order_qty = fields.Boolean(string='SO Decrement Ordered Qty.',
+                                            help='When completing the RMA, the Ordered Quantity will be decremented by '
+                                                 'the RMA qty.')
 
 
 class RMA(models.Model):
@@ -54,6 +68,45 @@ class RMA(models.Model):
             rma.partner_id = rma.sale_order_id.partner_id
             rma.partner_shipping_id = rma.sale_order_id.partner_shipping_id
 
+    @api.multi
+    def action_done(self):
+        res = super(RMA, self).action_done()
+        res2 = self._so_action_done()
+        if isinstance(res, dict) and isinstance(res2, dict):
+            if 'warning' in res and 'warning' in res2:
+                res['warning'] = '\n'.join([res['warning'], res2['warning']])
+                return res
+            if 'warning' in res2:
+                res['warning'] = res2['warning']
+                return res
+        elif isinstance(res2, dict):
+            return res2
+        return res
+
+    def _so_action_done(self):
+        warnings = []
+        for rma in self:
+            if rma.template_id.so_decrement_order_qty:
+                for rma_line in rma.lines:
+                    so_lines = rma.sale_order_id.order_line.filtered(lambda l: l.product_id == rma_line.product_id)
+                    qty_remaining = rma_line.product_uom_qty
+                    for sale_line in so_lines:
+                        if qty_remaining == 0:
+                            continue
+                        sale_line_qty = sale_line.product_uom_qty
+                        sale_line_qty = sale_line_qty - qty_remaining
+                        if sale_line_qty < 0:
+                            qty_remaining = abs(sale_line_qty)
+                            sale_line_qty = 0
+                        else:
+                            qty_remaining = 0
+                        sale_line.with_context(rma_done=True).write({'product_uom_qty': sale_line_qty})
+                    if qty_remaining:
+                        warnings.append((rma, rma.sale_order_id, rma_line, qty_remaining))
+        if warnings:
+            return {'warning': _('Could not reduce all ordered qty:\n %s' % '\n'.join(
+                ['%s %s %s : %s' % (w[0].name, w[1].name, w[2].product_id.display_name, w[3]) for w in warnings]))}
+        return True
 
     @api.multi
     def action_add_so_lines(self):
@@ -74,7 +127,7 @@ class RMA(models.Model):
             sale_id = self.sale_order_id.id
             values = self.template_id._values_for_in_picking(self)
             update = {'sale_id': sale_id, 'group_id': group_id}
-            update_lines = {'group_id': group_id}
+            update_lines = {'to_refund': self.template_id.in_to_refund, 'group_id': group_id}
             return self._picking_from_values(values, update, update_lines)
 
         lines = self.lines.filtered(lambda l: l.product_uom_qty >= 1)
@@ -98,7 +151,7 @@ class RMA(models.Model):
             sale_id = self.sale_order_id.id
             values = self.template_id._values_for_out_picking(self)
             update = {'sale_id': sale_id, 'group_id': group_id}
-            update_lines = {'to_refund_so': self.template_id.in_to_refund_so, 'group_id': group_id}
+            update_lines = {'group_id': group_id}
             return self._picking_from_values(values, update, update_lines)
 
         lines = self.lines.filtered(lambda l: l.product_uom_qty >= 1)
