@@ -45,7 +45,7 @@ class TestUsMoPayslip(TestUsPayslip):
         # tax rates
         mo_unemp = contract.mo_unemp_rate(2018) / -100.0
 
-        self._log('2018 Missouri tax first payslip:')
+        self._log('2018 Missouri tax single first payslip:')
         payslip = self._createPayslip(employee, '2018-01-01', '2018-01-31')
 
         payslip.compute_sheet()
@@ -62,11 +62,12 @@ class TestUsMoPayslip(TestUsPayslip):
 
         # 5000 for single and married with spouse working, 10000 for married spouse not working
         us_withholding = min(5000, us_withholding)
-
+        # 5000
+        self._log(us_withholding)
 
         mo_taxable_income = gross_salary - standard_deduction - mo_allowance_calculated - us_withholding
-        # 48306.14
-        self._log(mo_taxable_income)
+        # 44000.0
+        self._log('%s = %s - %s - %s - %s' % (mo_taxable_income, gross_salary, standard_deduction, mo_allowance_calculated, us_withholding))
 
         remaining_taxable_income = mo_taxable_income
         tax = 0.0
