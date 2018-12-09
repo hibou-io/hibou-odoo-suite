@@ -14,7 +14,7 @@ class TestUsPAPayslip(TestUsPayslip):
         wh = -127.92
 
         employee = self._createEmployee()
-        employee.company_id.pa_unemp_employee_rate_2018 = 0.06~
+        employee.company_id.pa_unemp_employee_rate_2018 = 0.06
         employee.company_id.pa_unemp_company_rate_2018 = 3.6785
         employee.company_id.pa_withhold_rate_2018 = 3.07
 
