@@ -11,5 +11,6 @@
         <field name="in_procure_method">make_to_stock</field>
         <field name="in_to_refund" eval="True"/>
         <field name="in_require_return" eval="True"/>
+        <field name="so_decrement_order_qty" eval="True"/>
     </record>
 </odoo>

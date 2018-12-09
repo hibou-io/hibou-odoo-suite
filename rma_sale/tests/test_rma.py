@@ -72,6 +72,9 @@ class TestRMASale(TestRMA):
         rma.in_picking_id.do_transfer()
         rma.action_done()
 
+        # Test Ordered Qty was decremented.
+        self.assertEqual(order.order_line.product_uom_qty, 0.0)
+
         # Make another RMA for the same sale order
         rma2 = self.env['rma.rma'].create({
             'template_id': self.template_sale_return.id,
