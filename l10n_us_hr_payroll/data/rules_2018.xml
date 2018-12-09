@@ -19,10 +19,10 @@ ytd += contract.external_wages
 remaining = 128400.0 - ytd
 if remaining &lt;= 0.0:
     result = 0
-elif remaining &lt; categories.GROSS:
+elif remaining &lt; categories.BASIC:
     result = remaining
 else:
-    result = categories.GROSS
+    result = categories.BASIC
         </field>
         <field name="appears_on_payslip" eval="False"/>
     </record>
@@ -34,7 +34,7 @@ else:
         <field name="condition_select">python</field>
         <field name="condition_python">result = (payslip.date_to[:4] == '2018') and not contract.fica_exempt</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = categories.GROSS</field>
+        <field name="amount_python_compute">result = categories.BASIC</field>
         <field name="appears_on_payslip" eval="False"/>
     </record>
     <record id="hr_payroll_rules_fica_emp_m_add_wages_2018" model="hr.salary.rule">
@@ -577,10 +577,10 @@ ytd += contract.external_wages
 remaining = 7000.0 - ytd
 if remaining &lt;= 0.0:
     result = 0
-elif remaining &lt; categories.GROSS:
+elif remaining &lt; categories.BASIC:
     result = remaining
 else:
-    result = categories.GROSS
+    result = categories.BASIC
         </field>
         <field name="appears_on_payslip" eval="False"/>
     </record>
