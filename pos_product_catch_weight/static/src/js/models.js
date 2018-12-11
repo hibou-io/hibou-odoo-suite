@@ -52,12 +52,15 @@ odoo.define("pos_product_catch_weight.models", function (require) {
 
         get_base_price:    function(){
             var rounding = this.pos.currency.rounding;
-            var valid_product_lot = this.pack_lot_lines.get_valid_lots();
             var lot_ratio_sum = 0.0;
 
-            for (var i=0; valid_product_lot && i < valid_product_lot.length; i++) {
-                lot_ratio_sum += valid_product_lot[i].get('lot_catch_weight_ratio');
+            if (this.pack_lot_lines && this.pack_lot_lines.get_valid_lots) {
+                var valid_product_lot = this.pack_lot_lines.get_valid_lots();
+                for (var i=0; i < valid_product_lot.length; i++) {
+                    lot_ratio_sum += valid_product_lot[i].get('lot_catch_weight_ratio');
+                }
             }
+
             var qty = this.get_quantity();
             if (lot_ratio_sum != 0.0) {
                 qty = lot_ratio_sum;
@@ -66,11 +69,15 @@ odoo.define("pos_product_catch_weight.models", function (require) {
         },
 
         get_all_prices: function(){
-            var valid_product_lot = this.pack_lot_lines.get_valid_lots();
             var lot_ratio_sum = 0.0;
-            for (var i=0; valid_product_lot && i < valid_product_lot.length; i++) {
-                lot_ratio_sum += valid_product_lot[i].get('lot_catch_weight_ratio');
+
+            if (this.pack_lot_lines && this.pack_lot_lines.get_valid_lots) {
+                var valid_product_lot = this.pack_lot_lines.get_valid_lots();
+                for (var i=0; i < valid_product_lot.length; i++) {
+                    lot_ratio_sum += valid_product_lot[i].get('lot_catch_weight_ratio');
+                }
             }
+
             var qty = this.get_quantity();
             var qty_ratio = 1.0
             if (lot_ratio_sum != 0.0) {
