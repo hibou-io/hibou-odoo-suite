@@ -18,6 +18,7 @@
     ],
     'data': [
         'templates/assets.xml',
+        'views/pos_views.xml',
     ],
     'qweb': [
         'static/src/xml/pos.xml'

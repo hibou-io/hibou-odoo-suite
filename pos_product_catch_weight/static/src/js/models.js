@@ -128,11 +128,21 @@ odoo.define("pos_product_catch_weight.models", function (require) {
         },
 
         set_lot_name: function(name){
-            this.set({
+            /*
+            If you want to allow selling unknown lots:
+            {
                 lot_name : _.str.trim(name) || null,
                 lot_catch_weight_ratio : 1.0,
                 lot_catch_weight : 1.0,
                 lot_catch_weight_uom_id : null,
+            }
+             */
+
+            this.set({
+                lot_name : _.str.trim(name) || null,
+                lot_catch_weight_ratio : 9999.0,
+                lot_catch_weight : 9999.0,
+                lot_catch_weight_uom_id : [0, 'INVALID'],
             });
         },
     })
