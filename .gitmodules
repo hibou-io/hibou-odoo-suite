@@ -1,0 +1,3 @@
+[submodule "external/hibou-shipbox"]
+	path = external/hibou-shipbox
+	url = https://github.com/hibou-io/shipbox.git
