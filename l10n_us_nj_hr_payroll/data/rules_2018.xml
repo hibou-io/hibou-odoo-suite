@@ -5,7 +5,7 @@
 <!-- HR SALARY RULES-->
 <!-- UNEMPLOYMENT -->
     <record id="hr_payroll_rules_nj_unemp_wages_2018" model="hr.salary.rule">
-        <field name="sequence" eval="423"/>
+        <field name="sequence" eval="140"/>
         <field name="category_id" ref="hr_payroll_nj_unemp_wages"/>
         <field name="name">New Jersey Unemployment Insurance Tax - Wages (2018)</field>
         <field name="code">NJ_UNEMP_WAGES_2018</field>
@@ -27,7 +27,7 @@ else:
         <field name="appears_on_payslip" eval="False"/>
     </record>
     <record id="hr_payroll_rules_nj_unemp_employee_2018" model="hr.salary.rule">
-        <field name="sequence" eval="443"/>
+        <field name="sequence" eval="145"/>
         <field name="category_id" ref="hr_payroll_nj_unemp_employee"/>
         <field name="name">New Jersey Unemployment - Employee(2018)</field>
         <field name="code">NJ_UNEMP_EMPLOYEE_2018</field>
@@ -68,7 +68,7 @@ if result_rate == 0.0:
 <!-- STATE DISABILITY INSURANCE -->
 
     <record id="hr_payroll_rules_nj_sdi_wages_2018" model="hr.salary.rule">
-        <field name="sequence" eval="423"/>
+        <field name="sequence" eval="140"/>
         <field name="category_id" ref="hr_payroll_nj_sdi_wages"/>
         <field name="name">New Jersey State Disability Tax - Wages (2018)</field>
         <field name="code">NJ_SDI_WAGES_2018</field>
@@ -90,7 +90,7 @@ else:
         <field name="appears_on_payslip" eval="False"/>
     </record>
     <record id="hr_payroll_rules_nj_sdi_employee_2018" model="hr.salary.rule">
-        <field name="sequence" eval="443"/>
+        <field name="sequence" eval="145"/>
         <field name="category_id" ref="hr_payroll_nj_sdi_employee"/>
         <field name="name">New Jersey State Disability Insurance - Employee(2018)</field>
         <field name="code">NJ_SDI_EMPLOYEE_2018</field>
@@ -130,7 +130,7 @@ if result_rate == 0.0:
 
 <!-- FAMILY LEAVE INSURANCE -->
     <record id="hr_payroll_rules_nj_fli_wages_2018" model="hr.salary.rule">
-        <field name="sequence" eval="423"/>
+        <field name="sequence" eval="145"/>
         <field name="category_id" ref="hr_payroll_nj_fli_wages"/>
         <field name="name">New Jersey Family Leave Insurance Tax - Wages (2018)</field>
         <field name="code">NJ_FLI_WAGES_2018</field>
@@ -169,7 +169,7 @@ result = categories.NJ_FLI_WAGES
 
 <!-- WORKFORCE DEVELOPMENT/SUPPLEMENTAL WORKFORCE FUNDS -->
     <record id="hr_payroll_rules_nj_wf_wages_2018" model="hr.salary.rule">
-        <field name="sequence" eval="423"/>
+        <field name="sequence" eval="140"/>
         <field name="category_id" ref="hr_payroll_nj_wf_wages"/>
         <field name="name">New Jersey Workforce Development/Supplemental Workforce Funds Tax - Wages (2018)</field>
         <field name="code">NJ_WF_WAGES_2018</field>
@@ -191,7 +191,7 @@ else:
         <field name="appears_on_payslip" eval="False"/>
     </record>
     <record id="hr_payroll_rules_nj_wf_2018" model="hr.salary.rule">
-        <field name="sequence" eval="443"/>
+        <field name="sequence" eval="145"/>
         <field name="category_id" ref="hr_payroll_nj_wf"/>
         <field name="name">New Jersey Workforce Development/Supplemental Workforce Funds(2018)</field>
         <field name="code">NJ_WF_2018</field>
