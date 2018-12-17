@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Tecnativa - David Vidal
+     Copyright 2018 Hibou Corp. - Jared Kipe
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl). -->
+
+<odoo>
+
+    <template id="assets" inherit_id="point_of_sale.assets">
+        <xpath expr=".">
+            <script type="text/javascript" src="/pos_product_catch_weight/static/src/js/models.js"/>
+            <script type="text/javascript" src="/pos_product_catch_weight/static/src/js/chrome.js"/>
+            <link rel="stylesheet" href="/pos_product_catch_weight/static/src/css/pos.css" />
+        </xpath>
+    </template>
+
+</odoo>

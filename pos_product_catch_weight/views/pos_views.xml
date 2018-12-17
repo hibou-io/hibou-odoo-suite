@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_pos_order_line_form_inherit" model="ir.ui.view">
+        <field name="name">pos.order.line.form.inherit</field>
+        <field name="model">pos.order.line</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="after">
+                <group col="4">
+                    <field name="pack_lot_ids" colspan="4">
+                        <tree>
+                            <field name="lot_name"/>
+                            <field name="lot_id"/>
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_pos_form_inherit" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lines']/form/group" position="after">
+                <group col="4">
+                    <field name="pack_lot_ids" colspan="4">
+                        <tree>
+                            <field name="lot_name"/>
+                            <field name="lot_id"/>
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

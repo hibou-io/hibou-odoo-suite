@@ -13,16 +13,6 @@
         </field>
     </record>
 
-    <!--<record id="view_move_line_form_inherit" model="ir.ui.view">-->
-        <!--<field name="name">stock.move.line.form.inherit</field>-->
-        <!--<field name="model">stock.move.line</field>-->
-        <!--<field name="inherit_id" ref="stock.view_move_line_form" />-->
-        <!--<field name="arch" type="xml">-->
-            <!--<xpath expr="//field[@name='lot_name']" position="after">-->
-                <!--<field name="lot_catch_weight_ratio" readonly="1"/>-->
-            <!--</xpath>-->
-        <!--</field>-->
-    <!--</record>-->
     <record id="view_stock_move_operations_inherit" model="ir.ui.view">
         <field name="name">stock.move.operations.form.inherit</field>
         <field name="model">stock.move</field>
@@ -36,6 +26,7 @@
             </xpath>
         </field>
     </record>
+
     <record id="view_stock_move_line_operation_tree_inherit" model="ir.ui.view">
         <field name="name">stock.move.line.operations.tree.inherit</field>
         <field name="model">stock.move.line</field>
@@ -49,6 +40,7 @@
             </xpath>
         </field>
     </record>
+
     <record id="product_template_form_view_inherit" model="ir.ui.view">
         <field name="name">product.template.common.form.inherit</field>
         <field name="model">product.template</field>
@@ -56,6 +48,20 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='uom_po_id']" position="after">
                 <field name="catch_weight_uom_id" attrs="{'invisible': [('tracking', '!=', 'serial')]}" help="Leave empty to not use catch weight."/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_view_picking_internal_search_inherit" model="ir.ui.view">
+        <field name="name">stock.view.picking.internal.search.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='done']" position="after">
+                <filter name="has_catch_weight" string="Has Catch Weight" domain="[('has_catch_weight','=',True)]" help="Pickings with Catch Weight"/>
+            </xpath>
+            <xpath expr="//group/filter[@name='picking_type']" position="after">
+                <filter string="Has Catch Weight" domain="[]" context="{'group_by':'has_catch_weight'}"/>
             </xpath>
         </field>
     </record>

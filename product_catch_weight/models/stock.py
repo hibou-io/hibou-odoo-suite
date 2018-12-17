@@ -8,7 +8,6 @@ class StockProductionLot(models.Model):
     catch_weight = fields.Float(string='Catch Weight', digits=(10, 4))
     catch_weight_uom_id = fields.Many2one('product.uom', related='product_id.catch_weight_uom_id')
 
-
     @api.depends('catch_weight')
     def _compute_catch_weight_ratio(self):
         for lot in self:
@@ -44,3 +43,22 @@ class StockMoveLine(models.Model):
     catch_weight_uom_id = fields.Many2one('product.uom', string='Catch Weight UOM')
     lot_catch_weight = fields.Float(related='lot_id.catch_weight')
     lot_catch_weight_uom_id = fields.Many2one('product.uom', related='product_id.catch_weight_uom_id')
+
+
+class StockPicking(models.Model):
+    _inherit = 'stock.picking'
+
+    has_catch_weight = fields.Boolean(string="Has Catch Weight", compute='_compute_has_catch_weight', store=True)
+
+    @api.depends('move_lines.product_catch_weight_uom_id')
+    def _compute_has_catch_weight(self):
+        for picking in self:
+            picking.has_catch_weight = any(picking.mapped('move_lines.product_catch_weight_uom_id'))
+
+
+class StockQuant(models.Model):
+    _inherit = 'stock.quant'
+
+    lot_catch_weight_ratio = fields.Float(related='lot_id.catch_weight_ratio')
+    lot_catch_weight = fields.Float(related='lot_id.catch_weight')
+    lot_catch_weight_uom_id = fields.Many2one('product.uom', related='lot_id.catch_weight_uom_id')

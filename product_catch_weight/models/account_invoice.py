@@ -25,10 +25,14 @@ class AccountInvoiceLine(models.Model):
             move_lines = self.sale_line_ids.mapped('move_ids.move_line_ids')
         else:
             move_lines = self.purchase_line_id.mapped('move_ids.move_line_ids')
-        for move_line in move_lines:
+        for move_line in move_lines.filtered(lambda l: l.lot_id):
             qty_done = move_line.qty_done
+            current_qty_done = qty_done + qty_done_total
             r = move_line.lot_id.catch_weight_ratio
-            ratio = ((ratio * qty_done_total) + (qty_done * r)) / (qty_done + qty_done_total)
+            if current_qty_done == 0:
+                ratio = 0
+            else:
+                ratio = ((ratio * qty_done_total) + (qty_done * r)) / current_qty_done
             qty_done_total += qty_done
             catch_weight += move_line.lot_id.catch_weight
         price = price * ratio

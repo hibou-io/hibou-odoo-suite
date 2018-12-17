@@ -55,7 +55,7 @@ class FakePartner():
 
     @property
     def date_localization(self):
-        if not hasattr(self, 'date_localization'):
+        if not hasattr(self, 'date_localization') and self.date_localization:
             self.date_localization = 'TODAY!'
             # The fast way.
             if ZipcodeSearchEngine and self.zip:

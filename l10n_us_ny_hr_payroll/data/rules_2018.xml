@@ -19,10 +19,10 @@ ytd += contract.external_wages
 remaining = 11100.00 - ytd
 if remaining &lt;= 0.0:
     result = 0
-elif remaining &lt; categories.GROSS:
+elif remaining &lt; categories.BASIC:
     result = remaining
 else:
-    result = categories.GROSS
+    result = categories.BASIC
         </field>
         <field name="appears_on_payslip" eval="False"/>
     </record>
