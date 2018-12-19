@@ -4,11 +4,14 @@ services:
 
 stages:
   - build
+  - trigger
 
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   CONTAINER_IMAGE: registry.gitlab.com/hibou-io/hibou-odoo/suite
+  GITLAB_BASE_URL: https://gitlab.com
+  ENTERPRISE_PROJECT_ID: 10004796
 
 before_script:
   - RELEASE=$(echo $CI_COMMIT_REF_SLUG | sed "s/^\([[:digit:]][[:digit:]]\)-\([[:digit:]]\)/\1\.\2/g")
@@ -20,5 +23,17 @@ build:
     - docker build --pull -t $CONTAINER_IMAGE:$RELEASE -f Dockerfile-GitLab .
     - docker push $CONTAINER_IMAGE:$RELEASE
 
+trigger11:
+  stage: trigger
+  script:
+    - docker run byrnedo/alpine-curl curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=11.0 $GITLAB_BASE_URL/api/v4/projects/$ENTERPRISE_PROJECT_ID/trigger/pipeline
+  only:
+    - 11.0
 
+trigger12:
+  stage: trigger
+  script:
+    - docker run byrnedo/alpine-curl curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=12.0 $GITLAB_BASE_URL/api/v4/projects/$ENTERPRISE_PROJECT_ID/trigger/pipeline
+  only:
+    - 12.0
 
