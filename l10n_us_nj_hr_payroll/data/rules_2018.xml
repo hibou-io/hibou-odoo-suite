@@ -130,7 +130,7 @@ if result_rate == 0.0:
 
 <!-- FAMILY LEAVE INSURANCE -->
     <record id="hr_payroll_rules_nj_fli_wages_2018" model="hr.salary.rule">
-        <field name="sequence" eval="145"/>
+        <field name="sequence" eval="140"/>
         <field name="category_id" ref="hr_payroll_nj_fli_wages"/>
         <field name="name">New Jersey Family Leave Insurance Tax - Wages (2018)</field>
         <field name="code">NJ_FLI_WAGES_2018</field>
@@ -152,7 +152,7 @@ else:
         <field name="appears_on_payslip" eval="False"/>
     </record>
     <record id="hr_payroll_rules_nj_fli_2018" model="hr.salary.rule">
-        <field name="sequence" eval="443"/>
+        <field name="sequence" eval="145"/>
         <field name="category_id" ref="hr_payroll_nj_fli"/>
         <field name="name">New Jersey Family Leave Insurance(2018)</field>
         <field name="code">NJ_FLI_2018</field>
