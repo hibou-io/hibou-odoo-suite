@@ -4,7 +4,7 @@
 
 <!-- HR SALARY RULES-->
     <record id="hr_payroll_rules_pa_unemp_wages_2018" model="hr.salary.rule">
-        <field name="sequence" eval="423"/>
+        <field name="sequence" eval="143"/>
         <field name="category_id" ref="hr_payroll_pa_unemp_wages"/>
         <field name="name">Pennsylvania Unemployment - Wages (2018)</field>
         <field name="code">PA_UNEMP_WAGES_2018</field>
@@ -26,7 +26,7 @@ else:
         <field name="appears_on_payslip" eval="False"/>
     </record>
     <record id="hr_payroll_rules_pa_unemp_employee_2018" model="hr.salary.rule">
-        <field name="sequence" eval="443"/>
+        <field name="sequence" eval="145"/>
         <field name="category_id" ref="hr_payroll_pa_unemp_employee"/>
         <field name="name">Pennsylvania Unemployment - Employee(2018)</field>
         <field name="code">PA_UNEMP_EMPLOYEE_2018</field>
