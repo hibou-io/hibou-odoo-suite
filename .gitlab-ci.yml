@@ -33,10 +33,24 @@ trigger11:
   only:
     - "11.0"
 
+trigger11-test:
+  stage: trigger
+  script:
+    - docker run byrnedo/alpine-curl curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=11.0-test $GITLAB_BASE_URL/api/v4/projects/$ENTERPRISE_PROJECT_ID/trigger/pipeline
+  only:
+    - 11.0-test
+
 trigger12:
   stage: trigger
   script:
     - docker run byrnedo/alpine-curl curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=12.0 $GITLAB_BASE_URL/api/v4/projects/$ENTERPRISE_PROJECT_ID/trigger/pipeline
   only:
     - "12.0"
+
+trigger12-test:
+  stage: trigger
+  script:
+    - docker run byrnedo/alpine-curl curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=12.0-test $GITLAB_BASE_URL/api/v4/projects/$ENTERPRISE_PROJECT_ID/trigger/pipeline
+  only:
+    - 12.0-test
 
