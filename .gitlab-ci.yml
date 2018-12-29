@@ -26,7 +26,7 @@ build:
   script:
     - sed -i "s/RELEASE/$RELEASE/g" Dockerfile-GitLab
     - docker build --pull -t $CONTAINER_IMAGE:$IMAGE_TAG -f Dockerfile-GitLab .
-    - docker push $CONTAINER_IMAGE:$RELEASE
+    - docker push $CONTAINER_IMAGE:$IMAGE_TAG
 
 trigger:
   stage: trigger
