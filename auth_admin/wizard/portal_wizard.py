@@ -9,7 +9,13 @@ class PortalWizard(models.TransientModel):
     def admin_auth_generate_login(self):
         self.ensure_one()
         self.user_ids.admin_auth_generate_login()
-        return {'type': 'ir.actions.do_nothing'}
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "views": [[False, "form"]],
+            "res_id": self.id,
+            "target": "new",
+        }
 
 
 class PortalWizardUser(models.TransientModel):
@@ -20,8 +26,8 @@ class PortalWizardUser(models.TransientModel):
     @api.multi
     def admin_auth_generate_login(self):
         ir_model_access = self.env['ir.model.access']
-        for row in self:
-            row.force_login_url = ''
+        for row in self.filtered(lambda r: r.in_portal):
             user = row.partner_id.user_ids[0] if row.partner_id.user_ids else None
-            if ir_model_access.check('res.partner', mode='unlink') and row.in_portal and user:
+            if ir_model_access.check('res.partner', mode='unlink') and user:
                 row.force_login_url = admin_auth_generate_login(self.env, user)
+        self.filtered(lambda r: not r.in_portal).update({'force_login_url': ''})

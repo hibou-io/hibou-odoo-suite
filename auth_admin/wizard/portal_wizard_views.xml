@@ -7,10 +7,10 @@
         <field name="inherit_id" ref="portal.wizard_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='in_portal']" position="after">
-                <field name="force_login_url" readonly="1"/>
+                <field name="force_login_url"/>
             </xpath>
             <xpath expr="//button[last()]" position="after">
-                <button string="Generate Login URL" type="object" name="admin_auth_generate_login" class="btn-default" />
+                <button string="Generate Login URL" type="object" name="admin_auth_generate_login" class="btn-primary" />
             </xpath>
         </field>
     </record>

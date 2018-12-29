@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo import http, exceptions
 from ..models.res_users import check_admin_auth_login
 
