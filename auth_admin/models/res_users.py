@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo import models, api, exceptions
 from odoo.http import request
 from datetime import datetime
@@ -9,6 +7,7 @@ from hashlib import sha256
 
 from logging import getLogger
 _logger = getLogger(__name__)
+
 
 def admin_auth_generate_login(env, user):
     """
@@ -36,6 +35,7 @@ def admin_auth_generate_login(env, user):
 
     return base_url + '/auth_admin?u=' + u + '&e=' + e + '&o=' + o + '&h=' + h.hexdigest()
 
+
 def check_admin_auth_login(env, u_user_id, e_expires, o_org_user_id, hash_):
     """
     Checks that the parameters are valid and that the user exists.
@@ -58,14 +58,14 @@ def check_admin_auth_login(env, u_user_id, e_expires, o_org_user_id, hash_):
     myh = hmac.new(key.encode(), str(str(u_user_id) + str(e_expires) + str(o_org_user_id)).encode(), sha256)
 
     if not hmac.compare_digest(hash_, myh.hexdigest()):
-        raise exceptions.Warning('Invalid Request')
+        raise exceptions.AccessDenied('Invalid Request')
 
     if not (now <= int(e_expires) <= fifteen):
-        raise exceptions.Warning('Expired')
+        raise exceptions.AccessDenied('Expired')
 
     user = env['res.users'].sudo().search([('id', '=', int(u_user_id))], limit=1)
     if not user.id:
-        raise exceptions.Warning('Invalid User')
+        raise exceptions.AccessDenied('Invalid User')
     return user
 
 
@@ -82,9 +82,12 @@ class ResUsers(models.Model):
 
         return False
 
-    @api.model
-    def check_credentials(self, password):
-        if request and hasattr(request, 'session') and request.session.get('auth_admin'):
-            _logger.warn('check_credentials for user id: ' + str(request.session.uid) + ' original user id: ' + str(request.session.auth_admin))
-            return True
-        return super(ResUsers, self).check_credentials(password)
+    def _check_credentials(self, password):
+        try:
+            return super(ResUsers, self)._check_credentials(password)
+        except exceptions.AccessDenied:
+            if request and hasattr(request, 'session') and request.session.get('auth_admin'):
+                _logger.warn('_check_credentials for user id: ' + \
+                             str(request.session.uid) + ' original user id: ' + str(request.session.auth_admin))
+            else:
+                raise
