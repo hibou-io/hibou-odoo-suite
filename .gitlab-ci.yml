@@ -14,7 +14,8 @@ variables:
   ENTERPRISE_PROJECT_ID: 10004796
 
 before_script:
-  - RELEASE=$(echo $CI_COMMIT_REF_SLUG | sed "s/^\([[:digit:]][[:digit:]]\)-\([[:digit:]]\)/\1\.\2/g")
+  - RELEASE=$(echo $CI_COMMIT_REF_NAME | sed "s{.*\/\(.*\)\/.*{\1{g")
+  - IMAGE_TAG=$(echo $CI_COMMIT_REF_SLUG | sed "s/^\([[:digit:]][[:digit:]]\)-\([[:digit:]]\)/\1\.\2/g")
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
   - apk add git
   - git submodule sync --recursive
@@ -24,11 +25,13 @@ build:
   stage: build
   script:
     - sed -i "s/RELEASE/$RELEASE/g" Dockerfile-GitLab
-    - docker build --pull -t $CONTAINER_IMAGE:$RELEASE -f Dockerfile-GitLab .
+    - docker build --pull -t $CONTAINER_IMAGE:$IMAGE_TAG -f Dockerfile-GitLab .
     - docker push $CONTAINER_IMAGE:$RELEASE
 
 trigger:
   stage: trigger
   script:
     - docker run byrnedo/alpine-curl curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=$RELEASE $GITLAB_BASE_URL/api/v4/projects/$ENTERPRISE_PROJECT_ID/trigger/pipeline
+  only:
+    - /^\d\d\.\d/
 
