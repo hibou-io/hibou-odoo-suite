@@ -38,7 +38,7 @@ class PosOrderLine(models.Model):
                     lot_ratio_sum += l.lot_catch_weight_ratio
                 else:
                     lot_ratio_sum += 1.0
-            if lot_ratio_sum != 0.0:
+            if lot_ratio_sum != 0.0 and line.qty:
                 lot_ratio = lot_ratio_sum / line.qty
                 price = (line.price_unit * lot_ratio) * (1 - (line.discount or 0.0) / 100.0)
 
