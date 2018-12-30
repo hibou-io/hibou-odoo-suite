@@ -1,9 +1,9 @@
 from odoo import api, fields, models
 
 try:
-    from uszipcode import ZipcodeSearchEngine
+    from uszipcode import SearchEngine
 except ImportError:
-    ZipcodeSearchEngine = None
+    SearchEngine = None
 
 
 class Partner(models.Model):
@@ -13,13 +13,13 @@ class Partner(models.Model):
     def geo_localize(self):
         # We need country names in English below
         for partner in self.with_context(lang='en_US'):
-            if ZipcodeSearchEngine and partner.zip:
-                with ZipcodeSearchEngine() as search:
+            if SearchEngine and partner.zip:
+                with SearchEngine() as search:
                     zipcode = search.by_zipcode(str(self.zip).split('-')[0])
-                    if zipcode and zipcode['Latitude']:
+                    if zipcode and zipcode.lat:
                         partner.write({
-                            'partner_latitude': zipcode['Latitude'],
-                            'partner_longitude': zipcode['Longitude'],
+                            'partner_latitude': zipcode.lat,
+                            'partner_longitude': zipcode.lng,
                             'date_localization': fields.Date.context_today(partner),
                         })
                     else:
