@@ -8,10 +8,10 @@ from logging import getLogger
 _logger = getLogger(__name__)
 
 try:
-    from uszipcode import ZipcodeSearchEngine
+    from uszipcode import SearchEngine
 except ImportError:
     _logger.warn('module "uszipcode" cannot be loaded, falling back to Google API')
-    ZipcodeSearchEngine = None
+    SearchEngine = None
 
 from odoo import api, fields, models, tools
 from odoo.addons.base_geolocalize.models.res_partner import geo_find, geo_query_address
@@ -58,12 +58,12 @@ class FakePartner():
         if not hasattr(self, 'date_localization') and self.date_localization:
             self.date_localization = 'TODAY!'
             # The fast way.
-            if ZipcodeSearchEngine and self.zip:
-                with ZipcodeSearchEngine() as search:
+            if SearchEngine and self.zip:
+                with SearchEngine() as search:
                     zipcode = search.by_zipcode(str(self.zip).split('-')[0])
-                    if zipcode and zipcode['Latitude']:
-                        self.partner_latitude = zipcode['Latitude']
-                        self.partner_longitude = zipcode['Longitude']
+                    if zipcode and zipcode.lat:
+                        self.partner_latitude = zipcode.lat
+                        self.partner_longitude = zipcode.lng
                         return self.date_localization
 
             # The slow way.
