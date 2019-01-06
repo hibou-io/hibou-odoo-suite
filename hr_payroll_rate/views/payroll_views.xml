@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="payroll_rate_view_tree" model="ir.ui.view">
+        <field name="name">hr.payroll.rate.tree</field>
+        <field name="model">hr.payroll.rate</field>
+        <field name="arch" type="xml">
+            <tree string="Payroll Rates">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="rate"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="payroll_rate_view_form" model="ir.ui.view">
+        <field name="name">hr.payroll.rate.form</field>
+        <field name="model">hr.payroll.rate</field>
+        <field name="arch" type="xml">
+            <form string="Payroll Rate">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="active"/>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="rate"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="payroll_rate_view_search" model="ir.ui.view">
+        <field name="name">hr.payroll.rate.search</field>
+        <field name="model">hr.payroll.rate</field>
+        <field name="arch" type="xml">
+            <search string="Payroll Rates">
+                <field name="name"/>
+                <field name="code"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="payroll_rate_view_action_main" model="ir.actions.act_window">
+        <field name="name">Payroll Rates</field>
+        <field name="res_model">hr.payroll.rate</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>
+                No rates
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="payroll_rate_menu_main" name="Payroll Rates"
+              action="payroll_rate_view_action_main"
+              sequence="13" parent="hr_payroll.menu_hr_payroll_configuration"/>
+</odoo>
