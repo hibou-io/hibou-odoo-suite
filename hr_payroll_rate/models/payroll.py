@@ -18,10 +18,15 @@ class PayrollRate(models.Model):
 class Payslip(models.Model):
     _inherit = 'hr.payslip'
 
-    def get_rate(self, code):
-        self.ensure_one()
-        return self.env['hr.payroll.rate'].search([
+    def _get_rate_domain(self, code):
+        return [
             '|', ('date_to', '=', False), ('date_to', '>=', self.date_to),
+            '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id),
             ('code', '=', code),
             ('date_from', '<=', self.date_from),
-        ], limit=1)
+        ]
+
+    def get_rate(self, code):
+        self.ensure_one()
+        return self.env['hr.payroll.rate'].search(
+            self._get_rate_domain(code), limit=1)
