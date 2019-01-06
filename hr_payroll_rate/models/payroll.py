@@ -14,6 +14,11 @@ class PayrollRate(models.Model):
     rate = fields.Float(string='Rate', required=True)
     code = fields.Char(string='Code', required=True)
 
+    limit_payslip = fields.Float(string='Payslip Limit')
+    limit_year = fields.Float(string='Year Limit')
+    wage_limit_payslip = fields.Float(string='Payslip Wage Limit')
+    wage_limit_year = fields.Float(string='Year Wage Limit')
+
 
 class Payslip(models.Model):
     _inherit = 'hr.payslip'
