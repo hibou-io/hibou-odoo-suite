@@ -27,8 +27,31 @@ class TestPayrollRate(common.TransactionCase):
         self.payslip = self.env['hr.payslip'].create({
             'employee_id': self.employee.id,
         })
+        self.company_other = self.env['res.company'].create({
+            'name': 'Other'
+        })
 
-    def test_payslip_timesheet(self):
+    def test_payroll_rate_basic(self):
+        rate = self.payslip.get_rate('TEST')
+        self.assertFalse(rate)
+        test_rate = self.env['hr.payroll.rate'].create({
+            'name': 'Test Rate',
+            'code': 'TEST',
+            'rate': 1.65,
+            'date_from': '2018-01-01',
+        })
+
+        rate = self.payslip.get_rate('TEST')
+        self.assertEqual(rate, test_rate)
+
+    def test_payroll_rate_multicompany(self):
+        test_rate_other = self.env['hr.payroll.rate'].create({
+            'name': 'Test Rate',
+            'code': 'TEST',
+            'rate': 1.65,
+            'date_from': '2018-01-01',
+            'company_id': self.company_other.id,
+        })
         rate = self.payslip.get_rate('TEST')
         self.assertFalse(rate)
         test_rate = self.env['hr.payroll.rate'].create({
