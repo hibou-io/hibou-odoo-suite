@@ -33,6 +33,12 @@
                             <field name="date_to"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
+                        <group name="limits">
+                            <field name="limit_payslip"/>
+                            <field name="limit_year"/>
+                            <field name="wage_limit_payslip"/>
+                            <field name="wage_limit_year"/>
+                        </group>
                     </group>
                 </sheet>
             </form>
