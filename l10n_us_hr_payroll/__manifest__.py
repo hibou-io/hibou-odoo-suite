@@ -4,7 +4,7 @@
     'author': 'Hibou Corp. <hello@hibou.io>',
     'license': 'AGPL-3',
     'category': 'Localization',
-    'depends': ['hr_payroll'],
+    'depends': ['hr_payroll', 'hr_payroll_rate'],
     'version': '11.0.2018.1.0',
     'description': """
 USA Payroll Rules.
@@ -21,11 +21,10 @@ USA Payroll Rules.
     'auto_install': False,
     'website': 'https://hibou.io/',
     'data': [
-        'l10n_us_hr_payroll_view.xml',
+        'views/l10n_us_hr_payroll_view.xml',
         'data/base.xml',
-        'data/rules_2016.xml',
-        'data/rules_2017.xml',
-        'data/rules_2018.xml',
+        'data/rates.xml',
+        'data/rules.xml',
         'data/final.xml',
     ],
     'installable': True

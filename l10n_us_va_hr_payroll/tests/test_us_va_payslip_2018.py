@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.l10n_us_hr_payroll.tests.test_us_payslip import TestUsPayslip, process_payslip
-from odoo.addons.l10n_us_hr_payroll.l10n_us_hr_payroll import USHrContract
+from odoo.addons.l10n_us_hr_payroll.models.l10n_us_hr_payroll import USHrContract
 
 
 class TestUsVaPayslip(TestUsPayslip):
