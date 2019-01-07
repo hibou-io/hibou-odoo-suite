@@ -5,7 +5,7 @@ from sys import float_info as sys_float_info
 
 from odoo.tests import common
 from odoo.tools.float_utils import float_round as odoo_float_round
-from odoo.addons.l10n_us_hr_payroll.l10n_us_hr_payroll import USHrContract
+from odoo.addons.l10n_us_hr_payroll.models.l10n_us_hr_payroll import USHrContract
 
 
 def process_payslip(payslip):

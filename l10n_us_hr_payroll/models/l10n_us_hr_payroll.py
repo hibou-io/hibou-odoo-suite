@@ -1,15 +1,24 @@
 from odoo import models, fields, api
 
 
+class Payslip(models.Model):
+    _inherit = 'hr.payslip'
+
+    def get_futa_rate(self, contract):
+        self.ensure_one()
+        if contract.futa_type == USHrContract.FUTA_TYPE_EXEMPT:
+            rate = self.get_rate('US_FUTA_EXEMPT')
+        elif contract.futa_type == USHrContract.FUTA_TYPE_NORMAL:
+            rate = self.get_rate('US_FUTA_NORMAL')
+        else:
+            rate = self.get_rate('US_FUTA_BASIC')
+        return rate
+
+
 class USHrContract(models.Model):
     FUTA_TYPE_EXEMPT = 'exempt'
     FUTA_TYPE_BASIC = 'basic'
     FUTA_TYPE_NORMAL = 'normal'
-    FUTA_YEARS_VALID = (
-        2016,
-        2017,
-        2018,
-    )
 
     _inherit = 'hr.contract'
 
@@ -33,17 +42,3 @@ class USHrContract(models.Model):
         (FUTA_TYPE_NORMAL, 'Normal Net Rate (0.6%)'),
         (FUTA_TYPE_BASIC, 'Basic Rate (6%)'),
     ], string="Federal Unemployment Tax Type (FUTA)", default='normal')
-
-    @api.multi
-    def futa_rate(self, year):
-        self.ensure_one()
-
-        if year not in self.FUTA_YEARS_VALID:
-            raise NotImplemented('FUTA rate for Year: ' + str(year) + ' not known.')
-
-        if self.futa_type == self.FUTA_TYPE_EXEMPT:
-            return 0.0
-        elif self.futa_type == self.FUTA_TYPE_NORMAL:
-            return 0.6
-        else:
-            return 6.0
