@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_nc_unemp_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_nc_unemp_wages"/>
+        <field name="name">Wage: US-NC Unemployment</field>
+        <field name="code">WAGE_US_NC_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_NC_UNEMP')
+year = int(payslip.dict.date_from[:4])
+ytd = payslip.sum('NC_UNEMP_WAGES_2018', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_nc_unemp_2018" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_nc_unemp"/>
+        <field name="name">ER: US-NC Unemployment</field>
+        <field name="code">ER_US_NC_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_NC_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_US_NC_UNEMP
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_ncdor_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_nc_inc_withhold_2018" model="hr.salary.rule">
+        <field name="sequence" eval="155"/>
+        <field name="category_id" ref="hr_payroll_nc_income_withhold"/>
+        <field name="name">EE: US-NC Income Tax Withholding</field>
+        <field name="code">EE_US_NC_INC_WITHHOLD</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = True</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+wages = categories.GROSS
+allowances = contract.nc_nc4_allowances
+schedule_pay = contract.schedule_pay
+val = 0.00
+
+
+# PST -> Portion of standard deduction
+if year == 2018:
+    PST = 0.0
+    allowance_multiplier = 0.0
+    if 'weekly' == schedule_pay:
+        allowance_multiplier = 48.08
+        if contract.nc_nc4_filing_status == 'head_household':
+            PST = 269.23
+        else:
+            PST = 168.27
+    elif 'bi-weekly' == schedule_pay:
+        allowance_multiplier = 96.15
+        if contract.nc_nc4_filing_status == 'head_household':
+            PST = 538.46
+        else:
+            PST = 336.54
+    elif 'semi-monthly' == schedule_pay:
+        allowance_multiplier = 104.17
+        if contract.nc_nc4_filing_status == 'head_household':
+            PST = 583.33
+        else:
+            PST = 364.58
+    elif 'monthly' == schedule_pay:
+        allowance_multiplier = 208.33
+        if contract.nc_nc4_filing_status == 'head_household':
+            PST = 1166.67
+        else:
+            PST = 729.17
+
+    else:
+        raise Exception('Invalid schedule_pay="' + schedule_pay + '" for NC Income Withholding calculation')
+
+    # Algorithm derived from percentage method in https://files.nc.gov/ncdor/documents/files/nc-30_book_web.pdf
+    if contract.nc_nc4_filing_status == 'exempt':
+        result = 0
+    else:
+        withholding = round(((wages - (PST + (allowance_multiplier * allowances))) * 0.05599) + contract.nc_nc4_additional_wh)
+        if withholding > 0.0:
+            result = - withholding
+        else:
+            result = 0
+else:
+    PST = 0.0
+    allowance_multiplier = 0.0
+    if 'weekly' == schedule_pay:
+        allowance_multiplier = 48.08
+        if contract.nc_nc4_filing_status == 'head_household':
+            PST = 288.46
+        else:
+            PST = 192.31
+    elif 'bi-weekly' == schedule_pay:
+        allowance_multiplier = 96.15
+        if contract.nc_nc4_filing_status == 'head_household':
+            PST = 576.92
+        else:
+            PST = 384.62
+    elif 'semi-monthly' == schedule_pay:
+        allowance_multiplier = 104.17
+        if contract.nc_nc4_filing_status == 'head_household':
+            PST = 625.00
+        else:
+            PST = 416.67
+    elif 'monthly' == schedule_pay:
+        allowance_multiplier = 208.33
+        if contract.nc_nc4_filing_status == 'head_household':
+            PST = 1250.00
+        else:
+            PST = 833.33
+
+    else:
+        raise Exception('Invalid schedule_pay="' + schedule_pay + '" for NC Income Withholding calculation')
+
+    # Algorithm derived from percentage method in https://files.nc.gov/ncdor/documents/files/nc-30_book_web.pdf
+    if contract.nc_nc4_filing_status == 'exempt':
+        result = 0
+    else:
+        withholding = round(((wages - (PST + (allowance_multiplier * allowances))) * 0.0535) + contract.nc_nc4_additional_wh)
+        if withholding > 0.0:
+            result = - withholding
+        else:
+            result = 0
+
+        </field>
+        <field name="register_id" ref="contrib_register_ncdor_withhold"/>
+    </record>
+
+    </data>
+</odoo>
