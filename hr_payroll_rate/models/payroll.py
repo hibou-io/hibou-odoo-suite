@@ -34,4 +34,4 @@ class Payslip(models.Model):
     def get_rate(self, code):
         self.ensure_one()
         return self.env['hr.payroll.rate'].search(
-            self._get_rate_domain(code), limit=1)
+            self._get_rate_domain(code), limit=1, order='date_from DESC')
