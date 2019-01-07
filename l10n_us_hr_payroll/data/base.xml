@@ -26,111 +26,58 @@
 
 <!-- HR SALARY RULE CATEGORIES-->
     <record id="hr_payroll_fica_emp_ss_wages" model="hr.salary.rule.category">
-        <field name="name">FICA Employee Social Security - Wages</field>
-        <field name="code">FICA_EMP_SS_WAGES</field>
+        <field name="name">Wage: US FICA Social Security</field>
+        <field name="code">WAGE_US_FICA_SS</field>
     </record>
     <record id="hr_payroll_fica_emp_m_wages" model="hr.salary.rule.category">
-        <field name="name">FICA Employee Medicare - Wages</field>
-        <field name="code">FICA_EMP_M_WAGES</field>
+        <field name="name">Wage: US FICA Medicare</field>
+        <field name="code">WAGE_US_FICA_M</field>
     </record>
     <record id="hr_payroll_fica_emp_m_add_wages" model="hr.salary.rule.category">
-        <field name="name">FICA Employee Medicare Additional - Wages</field>
-        <field name="code">FICA_EMP_M_ADD_WAGES</field>
+        <field name="name">Wage: US FICA Medicare Additional</field>
+        <field name="code">WAGE_US_FICA_M_ADD</field>
     </record>
     <record id="hr_payroll_futa_wages" model="hr.salary.rule.category">
-        <field name="name">FUTA Federal Unemployment - Wages</field>
-        <field name="code">FUTA_WAGES</field>
+        <field name="name">Wage: US FUTA Federal Unemployment</field>
+        <field name="code">WAGE_US_FUTA</field>
     </record>
 
     <record id="hr_payroll_fica_emp_ss" model="hr.salary.rule.category">
-        <field name="name">FICA Employee Social Security</field>
-        <field name="code">FICA_EMP_SS</field>
+        <field name="name">EE: US FICA Social Security</field>
+        <field name="code">EE_US_FICA_SS</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
     <record id="hr_payroll_fica_emp_m" model="hr.salary.rule.category">
-        <field name="name">FICA Employee Medicare</field>
-        <field name="code">FICA_EMP_M</field>
+        <field name="name">EE: US FICA Medicare</field>
+        <field name="code">EE_US_FICA_M</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
     <record id="hr_payroll_fica_emp_m_add" model="hr.salary.rule.category">
-        <field name="name">FICA Employee Medicare Additional</field>
-        <field name="code">FICA_EMP_M_ADD</field>
+        <field name="name">EE: US FICA Medicare Additional</field>
+        <field name="code">EE_US_FICA_M_ADD</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
     <record id="hr_payroll_fed_income_withhold" model="hr.salary.rule.category">
-        <field name="name">Federal Income Withholding</field>
-        <field name="code">FED_INC_WITHHOLD</field>
+        <field name="name">EE: US Federal Income Tax Withholding</field>
+        <field name="code">EE_US_FED_INC_WITHHOLD</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
 
     <record id="hr_payroll_fica_comp_ss" model="hr.salary.rule.category">
-        <field name="name">FICA Company Social Security</field>
-        <field name="code">FICA_COMP_SS</field>
+        <field name="name">ER: US FICA Social Security</field>
+        <field name="code">ER_US_FICA_SS</field>
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
     <record id="hr_payroll_fica_comp_m" model="hr.salary.rule.category">
-        <field name="name">FICA Company Medicare</field>
-        <field name="code">FICA_COMP_M</field>
+        <field name="name">ER: US FICA Medicare</field>
+        <field name="code">ER_US_FICA_M</field>
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
     <record id="hr_payroll_futa" model="hr.salary.rule.category">
-        <field name="name">FUTA Federal Unemployment</field>
-        <field name="code">FUTA</field>
+        <field name="name">ER: US FUTA Federal Unemployment</field>
+        <field name="code">ER_US_FUTA</field>
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
-
-
-<!-- HR SALARY RULES-->
-    <!-- Employee Deductions and Calculations -->
-    <!-- Company Contributions -->
-    <record id="hr_payroll_rules_fica_comp_ss" model="hr.salary.rule">
-        <field name="sequence" eval="440"/>
-        <field name="category_id" ref="hr_payroll_fica_comp_ss"/>
-        <field name="name">FICA Company Social Security</field>
-        <field name="code">FICA_COMP_SS</field>
-        <field name="condition_select">none</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = categories.FICA_EMP_SS</field>
-        <field name="register_id" ref="contrib_register_eftps_941"/>
-        <field name="appears_on_payslip" eval="False"/>
-    </record>
-    <record id="hr_payroll_rules_fica_comp_m" model="hr.salary.rule">
-        <field name="sequence" eval="441"/>
-        <field name="category_id" ref="hr_payroll_fica_comp_m"/>
-        <field name="name">FICA Company Medicare</field>
-        <field name="code">FICA_COMP_M</field>
-        <field name="condition_select">none</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = categories.FICA_EMP_M</field>
-        <field name="register_id" ref="contrib_register_eftps_941"/>
-        <field name="appears_on_payslip" eval="False"/>
-    </record>
-
-
-<!-- Salary Rules -->
-    <!-- Company Contributions -->
-    <record id="hr_payroll_rules_fica_comp_ss" model="hr.salary.rule">
-        <field name="sequence" eval="440"/>
-        <field name="category_id" ref="hr_payroll_fica_comp_ss"/>
-        <field name="name">FICA Company Social Security</field>
-        <field name="code">FICA_COMP_SS</field>
-        <field name="condition_select">none</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = categories.FICA_EMP_SS</field>
-        <field name="register_id" ref="contrib_register_eftps_941"/>
-        <field name="appears_on_payslip" eval="False"/>
-    </record>
-    <record id="hr_payroll_rules_fica_comp_m" model="hr.salary.rule">
-        <field name="sequence" eval="441"/>
-        <field name="category_id" ref="hr_payroll_fica_comp_m"/>
-        <field name="name">FICA Company Medicare</field>
-        <field name="code">FICA_COMP_M</field>
-        <field name="condition_select">none</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = categories.FICA_EMP_M</field>
-        <field name="register_id" ref="contrib_register_eftps_941"/>
-        <field name="appears_on_payslip" eval="False"/>
-    </record>
-
+        
     </data>
 </openerp>
