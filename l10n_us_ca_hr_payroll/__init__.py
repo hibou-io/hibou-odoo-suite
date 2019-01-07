@@ -1,1 +1,1 @@
-from . import hr_payroll
+from . import models

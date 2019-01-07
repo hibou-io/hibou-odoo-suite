@@ -7,9 +7,9 @@ class TestUsCAPayslip(TestUsPayslip):
     ###
     CA_UIT_MAX_WAGE = 7000
     CA_UIT_MAX_WAGE = 7000
-    CA_SDI_MAX_WAGE = 114967
+    CA_SDI_MAX_WAGE = 18371
 
-    CA_UIT = -2.6 / 100.0
+    CA_UIT = -3.4 / 100.0
     CA_ETT = -0.1 / 100.0
     CA_SDI = -1.0 / 100.0
 
@@ -35,13 +35,13 @@ class TestUsCAPayslip(TestUsPayslip):
 
         self.assertEqual(contract.schedule_pay, 'weekly')
 
-        self._log('2017 California tax last payslip:')
-        payslip = self._createPayslip(employee, '2017-12-01', '2017-12-31')
+        self._log('2018 California tax last payslip:')
+        payslip = self._createPayslip(employee, '2018-12-01', '2018-12-31')
         payslip.compute_sheet()
         process_payslip(payslip)
 
-        self._log('2018 California tax first payslip:')
-        payslip = self._createPayslip(employee, '2018-01-01', '2018-01-31')
+        self._log('2019 California tax first payslip:')
+        payslip = self._createPayslip(employee, '2019-01-01', '2019-01-31')
 
         payslip.compute_sheet()
 
@@ -62,8 +62,8 @@ class TestUsCAPayslip(TestUsPayslip):
         remaining_ca_uit_wages = self.CA_UIT_MAX_WAGE - salary if (self.CA_UIT_MAX_WAGE - 2 * salary < salary) \
             else salary
 
-        self._log('2018 California tax second payslip:')
-        payslip = self._createPayslip(employee, '2018-02-01', '2018-02-28')
+        self._log('2019 California tax second payslip:')
+        payslip = self._createPayslip(employee, '2019-02-01', '2019-02-28')
 
         payslip.compute_sheet()
 
@@ -78,7 +78,13 @@ class TestUsCAPayslip(TestUsPayslip):
         allowances = 2
         additional_allowances = 1
 
-        wh = -2.89
+        # for additional allowances
+        wh = salary - 38
+        wh = wh - 339
+        wh = (wh - 632) * 0.022 + 6.95
+        wh = wh - 9.65
+        # 2.651 - 9.65
+        wh = -wh
 
         employee = self._createEmployee()
         contract = self._createContract(employee,
@@ -95,13 +101,13 @@ class TestUsCAPayslip(TestUsPayslip):
         self.assertEqual(contract.ca_de4_allowances, 2)
         self.assertEqual(contract.ca_additional_allowances, 1)
 
-        self._log('2017 California tax last payslip:')
-        payslip = self._createPayslip(employee, '2017-12-01', '2017-12-31')
+        self._log('2018 California tax last payslip:')
+        payslip = self._createPayslip(employee, '2018-12-01', '2018-12-31')
         payslip.compute_sheet()
         process_payslip(payslip)
 
-        self._log('2018 California tax first payslip:')
-        payslip = self._createPayslip(employee, '2018-01-01', '2018-01-31')
+        self._log('2019 California tax first payslip:')
+        payslip = self._createPayslip(employee, '2019-01-01', '2019-01-31')
 
         payslip.compute_sheet()
 
@@ -122,8 +128,8 @@ class TestUsCAPayslip(TestUsPayslip):
         remaining_ca_uit_wages = self.CA_UIT_MAX_WAGE - salary if (self.CA_UIT_MAX_WAGE - 2 * salary < salary) \
             else salary
 
-        self._log('2018 California tax second payslip:')
-        payslip = self._createPayslip(employee, '2018-02-01', '2018-02-28')
+        self._log('2019 California tax second payslip:')
+        payslip = self._createPayslip(employee, '2019-02-01', '2019-02-28')
 
         payslip.compute_sheet()
 
@@ -138,7 +144,7 @@ class TestUsCAPayslip(TestUsPayslip):
         allowances = 5
         additional_allowances = 0.72
 
-        wh = -0.72
+        wh = -0.11
 
         employee = self._createEmployee()
         contract = self._createContract(employee,
@@ -155,13 +161,13 @@ class TestUsCAPayslip(TestUsPayslip):
         self.assertEqual(contract.ca_de4_allowances, 5)
         self.assertEqual(contract.ca_additional_allowances, 0)
 
-        self._log('2017 California tax last payslip:')
-        payslip = self._createPayslip(employee, '2017-12-01', '2017-12-31')
+        self._log('2018 California tax last payslip:')
+        payslip = self._createPayslip(employee, '2018-12-01', '2018-12-31')
         payslip.compute_sheet()
         process_payslip(payslip)
 
-        self._log('2018 California tax first payslip:')
-        payslip = self._createPayslip(employee, '2018-01-01', '2018-01-31')
+        self._log('2019 California tax first payslip:')
+        payslip = self._createPayslip(employee, '2019-01-01', '2019-01-31')
 
         payslip.compute_sheet()
 
@@ -182,8 +188,8 @@ class TestUsCAPayslip(TestUsPayslip):
         remaining_ca_uit_wages = self.CA_UIT_MAX_WAGE - salary if (self.CA_UIT_MAX_WAGE - 2 * salary < salary) \
             else salary
 
-        self._log('2018 California tax second payslip:')
-        payslip = self._createPayslip(employee, '2018-02-01', '2018-02-28')
+        self._log('2019 California tax second payslip:')
+        payslip = self._createPayslip(employee, '2019-02-01', '2019-02-28')
 
         payslip.compute_sheet()
 
@@ -198,7 +204,7 @@ class TestUsCAPayslip(TestUsPayslip):
         allowances = 3
         additional_allowances = 0
 
-        wh = -3.31
+        wh = -3.18
 
         employee = self._createEmployee()
         contract = self._createContract(employee,
@@ -215,13 +221,13 @@ class TestUsCAPayslip(TestUsPayslip):
         self.assertEqual(contract.ca_de4_allowances, 3)
         self.assertEqual(contract.ca_additional_allowances, 0)
 
-        self._log('2017 California tax last payslip:')
-        payslip = self._createPayslip(employee, '2017-12-01', '2017-12-31')
+        self._log('2018 California tax last payslip:')
+        payslip = self._createPayslip(employee, '2018-12-01', '2018-12-31')
         payslip.compute_sheet()
         process_payslip(payslip)
 
-        self._log('2018 California tax first payslip:')
-        payslip = self._createPayslip(employee, '2018-01-01', '2018-01-31')
+        self._log('2019 California tax first payslip:')
+        payslip = self._createPayslip(employee, '2019-01-01', '2019-01-31')
 
         payslip.compute_sheet()
 
@@ -242,8 +248,8 @@ class TestUsCAPayslip(TestUsPayslip):
         remaining_ca_uit_wages = self.CA_UIT_MAX_WAGE - salary if (self.CA_UIT_MAX_WAGE - 2 * salary < salary) \
             else salary
 
-        self._log('2018 California tax second payslip:')
-        payslip = self._createPayslip(employee, '2018-02-01', '2018-02-28')
+        self._log('2019 California tax second payslip:')
+        payslip = self._createPayslip(employee, '2019-02-01', '2019-02-28')
 
         payslip.compute_sheet()
 
@@ -258,7 +264,7 @@ class TestUsCAPayslip(TestUsPayslip):
         allowances = 4
         additional_allowances = 0
 
-        wh = -3.39
+        wh = -3.08
 
         employee = self._createEmployee()
         contract = self._createContract(employee,
@@ -275,13 +281,13 @@ class TestUsCAPayslip(TestUsPayslip):
         self.assertEqual(contract.ca_de4_allowances, 4)
         self.assertEqual(contract.ca_additional_allowances, 0)
 
-        self._log('2017 California tax last payslip:')
-        payslip = self._createPayslip(employee, '2017-12-01', '2017-12-31')
+        self._log('2018 California tax last payslip:')
+        payslip = self._createPayslip(employee, '2018-12-01', '2018-12-31')
         payslip.compute_sheet()
         process_payslip(payslip)
 
-        self._log('2018 California tax first payslip:')
-        payslip = self._createPayslip(employee, '2018-01-01', '2018-01-31')
+        self._log('2019 California tax first payslip:')
+        payslip = self._createPayslip(employee, '2019-01-01', '2019-01-31')
 
         payslip.compute_sheet()
 
@@ -302,8 +308,8 @@ class TestUsCAPayslip(TestUsPayslip):
         remaining_ca_uit_wages = self.CA_UIT_MAX_WAGE - salary if (self.CA_UIT_MAX_WAGE - 2 * salary < salary) \
             else salary
 
-        self._log('2018 California tax second payslip:')
-        payslip = self._createPayslip(employee, '2018-02-01', '2018-02-28')
+        self._log('2019 California tax second payslip:')
+        payslip = self._createPayslip(employee, '2019-02-01', '2019-02-28')
 
         payslip.compute_sheet()
 
@@ -318,7 +324,7 @@ class TestUsCAPayslip(TestUsPayslip):
         allowances = 4
         additional_allowances = 0
 
-        wh = -121.11
+        wh = -113.85
 
         employee = self._createEmployee()
         contract = self._createContract(employee,
@@ -335,13 +341,13 @@ class TestUsCAPayslip(TestUsPayslip):
         self.assertEqual(contract.ca_de4_allowances, 4)
         self.assertEqual(contract.ca_additional_allowances, 0)
 
-        self._log('2017 California tax last payslip:')
-        payslip = self._createPayslip(employee, '2017-12-01', '2017-12-31')
+        self._log('2018 California tax last payslip:')
+        payslip = self._createPayslip(employee, '2018-12-01', '2018-12-31')
         payslip.compute_sheet()
         process_payslip(payslip)
 
-        self._log('2018 California tax first payslip:')
-        payslip = self._createPayslip(employee, '2018-01-01', '2018-01-31')
+        self._log('2019 California tax first payslip:')
+        payslip = self._createPayslip(employee, '2019-01-01', '2019-01-31')
 
         payslip.compute_sheet()
 
