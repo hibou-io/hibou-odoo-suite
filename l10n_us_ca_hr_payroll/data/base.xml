@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+<!-- CONTRIBUTION REGISTERS -->
+        <record id="res_partner_cador_uit" model="res.partner">
+            <field name="name">California Department of Taxation (CA DE88)</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_cador_withhold" model="res.partner">
+            <field name="name">California Department of Taxation - Income Tax Withholding</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+            <field eval="False" name="active"/>
+        </record>
+        <record id="res_partner_cador_ett" model="res.partner">
+            <field name="name">California Department of Taxation - Employment Training Tax</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+            <field eval="False" name="active"/>
+        </record>
+            <record id="res_partner_cador_sdi" model="res.partner">
+            <field name="name">California Department of Taxation - State Disability Insurance</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+            <field eval="False" name="active"/>
+        </record>
+
+        <record id="contrib_register_cador_uit" model="hr.contribution.register">
+            <field name="name">California (CA DE88)</field>
+            <field name="note">California Department of Taxation (CA DE88)</field>
+            <field name="partner_id" ref="res_partner_cador_uit"/>
+        </record>
+
+    <!-- HR SALARY RULE CATEGORIES-->
+        <record id="hr_payroll_ca_uit_wages" model="hr.salary.rule.category">
+            <field name="name">Wage: US-CA Unemployment Insurance</field>
+            <field name="code">WAGE_US_CA_UNEMP</field>
+        </record>
+
+        <record id="hr_payroll_ca_uit" model="hr.salary.rule.category">
+            <field name="name">ER: US-CA Unemployment Insurance</field>
+            <field name="code">ER_US_CA_UNEMP</field>
+            <field name="parent_id" ref="hr_payroll.COMP"/>
+        </record>
+
+        <record id="hr_payroll_ca_ett_wages" model="hr.salary.rule.category">
+            <field name="name">Wage: US-CA Employee Training Tax</field>
+            <field name="code">WAGE_US_CA_ETT</field>
+        </record>
+
+        <record id="hr_payroll_ca_ett" model="hr.salary.rule.category">
+            <field name="name">ER: US-CA Employee Training Tax</field>
+            <field name="code">ER_US_CA_ETT</field>
+            <field name="parent_id" ref="hr_payroll.COMP"/>
+        </record>
+
+        <record id="hr_payroll_ca_sdi_wages" model="hr.salary.rule.category">
+            <field name="name">Wage: US-CA State Disability Insurance</field>
+            <field name="code">WAGE_US_CA_SDI</field>
+        </record>
+
+        <record id="hr_payroll_ca_sdi" model="hr.salary.rule.category">
+            <field name="name">EE: US-CA State Disability Insurance</field>
+            <field name="code">EE_US_CA_SDI</field>
+            <field name="parent_id" ref="hr_payroll.DED"/>
+        </record>
+
+        <record id="hr_payroll_ca_income_withhold" model="hr.salary.rule.category">
+            <field name="name">EE: US-CA Income Withholding</field>
+            <field name="code">EE_US_CA_INC_WITHHOLD</field>
+            <field name="parent_id" ref="hr_payroll.DED"/>
+        </record>
+    </data>
+</odoo>

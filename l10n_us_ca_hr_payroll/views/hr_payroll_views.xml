@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_contract_form_l10n_us_ca_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.form.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="priority">147</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//group[@name='state_filing']" position="inside">
+                    <group string="California" name="ca">
+                        <field name="ca_de4_filing_status"/>
+                        <field name="ca_de4_allowances" string="DE-4 Allowances"/>
+                        <field name="ca_additional_allowances" string="Additional Allowances"/>
+                    </group>
+                </xpath>
+            </data>
+            </field>
+        </record>
+    </data>
+</odoo>
