@@ -27,25 +27,25 @@
 
 <!-- HR SALARY RULE CATEGORIES-->
     <record id="hr_payroll_tx_unemp_wages" model="hr.salary.rule.category">
-        <field name="name">Texas Unemployment - Wages</field>
-        <field name="code">TX_UNEMP_WAGES</field>
+        <field name="name">Wage: US-TX Unemployment</field>
+        <field name="code">WAGE_US_TX_UNEMP</field>
     </record>
 
     <record id="hr_payroll_tx_unemp" model="hr.salary.rule.category">
-        <field name="name">Texas Unemployment</field>
-        <field name="code">TX_UNEMP</field>
+        <field name="name">ER: US-TX Unemployment</field>
+        <field name="code">ER_US_TX_UNEMP</field>
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
 
     <record id="hr_payroll_tx_oa" model="hr.salary.rule.category">
-        <field name="name">Texas Obligation Assessment</field>
-        <field name="code">TX_OA</field>
+        <field name="name">ER: US-TX Obligation Assessment</field>
+        <field name="code">ER_US_TX_OA</field>
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
 
     <record id="hr_payroll_tx_etia" model="hr.salary.rule.category">
-        <field name="name">Texas Employment and Training Investment Assessment</field>
-        <field name="code">TX_ETIA</field>
+        <field name="name">ER: US-TX Employment &amp; Training Investment Assessment</field>
+        <field name="code">ER_US_TX_ETIA</field>
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
 

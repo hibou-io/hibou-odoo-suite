@@ -5,7 +5,7 @@
     'license': 'AGPL-3',
     'category': 'Localization',
     'depends': ['l10n_us_hr_payroll'],
-    'version': '11.0.2018.0.0',
+    'version': '11.0.2019.0.0',
     'description': """
 USA::Texas Payroll Rules.
 =========================
@@ -20,9 +20,10 @@ USA::Texas Payroll Rules.
     'auto_install': False,
     'website': 'https://hibou.io/',
     'data':[
-        'us_tx_hr_payroll_view.xml',
+        'views/us_tx_hr_payroll_views.xml',
         'data/base.xml',
-        'data/rules_2018.xml',
+        'data/rates.xml',
+        'data/rules.xml',
         'data/final.xml',
     ],
     'installable': True
