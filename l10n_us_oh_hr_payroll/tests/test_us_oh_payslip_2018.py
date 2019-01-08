@@ -9,6 +9,7 @@ class TestUsOhPayslip(TestUsPayslip):
     #    Taxes and Rates
     ###
     OH_UNEMP_MAX_WAGE = 9500.0
+    OH_UNEMP = -2.7 / 100.0
 
     def test_2018_taxes(self):
         salary = 5000.0
@@ -19,15 +20,11 @@ class TestUsOhPayslip(TestUsPayslip):
         wd = ((tw - 40000) * 0.035 + 900) / 12 * 1.112
 
         employee = self._createEmployee()
-        employee.company_id.oh_unemp_rate_2018 = 2.7
 
         contract = self._createContract(employee, salary, struct_id=self.ref('l10n_us_oh_hr_payroll.hr_payroll_salary_structure_us_oh_employee'))
 
-        # tax rates
-        oh_unemp = contract.oh_unemp_rate(2018) / -100.0
-
-        self._log('2016 Ohio tax last payslip:')
-        payslip = self._createPayslip(employee, '2016-12-01', '2016-12-31')
+        self._log('2017 Ohio tax last payslip:')
+        payslip = self._createPayslip(employee, '2017-12-01', '2017-12-31')
         payslip.compute_sheet()
         process_payslip(payslip)
 
@@ -38,9 +35,9 @@ class TestUsOhPayslip(TestUsPayslip):
 
         cats = self._getCategories(payslip)
 
-        self.assertPayrollEqual(cats['OH_UNEMP_WAGES'], salary)
-        self.assertPayrollEqual(cats['OH_UNEMP'], cats['OH_UNEMP_WAGES'] * oh_unemp)
-        self.assertPayrollEqual(cats['OH_INC_WITHHOLD'], -wd)
+        self.assertPayrollEqual(cats['WAGE_US_OH_UNEMP'], salary)
+        self.assertPayrollEqual(cats['ER_US_OH_UNEMP'], cats['WAGE_US_OH_UNEMP'] * self.OH_UNEMP)
+        self.assertPayrollEqual(cats['EE_US_OH_INC_WITHHOLD'], -wd)
 
         process_payslip(payslip)
 
@@ -56,21 +53,17 @@ class TestUsOhPayslip(TestUsPayslip):
 
         cats = self._getCategories(payslip)
 
-        self.assertPayrollEqual(cats['OH_UNEMP_WAGES'], remaining_oh_unemp_wages)
-        self.assertPayrollEqual(cats['OH_UNEMP'], remaining_oh_unemp_wages * oh_unemp)
+        self.assertPayrollEqual(cats['WAGE_US_OH_UNEMP'], remaining_oh_unemp_wages)
+        self.assertPayrollEqual(cats['ER_US_OH_UNEMP'], remaining_oh_unemp_wages * self.OH_UNEMP)
 
     def test_2018_taxes_with_external(self):
         salary = 5000.0
         external_wages = 6000.0
 
         employee = self._createEmployee()
-        employee.company_id.oh_unemp_rate_2018 = 2.8
 
         contract = self._createContract(employee, salary, external_wages=external_wages,
                                         struct_id=self.ref('l10n_us_oh_hr_payroll.hr_payroll_salary_structure_us_oh_employee'))
-
-        # tax rates
-        oh_unemp = contract.oh_unemp_rate(2018) / -100.0
 
         self._log('2018 Ohio_external tax first payslip:')
         payslip = self._createPayslip(employee, '2018-01-01', '2018-01-31')
@@ -79,23 +72,16 @@ class TestUsOhPayslip(TestUsPayslip):
 
         cats = self._getCategories(payslip)
 
-        self.assertPayrollEqual(cats['OH_UNEMP_WAGES'], self.OH_UNEMP_MAX_WAGE - external_wages)
-        self.assertPayrollEqual(cats['OH_UNEMP'], cats['OH_UNEMP_WAGES'] * oh_unemp)
+        self.assertPayrollEqual(cats['WAGE_US_OH_UNEMP'], self.OH_UNEMP_MAX_WAGE - external_wages)
+        self.assertPayrollEqual(cats['ER_US_OH_UNEMP'], cats['WAGE_US_OH_UNEMP'] * self.OH_UNEMP)
 
     def test_2018_taxes_with_state_exempt(self):
         salary = 5000.0
         external_wages = 6000.0
 
         employee = self._createEmployee()
-        employee.company_id.oh_unemp_rate_2018 = 2.9
-
         contract = self._createContract(employee, salary, external_wages=external_wages, struct_id=self.ref(
             'l10n_us_oh_hr_payroll.hr_payroll_salary_structure_us_oh_employee'), futa_type=USHrContract.FUTA_TYPE_BASIC)
-
-        # tax rates
-        oh_unemp = contract.oh_unemp_rate(2018) / -100.0
-
-        self.assertPayrollEqual(oh_unemp, 0.0)
 
         self._log('2018 Ohio exempt tax first payslip:')
         payslip = self._createPayslip(employee, '2018-01-01', '2018-01-31')
@@ -104,5 +90,6 @@ class TestUsOhPayslip(TestUsPayslip):
 
         cats = self._getCategories(payslip)
 
-        self.assertPayrollEqual(cats['OH_UNEMP_WAGES'], self.OH_UNEMP_MAX_WAGE - external_wages)
-        self.assertPayrollEqual(cats['OH_UNEMP'], cats['OH_UNEMP_WAGES'] * oh_unemp)
+        # FUTA_TYPE_BASIC
+        self.assertPayrollEqual(cats.get('WAGE_US_OH_UNEMP', 0.0), 0.0)
+        self.assertPayrollEqual(cats.get('ER_US_OH_UNEMP', 0.0), cats.get('WAGE_US_OH_UNEMP', 0.0) * 0.0)

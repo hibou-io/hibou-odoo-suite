@@ -26,19 +26,19 @@
 
 <!-- HR SALARY RULE CATEGORIES-->
     <record id="hr_payroll_oh_unemp_wages" model="hr.salary.rule.category">
-        <field name="name">Ohio Unemployment - Wages</field>
-        <field name="code">OH_UNEMP_WAGES</field>
+        <field name="name">Wage: US-OH Unemployment</field>
+        <field name="code">WAGE_US_OH_UNEMP</field>
     </record>
 
     <record id="hr_payroll_oh_unemp" model="hr.salary.rule.category">
-        <field name="name">Ohio Unemployment</field>
-        <field name="code">OH_UNEMP</field>
+        <field name="name">ER: US-OH Unemployment</field>
+        <field name="code">ER_US_OH_UNEMP</field>
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
 
     <record id="hr_payroll_oh_income_withhold" model="hr.salary.rule.category">
-        <field name="name">Ohio Income Withholding</field>
-        <field name="code">OH_INC_WITHHOLD</field>
+        <field name="name">EE: US-OH Income Withholding</field>
+        <field name="code">EE_US_OH_INC_WITHHOLD</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
 

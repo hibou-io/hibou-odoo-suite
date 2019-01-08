@@ -7,14 +7,6 @@
         <field name="code">US_OH_EMP</field>
         <field name="name">USA Ohio Employee</field>
         <field eval="[(6, 0, [
-          ref('hr_payroll_rules_oh_unemp_wages_2016'),
-          ref('hr_payroll_rules_oh_unemp_2016'),
-          ref('hr_payroll_rules_oh_inc_withhold_2016'),
-
-          ref('hr_payroll_rules_oh_unemp_wages_2017'),
-          ref('hr_payroll_rules_oh_unemp_2017'),
-          ref('hr_payroll_rules_oh_inc_withhold_2017'),
-
           ref('hr_payroll_rules_oh_unemp_wages_2018'),
           ref('hr_payroll_rules_oh_unemp_2018'),
           ref('hr_payroll_rules_oh_inc_withhold_2018'),
