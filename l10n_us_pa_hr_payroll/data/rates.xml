@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="hr_payroll_rates_pa_unemp_2018" model="hr.payroll.rate">
+            <field name="name">US Pennsylvania Unemployment (Company)</field>
+            <field name="code">ER_US_PA_UNEMP</field>
+            <field name="rate">3.6890</field>
+            <field name="date_from">2018-01-01</field>
+            <field name="wage_limit_year" eval="10000.0"/>
+        </record>
+        <record id="hr_payroll_rates_pa_unemp_ee_2018" model="hr.payroll.rate">
+            <field name="name">UUS Pennsylvania Unemployment (Employee)</field>
+            <field name="code">EE_US_PA_UNEMP</field>
+            <field name="rate">0.06</field>
+            <field name="date_from">2018-01-01</field>
+        </record>
+        <record id="hr_payroll_rates_pa_inc_2018" model="hr.payroll.rate">
+            <field name="name">US Pennsylvania Income Tax Rate (default)</field>
+            <field name="code">US_PA_INC_WITHHOLD</field>
+            <field name="rate">3.07</field>
+            <field name="date_from">2018-01-01</field>
+        </record>
+    </data>
+</odoo>
