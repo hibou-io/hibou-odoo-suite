@@ -10,15 +10,18 @@ class TestUsPAPayslip(TestUsPayslip):
     EE_PA_UNEMP = -0.06 / 100.0
     PA_INC_WITHHOLD = 3.07
 
-    def test_2018_taxes(self):
+    def test_2019_taxes(self):
         salary = 4166.67
-        wh = -127.92
+        additional_withhold = 5.0
+        wh = -127.92 - additional_withhold
+
 
         employee = self._createEmployee()
         contract = self._createContract(employee, salary, struct_id=self.ref('l10n_us_pa_hr_payroll.hr_payroll_salary_structure_us_pa_employee'))
+        contract.pa_additional_withholding = additional_withhold
 
-        self._log('2018 Pennsylvania tax first payslip:')
-        payslip = self._createPayslip(employee, '2018-01-01', '2018-01-31')
+        self._log('2019 Pennsylvania tax first payslip:')
+        payslip = self._createPayslip(employee, '2019-01-01', '2019-01-31')
         payslip.onchange_contract()
         payslip.compute_sheet()
 
