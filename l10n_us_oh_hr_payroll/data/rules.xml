@@ -6,16 +6,18 @@
     <record id="hr_payroll_rules_oh_unemp_wages_2018" model="hr.salary.rule">
         <field name="sequence" eval="423"/>
         <field name="category_id" ref="hr_payroll_oh_unemp_wages"/>
-        <field name="name">Ohio Unemployment - Wages (2018)</field>
-        <field name="code">OH_UNEMP_WAGES_2018</field>
+        <field name="name">Wage: US-OH Unemployment</field>
+        <field name="code">WAGE_US_OH_UNEMP</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 ###
-ytd = payslip.sum('OH_UNEMP_WAGES_2018', '2018-01-01', '2019-01-01')
+rate = payslip.dict.get_rate('US_OH_UNEMP')
+year = int(payslip.dict.date_from[:4])
+ytd = payslip.sum('WAGE_US_OH_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
 ytd += contract.external_wages
-remaining = 9500.0 - ytd
+remaining = rate.wage_limit_year - ytd
 if remaining &lt;= 0.0:
     result = 0
 elif remaining &lt; categories.GROSS:
@@ -28,14 +30,15 @@ else:
     <record id="hr_payroll_rules_oh_unemp_2018" model="hr.salary.rule">
         <field name="sequence" eval="443"/>
         <field name="category_id" ref="hr_payroll_oh_unemp"/>
-        <field name="name">Ohio Unemployment (2018)</field>
-        <field name="code">OH_UNEMP_2018</field>
+        <field name="name">ER: US-OH Unemployment</field>
+        <field name="code">ER_US_OH_UNEMP</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-result_rate = -contract.oh_unemp_rate(2018)
-result = categories.OH_UNEMP_WAGES
+rate = payslip.dict.get_rate('US_OH_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_US_OH_UNEMP
 
 # result_rate of 0 implies 100% due to bug
 if result_rate == 0.0:
@@ -48,10 +51,10 @@ if result_rate == 0.0:
     <record id="hr_payroll_rules_oh_inc_withhold_2018" model="hr.salary.rule">
         <field name="sequence" eval="145"/>
         <field name="category_id" ref="hr_payroll_oh_income_withhold"/>
-        <field name="name">Ohio Income Withholding</field>
-        <field name="code">OH_INC_WITHHOLD_2018</field>
+        <field name="name">EE: US-OH Income Withholding</field>
+        <field name="code">EE_US_OH_INC_WITHHOLD</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = (payslip.date_to[:4] == '2018')</field>
+        <field name="condition_python">result = True</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 wages = categories.GROSS
