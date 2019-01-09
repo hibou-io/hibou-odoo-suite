@@ -90,64 +90,64 @@
 
 <!-- HR SALARY RULE CATEGORIES-->
     <record id="hr_payroll_nj_unemp_wages" model="hr.salary.rule.category">
-        <field name="name">New Jersey Unemployment Insurance Tax  - Wages</field>
-        <field name="code">NJ_UNEMP_WAGES</field>
+        <field name="name">Wage: US-NJ Unemployment Insurance</field>
+        <field name="code">WAGE_US_NJ_UNEMP</field>
     </record>
 
     <record id="hr_payroll_nj_sdi_wages" model="hr.salary.rule.category">
-        <field name="name">New Jersey State Disability Insurance Tax  - Wages</field>
-        <field name="code">NJ_SDI_WAGES</field>
+        <field name="name">Wage: US-NJ State Disability Insurance</field>
+        <field name="code">WAGE_US_NJ_SDI</field>
     </record>
 
     <record id="hr_payroll_nj_fli_wages" model="hr.salary.rule.category">
-        <field name="name">New Jersey Family Leave Insurance Tax  - Wages</field>
-        <field name="code">NJ_FLI_WAGES</field>
+        <field name="name">Wage: US-NJ Family Leave Insurance</field>
+        <field name="code">WAGE_US_NJ_FLI</field>
     </record>
 
     <record id="hr_payroll_nj_wf_wages" model="hr.salary.rule.category">
-        <field name="name">New Jersey Work Force Development - Wages</field>
-        <field name="code">NJ_WF_WAGES</field>
+        <field name="name">Wage: US-NJ Work Force Development</field>
+        <field name="code">WAGE_US_NJ_WF</field>
     </record>
 
     <record id="hr_payroll_nj_unemp_employee" model="hr.salary.rule.category">
-        <field name="name">New Jersey Unemployment Insurance Tax - Employee</field>
-        <field name="code">NJ_UNEMP_EMPLOYEE</field>
+        <field name="name">EE: US-NJ Unemployment Insurance</field>
+        <field name="code">EE_US_NJ_UNEMP</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
 
      <record id="hr_payroll_nj_unemp_company" model="hr.salary.rule.category">
-        <field name="name">New Jersey Unemployment Insurance Tax - Employer</field>
-        <field name="code">NJ_UNEMP_COMPANY</field>
+        <field name="name">ER: US-NJ Unemployment Insurance</field>
+        <field name="code">ER_US_NJ_UNEMP</field>
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
 
     <record id="hr_payroll_nj_sdi_company" model="hr.salary.rule.category">
-        <field name="name">New Jersey State Disability Insurance - Employer</field>
-        <field name="code">NJ_SDI_COMPANY</field>
+        <field name="name">ER: US-NJ State Disability Insurance</field>
+        <field name="code">ER_US_NJ_SDI</field>
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
 
     <record id="hr_payroll_nj_sdi_employee" model="hr.salary.rule.category">
-        <field name="name">New Jersey State Disability Insurance - Employee</field>
-        <field name="code">NJ_SDI_EMPLOYEE</field>
+        <field name="name">EE: US-NJ State Disability Insurance</field>
+        <field name="code">EE_US_NJ_SDI</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
 
     <record id="hr_payroll_nj_fli" model="hr.salary.rule.category">
-        <field name="name">New Jersey State Family Leave Insurance Tax</field>
-        <field name="code">NJ_FLI</field>
+        <field name="name">EE: US-NJ Family Leave Insurance</field>
+        <field name="code">EE_US_NJ_FLI</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
 
     <record id="hr_payroll_nj_wf" model="hr.salary.rule.category">
-        <field name="name">New Jersey State Workforce Development/Suppllemental Tax</field>
-        <field name="code">NJ_WF</field>
+        <field name="name">EE: US-NJ Workforce Development</field>
+        <field name="code">EE_US_NJ_WF</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
 
     <record id="hr_payroll_nj_income_withhold" model="hr.salary.rule.category">
-        <field name="name">New Jersey Income Withholding</field>
-        <field name="code">NJ_WITHHOLD</field>
+        <field name="name">EE: US-NJ Income Withholding</field>
+        <field name="code">EE_US_NJ_INC_WITHHOLD</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
 
