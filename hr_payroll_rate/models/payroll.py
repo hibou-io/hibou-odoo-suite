@@ -10,7 +10,7 @@ class PayrollRate(models.Model):
     date_from = fields.Date(string='Date From', required=True)
     date_to = fields.Date(string='Date To')
     company_id = fields.Many2one('res.company', string='Company', copy=False,
-                                 default=lambda self: self.env['res.company']._company_default_get())
+                                 default=False)
     rate = fields.Float(string='Rate', required=True)
     code = fields.Char(string='Code', required=True)
 
@@ -34,4 +34,4 @@ class Payslip(models.Model):
     def get_rate(self, code):
         self.ensure_one()
         return self.env['hr.payroll.rate'].search(
-            self._get_rate_domain(code), limit=1, order='date_from DESC')
+            self._get_rate_domain(code), limit=1, order='date_from DESC, company_id ASC')
