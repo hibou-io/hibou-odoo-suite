@@ -64,6 +64,16 @@ class TestPayrollRate(common.TransactionCase):
         rate = self.payslip.get_rate('TEST')
         self.assertEqual(rate, test_rate)
 
+        test_rate_more_specific = self.env['hr.payroll.rate'].create({
+            'name': 'Test Rate Specific',
+            'code': 'TEST',
+            'rate': 1.65,
+            'date_from': '2018-01-01',
+            'company_id': self.payslip.company_id.id,
+        })
+        rate = self.payslip.get_rate('TEST')
+        self.assertEqual(rate, test_rate_more_specific)
+
     def test_payroll_rate_newer(self):
         test_rate_old = self.env['hr.payroll.rate'].create({
             'name': 'Test Rate',
