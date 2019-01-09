@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="us_nj_view_company_form" model="ir.ui.view">
-            <field name="name">res.company.form</field>
-            <field name="model">res.company</field>
-            <field name="priority">20</field>
-            <field name="inherit_id" ref="base.view_company_form"/>
-            <field name="arch" type="xml">
-            <data>
-                 <xpath expr="//field[@name='currency_id']" position="after">
-                    <field name="nj_unemp_company_rate_2018"/>
-                    <field name="nj_unemp_employee_rate_2018"/>
-                    <field name="nj_sdi_company_rate_2018"/>
-                    <field name="nj_sdi_employee_rate_2018"/>
-                    <field name="nj_fli_rate_2018"/>
-                    <field name="nj_wf_rate_2018"/>
-                 </xpath>
-            </data>
-            </field>
-        </record>
-
          <record id="hr_contract_form_l10n_us_nj_inherit" model="ir.ui.view">
             <field name="name">hr.contract.form.inherit</field>
             <field name="model">hr.contract</field>
