@@ -1,0 +1,69 @@
+from odoo import api, fields, models
+
+
+class ProgramOutputView(models.TransientModel):
+    _name = 'mrp.bom.add'
+    _description = 'BoM Add Wizard'
+
+    bom_id = fields.Many2one('mrp.bom', string='Bill of Materials')
+    bom_product_tmpl_id = fields.Many2one('product.template', string='BoM Product', related='bom_id.product_tmpl_id')
+    product_tmpl_id = fields.Many2one('product.template', string='Product')
+    product_variant_count = fields.Integer(string='Variant Count', compute='_compute_variant_count')
+    limit_possible = fields.Boolean(string='Limit to possible variants',
+                                    help='Only add variants that can be selected by BoM Product')
+    product_qty = fields.Float(string='Quantity to Consume', default=1.0)
+    product_uom_id = fields.Many2one('uom.uom', string='Consume Unit of Measure')
+    bom_routing_id = fields.Many2one('mrp.routing', related='bom_id.routing_id')
+    operation_id = fields.Many2one('mrp.routing.workcenter', 'Consume in Operation')
+
+    @api.multi
+    @api.depends('product_tmpl_id', 'limit_possible')
+    def _compute_variant_count(self):
+        self.ensure_one()
+        if not self.product_tmpl_id or not self.bom_product_tmpl_id:
+            self.product_variant_count = 0
+        else:
+            products = self._compute_product_ids()
+            self.product_variant_count = len(products)
+
+    @api.onchange('product_tmpl_id')
+    def _onchange_default_product_uom(self):
+        if self.product_tmpl_id:
+            self.product_uom_id = self.product_tmpl_id.uom_id
+
+    def _compute_attribute_value_ids(self):
+        attr_val_ids = self.env['product.attribute.value']
+        other_val_ids = self.product_tmpl_id.mapped('attribute_line_ids.value_ids')
+        if not self.limit_possible:
+            return other_val_ids
+        main_product_value_ids = self.bom_product_tmpl_id.mapped('attribute_line_ids.value_ids')
+        for v in other_val_ids:
+            if v in main_product_value_ids:
+                attr_val_ids += v
+        return attr_val_ids
+
+    def _compute_product_ids(self):
+        values = self._compute_attribute_value_ids()
+        products = self.env['product.product']
+        for p in self.product_tmpl_id.product_variant_ids:
+            if not p.attribute_value_ids.filtered(lambda a: a not in values):
+                # This product's attribute values are in the values set.
+                products += p
+        return products
+
+    def add_variants(self):
+        attribute_values = self._compute_attribute_value_ids()
+        products = self._compute_product_ids()
+        if not self.product_uom_id:
+            self.product_uom_id = self.product_tmpl_id.uom_id
+        lines = []
+        for p in products:
+            lines.append((0, 0, {
+                'bom_id': self.bom_id.id,
+                'product_id': p.id,
+                'product_qty': self.product_qty,
+                'product_uom_id': self.product_uom_id.id,
+                'attribute_value_ids': [(4, a.id, 0) for a in p.attribute_value_ids if a in attribute_values],
+                'operation_id': self.operation_id.id,
+            }))
+        self.bom_id.write({'bom_line_ids': lines})
