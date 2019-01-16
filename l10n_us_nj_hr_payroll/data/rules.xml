@@ -14,7 +14,7 @@
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 ###
-year = int(payslip.dict.date_from[:4])
+year = int(payslip.dict.date_to[:4])
 rate = payslip.dict.get_rate('ER_US_NJ_UNEMP')
 ytd = payslip.sum('WAGE_US_NJ_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
 ytd += contract.external_wages
@@ -81,7 +81,7 @@ if result_rate == 0.0:
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 ###
-year = int(payslip.dict.date_from[:4])
+year = int(payslip.dict.date_to[:4])
 rate = payslip.dict.get_rate('ER_US_NJ_SDI')
 ytd = payslip.sum('WAGE_US_NJ_SDI', str(year) + '-01-01', str(year+1) + '-01-01')
 ytd += contract.external_wages
@@ -147,7 +147,7 @@ if result_rate == 0.0:
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 ###
-year = int(payslip.dict.date_from[:4])
+year = int(payslip.dict.date_to[:4])
 rate = payslip.dict.get_rate('ER_US_NJ_FLI')
 ytd = payslip.sum('WAGE_US_NJ_FLI', str(year) + '-01-01', str(year+1) + '-01-01')
 ytd += contract.external_wages
@@ -189,7 +189,7 @@ result = categories.BASIC
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 ###
-year = int(payslip.dict.date_from[:4])
+year = int(payslip.dict.date_to[:4])
 rate = payslip.dict.get_rate('ER_US_NJ_WF')
 ytd = payslip.sum('WAGE_US_NJ_WF', str(year) + '-01-01', str(year+1) + '-01-01')
 ytd += contract.external_wages
