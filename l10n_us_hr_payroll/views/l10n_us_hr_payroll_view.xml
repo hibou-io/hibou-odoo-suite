@@ -15,6 +15,7 @@
                     <field name="w4_is_nonresident_alien"/>
                     <field name="external_wages"/>
                     <field name="futa_type"/>
+                    <field name="fica_exempt"/>
                 </xpath>
             </data>
             </field>
