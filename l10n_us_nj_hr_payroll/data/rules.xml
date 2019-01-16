@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- HR SALARY RULES-->
+<!-- UNEMPLOYMENT -->
+    <record id="hr_payroll_rules_nj_unemp_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="420"/>
+        <field name="category_id" ref="hr_payroll_nj_unemp_wages"/>
+        <field name="name">Wage: US-NJ Unemployment Insurance</field>
+        <field name="code">WAGE_US_NJ_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+year = int(payslip.dict.date_to[:4])
+rate = payslip.dict.get_rate('ER_US_NJ_UNEMP')
+ytd = payslip.sum('WAGE_US_NJ_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_nj_unemp_employee_2018" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_nj_unemp_employee"/>
+        <field name="name">EE: US-NJ Unemployment</field>
+        <field name="code">EE_US_NJ_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('EE_US_NJ_UNEMP')
+result_rate = -rate.rate
+result = categories.BASIC
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_njdor_unemp_employee"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_nj_unemp_company_2018" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_nj_unemp_company"/>
+        <field name="name">ER: US-NJ Unemployment</field>
+        <field name="code">ER_US_NJ_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('ER_US_NJ_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_US_NJ_UNEMP
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_njdor_unemp_employee"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+<!-- STATE DISABILITY INSURANCE -->
+
+    <record id="hr_payroll_rules_nj_sdi_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="420"/>
+        <field name="category_id" ref="hr_payroll_nj_sdi_wages"/>
+        <field name="name">Wage: US-NJ State Disability Insurance</field>
+        <field name="code">WAGE_US_NJ_SDI</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+year = int(payslip.dict.date_to[:4])
+rate = payslip.dict.get_rate('ER_US_NJ_SDI')
+ytd = payslip.sum('WAGE_US_NJ_SDI', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_nj_sdi_employee_2018" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_nj_sdi_employee"/>
+        <field name="name">EE: US-NJ State Disability Insurance</field>
+        <field name="code">EE_US_NJ_SDI</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('EE_US_NJ_SDI')
+result_rate = -rate.rate
+result = categories.BASIC
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_njdor_sdi_employee"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_nj_sdi_company_2018" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_nj_sdi_company"/>
+        <field name="name">ER: US-NJ State Disability Insurance</field>
+        <field name="code">ER_US_NJ_SDI</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('ER_US_NJ_SDI')
+result_rate = -rate.rate
+result = categories.WAGE_US_NJ_SDI
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_njdor_unemp_company"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+<!-- FAMILY LEAVE INSURANCE -->
+    <record id="hr_payroll_rules_nj_fli_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="420"/>
+        <field name="category_id" ref="hr_payroll_nj_fli_wages"/>
+        <field name="name">Wage: US-NJ Family Leave Insurance</field>
+        <field name="code">WAGE_US_NJ_FLI</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+year = int(payslip.dict.date_to[:4])
+rate = payslip.dict.get_rate('ER_US_NJ_FLI')
+ytd = payslip.sum('WAGE_US_NJ_FLI', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_nj_fli_2018" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_nj_fli"/>
+        <field name="name">EE: US-NJ Family Leave Insurance</field>
+        <field name="code">EE_US_NJ_FLI</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('EE_US_NJ_FLI')
+result_rate = -rate.rate
+result = categories.BASIC
+        </field>
+        <field name="register_id" ref="contrib_register_njdor_fli"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+<!-- WORKFORCE DEVELOPMENT/SUPPLEMENTAL WORKFORCE FUNDS -->
+    <record id="hr_payroll_rules_nj_wf_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="140"/>
+        <field name="category_id" ref="hr_payroll_nj_wf_wages"/>
+        <field name="name">Wage: US-NJ Workforce Development Funds</field>
+        <field name="code">WAGE_US_NJ_WF</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+year = int(payslip.dict.date_to[:4])
+rate = payslip.dict.get_rate('ER_US_NJ_WF')
+ytd = payslip.sum('WAGE_US_NJ_WF', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_nj_wf_2018" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_nj_wf"/>
+        <field name="name">EE: US-NJ Workforce Development Funds</field>
+        <field name="code">EE_US_NJ_WF</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('EE_US_NJ_WF')
+result_rate = -rate.rate
+result = categories.BASIC
+
+if result_rate == 0.0:
+  result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_njdor_wf"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+<!-- STATE INCOME WITHHOLDING -->
+    <record id="hr_payroll_rules_nj_inc_withhold_2018" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_nj_income_withhold"/>
+        <field name="name">EE: US-NJ Income Withholding</field>
+        <field name="code">EE_US_NJ_INC_WITHHOLD</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = True</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+wages = categories.GROSS
+allowances = contract.nj_njw4_allowances
+additional_withholding = contract.nj_additional_withholding
+schedule_pay = contract.schedule_pay
+filing_status = contract.nj_njw4_filing_status
+rate_table = contract.nj_njw4_rate_table
+
+# Determine which rate table to use
+if not rate_table:
+    if filing_status == 'single' or filing_status == 'married_separate':
+        rate_table = 'A'
+    elif filing_status == 'married_joint' or filing_status == 'widower' or filing_status == 'head_household':
+        rate_table = 'B'
+
+# Tables are found in http://www.state.nj.us/treasury/taxation/pdf/current/njwt.pdf
+# Tax Rate Tables to calculate income withholding
+
+#### RATE 'A' ####
+if rate_table == 'A':
+    ### WEEKLY ###
+    if schedule_pay == 'weekly':
+        wages -= 19.20 * allowances
+        tax_rate_table = [
+        (384, 0.015, 0.0),
+        (673, 0.02, 5.76),
+        (769, 0.039, 11.54),
+        (1442, 0.061, 15.28),
+        (9615, 0.07, 56.34),
+        (float('inf'), 0.099, 628.45),
+        ]
+
+    ### BI-WEEKLY ###
+    elif schedule_pay == 'bi-weekly':
+        wages -= 38.40 * allowances
+        tax_rate_table = [
+        (769, 0.015, 0.0),
+        (1346, 0.02, 11.54),
+        (1538, 0.039, 23.08),
+        (2884, 0.061, 30.56),
+        (19231, 0.07, 112.67),
+        (float('inf'), 0.099, 1256.96),
+        ]
+
+    ### SEMI-MONTHLY ###
+    elif schedule_pay == 'semi-monthly':
+        wages -= 41.60 * allowances
+        tax_rate_table = [
+        (833, 0.015, 0.0),
+        (1458, 0.02, 12.50),
+        (1666, 0.039, 25.00),
+        (3125, 0.061, 33.11),
+        (20833, 0.07, 112.11),
+        (float('inf'), 0.099, 1361.67),
+        ]
+
+    ### MONTHLY ###
+    elif schedule_pay == 'monthly':
+        wages -= 83.30 * allowances
+        tax_rate_table = [
+        (1666, 0.015, 0.0),
+        (2916, 0.02, 24.99),
+        (3333, 0.039, 49.99),
+        (6250, 0.061, 66.25),
+        (41667, 0.07, 244.19),
+        (float('inf'), 0.099, 2723.38),
+        ]
+
+    ### QUARTERLY ###
+    elif schedule_pay == 'quarterly':
+        wages -= 250.00 * allowances
+        tax_rate_table = [
+        (5000, 0.015, 0.0),
+        (8750, 0.02, 75.00),
+        (10000, 0.039, 150.00),
+        (18750, 0.061, 198.75),
+        (125000, 0.07, 732.50),
+        (float('inf'), 0.099, 8170.00),
+        ]
+
+    ### SEMI-ANNUAL ###
+    elif schedule_pay == 'semi-annual':
+        wages -= 500 * allowances
+        tax_rate_table = [
+        (10000, 0.015, 0.0),
+        (17500, 0.02, 150.00),
+        (20000, 0.039, 300.00),
+        (37500, 0.061, 397.50),
+        (250000, 0.07, 1465.00),
+        (float('inf'), 0.099, 16340.00),
+        ]
+
+    ### ANNUAL ###
+    elif schedule_pay == 'annually':
+        wages -= 1000.00 * allowances
+        tax_rate_table = [
+        (20000, 0.015, 0.0),
+        (35000, 0.02, 300.00),
+        (40000, 0.039, 600.00),
+        (75000, 0.061, 795.00),
+        (500000, 0.07, 2930.00),
+        (float('inf'), 0.099, 32680.00),
+        ]
+
+#### RATE 'B' ####
+elif rate_table == 'B':
+    ### WEEKLY ###
+    if schedule_pay == 'weekly':
+        wages -= 19.20 * allowances
+        tax_rate_table = [
+        (384, 0.015, 0.0),
+        (961, 0.02, 5.76),
+        (1346, 0.027, 17.30),
+        (1538, 0.039, 27.70),
+        (2884, 0.061, 35.18),
+        (9615, 0.07, 117.29),
+        (float('inf'), 0.099, 588.46),
+        ]
+
+    ### BI-WEEKLY ###
+    elif schedule_pay == 'bi-weekly':
+        wages -= 38.40 * allowances
+        tax_rate_table = [
+        (769, 0.015, 0.0),
+        (1923, 0.02, 11.54),
+        (2692, 0.027, 34.62),
+        (3076, 0.039, 55.38),
+        (5769, 0.061, 70.35),
+        (19231, 0.07, 234.63),
+        (float('inf'), 0.099, 1176.97),
+        ]
+
+    ### SEMI-MONTHLY ###
+    elif schedule_pay == 'semi-monthly':
+        wages -= 41.60 * allowances
+        tax_rate_table = [
+        (833, 0.015, 0.0),
+        (2083, 0.02, 12.50),
+        (2916, 0.027, 37.50),
+        (3333, 0.039, 59.99),
+        (6250, 0.061, 76.25),
+        (20833, 0.07, 254.19),
+        (float('inf'), 0.099, 1275),
+        ]
+
+    ### MONTHLY ###
+    elif schedule_pay == 'monthly':
+        wages -= 83.30 * allowances
+        tax_rate_table = [
+        (1666, 0.015, 0.0),
+        (4166, 0.02, 24.99),
+        (5833, 0.027, 74.99),
+        (6666, 0.039, 120.00),
+        (12500, 0.061, 152.49),
+        (41667, 0.07, 508.36),
+        (float('inf'), 0.099, 2550.05),
+        ]
+
+    ### QUARTERLY ###
+    elif schedule_pay == 'quarterly':
+        wages -= 250.00 * allowances
+        tax_rate_table = [
+        (5000, 0.015, 0.0),
+        (12500, 0.02, 75.00),
+        (17500, 0.027, 225.00),
+        (20000, 0.039, 360.00),
+        (37500, 0.061, 457.50),
+        (125000, 0.07, 1525.00),
+        (float('inf'), 0.099, 7650.00),
+        ]
+
+    ### SEMI-ANNUAL ###
+    elif schedule_pay == 'semi-annual':
+        wages -= 500.00 * allowances
+        tax_rate_table = [
+        (10000, 0.015, 0.0),
+        (25000, 0.02, 150.00),
+        (35000, 0.027, 450.00),
+        (40000, 0.039, 720.00),
+        (75000, 0.061, 915.00),
+        (250000, 0.07, 3050.00),
+        (float('inf'), 0.099, 15300.00),
+        ]
+
+    ### ANNUAL ###
+    elif schedule_pay == 'annually':
+        wages -= 1000.00 * allowances
+        tax_rate_table = [
+        (20000, 0.015, 0.0),
+        (50000, 0.02, 300.00),
+        (70000, 0.027, 900.00),
+        (80000, 0.039, 1440.00),
+        (150000, 0.061, 1830.00),
+        (500000, 0.07, 6100.00),
+        (float('inf'), 0.099, 30600.00),
+        ]
+
+#### RATE 'C' ####
+elif rate_table == 'C':
+    ### WEEKLY ###
+    if schedule_pay == 'weekly':
+        wages -= 19.20 * allowances
+        tax_rate_table = [
+        (384, 0.015, 0.0),
+        (769, 0.023, 5.76),
+        (961, 0.028, 14.62),
+        (1153, 0.035, 19.99),
+        (2884, 0.056, 26.71),
+        (9615, 0.066, 123.65),
+        (float('inf'), 0.099, 567.90),
+        ]
+
+    ### BI-WEEKLY ###
+    elif schedule_pay == 'bi-weekly':
+        wages -= 38.40 * allowances
+        tax_rate_table = [
+        (769, 0.015, 0.0),
+        (1538, 0.023, 11.54),
+        (1923, 0.028, 29.22),
+        (2307, 0.035, 40.00),
+        (5769, 0.056, 53.44),
+        (19231, 0.066, 247.31),
+        (float('inf'), 0.099, 1135.80),
+        ]
+
+    ### SEMI-MONTHLY ###
+    elif schedule_pay == 'semi-monthly':
+        wages -= 41.60 * allowances
+        tax_rate_table = [
+        (833, 0.015, 0.0),
+        (1666, 0.023, 12.50),
+        (2083, 0.028, 31.65),
+        (2500, 0.035, 43.33),
+        (6250, 0.056, 57.93),
+        (20833, 0.066, 26793),
+        (float('inf'), 0.099, 1230.41),
+        ]
+
+    ### MONTHLY ###
+    elif schedule_pay == 'monthly':
+        wages -= 83.30 * allowances
+        tax_rate_table = [
+        (1666, 0.015, 0.0),
+        (3333, 0.023, 24.99),
+        (4166, 0.028, 63.33),
+        (5000, 0.035, 86.66),
+        (12500, 0.056, 115.85),
+        (41667, 0.066, 535.85),
+        (float('inf'), 0.099, 2460.87),
+        ]
+
+    ### QUARTERLY ###
+    elif schedule_pay == 'quarterly':
+        wages -= 250.00 * allowances
+        tax_rate_table = [
+        (5000, 0.015, 0.0),
+        (10000, 0.023, 75.00),
+        (12500, 0.028, 190.00),
+        (15000, 0.035, 260.00),
+        (37500, 0.056, 347.50),
+        (125000, 0.066, 1607.50),
+        (float('inf'), 0.099, 7382.50),
+        ]
+
+    ### SEMI-ANNUAL ###
+    elif schedule_pay == 'semi-annual':
+        wages -= 500.00 * allowances
+        tax_rate_table = [
+        (10000, 0.015, 0.0),
+        (20000, 0.023, 150.00),
+        (25000, 0.028, 380.00),
+        (30000, 0.035, 520.00),
+        (75000, 0.056, 695.00),
+        (250000, 0.066, 3215.00),
+        (float('inf'), 0.099, 14765.00),
+        ]
+
+    ### ANNUAL ###
+    elif schedule_pay == 'annually':
+        wages -= 1000.00 * allowances
+        tax_rate_table = [
+        (20000, 0.015, 0.0),
+        (40000, 0.023, 300.00),
+        (50000, 0.028, 760.00),
+        (60000, 0.035, 1040.00),
+        (150000, 0.056, 1390.00),
+        (500000, 0.066, 6430.00),
+        (float('inf'), 0.099, 29530.00),
+        ]
+
+#### RATE 'D' ####
+elif rate_table == 'D':
+    ### WEEKLY ###
+    if schedule_pay == 'weekly':
+        wages -= 19.20 * allowances
+        tax_rate_table = [
+        (384, 0.015, 0.0),
+        (769, 0.027, 5.76),
+        (961, 0.034, 16.16),
+        (1153, 0.043, 22.68),
+        (2884, 0.056, 30.94),
+        (9615, 0.065, 127.88),
+        (float('inf'), 0.099, 565.40),
+        ]
+
+    ### BI-WEEKLY ###
+    elif schedule_pay == 'bi-weekly':
+        wages -= 38.40 * allowances
+        tax_rate_table = [
+        (769, 0.015, 0.0),
+        (1538, 0.027, 11.54),
+        (1923, 0.034, 32.30),
+        (2307, 0.043, 45.39),
+        (5769, 0.056, 61.90),
+        (19231, 0.065, 255.77),
+        (float('inf'), 0.099, 1130.80),
+        ]
+
+    ### SEMI-MONTHLY ###
+    elif schedule_pay == 'semi-monthly':
+        wages -= 41.60 * allowances
+        tax_rate_table = [
+        (833, 0.015, 0.0),
+        (1666, 0.027, 12.50),
+        (2083, 0.034, 34.99),
+        (2500, 0.043, 49.16),
+        (6250, 0.056, 67.10),
+        (20833, 0.065, 277.10),
+        (float('inf'), 0.099, 1225.00),
+        ]
+
+    ### MONTHLY ###
+    elif schedule_pay == 'monthly':
+        wages -= 83.30 * allowances
+        tax_rate_table = [
+        (1666, 0.015, 0.0),
+        (3333, 0.027, 24.99),
+        (4166, 0.034, 70.00),
+        (5000, 0.043, 98.32),
+        (12500, 0.056, 134.18),
+        (41667, 0.065, 554.18),
+        (float('inf'), 0.099, 2450.04),
+        ]
+
+    ### QUARTERLY ###
+    elif schedule_pay == 'quarterly':
+        wages -= 250.00 * allowances
+        tax_rate_table = [
+        (5000, 0.015, 0.0),
+        (10000, 0.027, 75.00),
+        (12500, 0.034, 210.00),
+        (15000, 0.043, 295.00),
+        (37500, 0.056, 402.50),
+        (125000, 0.065, 1662.50),
+        (float('inf'), 0.099, 7350.00),
+        ]
+
+    ### SEMI-ANNUAL ###
+    elif schedule_pay == 'semi-annual':
+        wages -= 500.00 * allowances
+        tax_rate_table = [
+        (10000, 0.015, 0.0),
+        (20000, 0.027, 150.00),
+        (25000, 0.034, 420.00),
+        (30000, 0.043, 590.00),
+        (75000, 0.056, 805.00),
+        (250000, 0.065, 3325.00),
+        (float('inf'), 0.099, 14700.00),
+        ]
+
+    ### ANNUAL ###
+    elif schedule_pay == 'annually':
+        wages -= 1000.00 * allowances
+        tax_rate_table = [
+        (20000, 0.015, 0.0),
+        (40000, 0.027, 300.00),
+        (50000, 0.034, 840.00),
+        (60000, 0.043, 1180.00),
+        (150000, 0.056, 1610.00),
+        (250000, 0.065, 6650.00),
+        (float('inf'), 0.099, 29400.00),
+        ]
+
+#### RATE 'E' ####
+elif rate_table == 'E':
+    ### WEEKLY ###
+    if schedule_pay == 'weekly':
+        wages -= 19.20 * allowances
+        tax_rate_table = [
+        (384, 0.015, 0.0),
+        (673, 0.02, 5.76),
+        (1923, 0.058, 11.54),
+        (9615, 0.065, 84.04),
+        (float('inf'), 0.099, 584.02),
+        ]
+
+    ### BI-WEEKLY ###
+    elif schedule_pay == 'bi-weekly':
+        wages -= 38.40 * allowances
+        tax_rate_table = [
+        (769, 0.015, 0.0),
+        (1346, 0.02, 11.54),
+        (3846, 0.058, 23.08),
+        (19231, 0.065, 168.08),
+        (float('inf'), 0.099, 1168.11),
+        ]
+
+    ### SEMI-MONTHLY ###
+    elif schedule_pay == 'semi-monthly':
+        wages -= 41.60 * allowances
+        tax_rate_table = [
+        (833, 0.015, 0.0),
+        (1458, 0.02, 12.50),
+        (4166, 0.058, 25.00),
+        (20833, 0.065, 182.06),
+        (float('inf'), 0.099, 1265.42),
+        ]
+
+    ### MONTHLY ###
+    elif schedule_pay == 'monthly':
+        wages -= 83.30 * allowances
+        tax_rate_table = [
+        (1666, 0.015, 0.0),
+        (2916, 0.02, 24.99),
+        (8333, 0.058, 49.99),
+        (41667, 0.065, 364.18),
+        (float('inf'), 0.099, 2530.89),
+        ]
+
+    ### QUARTERLY ###
+    elif schedule_pay == 'quarterly':
+        wages -= 250.00 * allowances
+        tax_rate_table = [
+        (5000, 0.015, 0.0),
+        (8750, 0.02, 75.00),
+        (25000, 0.058, 150.00),
+        (125000, 0.065, 1092.50),
+        (float('inf'), 0.099, 7592.50),
+        ]
+
+    ### SEMI-ANNUAL ###
+    elif schedule_pay == 'semi-annual':
+        wages -= 500.00 * allowances
+        tax_rate_table = [
+        (10000, 0.015, 0.0),
+        (17500, 0.02, 150.00),
+        (50000, 0.058, 300.00),
+        (250000, 0.065, 2185.00),
+        (float('inf'), 0.099, 15,185.00),
+        ]
+
+    ### ANNUAL ###
+    elif schedule_pay == 'annually':
+        wages -= 1000.00 * allowances
+        tax_rate_table = [
+        (20000, 0.015, 0.0),
+        (35000, 0.02, 300.00),
+        (100000, 0.058, 600.00),
+        (500000, 0.065, 4370.00),
+        (float('inf'), 0.099, 30370.00),
+        ]
+
+
+over = 0.0
+tax = 0.0
+for row in tax_rate_table:
+    if wages &lt;= row[0]:
+        tax = ((wages - over) * row[1]) + row[2]
+        tax += additional_withholding
+        break
+    over = row[0]
+
+result = -tax
+
+        </field>
+        <field name="register_id" ref="contrib_register_njdor_withhold"/>
+    </record>
+
+    </data>
+</odoo>
