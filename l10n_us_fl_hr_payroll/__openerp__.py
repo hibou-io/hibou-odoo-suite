@@ -5,7 +5,7 @@
     'license': 'AGPL-3',
     'category': 'Localization',
     'depends': ['l10n_us_hr_payroll'],
-    'version': '2017.0.0',
+    'version': '10.0.2019.0.0',
     'description': """
 USA::Florida Payroll Rules.
 ==================
@@ -18,11 +18,10 @@ USA::Florida Payroll Rules.
     'auto_install': False,
     'website': 'https://hibou.io/',
     'data':[
-        'us_fl_hr_payroll_view.xml',
+        'views/us_fl_hr_payroll_views.xml',
         'data/base.xml',
-        'data/rules_2016.xml',
-        'data/rules_2017.xml',
-        'data/rules_2018.xml',
+        'data/rates.xml',
+        'data/rules.xml',
         'data/final.xml',
     ],
     'installable': True

@@ -17,13 +17,13 @@
 
 <!-- HR SALARY RULE CATEGORIES-->
     <record id="hr_payroll_fl_unemp_wages" model="hr.salary.rule.category">
-        <field name="name">Florida Unemployment - Wages</field>
-        <field name="code">FL_UNEMP_WAGES</field>
+        <field name="name">Wage: US-FL Unemployment</field>
+        <field name="code">WAGE_US_FL_UNEMP</field>
     </record>
 
     <record id="hr_payroll_fl_unemp" model="hr.salary.rule.category">
-        <field name="name">Florida Unemployment</field>
-        <field name="code">FL_UNEMP</field>
+        <field name="name">ER: US-FL Unemployment</field>
+        <field name="code">ER_US_FL_UNEMP</field>
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
 
