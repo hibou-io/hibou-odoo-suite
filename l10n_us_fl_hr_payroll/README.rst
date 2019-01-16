@@ -30,6 +30,32 @@ New Payslip Categories for:
 * Florida Unemployment
 * Florida Unemployment - Wages
 
+Upgrading to 2019
+==========================
+
+If you were using this prior to January 2019, then you will need to run the following
+migration script.
+
+Odoo Shell code::
+
+    def migrate_rule_name(rule_id):
+        main = env.ref(rule_id)
+        old_2017 = env.ref(rule_id.replace('2018', '2017'))
+        old_2016 = env.ref(rule_id.replace('2018', '2016'))
+        lines = env['hr.payslip.line'].search([('salary_rule_id', 'in', [old_2017.id, old_2016.id,])])
+        lines.write({'salary_rule_id': main.id})
+
+    rules = [
+        'l10n_us_fl_hr_payroll.hr_payroll_rules_fl_unemp_wages_2018',
+        'l10n_us_fl_hr_payroll.hr_payroll_rules_fl_unemp_2018',
+    ]
+    for rule_id in rules:
+        migrate_rule_name(rule_id)
+
+    env.cr.commit()
+
+
+
 =======
 License
 =======
