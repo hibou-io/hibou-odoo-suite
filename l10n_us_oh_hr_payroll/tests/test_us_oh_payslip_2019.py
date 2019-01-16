@@ -17,7 +17,7 @@ class TestUsOhPayslip(TestUsPayslip):
         # For formula here
         # http://www.tax.ohio.gov/Portals/0/employer_withholding/August2015Rates/WTH_OptionalComputerFormula_073015.pdf
         tw = salary * 12  # = 60000
-        wd = ((tw - 40000) * 0.035 + 900) / 12 * 1.112
+        wd = ((tw - 40000) * 0.035 + 900) / 12 * 1.075
 
         employee = self._createEmployee()
 
