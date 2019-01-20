@@ -19,9 +19,10 @@ USA::Missouri Payroll Rules.
     'auto_install': False,
     'website': 'https://hibou.io/',
     'data': [
-        'hr_payroll_view.xml',
+        'views/hr_payroll_views.xml',
         'data/base.xml',
-        'data/rules_2018.xml',
+        'data/rates.xml',
+        'data/rules.xml',
         'data/final.xml',
     ],
     'installable': True
