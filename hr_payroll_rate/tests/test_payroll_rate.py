@@ -90,3 +90,12 @@ class TestPayrollRate(common.TransactionCase):
 
         rate = self.payslip.get_rate('TEST')
         self.assertEqual(rate, test_rate)
+
+    def test_payroll_rate_precision(self):
+        test_rate = self.env['hr.payroll.rate'].create({
+            'name': 'Test Rate',
+            'code': 'TEST',
+            'rate': 2.65001,
+            'date_from': '2019-01-01',
+        })
+        self.assertEqual(round(test_rate.rate * 100000), 265001.0)
