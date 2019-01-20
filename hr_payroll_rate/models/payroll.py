@@ -11,7 +11,7 @@ class PayrollRate(models.Model):
     date_to = fields.Date(string='Date To')
     company_id = fields.Many2one('res.company', string='Company', copy=False,
                                  default=False)
-    rate = fields.Float(string='Rate', required=True)
+    rate = fields.Float(string='Rate', digits=(12, 6), required=True)
     code = fields.Char(string='Code', required=True)
 
     limit_payslip = fields.Float(string='Payslip Limit')
