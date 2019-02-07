@@ -1,7 +1,7 @@
 {
     'name': 'Purchase by Sale History',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '11.0.1.0.0',
+    'version': '12.0.1.0.0',
     'category': 'Purchases',
     'sequence': 95,
     'summary': 'Fill Purchase Orders by Sales History',
