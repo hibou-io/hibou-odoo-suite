@@ -172,7 +172,7 @@ class TestPurchaseBySaleHistory(common.TransactionCase):
             'product_qty': 100.0,
             'location_id': wh1.lot_stock_id.id,
         })
-        adjust_product11.action_done()
+        adjust_product11.action_validate()
 
         wiz.action_confirm()
         self.assertEqual(po1.order_line.filtered(lambda l: l.product_id == product11).product_qty, 0.0)  # Because we have so much in stock now.
