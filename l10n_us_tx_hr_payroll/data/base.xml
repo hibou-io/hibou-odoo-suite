@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- CONTRIBUTION REGISTERS -->
+    <record id="res_partner_txdor" model="res.partner">
+        <field name="name">Texas Workforce Commission</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+    <record id="contrib_register_txdor" model="hr.contribution.register">
+        <field name="name">Texas Unemployment</field>
+        <field name="note">Texas Workforce Commission - Unemployment</field>
+        <field name="partner_id" ref="res_partner_txdor"/>
+    </record>
+    <record id="contrib_register_txdor" model="hr.contribution.register">
+        <field name="name">Texas Obligation Assessment</field>
+        <field name="note">Texas Workforce Commission - Obligation Assessment</field>
+        <field name="partner_id" ref="res_partner_txdor"/>
+    </record>
+    <record id="contrib_register_txdor" model="hr.contribution.register">
+        <field name="name">Texas Employment and Training Investment Assessment</field>
+        <field name="note">Texas Workforce Commission - Employment and Trainging Investment Assessment</field>
+        <field name="partner_id" ref="res_partner_txdor"/>
+    </record>
+
+
+<!-- HR SALARY RULE CATEGORIES-->
+    <record id="hr_payroll_tx_unemp_wages" model="hr.salary.rule.category">
+        <field name="name">Wage: US-TX Unemployment</field>
+        <field name="code">WAGE_US_TX_UNEMP</field>
+    </record>
+
+    <record id="hr_payroll_tx_unemp" model="hr.salary.rule.category">
+        <field name="name">ER: US-TX Unemployment</field>
+        <field name="code">ER_US_TX_UNEMP</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="hr_payroll_tx_oa" model="hr.salary.rule.category">
+        <field name="name">ER: US-TX Obligation Assessment</field>
+        <field name="code">ER_US_TX_OA</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="hr_payroll_tx_etia" model="hr.salary.rule.category">
+        <field name="name">ER: US-TX Employment &amp; Training Investment Assessment</field>
+        <field name="code">ER_US_TX_ETIA</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    </data>
+</odoo>
