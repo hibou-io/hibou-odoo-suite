@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_fl_unemp_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_fl_unemp_wages"/>
+        <field name="name">Wage: US-FL Unemployment</field>
+        <field name="code">WAGE_US_FL_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+year = payslip.dict.date_to.year
+rate = payslip.dict.get_rate('US_FL_UNEMP')
+ytd = payslip.sum('WAGE_US_FL_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_fl_unemp_2018" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_fl_unemp"/>
+        <field name="name">ER: US-FL Unemployment</field>
+        <field name="code">ER_US_FL_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_FL_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_US_FL_UNEMP
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_fldor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    </data>
+</odoo>

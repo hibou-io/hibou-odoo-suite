@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- CONTRIBUTION REGISTERS -->
+    <record id="res_partner_fldor" model="res.partner">
+        <field name="name">Florida Department of Revenue</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+    <record id="contrib_register_fldor" model="hr.contribution.register">
+        <field name="name">Florida Unemployment</field>
+        <field name="note">Florida Department of Revenue - Unemployment</field>
+        <field name="partner_id" ref="res_partner_fldor"/>
+    </record>
+
+
+<!-- HR SALARY RULE CATEGORIES-->
+    <record id="hr_payroll_fl_unemp_wages" model="hr.salary.rule.category">
+        <field name="name">Wage: US-FL Unemployment</field>
+        <field name="code">WAGE_US_FL_UNEMP</field>
+    </record>
+
+    <record id="hr_payroll_fl_unemp" model="hr.salary.rule.category">
+        <field name="name">ER: US-FL Unemployment</field>
+        <field name="code">ER_US_FL_UNEMP</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    </data>
+</odoo>
