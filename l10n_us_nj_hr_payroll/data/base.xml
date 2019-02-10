@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- CONTRIBUTION REGISTERS -->
+    <record id="res_partner_njdor_unemp_employee" model="res.partner">
+            <field name="name">New Jersey Division of Taxation - Unemployment Insurance Tax(Employee)</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+    </record>
+
+    <record id="res_partner_njdor_unemp_company" model="res.partner">
+            <field name="name">New Jersey Division of Taxation - Unemployment Insurance Tax(Employer)</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+    </record>
+
+    <record id="res_partner_njdor_sdi_employee" model="res.partner">
+            <field name="name">New Jersey Division of Taxation - State Disability Insurance Tax(Employee)</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+    </record>
+
+    <record id="res_partner_njdor_sdi_company" model="res.partner">
+            <field name="name">New Jersey Division of Taxation - State Disability Insurance Tax(Employer)</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+    </record>
+
+    <record id="res_partner_njdor_fli" model="res.partner">
+            <field name="name">New Jersey Division of Taxation - Family Leave Insurance Tax</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+    </record>
+
+    <record id="res_partner_njdor_wf" model="res.partner">
+            <field name="name">New Jersey Division of Taxation - Workforce Development/Supplemental Workforce Funds Tax</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+    </record>
+
+    <record id="res_partner_njdor_withhold" model="res.partner">
+        <field name="name">New Jersey Division of Taxation - Income Tax Withholding</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+
+    <record id="contrib_register_njdor_unemp_employee" model="hr.contribution.register">
+        <field name="name">New Jersey Unemployment Insurance Tax</field>
+        <field name="note">New Jersey Division of Taxation - Unemployment Insurance Tax(Employee)</field>
+        <field name="partner_id" ref="res_partner_njdor_unemp_employee"/>
+    </record>
+
+    <record id="contrib_register_njdor_unemp_company" model="hr.contribution.register">
+        <field name="name">New Jersey Unemployment Insurance Tax</field>
+        <field name="note">New Jersey Division of Taxation - Unemployment Insurance Tax(Employer)</field>
+        <field name="partner_id" ref="res_partner_njdor_unemp_company"/>
+    </record>
+
+    <record id="contrib_register_njdor_sdi_employee" model="hr.contribution.register">
+        <field name="name">New Jersey State Disability Insurance</field>
+        <field name="note">New Jersey Division of Taxation - State Disability Insurance Tax(Employee)</field>
+        <field name="partner_id" ref="res_partner_njdor_sdi_employee"/>
+    </record>
+
+    <record id="contrib_register_njdor_sdi_company" model="hr.contribution.register">
+        <field name="name">New Jersey State Disability Insurance</field>
+        <field name="note">New Jersey Division of Taxation - State Disability Insurance Tax(Employer)</field>
+        <field name="partner_id" ref="res_partner_njdor_sdi_company"/>
+    </record>
+
+    <record id="contrib_register_njdor_fli" model="hr.contribution.register">
+        <field name="name">New Jersey State Family Leave Insurance</field>
+        <field name="note">New Jersey Division of Taxation - Family Leave Insurance Tax</field>
+        <field name="partner_id" ref="res_partner_njdor_fli"/>
+    </record>
+
+    <record id="contrib_register_njdor_wf" model="hr.contribution.register">
+        <field name="name">New Jersey State Workforce Development/Supplemental Workforce Funds</field>
+        <field name="note">New Jersey Division of Taxation - Workforce Development/Supplemental Workforce Funds Tax</field>
+        <field name="partner_id" ref="res_partner_njdor_wf"/>
+    </record>
+
+    <record id="contrib_register_njdor_withhold" model="hr.contribution.register">
+        <field name="name">New Jersey Income Tax Withholding</field>
+        <field name="note">New Jersey Division of Taxation - Income Tax Withholding</field>
+        <field name="partner_id" ref="res_partner_njdor_withhold"/>
+    </record>
+
+
+<!-- HR SALARY RULE CATEGORIES-->
+    <record id="hr_payroll_nj_unemp_wages" model="hr.salary.rule.category">
+        <field name="name">Wage: US-NJ Unemployment Insurance</field>
+        <field name="code">WAGE_US_NJ_UNEMP</field>
+    </record>
+
+    <record id="hr_payroll_nj_sdi_wages" model="hr.salary.rule.category">
+        <field name="name">Wage: US-NJ State Disability Insurance</field>
+        <field name="code">WAGE_US_NJ_SDI</field>
+    </record>
+
+    <record id="hr_payroll_nj_fli_wages" model="hr.salary.rule.category">
+        <field name="name">Wage: US-NJ Family Leave Insurance</field>
+        <field name="code">WAGE_US_NJ_FLI</field>
+    </record>
+
+    <record id="hr_payroll_nj_wf_wages" model="hr.salary.rule.category">
+        <field name="name">Wage: US-NJ Work Force Development</field>
+        <field name="code">WAGE_US_NJ_WF</field>
+    </record>
+
+    <record id="hr_payroll_nj_unemp_employee" model="hr.salary.rule.category">
+        <field name="name">EE: US-NJ Unemployment Insurance</field>
+        <field name="code">EE_US_NJ_UNEMP</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+     <record id="hr_payroll_nj_unemp_company" model="hr.salary.rule.category">
+        <field name="name">ER: US-NJ Unemployment Insurance</field>
+        <field name="code">ER_US_NJ_UNEMP</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="hr_payroll_nj_sdi_company" model="hr.salary.rule.category">
+        <field name="name">ER: US-NJ State Disability Insurance</field>
+        <field name="code">ER_US_NJ_SDI</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="hr_payroll_nj_sdi_employee" model="hr.salary.rule.category">
+        <field name="name">EE: US-NJ State Disability Insurance</field>
+        <field name="code">EE_US_NJ_SDI</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_nj_fli" model="hr.salary.rule.category">
+        <field name="name">EE: US-NJ Family Leave Insurance</field>
+        <field name="code">EE_US_NJ_FLI</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_nj_wf" model="hr.salary.rule.category">
+        <field name="name">EE: US-NJ Workforce Development</field>
+        <field name="code">EE_US_NJ_WF</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_nj_income_withhold" model="hr.salary.rule.category">
+        <field name="name">EE: US-NJ Income Withholding</field>
+        <field name="code">EE_US_NJ_INC_WITHHOLD</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    </data>
+</odoo>
