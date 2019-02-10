@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- HR PAYROLL STRUCTURE -->
+    <record id="hr_payroll_salary_structure_us_oh_employee" model="hr.payroll.structure">
+        <field name="code">US_OH_EMP</field>
+        <field name="name">USA Ohio Employee</field>
+        <field eval="[(6, 0, [
+          ref('hr_payroll_rules_oh_unemp_wages_2018'),
+          ref('hr_payroll_rules_oh_unemp_2018'),
+          ref('hr_payroll_rules_oh_inc_withhold_2018'),
+          ])]" name="rule_ids"/>
+        <field name="company_id" ref="base.main_company"/>    
+        <field name="parent_id" ref="l10n_us_hr_payroll.hr_payroll_salary_structure_us_employee"/>
+    </record>
+
+    </data>
+</odoo>

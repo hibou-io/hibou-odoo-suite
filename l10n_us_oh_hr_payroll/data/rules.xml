@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_oh_unemp_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_oh_unemp_wages"/>
+        <field name="name">Wage: US-OH Unemployment</field>
+        <field name="code">WAGE_US_OH_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+rate = payslip.dict.get_rate('US_OH_UNEMP')
+year = payslip.dict.date_to.year
+ytd = payslip.sum('WAGE_US_OH_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_oh_unemp_2018" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_oh_unemp"/>
+        <field name="name">ER: US-OH Unemployment</field>
+        <field name="code">ER_US_OH_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_OH_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_US_OH_UNEMP
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_ohdor_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_oh_inc_withhold_2018" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_oh_income_withhold"/>
+        <field name="name">EE: US-OH Income Withholding</field>
+        <field name="code">EE_US_OH_INC_WITHHOLD</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = True</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+year = payslip.dict.date_to.year
+wages = categories.GROSS
+allowances = contract.oh_income_allowances
+schedule_pay = contract.schedule_pay
+val = 0.00
+
+PP = 0
+if 'weekly' == schedule_pay:
+    PP = 52
+elif 'bi-weekly' == schedule_pay:
+    PP = 26
+elif 'semi-monthly' == schedule_pay:  # impossible
+    PP = 24
+elif 'monthly' == schedule_pay:
+    PP = 12
+elif 'quarterly' == schedule_pay:
+    PP = 4
+elif 'semi-annually' == schedule_pay:
+    PP = 2
+elif 'annually' == schedule_pay:
+    PP = 1
+else:
+    raise Exception('Invalid schedule_pay="' + schedule_pay + '" for OH Income Withholding calculation')
+
+# Algorithm from https://www.tax.ohio.gov/Portals/0/employer_withholding/2019%20tables/WTH_OptionalComputerFormula_2019.pdf
+if year == 2018:
+    TW = (wages * PP) - (650 * allowances)
+    if TW &lt;= 5000.0:
+        WD = ((TW * 0.005) / PP) * 1.112
+    elif TW &lt;= 10000.0:
+        WD = ((((TW - 5000.0) * 0.01) + 25.0) / PP) * 1.112
+    elif TW &lt;= 15000.0:
+        WD = ((((TW - 10000.0) * 0.02) + 75.0) / PP) * 1.112
+    elif TW &lt;= 20000.0:
+        WD = ((((TW - 15000.0) * 0.025) + 175.0) / PP) * 1.112
+    elif TW &lt;= 40000.0:
+        WD = ((((TW - 20000.0) * 0.03) + 300.0) / PP) * 1.112
+    elif TW &lt;= 80000.0:
+        WD = ((((TW - 40000.0) * 0.035) + 900.0) / PP) * 1.112
+    elif TW &lt;= 100000.0:
+        WD = ((((TW - 80000.0) * 0.04) + 2300.0) / PP) * 1.112
+    else:
+        WD = ((((TW - 100000.0) * 0.05) + 3100.0) / PP) * 1.112
+else:
+    TW = (wages * PP) - (650 * allowances)
+    if TW &lt;= 5000.0:
+        WD = ((TW * 0.005) / PP) * 1.112
+    elif TW &lt;= 10000.0:
+        WD = ((((TW - 5000.0) * 0.01) + 25.0) / PP) * 1.075
+    elif TW &lt;= 15000.0:
+        WD = ((((TW - 10000.0) * 0.02) + 75.0) / PP) * 1.075
+    elif TW &lt;= 20000.0:
+        WD = ((((TW - 15000.0) * 0.025) + 175.0) / PP) * 1.075
+    elif TW &lt;= 40000.0:
+        WD = ((((TW - 20000.0) * 0.03) + 300.0) / PP) * 1.075
+    elif TW &lt;= 80000.0:
+        WD = ((((TW - 40000.0) * 0.035) + 900.0) / PP) * 1.075
+    elif TW &lt;= 100000.0:
+        WD = ((((TW - 80000.0) * 0.04) + 2300.0) / PP) * 1.075
+    else:
+        WD = ((((TW - 100000.0) * 0.05) + 3100.0) / PP) * 1.075
+
+result = -WD
+        </field>
+        <field name="register_id" ref="contrib_register_ohdor_withhold"/>
+    </record>
+
+    </data>
+</odoo>
