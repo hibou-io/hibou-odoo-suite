@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Basic -->
+        <record id="hr_payroll.hr_rule_basic" model="hr.salary.rule">
+            <!-- Salary Expense -->
+            <field name="account_debit" search="[('code', 'like', '212100%')]"/>
+        </record>
+        <record id="hr_payroll.hr_rule_net" model="hr.salary.rule">
+            <!-- Salary Payable / Accounts Payable -->
+            <field name="account_credit" search="[('code', 'like', '111100%')]"/>
+        </record>
+
+        <!-- Employee Deductions FICA & Federal Withholding -->
+        <record id="l10n_us_hr_payroll.hr_payroll_rules_fica_emp_ss_2018" model="hr.salary.rule">
+            <!-- Accounts Payable -->
+            <field name="account_debit" search="[('code', 'like', '111100%')]"/>
+        </record>
+        <record id="l10n_us_hr_payroll.hr_payroll_rules_fica_emp_m_2018" model="hr.salary.rule">
+            <!-- Accounts Payable -->
+            <field name="account_debit" search="[('code', 'like', '111100%')]"/>
+        </record>
+        <record id="l10n_us_hr_payroll.hr_payroll_rules_fica_emp_m_add_2018" model="hr.salary.rule">
+            <!-- Accounts Payable -->
+            <field name="account_debit" search="[('code', 'like', '111100%')]"/>
+        </record>
+        <record id="l10n_us_hr_payroll.hr_payroll_rules_fed_inc_withhold_2018_single" model="hr.salary.rule">
+            <!-- Accounts Payable -->
+            <field name="account_debit" search="[('code', 'like', '111100%')]"/>
+        </record>
+        <record id="l10n_us_hr_payroll.hr_payroll_rules_fed_inc_withhold_2018_married" model="hr.salary.rule">
+            <!-- Accounts Payable -->
+            <field name="account_debit" search="[('code', 'like', '111100%')]"/>
+        </record>
+
+        <!-- Company Contributions FICA -->
+        <record id="l10n_us_hr_payroll.hr_payroll_rules_fica_comp_ss" model="hr.salary.rule">
+            <!-- Accounts Payable -->
+            <field name="account_debit" search="[('code', 'like', '111100%')]"/>
+            <!-- Salary Expense -->
+            <field name="account_credit" search="[('code', 'like', '220000%')]"/>
+        </record>
+        <record id="l10n_us_hr_payroll.hr_payroll_rules_fica_comp_m" model="hr.salary.rule">
+            <!-- Accounts Payable -->
+            <field name="account_debit" search="[('code', 'like', '111100%')]"/>
+            <!-- Salary Expense -->
+            <field name="account_credit" search="[('code', 'like', '220000%')]"/>
+        </record>
+        <!-- Company Contributions FUTA -->
+        <record id="l10n_us_hr_payroll.hr_payroll_rules_futa_2018" model="hr.salary.rule">
+            <!-- Accounts Payable -->
+            <field name="account_debit" search="[('code', 'like', '111100%')]"/>
+            <!-- Salary Expense -->
+            <field name="account_credit" search="[('code', 'like', '220000%')]"/>
+        </record>
+
+    </data>
+</odoo>
