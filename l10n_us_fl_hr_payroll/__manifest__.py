@@ -1,11 +1,10 @@
-# -*- encoding: utf-8 -*-
 {
     'name': 'USA - Florida - Payroll',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'license': 'AGPL-3',
     'category': 'Localization',
     'depends': ['l10n_us_hr_payroll'],
-    'version': '11.0.2019.0.0',
+    'version': '12.0.2019.0.0',
     'description': """
 USA::Florida Payroll Rules.
 ===========================
