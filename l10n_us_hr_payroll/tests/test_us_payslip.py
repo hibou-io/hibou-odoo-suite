@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from logging import getLogger
 from sys import float_info as sys_float_info
 

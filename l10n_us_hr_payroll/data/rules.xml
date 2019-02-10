@@ -14,7 +14,7 @@
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 ###
-year = int(payslip.dict.date_to[:4])
+year = payslip.dict.date_to.year
 ytd = payslip.sum('WAGE_US_FICA_SS', str(year) + '-01-01', str(year+1) + '-01-01')
 ytd += contract.external_wages
 rate = payslip.dict.get_rate('US_FICA_SS')
@@ -52,7 +52,7 @@ else:
 ###
 rate = payslip.dict.get_rate('US_FICA_M_ADD')
 ADD_M = rate.wage_limit_year
-year = int(payslip.dict.date_to[:4])
+year = payslip.dict.date_to.year
 norm_med_ytd = payslip.sum('WAGE_US_FICA_M', str(year) + '-01-01', str(year+1) + '-01-01')
 norm_med_cur = categories.WAGE_US_FICA_M
 
@@ -124,7 +124,7 @@ result = categories.WAGE_US_FICA_M_ADD
         <field name="condition_python">result = (contract.w4_filing_status != 'married' and contract.w4_filing_status)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-year = int(payslip.dict.date_to[:4])
+year = payslip.dict.date_to.year
 wages = categories.GROSS
 allowances = contract.w4_allowances
 is_nra = contract.w4_is_nonresident_alien
@@ -560,7 +560,7 @@ result = -(val + additional)
         <field name="condition_python">result = (contract.w4_filing_status == 'married')</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-year = int(payslip.dict.date_to[:4])
+year = payslip.dict.date_to.year
 wages = categories.GROSS
 allowances = contract.w4_allowances
 is_nra = contract.w4_is_nonresident_alien
@@ -999,7 +999,7 @@ result = -(val + additional)
         <field name="amount_python_compute">
 ###
 rate = payslip.dict.get_futa_rate(contract)
-year = int(payslip.dict.date_to[:4])
+year = payslip.dict.date_to.year
 ytd = payslip.sum('WAGE_US_FUTA', str(year) + '-01-01', str(year+1) + '-01-01')
 ytd += contract.external_wages
 remaining = rate.wage_limit_year - ytd
@@ -1021,7 +1021,7 @@ else:
         <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_EXEMPT)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-year = int(payslip.dict.date_to[:4])
+year = payslip.dict.date_to.year
 rate = payslip.dict.get_futa_rate(contract)
 result_rate = -(rate.rate)
 result = categories.WAGE_US_FUTA

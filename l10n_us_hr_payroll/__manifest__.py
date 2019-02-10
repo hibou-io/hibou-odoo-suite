@@ -1,11 +1,10 @@
-# -*- encoding: utf-8 -*-
 {
     'name': 'USA - Payroll',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'license': 'AGPL-3',
     'category': 'Localization',
     'depends': ['hr_payroll', 'hr_payroll_rate'],
-    'version': '11.0.2018.1.0',
+    'version': '12.0.2019.1.0',
     'description': """
 USA Payroll Rules.
 ==================
