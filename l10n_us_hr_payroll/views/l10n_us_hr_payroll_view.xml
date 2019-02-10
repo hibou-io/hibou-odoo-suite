@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_contract_form_l10n_us_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.form.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//page[@name='other']" position="before">
+                    <page string="US Federal Filing">
+                        <group>
+                            <group string="W4" name="w4">
+                                <field name="w4_filing_status" string="Filing Status"/>
+                                <field name="w4_allowances" string="Allowances"/>
+                                <field name="w4_additional_withholding" string="Additional Withholding"/>
+                                <field name="w4_is_nonresident_alien" string="Non-resident Alien"/>
+                            </group>
+                            <group string="Other" name="other">
+                                <field name="external_wages" string="External YTD Wages"/>
+                                <field name="futa_type" string="Unemployment Tax Type (FUTA)"/>
+                                <field name="fica_exempt"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="US State Filing">
+                        <group name="state_filing"/>
+                    </page>
+                </xpath>
+            </data>
+            </field>
+        </record>
+    </data>
+</odoo>
