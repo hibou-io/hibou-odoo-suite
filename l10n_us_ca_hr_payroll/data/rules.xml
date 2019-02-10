@@ -1,0 +1,1005 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- HR SALARY RULES-->
+<!-- UIT -->
+    <record id="hr_payroll_rules_ca_uit_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_ca_uit_wages"/>
+        <field name="name">Wage: US-CA Unemployment Insurance</field>
+        <field name="code">WAGE_US_CA_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+rate = payslip.dict.get_rate('US_CA_UNEMP')
+year = payslip.dict.date_to.year
+ytd = payslip.sum('WAGE_US_CA_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_ca_uit_2018" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_ca_uit"/>
+        <field name="name">ER: US-CA Unemployment Insurance Tax</field>
+        <field name="code">ER_US_CA_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_CA_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_US_CA_UNEMP
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_cador_uit"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+<!-- ETT -->
+    <record id="hr_payroll_rules_ca_ett_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_ca_ett_wages"/>
+        <field name="name">Wage: US-CA Employment Training Tax</field>
+        <field name="code">WAGE_US_CA_ETT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+rate = payslip.dict.get_rate('US_CA_ETT')
+year = payslip.dict.date_to.year
+ytd = payslip.sum('WAGE_US_CA_ETT', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_ca_ett_2018" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_ca_ett"/>
+        <field name="name">ER: US-CA Employee Training Tax</field>
+        <field name="code">ER_US_CA_ETT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_CA_ETT')
+result_rate = -rate.rate
+result = categories.WAGE_US_CA_ETT
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_cador_uit"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+<!-- SDI -->
+    <record id="hr_payroll_rules_ca_sdi_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="190"/>
+        <field name="category_id" ref="hr_payroll_ca_sdi_wages"/>
+        <field name="name">Wage: US-CA State Disability Insurance</field>
+        <field name="code">WAGE_US_CA_SDI</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+rate = payslip.dict.get_rate('US_CA_SDI')
+year = payslip.dict.date_to.year
+ytd = payslip.sum('WAGE_US_CA_SDI', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_ca_sdi_2018" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="category_id" ref="hr_payroll_ca_sdi"/>
+        <field name="name">EE: US-CA State Disability Insurance</field>
+        <field name="code">EE_US_CA_SDI</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_CA_SDI')
+result_rate = -rate.rate
+result = categories.WAGE_US_CA_SDI
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_cador_uit"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+<!-- STATE INCOME WITHHOLDING -->
+    <record id="hr_payroll_rules_ca_inc_withhold_2018" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_ca_income_withhold"/>
+        <field name="name">EE: US-CA Income Withholding</field>
+        <field name="code">EE_US_CA_INC_WITHHOLD</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = True</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+year = payslip.dict.date_to.year
+wages = categories.GROSS
+allowances = contract.ca_de4_allowances
+additional_allowances = contract.ca_additional_allowances
+schedule_pay = contract.schedule_pay
+filing_status = contract.ca_de4_filing_status
+low_income = False
+
+if year == 2018:
+    # Tables are found in http://www.edd.ca.gov/pdf_pub_ctr/18methb.pdf
+    # First check low income exemption table (Step 1)
+    low_income_exemption_table = {
+    'weekly':       (270, 270, 540, 540),
+    'bi-weekly':    (540, 540, 1081, 1081),
+    'semi-monthly': (585, 585, 1171, 1171),
+    'monthly':      (1171, 1171, 2341, 2341),
+    'quarterly': (3512, 3512, 7024, 7024),
+    'semi-annual': (7024, 7024, 14048, 14048),
+    'annually': (14048, 14048, 28095, 28095),
+    }
+
+    if filing_status == 'head_household':
+        _, _, _, income = low_income_exemption_table[schedule_pay]
+        if wages &lt;= income:
+            result = 0
+            low_income = True
+    elif filing_status == 'married':
+        if allowances &gt;= 2:
+            _, _, income, _ = low_income_exemption_table[schedule_pay]
+            if wages &lt;= income:
+                result = 0
+                low_income = True
+        else:
+            _, income, _, _ = low_income_exemption_table[schedule_pay]
+            if wages &lt;= income:
+                result = 0
+                low_income = True
+    else:
+        income, _, _, _ = low_income_exemption_table[schedule_pay]
+        if wages &lt;= income:
+            result = 0
+            low_income = True
+
+    if not low_income:
+        # Estimated deduction table (Step 2)
+        estimated_deduction_table = {
+        'weekly':         (19, 38, 58, 77, 96, 115, 135, 154, 173, 192),
+        'bi-weekly':      (38, 77, 115, 154, 192, 231, 269, 308, 346, 385),
+        'semi-monthly':   (42, 83, 125, 167, 208, 250, 292, 333, 375, 417),
+        'monthly':        (83, 167, 250, 333, 417, 500, 583, 667, 750, 833),
+        'quarterly':      (250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500),
+        'semi-annual':    (500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000),
+        'annually':         (1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000),
+        }
+
+        allowance_index = additional_allowances - 1
+        if additional_allowances > 10:
+             deduction = (estimated_deduction_table[schedule_pay][0]) * additional_allowances
+             wages -= deduction
+        elif additional_allowances > 0:
+            deduction = estimated_deduction_table[schedule_pay][allowance_index]
+            wages -= deduction
+
+        # Standard deduction table (Step 3)
+        standard_deduction_table = {
+        'weekly':       (81, 81, 163, 163),
+        'bi-weekly':    (163, 163, 326, 326),
+        'semi-monthly': (177, 177, 353, 353),
+        'monthly':      (353, 353, 706, 706),
+        'quarterly':    (1059, 1059, 2118, 2118),
+        'semi-annual':  (2118, 2118, 4236, 4236),
+        'annually':       (4236, 4236, 8472, 8472),
+        }
+
+        if filing_status == 'head_household':
+            _, _, _, deduction = standard_deduction_table[schedule_pay]
+            wages -= deduction
+        elif filing_status == 'married':
+            if allowances &gt;= 2:
+                _, _, deduction, _ = standard_deduction_table[schedule_pay]
+                wages -= deduction
+            else:
+                _, deduction, _, _ = standard_deduction_table[schedule_pay]
+                wages -= deduction
+        else:
+            deduction, _, _, _ = standard_deduction_table[schedule_pay]
+            wages -= deduction
+
+        # Tax Rate Tables (Step 4)
+        #### WEEKLY ####
+        if schedule_pay == 'weekly':
+            if filing_status == 'head_household' and wages > 0:
+                tax_rate_table = [
+                (316, 0.011, 0.0),
+                (750, 0.022, 3.48),
+                (967, 0.044, 13.03),
+                (1196, 0.066, 22.58),
+                (1413, 0.088, 37.69),
+                (7212, 0.1023, 56.79),
+                (8654, 0.1133, 650.03),
+                (14423, 0.1243, 813.41),
+                (19231, 0.1353, 1530.50),
+                (float('inf'), 0.1463, 2181.02),
+                ]
+
+            elif filing_status == 'married':
+                tax_rate_table = [
+                (316, 0.011, 0.0),
+                (750, 0.022, 3.48),
+                (1184, 0.044, 13.03),
+                (1642, 0.066, 32.13),
+                (2076, 0.088, 62.36),
+                (10606, 0.1023, 100.55),
+                (12726, 0.1133, 973.17),
+                (19231, 0.1243, 1213.37),
+                (21210, 0.1353, 2021.94),
+                (float('inf'), 0.1463, 2289.70),
+                ]
+
+            else:
+                tax_rate_table = [
+                (158, 0.011, 0.0),
+                (375, 0.022, 1.74),
+                (592, 0.044, 6.51),
+                (821, 0.066, 16.06),
+                (1038, 0.088, 31.17),
+                (5303, 0.1023, 50.27),
+                (6363, 0.1133, 486.58),
+                (10605, 0.1243, 606.68),
+                (19231, 0.1353, 1133.96),
+                (float('inf'), 0.1463, 2301.06),
+                ]
+
+        #### BI-WEEKLY ####
+        elif schedule_pay == 'bi-weekly':
+            if filing_status == 'head_household':
+                tax_rate_table = [
+                (632, 0.011, 0.0),
+                (1500, 0.022, 6.95),
+                (1934, 0.044, 26.05),
+                (2392, 0.066, 45.15),
+                (2826, 0.088, 75.38),
+                (14424, 0.1023, 113.57),
+                (17308, 0.1133, 1300.05),
+                (28846, 0.1243, 1626.81),
+                (38462, 0.1353, 3060.98),
+                (float('inf'), 0.1463, 4362.02),
+                ]
+
+            elif filing_status == 'married':
+                tax_rate_table = [
+                (632, 0.011, 0.0),
+                (1500, 0.022, 6.95),
+                (2368, 0.044, 26.05),
+                (3284, 0.066, 64.24),
+                (4152, 0.088, 124.70),
+                (21212, 0.1023, 201.08),
+                (25452, 0.1133, 1946.32),
+                (38462, 0.1243, 2426.71),
+                (42420, 0.1353, 4043.85),
+                (float('inf'), 0.1463, 4579.37),
+                ]
+
+            else:
+                tax_rate_table = [
+                (316, 0.011, 0.0),
+                (750, 0.022, 3.48),
+                (1184, 0.044, 13.03),
+                (1642, 0.066, 32.13),
+                (2076, 0.088, 62.36),
+                (10606, 0.1023, 100.55),
+                (12726, 0.1133, 973.17),
+                (21210, 0.1243, 1213.37),
+                (38462, 0.1353, 2267.93),
+                (float('inf'), 0.1463, 4602.13),
+                ]
+
+        #### SEMI-MONTHLY ####
+        elif schedule_pay == 'semi-monthly':
+            if filing_status == 'head_household':
+                tax_rate_table = [
+                (686, 0.011, 0.0),
+                (1625, 0.022, 7.55),
+                (2094, 0.044, 28.21),
+                (2592, 0.066, 48.85),
+                (3062, 0.088, 81.72),
+                (15625, 0.1023, 123.08),
+                (18750, 0.1133, 1408.27),
+                (31250, 0.1243, 1762.33),
+                (41667, 0.1353, 3316.08),
+                (float('inf'), 0.1463, 4725.50),
+                ]
+
+            elif filing_status == 'married':
+                tax_rate_table = [
+                (686, 0.011, 0.0),
+                (1624, 0.022, 7.55),
+                (2564, 0.044, 28.19),
+                (3560, 0.066, 69.55),
+                (4498, 0.088, 135.29),
+                (22978, 0.1023, 217.83),
+                (27574, 0.1133, 2108.33),
+                (41667, 0.1243, 2629.06),
+                (45956, 0.1353, 4380.82),
+                (float('inf'), 0.1463, 4961.12),
+                ]
+
+            else:
+                tax_rate_table = [
+                (343, 0.011, 0.0),
+                (812, 0.022, 3.77),
+                (1282, 0.044, 14.09),
+                (1780, 0.066, 34.77),
+                (2249, 0.088, 67.64),
+                (11489, 0.1023, 108.91),
+                (13787, 0.1133, 1054.16),
+                (22978, 0.1243, 1314.52),
+                (41667, 0.1353, 2456.96),
+                (float('inf'), 0.1463, 4985.58),
+                ]
+
+        #### MONTHLY ####
+        elif schedule_pay == 'monthly':
+            if filing_status == 'head_household':
+                tax_rate_table = [
+                (1372, 0.011, 0.0),
+                (3250, 0.022, 15.09),
+                (4188, 0.044, 56.41),
+                (5184, 0.066, 97.68),
+                (6124, 0.088, 163.42),
+                (31250, 0.1023, 246.148),
+                (37500, 0.1133, 2816.53),
+                (62500, 0.1243, 3524.66),
+                (83334, 0.1353, 6632.16),
+                (float('inf'), 0.1463, 9451.00),
+                ]
+
+            elif filing_status == 'married':
+                tax_rate_table = [
+                (1372, 0.011, 0.0),
+                (3248, 0.022, 15.09),
+                (5128, 0.044, 56.36),
+                (7120, 0.066, 139.08),
+                (8996, 0.088, 270.55),
+                (45956, 0.1023, 435.64),
+                (55148, 0.1133, 4216.65),
+                (83334, 0.1243, 5258.10),
+                (91912, 0.1353, 8761.62),
+                (float('inf'), 0.1463, 9922.22),
+                ]
+
+            else:
+                tax_rate_table = [
+                (686, 0.011, 0.0),
+                (1624, 0.022, 7.55),
+                (2564, 0.044, 28.19),
+                (3560, 0.066, 69.55),
+                (4498, 0.088, 135.29),
+                (22978, 0.1023, 217.83),
+                (27574, 0.1133, 2108.33),
+                (45956, 0.1243, 2629.06),
+                (83334, 0.1353, 4913.94),
+                (float('inf'), 0.1463, 9971.18),
+                ]
+
+        #### QUARTERLY ####
+        elif schedule_pay == 'quarterly':
+            if filing_status == 'head_household':
+                tax_rate_table = [
+                (4114, 0.011, 0.0),
+                (9748, 0.022, 45.25),
+                (12566, 0.044, 169.20),
+                (15552, 0.066, 293.19),
+                (18369, 0.088, 490.27),
+                (93751, 0.1023, 738.17),
+                (112501, 0.1133, 8449.75),
+                (187501, 0.1243, 10574.13),
+                (250000, 0.1353, 19896.63),
+                (float('inf'), 0.1463, 28352.74),
+                ]
+
+            elif filing_status == 'married':
+                tax_rate_table = [
+                (4112, 0.011, 0.0),
+                (9748, 0.022, 45.23),
+                (15384, 0.044, 169.22),
+                (21356, 0.066, 417.20),
+                (26990, 0.088, 811.35),
+                (137870, 0.1023, 1307.14),
+                (165442, 0.1133, 12650.16),
+                (250000, 0.1243, 15774.07),
+                (275736, 0.1353, 26284.63),
+                (float('inf'), 0.1463, 29766.71),
+                ]
+
+            else:
+                tax_rate_table = [
+                (2056, 0.011, 0.0),
+                (4874, 0.022, 22.62),
+                (7692, 0.044, 84.62),
+                (10678, 0.066, 208.61),
+                (13495, 0.088, 405.69),
+                (68935, 0.1023, 653.59),
+                (82721, 0.1133, 6325.10),
+                (137868, 0.1243, 7887.05),
+                (250000, 0.1353, 14741.82),
+                (float('inf'), 0.1463, 29913.28),
+                ]
+
+        #### SEMI-ANNUAL ####
+        elif schedule_pay == 'semi-annual':
+            if filing_status == 'head_household':
+                tax_rate_table = [
+                (8228, 0.011, 0.0),
+                (19496, 0.022, 90.51),
+                (25132, 0.044, 338.41),
+                (31104, 0.066, 586.39),
+                (36738, 0.088, 980.54),
+                (187502, 0.1023, 1476.33),
+                (225002, 0.1133, 16899.49),
+                (375002, 0.1243, 21148.24),
+                (500000, 0.1353, 39793.24),
+                (float('inf'), 0.1463, 56705.47),
+                ]
+
+            elif filing_status == 'married':
+                tax_rate_table = [
+                (8224, 0.011, 0.0),
+                (19496, 0.022, 90.46),
+                (30768, 0.044, 338.44),
+                (42712, 0.066, 834.41),
+                (53980, 0.088, 1622.71),
+                (275740, 0.1023, 2614.29),
+                (330884, 0.1133, 25300.34),
+                (500000, 0.1243, 31548.16),
+                (551472, 0.1353, 52569.28),
+                (float('inf'), 0.1463, 59533.44),
+                ]
+
+            else:
+                tax_rate_table = [
+                (4112, 0.011, 0.0),
+                (9748, 0.022, 45.23),
+                (15384, 0.044, 169.22),
+                (21356, 0.066, 417.20),
+                (26990, 0.088, 811.35),
+                (137870, 0.1023, 1307.14),
+                (165442, 0.1133, 12650.16),
+                (275736, 0.1243, 15774.07),
+                (500000, 0.1353, 29483.61),
+                (float('inf'), 0.1463, 59826.53),
+                ]
+
+        #### ANNUAL ####
+        elif schedule_pay == 'annually':
+            if filing_status == 'head_household':
+                tax_rate_table = [
+                (16457, 0.011, 0.0),
+                (38991, 0.022, 181.03),
+                (50264, 0.044, 676.78),
+                (62206, 0.066, 1172.79),
+                (73477, 0.088, 1960.96),
+                (375002, 0.1023, 2952.81),
+                (450003, 0.1133, 33798.82),
+                (750003, 0.1243, 42296.43),
+                (1000000, 0.1353, 79586.43),
+                (float('inf'), 0.1463, 113411.02),
+                ]
+
+            elif filing_status == 'married':
+                tax_rate_table = [
+                (16446, 0.011, 0.0),
+                (38990, 0.022, 180.91),
+                (61538, 0.044, 676.88),
+                (85422, 0.066, 1668.99),
+                (107960, 0.088, 3245.33),
+                (551476, 0.1023, 5228.67),
+                (661768, 0.1133, 50600.36),
+                (1000000, 0.1243, 63096.44),
+                (1102946, 0.1353, 105138.68),
+                (float('inf'), 0.1463, 119067.26),
+                ]
+
+            else:
+                tax_rate_table = [
+                (8223, 0.011, 0.0),
+                (19495, 0.022, 90.45),
+                (30769, 0.044, 338.43),
+                (42711, 0.066, 834.49),
+                (53980, 0.088, 1622.66),
+                (275738, 0.1023, 2614.33),
+                (330884, 0.1133, 25300.17),
+                (551473, 0.1243, 31548.21),
+                (1000000, 0.1353, 58967.42),
+                (float('inf'), 0.1463, 119653.12),
+                ]
+
+        over = 0.0
+        tax = 0.0
+        for row in tax_rate_table:
+            if wages &lt;= row[0]:
+                tax = ((wages - over) * row[1]) + row[2]
+                break
+            over = row[0]
+
+        # Exemption allowance table (Step 5)
+        exemption_allowance_table = {
+        'weekly':         (2.41, 4.82, 7.23, 9.65, 12.06, 14.47, 16.88, 19.29, 21.70, 24.12),
+        'bi-weekly':      (4.82, 9.65, 14.47, 19.29, 24.12, 28.94, 33.76, 38.58, 43.41, 48.23),
+        'semi-monthly':   (5.23, 10.45, 15.68, 20.90, 26.13, 31.35, 36.58, 41.80, 47.03, 52.25),
+        'monthly':        (10.45, 20.90, 31.35, 41.80, 52.25, 62.70, 73.15, 83.60, 94.05, 104.50),
+        'quarterly':      (31.35, 62.70, 94.05, 125.40, 156.75, 188.10, 219.45, 250.80, 282.15, 313.50),
+        'semi-annual':    (62.70, 125.40, 188.10, 250.80, 313.50, 376.20, 438.90, 501.60, 564.30, 627.00),
+        'annually':         (125.40, 250.80, 376.20, 501.60, 627.00, 752.40, 877.80, 1003.20, 1128.60, 1254.00),
+        }
+
+        allowance_index = allowances - 1
+        if allowances > 10:
+             deduction = (exemption_allowance_table[schedule_pay][0]) * allowances
+             tax -= deduction
+        elif allowances > 0:
+            deduction = exemption_allowance_table[schedule_pay][allowance_index]
+            tax -= deduction
+
+        result = -tax
+else:
+    # 2019
+    # Tables are found in http://www.edd.ca.gov/pdf_pub_ctr/18methb.pdf
+    # First check low income exemption table (Step 1)
+    low_income_exemption_table = {
+    'weekly':       (280, 280, 561, 561),
+    'bi-weekly':    (561, 561, 1121, 1121),
+    'semi-monthly': (607, 607, 1214, 1214),
+    'monthly':      (1214, 1214, 2429, 2429),
+    'quarterly': (3643, 3643, 7287, 7287),
+    'semi-annual': (7287, 7287, 14573, 14573),
+    'annually': (14573, 14573, 29146, 29146),
+    }
+
+    if filing_status == 'head_household':
+        _, _, _, income = low_income_exemption_table[schedule_pay]
+        if wages &lt;= income:
+            result = 0
+            low_income = True
+    elif filing_status == 'married':
+        if allowances &gt;= 2:
+            _, _, income, _ = low_income_exemption_table[schedule_pay]
+            if wages &lt;= income:
+                result = 0
+                low_income = True
+        else:
+            _, income, _, _ = low_income_exemption_table[schedule_pay]
+            if wages &lt;= income:
+                result = 0
+                low_income = True
+    else:
+        income, _, _, _ = low_income_exemption_table[schedule_pay]
+        if wages &lt;= income:
+            result = 0
+            low_income = True
+
+    if not low_income:
+        # Estimated deduction table (Step 2)
+        estimated_deduction_table = {
+        'weekly':         (19, 38, 58, 77, 96, 115, 135, 154, 173, 192),
+        'bi-weekly':      (38, 77, 115, 154, 192, 231, 269, 308, 346, 385),
+        'semi-monthly':   (42, 83, 125, 167, 208, 250, 292, 333, 375, 417),
+        'monthly':        (83, 167, 250, 333, 417, 500, 583, 667, 750, 833),
+        'quarterly':      (250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500),
+        'semi-annual':    (500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000),
+        'annually':         (1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000),
+        }
+
+        allowance_index = additional_allowances - 1
+        if additional_allowances > 10:
+             deduction = (estimated_deduction_table[schedule_pay][0]) * additional_allowances
+             wages -= deduction
+        elif additional_allowances > 0:
+            deduction = estimated_deduction_table[schedule_pay][allowance_index]
+            wages -= deduction
+
+        # Standard deduction table (Step 3)
+        standard_deduction_table = {
+        'weekly':       (85, 85, 169, 169),
+        'bi-weekly':    (169, 169, 339, 339),
+        'semi-monthly': (183, 183, 367, 367),
+        'monthly':      (367, 367, 734, 734),
+        'quarterly':    (1100, 1100, 2201, 2201),
+        'semi-annual':  (2201, 2201, 4401, 4401),
+        'annually':       (4401, 4401, 8802, 8802),
+        }
+
+        if filing_status == 'head_household':
+            _, _, _, deduction = standard_deduction_table[schedule_pay]
+            wages -= deduction
+        elif filing_status == 'married':
+            if allowances &gt;= 2:
+                _, _, deduction, _ = standard_deduction_table[schedule_pay]
+                wages -= deduction
+            else:
+                _, deduction, _, _ = standard_deduction_table[schedule_pay]
+                wages -= deduction
+        else:
+            deduction, _, _, _ = standard_deduction_table[schedule_pay]
+            wages -= deduction
+
+        # Tax Rate Tables (Step 4)
+        #### WEEKLY ####
+        if schedule_pay == 'weekly':
+            if filing_status == 'head_household' and wages > 0:
+                tax_rate_table = [
+                (316, 0.011, 0.0),
+                (750, 0.022, 3.48),
+                (967, 0.044, 13.03),
+                (1196, 0.066, 22.58),
+                (1413, 0.088, 37.69),
+                (7212, 0.1023, 56.79),
+                (8654, 0.1133, 650.03),
+                (14423, 0.1243, 813.41),
+                (19231, 0.1353, 1530.50),
+                (float('inf'), 0.1463, 2181.02),
+                ]
+
+            elif filing_status == 'married':
+                tax_rate_table = [
+                (316, 0.011, 0.0),
+                (750, 0.022, 3.48),
+                (1184, 0.044, 13.03),
+                (1642, 0.066, 32.13),
+                (2076, 0.088, 62.36),
+                (10606, 0.1023, 100.55),
+                (12726, 0.1133, 973.17),
+                (19231, 0.1243, 1213.37),
+                (21210, 0.1353, 2021.94),
+                (float('inf'), 0.1463, 2289.70),
+                ]
+
+            else:
+                tax_rate_table = [
+                (158, 0.011, 0.0),
+                (375, 0.022, 1.74),
+                (592, 0.044, 6.51),
+                (821, 0.066, 16.06),
+                (1038, 0.088, 31.17),
+                (5303, 0.1023, 50.27),
+                (6363, 0.1133, 486.58),
+                (10605, 0.1243, 606.68),
+                (19231, 0.1353, 1133.96),
+                (float('inf'), 0.1463, 2301.06),
+                ]
+
+        #### BI-WEEKLY ####
+        elif schedule_pay == 'bi-weekly':
+            if filing_status == 'head_household':
+                tax_rate_table = [
+                (632, 0.011, 0.0),
+                (1500, 0.022, 6.95),
+                (1934, 0.044, 26.05),
+                (2392, 0.066, 45.15),
+                (2826, 0.088, 75.38),
+                (14424, 0.1023, 113.57),
+                (17308, 0.1133, 1300.05),
+                (28846, 0.1243, 1626.81),
+                (38462, 0.1353, 3060.98),
+                (float('inf'), 0.1463, 4362.02),
+                ]
+
+            elif filing_status == 'married':
+                tax_rate_table = [
+                (632, 0.011, 0.0),
+                (1500, 0.022, 6.95),
+                (2368, 0.044, 26.05),
+                (3284, 0.066, 64.24),
+                (4152, 0.088, 124.70),
+                (21212, 0.1023, 201.08),
+                (25452, 0.1133, 1946.32),
+                (38462, 0.1243, 2426.71),
+                (42420, 0.1353, 4043.85),
+                (float('inf'), 0.1463, 4579.37),
+                ]
+
+            else:
+                tax_rate_table = [
+                (316, 0.011, 0.0),
+                (750, 0.022, 3.48),
+                (1184, 0.044, 13.03),
+                (1642, 0.066, 32.13),
+                (2076, 0.088, 62.36),
+                (10606, 0.1023, 100.55),
+                (12726, 0.1133, 973.17),
+                (21210, 0.1243, 1213.37),
+                (38462, 0.1353, 2267.93),
+                (float('inf'), 0.1463, 4602.13),
+                ]
+
+        #### SEMI-MONTHLY ####
+        elif schedule_pay == 'semi-monthly':
+            if filing_status == 'head_household':
+                tax_rate_table = [
+                (686, 0.011, 0.0),
+                (1625, 0.022, 7.55),
+                (2094, 0.044, 28.21),
+                (2592, 0.066, 48.85),
+                (3062, 0.088, 81.72),
+                (15625, 0.1023, 123.08),
+                (18750, 0.1133, 1408.27),
+                (31250, 0.1243, 1762.33),
+                (41667, 0.1353, 3316.08),
+                (float('inf'), 0.1463, 4725.50),
+                ]
+
+            elif filing_status == 'married':
+                tax_rate_table = [
+                (686, 0.011, 0.0),
+                (1624, 0.022, 7.55),
+                (2564, 0.044, 28.19),
+                (3560, 0.066, 69.55),
+                (4498, 0.088, 135.29),
+                (22978, 0.1023, 217.83),
+                (27574, 0.1133, 2108.33),
+                (41667, 0.1243, 2629.06),
+                (45956, 0.1353, 4380.82),
+                (float('inf'), 0.1463, 4961.12),
+                ]
+
+            else:
+                tax_rate_table = [
+                (343, 0.011, 0.0),
+                (812, 0.022, 3.77),
+                (1282, 0.044, 14.09),
+                (1780, 0.066, 34.77),
+                (2249, 0.088, 67.64),
+                (11489, 0.1023, 108.91),
+                (13787, 0.1133, 1054.16),
+                (22978, 0.1243, 1314.52),
+                (41667, 0.1353, 2456.96),
+                (float('inf'), 0.1463, 4985.58),
+                ]
+
+        #### MONTHLY ####
+        elif schedule_pay == 'monthly':
+            if filing_status == 'head_household':
+                tax_rate_table = [
+                (1372, 0.011, 0.0),
+                (3250, 0.022, 15.09),
+                (4188, 0.044, 56.41),
+                (5184, 0.066, 97.68),
+                (6124, 0.088, 163.42),
+                (31250, 0.1023, 246.148),
+                (37500, 0.1133, 2816.53),
+                (62500, 0.1243, 3524.66),
+                (83334, 0.1353, 6632.16),
+                (float('inf'), 0.1463, 9451.00),
+                ]
+
+            elif filing_status == 'married':
+                tax_rate_table = [
+                (1372, 0.011, 0.0),
+                (3248, 0.022, 15.09),
+                (5128, 0.044, 56.36),
+                (7120, 0.066, 139.08),
+                (8996, 0.088, 270.55),
+                (45956, 0.1023, 435.64),
+                (55148, 0.1133, 4216.65),
+                (83334, 0.1243, 5258.10),
+                (91912, 0.1353, 8761.62),
+                (float('inf'), 0.1463, 9922.22),
+                ]
+
+            else:
+                tax_rate_table = [
+                (686, 0.011, 0.0),
+                (1624, 0.022, 7.55),
+                (2564, 0.044, 28.19),
+                (3560, 0.066, 69.55),
+                (4498, 0.088, 135.29),
+                (22978, 0.1023, 217.83),
+                (27574, 0.1133, 2108.33),
+                (45956, 0.1243, 2629.06),
+                (83334, 0.1353, 4913.94),
+                (float('inf'), 0.1463, 9971.18),
+                ]
+
+        #### QUARTERLY ####
+        elif schedule_pay == 'quarterly':
+            if filing_status == 'head_household':
+                tax_rate_table = [
+                (4114, 0.011, 0.0),
+                (9748, 0.022, 45.25),
+                (12566, 0.044, 169.20),
+                (15552, 0.066, 293.19),
+                (18369, 0.088, 490.27),
+                (93751, 0.1023, 738.17),
+                (112501, 0.1133, 8449.75),
+                (187501, 0.1243, 10574.13),
+                (250000, 0.1353, 19896.63),
+                (float('inf'), 0.1463, 28352.74),
+                ]
+
+            elif filing_status == 'married':
+                tax_rate_table = [
+                (4112, 0.011, 0.0),
+                (9748, 0.022, 45.23),
+                (15384, 0.044, 169.22),
+                (21356, 0.066, 417.20),
+                (26990, 0.088, 811.35),
+                (137870, 0.1023, 1307.14),
+                (165442, 0.1133, 12650.16),
+                (250000, 0.1243, 15774.07),
+                (275736, 0.1353, 26284.63),
+                (float('inf'), 0.1463, 29766.71),
+                ]
+
+            else:
+                tax_rate_table = [
+                (2056, 0.011, 0.0),
+                (4874, 0.022, 22.62),
+                (7692, 0.044, 84.62),
+                (10678, 0.066, 208.61),
+                (13495, 0.088, 405.69),
+                (68935, 0.1023, 653.59),
+                (82721, 0.1133, 6325.10),
+                (137868, 0.1243, 7887.05),
+                (250000, 0.1353, 14741.82),
+                (float('inf'), 0.1463, 29913.28),
+                ]
+
+        #### SEMI-ANNUAL ####
+        elif schedule_pay == 'semi-annual':
+            if filing_status == 'head_household':
+                tax_rate_table = [
+                (8228, 0.011, 0.0),
+                (19496, 0.022, 90.51),
+                (25132, 0.044, 338.41),
+                (31104, 0.066, 586.39),
+                (36738, 0.088, 980.54),
+                (187502, 0.1023, 1476.33),
+                (225002, 0.1133, 16899.49),
+                (375002, 0.1243, 21148.24),
+                (500000, 0.1353, 39793.24),
+                (float('inf'), 0.1463, 56705.47),
+                ]
+
+            elif filing_status == 'married':
+                tax_rate_table = [
+                (8224, 0.011, 0.0),
+                (19496, 0.022, 90.46),
+                (30768, 0.044, 338.44),
+                (42712, 0.066, 834.41),
+                (53980, 0.088, 1622.71),
+                (275740, 0.1023, 2614.29),
+                (330884, 0.1133, 25300.34),
+                (500000, 0.1243, 31548.16),
+                (551472, 0.1353, 52569.28),
+                (float('inf'), 0.1463, 59533.44),
+                ]
+
+            else:
+                tax_rate_table = [
+                (4112, 0.011, 0.0),
+                (9748, 0.022, 45.23),
+                (15384, 0.044, 169.22),
+                (21356, 0.066, 417.20),
+                (26990, 0.088, 811.35),
+                (137870, 0.1023, 1307.14),
+                (165442, 0.1133, 12650.16),
+                (275736, 0.1243, 15774.07),
+                (500000, 0.1353, 29483.61),
+                (float('inf'), 0.1463, 59826.53),
+                ]
+
+        #### ANNUAL ####
+        elif schedule_pay == 'annually':
+            if filing_status == 'head_household':
+                tax_rate_table = [
+                (16457, 0.011, 0.0),
+                (38991, 0.022, 181.03),
+                (50264, 0.044, 676.78),
+                (62206, 0.066, 1172.79),
+                (73477, 0.088, 1960.96),
+                (375002, 0.1023, 2952.81),
+                (450003, 0.1133, 33798.82),
+                (750003, 0.1243, 42296.43),
+                (1000000, 0.1353, 79586.43),
+                (float('inf'), 0.1463, 113411.02),
+                ]
+
+            elif filing_status == 'married':
+                tax_rate_table = [
+                (16446, 0.011, 0.0),
+                (38990, 0.022, 180.91),
+                (61538, 0.044, 676.88),
+                (85422, 0.066, 1668.99),
+                (107960, 0.088, 3245.33),
+                (551476, 0.1023, 5228.67),
+                (661768, 0.1133, 50600.36),
+                (1000000, 0.1243, 63096.44),
+                (1102946, 0.1353, 105138.68),
+                (float('inf'), 0.1463, 119067.26),
+                ]
+
+            else:
+                tax_rate_table = [
+                (8223, 0.011, 0.0),
+                (19495, 0.022, 90.45),
+                (30769, 0.044, 338.43),
+                (42711, 0.066, 834.49),
+                (53980, 0.088, 1622.66),
+                (275738, 0.1023, 2614.33),
+                (330884, 0.1133, 25300.17),
+                (551473, 0.1243, 31548.21),
+                (1000000, 0.1353, 58967.42),
+                (float('inf'), 0.1463, 119653.12),
+                ]
+
+        over = 0.0
+        tax = 0.0
+        for row in tax_rate_table:
+            if wages &lt;= row[0]:
+                tax = ((wages - over) * row[1]) + row[2]
+                break
+            over = row[0]
+
+        # Exemption allowance table (Step 5) (Table 4)
+        exemption_allowance_table = {
+        'weekly':         (2.41, 4.82, 7.23, 9.65, 12.06, 14.47, 16.88, 19.29, 21.70, 24.12),
+        'bi-weekly':      (4.82, 9.65, 14.47, 19.29, 24.12, 28.94, 33.76, 38.58, 43.41, 48.23),
+        'semi-monthly':   (5.23, 10.45, 15.68, 20.90, 26.13, 31.35, 36.58, 41.80, 47.03, 52.25),
+        'monthly':        (10.45, 20.90, 31.35, 41.80, 52.25, 62.70, 73.15, 83.60, 94.05, 104.50),
+        'quarterly':      (31.35, 62.70, 94.05, 125.40, 156.75, 188.10, 219.45, 250.80, 282.15, 313.50),
+        'semi-annual':    (62.70, 125.40, 188.10, 250.80, 313.50, 376.20, 438.90, 501.60, 564.30, 627.00),
+        'annually':         (125.40, 250.80, 376.20, 501.60, 627.00, 752.40, 877.80, 1003.20, 1128.60, 1254.00),
+        }
+
+        allowance_index = allowances - 1
+        if allowances > 10:
+             deduction = (exemption_allowance_table[schedule_pay][0]) * allowances
+             tax -= deduction
+        elif allowances > 0:
+            deduction = exemption_allowance_table[schedule_pay][allowance_index]
+            tax -= deduction
+
+        result = -tax
+        </field>
+        <field name="register_id" ref="contrib_register_cador_uit"/>
+    </record>
+
+    </data>
+</odoo>

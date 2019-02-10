@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_rates_ca_unemp_2018" model="hr.payroll.rate">
+        <field name="name">US California Unemployment</field>
+        <field name="code">US_CA_UNEMP</field>
+        <field name="rate">2.6</field>
+        <field name="date_from">2018-01-01</field>
+        <field name="wage_limit_year" eval="7000"/>
+    </record>
+    <record id="hr_payroll_rates_ca_ett_2018" model="hr.payroll.rate">
+        <field name="name">US California Employment Training Tax</field>
+        <field name="code">US_CA_ETT</field>
+        <field name="rate">0.1</field>
+        <field name="date_from">2018-01-01</field>
+        <field name="wage_limit_year" eval="7000"/>
+    </record>
+    <record id="hr_payroll_rates_ca_sdi_2018" model="hr.payroll.rate">
+        <field name="name">US California State Disability Insurance</field>
+        <field name="code">US_CA_SDI</field>
+        <field name="rate">1.0</field>
+        <field name="date_from">2018-01-01</field>
+        <field name="wage_limit_year" eval="114967.0"/>
+    </record>
+
+    <record id="hr_payroll_rates_ca_unemp_2019" model="hr.payroll.rate">
+        <field name="name">US California Unemployment</field>
+        <field name="code">US_CA_UNEMP</field>
+        <field name="rate">3.4</field>
+        <field name="date_from">2019-01-01</field>
+        <field name="wage_limit_year" eval="7000"/>
+    </record>
+    <record id="hr_payroll_rates_ca_ett_2019" model="hr.payroll.rate">
+        <field name="name">US California Employment Training Tax</field>
+        <field name="code">US_CA_ETT</field>
+        <field name="rate">0.1</field>
+        <field name="date_from">2019-01-01</field>
+        <field name="wage_limit_year" eval="7000"/>
+    </record>
+    <record id="hr_payroll_rates_ca_sdi_2019" model="hr.payroll.rate">
+        <field name="name">US California State Disability Insurance</field>
+        <field name="code">US_CA_SDI</field>
+        <field name="rate">1.0</field>
+        <field name="date_from">2019-01-01</field>
+        <field name="wage_limit_year" eval="18371.0"/>
+    </record>
+</odoo>
