@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+<!-- CONTRIBUTION REGISTERS -->
+    <record id="res_partner_ncdor_unemp" model="res.partner">
+        <field name="name">North Carolina Division of Unemployment Security - Unemployment Tax</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+    <record id="res_partner_ncdor_withhold" model="res.partner">
+        <field name="name">North Carolina Department of Revenue - Income Tax Withholding</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+    <record id="contrib_register_ncdor_unemp" model="hr.contribution.register">
+        <field name="name">North Carolina Unemployment</field>
+        <field name="note">North Carolina Division of Unemployment Security - Unemployment</field>
+        <field name="partner_id" ref="res_partner_ncdor_unemp"/>
+    </record>
+    <record id="contrib_register_ncdor_withhold" model="hr.contribution.register">
+        <field name="name">North Carolina Income Tax Withholding</field>
+        <field name="note">North Carolina Department of Revenue - Income Tax Withholding</field>
+        <field name="partner_id" ref="res_partner_ncdor_withhold"/>
+    </record>
+
+
+<!-- HR SALARY RULE CATEGORIES-->
+    <record id="hr_payroll_nc_unemp_wages" model="hr.salary.rule.category">
+        <field name="name">Wage: US-NC Unemployment</field>
+        <field name="code">WAGE_US_NC_UNEMP</field>
+    </record>
+
+    <record id="hr_payroll_nc_unemp" model="hr.salary.rule.category">
+        <field name="name">ER: US-NC Unemployment</field>
+        <field name="code">ER_US_NC_UNEMP</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="hr_payroll_nc_income_withhold" model="hr.salary.rule.category">
+        <field name="name">EE: US-NC Income Tax Withholding</field>
+        <field name="code">EE_US_NC_INC_WITHHOLD</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    </data>
+</odoo>

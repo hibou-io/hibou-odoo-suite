@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_contract_form_l10n_us_nc_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.form.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="priority">128</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//group[@name='state_filing']" position="inside">
+                    <group string="North Carolina" name="nc">
+                        <field name="nc_nc4_allowances" string="Allowances"/>
+                        <field name="nc_nc4_filing_status" string="Filing Status"/>
+                        <field name="nc_nc4_additional_wh" string="Additional Withholding"/>
+                    </group>
+                </xpath>
+            </data>
+            </field>
+        </record>
+    </data>
+</odoo>
