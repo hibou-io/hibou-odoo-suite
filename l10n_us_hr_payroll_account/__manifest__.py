@@ -1,11 +1,10 @@
-# -*- encoding: utf-8 -*-
 {
     'name': 'USA - Payroll with Accounting',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'license': 'AGPL-3',
     'category': 'Localization',
     'depends': ['l10n_us_hr_payroll', 'hr_payroll_account'],
-    'version': '11.0.2017.0.0',
+    'version': '12.0.2019.0.0',
     'description': """
 USA Payroll Accounting hooks.
 =============================
