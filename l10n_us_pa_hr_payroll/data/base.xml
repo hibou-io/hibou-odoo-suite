@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+<!-- CONTRIBUTION REGISTERS -->
+    <record id="res_partner_pador_unemp_employee" model="res.partner">
+        <field name="name">Pennsylvania Department of Revenue - Unemployment Tax(Employee)</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+
+    <record id="res_partner_pador_unemp_company" model="res.partner">
+        <field name="name">Pennsylvania Department of Revenue - Unemployment Tax(Employer)</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+
+    <record id="res_partner_pador_withhold" model="res.partner">
+        <field name="name">Pennsylvania Department of Revenue - Income Tax</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+
+    <record id="contrib_register_pador_unemp_employee" model="hr.contribution.register">
+        <field name="name">Pennsylvania Unemployment(Employee)</field>
+        <field name="note">Pennsylvania Department of Revenue - Unemployment(Employee)</field>
+        <field name="partner_id" ref="res_partner_pador_unemp_employee"/>
+    </record>
+
+    <record id="contrib_register_pador_unemp_company" model="hr.contribution.register">
+        <field name="name">Pennsylvania Unemployment(Employer)</field>
+        <field name="note">Pennsylvania Department of Revenue - Unemployment(Employee)</field>
+        <field name="partner_id" ref="res_partner_pador_unemp_company"/>
+    </record>
+
+    <record id="contrib_register_pador_withhold" model="hr.contribution.register">
+        <field name="name">Pennsylvania Income Tax Withholding</field>
+        <field name="note">Pennsylvania Department of Revenue - Income Tax</field>
+        <field name="partner_id" ref="res_partner_pador_withhold"/>
+    </record>
+
+
+<!-- HR SALARY RULE CATEGORIES-->
+    <record id="hr_payroll_pa_unemp_wages" model="hr.salary.rule.category">
+        <field name="name">Wage: ER: US-PA Pennsylvania Unemployment</field>
+        <field name="code">WAGE_ER_US_PA_UNEMP</field>
+    </record>
+
+    <record id="hr_payroll_pa_unemp_employee" model="hr.salary.rule.category">
+        <field name="name">EE: US-PA Unemployment</field>
+        <field name="code">EE_US_PA_UNEMP</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_pa_unemp_company" model="hr.salary.rule.category">
+        <field name="name">ER: US-PA Unemployment</field>
+        <field name="code">ER_US_PA_UNEMP</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="hr_payroll_pa_withhold" model="hr.salary.rule.category">
+        <field name="name">EE: US-PA Income Withholding</field>
+        <field name="code">EE_US_PA_INC_WITHHOLD</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    </data>
+</odoo>

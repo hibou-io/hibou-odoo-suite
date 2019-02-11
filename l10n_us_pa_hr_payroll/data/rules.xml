@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_pa_unemp_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="143"/>
+        <field name="category_id" ref="hr_payroll_pa_unemp_wages"/>
+        <field name="name">Wage: ER: US-PA Unemployment</field>
+        <field name="code">WAGE_ER_US_PA_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+year = payslip.dict.date_to.year
+rate = payslip.dict.get_rate('ER_US_PA_UNEMP')
+ytd = payslip.sum('WAGE_ER_US_PA_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_pa_unemp_employee_2018" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_pa_unemp_employee"/>
+        <field name="name">EE: US-PA Unemployment</field>
+        <field name="code">EE_US_PA_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('EE_US_PA_UNEMP')
+result_rate = -rate.rate
+result = categories.BASIC
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_pador_unemp_employee"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_pa_unemp_company_2018" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_pa_unemp_company"/>
+        <field name="name">ER: US-PA Unemployment</field>
+        <field name="code">ER_US_PA_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('ER_US_PA_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_ER_US_PA_UNEMP
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_pador_unemp_company"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_pa_inc_withhold_2018" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_pa_withhold"/>
+        <field name="name">EE: US-PA Income Withholding</field>
+        <field name="code">EE_US_PA_INC_WITHHOLD</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = True</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_PA_INC_WITHHOLD')
+wages = categories.GROSS
+result_rate = -rate.rate
+result = wages
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_pador_withhold"/>
+    </record>
+
+    <record id="hr_payroll_rules_pa_inc_withhold_add" model="hr.salary.rule">
+        <field name="sequence" eval="146"/>
+        <field name="category_id" ref="hr_payroll_pa_withhold"/>
+        <field name="name">EE: US-PA Income Withholding Additional</field>
+        <field name="code">EE_US_PA_INC_WITHHOLD_ADD</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.pa_additional_withholding)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -contract.pa_additional_withholding
+        </field>
+        <field name="register_id" ref="contrib_register_pador_withhold"/>
+    </record>
+
+    </data>
+</odoo>
