@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_mo_unemp_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_mo_unemp_wages"/>
+        <field name="name">Wage: US-MO Unemployment</field>
+        <field name="code">WAGE_US_MO_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+year = payslip.dict.date_to.year
+rate = payslip.dict.get_rate('US_MO_UNEMP')
+ytd = payslip.sum('WAGE_US_MO_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_mo_unemp_2018" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_mo_unemp"/>
+        <field name="name">ER: US-MO Unemployment</field>
+        <field name="code">ER_US_MO_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_MO_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_US_MO_UNEMP
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_modor_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_mo_inc_withhold_2018" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_mo_income_withhold"/>
+        <field name="name">EE: US-MO Income Withholding</field>
+        <field name="code">EE_US_MO_INC_WITHHOLD</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = True</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+year = payslip.dict.date_to.year
+wages = categories.GROSS
+exemptions = contract.mo_mow4_exemptions
+filing_status = contract.mo_mow4_filing_status
+additional = contract.mo_mow4_additional_withholding
+spouse_employed = contract.mo_mow4_spouse_employed
+schedule_pay = contract.schedule_pay
+result = 0.00
+
+if year == 2018:
+    TAX = [
+        (1028.0, 1.5),
+        (1028.0, 2.0),
+        (1028.0, 2.5),
+        (1028.0, 3.0),
+        (1028.0, 3.5),
+        (1028.0, 4.0),
+        (1028.0, 4.5),
+        (1028.0, 5.0),
+        (1028.0, 5.5),
+        (999999999.0, 5.9),
+    ]
+    if filing_status:
+        PP = 0
+        if 'weekly' == schedule_pay:
+            PP = 52
+        elif 'bi-weekly' == schedule_pay:
+            PP = 26
+        elif 'semi-monthly' == schedule_pay:
+            PP = 24
+        elif 'monthly' == schedule_pay:
+            PP = 12
+        elif 'quarterly' == schedule_pay:
+            PP = 4
+        elif 'semi-annually' == schedule_pay:
+            PP = 2
+        elif 'annually' == schedule_pay:
+            PP = 1
+        else:
+            raise Exception('Invalid schedule_pay="' + schedule_pay + '" for MO Income Withholding calculation')
+
+        gross_salary = PP * wages
+        deduction = -1
+        if filing_status == 'single' or (filing_status == 'married' and spouse_employed):
+            deduction = 6500.0
+        elif filing_status == 'married' and not spouse_employed:
+            deduction = 13000.0
+        else:
+            deduction = 9550.0
+
+        if deduction &lt; 0:
+            raise UserError('Invalid deduction calculation')
+
+        allowances = 0
+        if filing_status == 'single' or (filing_status == 'married' and spouse_employed):
+            if exemptions == 1:
+                allowances = 2100.0
+            elif exemptions &gt; 1:
+                allowances = 2100.0 + ((exemptions - 1) * 1200.0)
+        elif filing_status == 'married' and not spouse_employed:
+            if exemptions &gt; 0 and exemptions &lt; 3:
+                allowances = 2100.0 * exemptions
+            elif exemptions &gt;= 3:
+                allowances = 2100.0 + 2100.0 + ((exemptions - 2) * 1200.0)
+        else:
+            if exemptions == 1:
+                allowances = 3500.0
+            elif exemptions &gt; 1:
+                allowances = 3500.0 + ((exemptions - 1) * 1200.0)
+
+        federal = categories.EE_US_FED_INC_WITHHOLD * -1 * PP
+        if filing_status == 'married' and not spouse_employed:
+            federal = min(10000.0, federal)
+        else:
+            federal = min(5000.0, federal)
+
+        mo_taxable_income = gross_salary - deduction - allowances - federal
+
+        remaining_taxable_income = mo_taxable_income
+        tax = 0.0
+        for amt, rate in TAX:
+            rate = rate / 100.0
+            remaining_taxable_income = remaining_taxable_income - amt
+            if remaining_taxable_income > 0.0 or remaining_taxable_income == 0.0:
+                tax += rate * amt
+            else:
+                tax += rate * (remaining_taxable_income + amt)
+                break
+        tax = -tax
+        tax = tax / PP
+
+        # Small GROSS results in an underflow
+        if tax &gt; 0.0:
+            tax = 0.0
+
+        if additional:
+            tax -= additional
+
+        result = round(tax)
+else:
+    if year == 2019:
+        # There are no longer allowances in the Missouri Withholding tables.
+        exemptions = 0
+
+    TAX = [
+        (1053.0, 1.5),
+        (1053.0, 2.0),
+        (1053.0, 2.5),
+        (1053.0, 3.0),
+        (1053.0, 3.5),
+        (1053.0, 4.0),
+        (1053.0, 4.5),
+        (1053.0, 5.0),
+        (999999999.0, 5.4),
+    ]
+    if filing_status:
+        PP = 0
+        if 'weekly' == schedule_pay:
+            PP = 52
+        elif 'bi-weekly' == schedule_pay:
+            PP = 26
+        elif 'semi-monthly' == schedule_pay:
+            PP = 24
+        elif 'monthly' == schedule_pay:
+            PP = 12
+        elif 'quarterly' == schedule_pay:
+            PP = 4
+        elif 'semi-annually' == schedule_pay:
+            PP = 2
+        elif 'annually' == schedule_pay:
+            PP = 1
+        else:
+            raise Exception('Invalid schedule_pay="' + schedule_pay + '" for MO Income Withholding calculation')
+
+        gross_salary = PP * wages
+        deduction = -1
+        if filing_status == 'single' or (filing_status == 'married' and spouse_employed):
+            deduction = 12200.0 / 2.0
+        elif filing_status == 'married' and not spouse_employed:
+            deduction = 24400.0 / 2.0
+        else:
+            deduction = 18350.0 / 2.0
+
+        if deduction &lt; 0:
+            raise UserError('Invalid deduction calculation')
+
+        allowances = 0
+        if filing_status == 'single' or (filing_status == 'married' and spouse_employed):
+            if exemptions == 1:
+                allowances = 2100.0
+            elif exemptions &gt; 1:
+                allowances = 2100.0 + ((exemptions - 1) * 1200.0)
+        elif filing_status == 'married' and not spouse_employed:
+            if exemptions &gt; 0 and exemptions &lt; 3:
+                allowances = 2100.0 * exemptions
+            elif exemptions &gt;= 3:
+                allowances = 2100.0 + 2100.0 + ((exemptions - 2) * 1200.0)
+        else:
+            if exemptions == 1:
+                allowances = 3500.0
+            elif exemptions &gt; 1:
+                allowances = 3500.0 + ((exemptions - 1) * 1200.0)
+
+        mo_taxable_income = gross_salary - deduction - allowances
+
+        remaining_taxable_income = mo_taxable_income
+        tax = 0.0
+        for amt, rate in TAX:
+            rate = rate / 100.0
+            remaining_taxable_income = remaining_taxable_income - amt
+            if remaining_taxable_income > 0.0 or remaining_taxable_income == 0.0:
+                tax += rate * amt
+            else:
+                tax += rate * (remaining_taxable_income + amt)
+                break
+        tax = -tax
+        tax = tax / PP
+
+        # Small GROSS results in an underflow
+        if tax &gt; 0.0:
+            tax = 0.0
+
+        if additional:
+            tax -= additional
+
+        result = round(tax)
+        </field>
+        <field name="register_id" ref="contrib_register_modor_withhold"/>
+    </record>
+
+    </data>
+</odoo>

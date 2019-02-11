@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_contract_form_l10n_us_mo_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.form.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="priority">138</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//group[@name='state_filing']" position="inside">
+                    <group string="Missouri" name="mo">
+                        <field name="mo_mow4_filing_status" string="Filing Status"/>
+                        <field name="mo_mow4_exemptions" string="Exceptions"/>
+                        <field name="mo_mow4_spouse_employed" string="Spouse Employed"/>
+                        <field name="mo_mow4_additional_withholding" string="Additional Withholding"/>
+                    </group>
+                </xpath>
+            </data>
+            </field>
+        </record>
+    </data>
+</odoo>
