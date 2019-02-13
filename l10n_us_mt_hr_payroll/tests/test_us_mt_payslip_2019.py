@@ -29,7 +29,7 @@ class TestUsMtPayslip(TestUsPayslip):
         mt_withhold = round(0 + (0.018 * (mt_taxable_income - 0)))
         self.assertPayrollEqual(mt_taxable_income, 155.0)
         self.assertPayrollEqual(mt_withhold, 3.0)
-        self.assertPayrollEqual(cats['EE_US_MT_INC_WITHHOLD'], mt_withhold)
+        self.assertPayrollEqual(cats['EE_US_MT_INC_WITHHOLD'], -mt_withhold)
 
     def test_2019_taxes_two(self):
         # Payroll Period Bi-Weekly example
@@ -57,7 +57,7 @@ class TestUsMtPayslip(TestUsPayslip):
         mt_withhold = round(18 + (0.06 * (mt_taxable_income - 577)))
         self.assertPayrollEqual(mt_taxable_income, 2804.0)
         self.assertPayrollEqual(mt_withhold, 152.0)
-        self.assertPayrollEqual(cats['EE_US_MT_INC_WITHHOLD'], mt_withhold)
+        self.assertPayrollEqual(cats['EE_US_MT_INC_WITHHOLD'], -mt_withhold)
 
     def test_2019_taxes_three(self):
         # Payroll Period Weekly example
@@ -83,7 +83,7 @@ class TestUsMtPayslip(TestUsPayslip):
         mt_withhold = round(0 + (0.018 * (mt_taxable_income - 0)))
         self.assertPayrollEqual(mt_taxable_income, 98.0)
         self.assertPayrollEqual(mt_withhold, 2.0)
-        self.assertPayrollEqual(cats['EE_US_MT_INC_WITHHOLD'], mt_withhold)
+        self.assertPayrollEqual(cats['EE_US_MT_INC_WITHHOLD'], -mt_withhold)
 
     def test_2019_taxes_three_exempt(self):
         # Payroll Period Weekly example
@@ -126,4 +126,4 @@ class TestUsMtPayslip(TestUsPayslip):
         mt_withhold = round(0 + (0.018 * (mt_taxable_income - 0)))
         self.assertPayrollEqual(mt_taxable_income, 98.0)
         self.assertPayrollEqual(mt_withhold, 2.0)
-        self.assertPayrollEqual(cats['EE_US_MT_INC_WITHHOLD'], mt_withhold + mt_mw4_additional_withholding)
+        self.assertPayrollEqual(cats['EE_US_MT_INC_WITHHOLD'], -mt_withhold + -mt_mw4_additional_withholding)

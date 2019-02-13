@@ -33,7 +33,7 @@ class TestUsMsPayslip(TestUsPayslip):
         self.assertPayrollEqual(TAX, 570.0)
 
         ms_withhold = round(TAX / 24)  # Semi-Monthly
-        self.assertPayrollEqual(cats['EE_US_MS_INC_WITHHOLD'], ms_withhold)
+        self.assertPayrollEqual(cats['EE_US_MS_INC_WITHHOLD'], -ms_withhold)
 
     def test_2019_taxes_one_exempt(self):
         salary = 1250.0
@@ -83,4 +83,4 @@ class TestUsMsPayslip(TestUsPayslip):
         self.assertPayrollEqual(TAX, 570.0)
 
         ms_withhold = round(TAX / 24)  # Semi-Monthly
-        self.assertPayrollEqual(cats['EE_US_MS_INC_WITHHOLD'], ms_withhold + additional)
+        self.assertPayrollEqual(cats['EE_US_MS_INC_WITHHOLD'], -ms_withhold + -additional)

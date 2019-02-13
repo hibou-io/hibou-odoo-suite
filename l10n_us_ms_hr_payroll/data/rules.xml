@@ -116,6 +116,7 @@ else:
     result = round(TAX / PP)
 
 result += additional
+result = -result
         </field>
         <field name="register_id" ref="contrib_register_msdor_withhold"/>
     </record>
