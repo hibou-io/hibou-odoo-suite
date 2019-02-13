@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="hr_payroll_rates_mt_unemp_2019" model="hr.payroll.rate">
+            <field name="name">US Montana Unemployment</field>
+            <field name="code">US_MT_UNEMP</field>
+            <field name="rate">1.18</field>
+            <field name="date_from">2019-01-01</field>
+            <field name="wage_limit_year" eval="33000.0"/>
+        </record>
+    </data>
+</odoo>
