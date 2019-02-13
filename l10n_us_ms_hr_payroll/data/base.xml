@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- CONTRIBUTION REGISTERS -->
+    <record id="res_partner_msdor_unemp" model="res.partner">
+        <field name="name">Mississippi Department of Employment Security</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+    <record id="res_partner_msdor_withhold" model="res.partner">
+        <field name="name">Mississippi Department of Revenue</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+    <record id="contrib_register_msdor_unemp" model="hr.contribution.register">
+        <field name="name">Mississippi Unemployment</field>
+        <field name="note">Mississippi Department of Employment Security</field>
+        <field name="partner_id" ref="res_partner_msdor_unemp"/>
+    </record>
+    <record id="contrib_register_msdor_withhold" model="hr.contribution.register">
+        <field name="name">Mississippi Income Tax Withholding</field>
+        <field name="note">Mississippi Department of Revenue - Income Tax Withholding</field>
+        <field name="partner_id" ref="res_partner_msdor_withhold"/>
+    </record>
+
+
+<!-- HR SALARY RULE CATEGORIES-->
+    <record id="hr_payroll_ms_unemp_wages" model="hr.salary.rule.category">
+        <field name="name">Wage: US-MS Unemployment</field>
+        <field name="code">WAGE_US_MS_UNEMP</field>
+    </record>
+
+    <record id="hr_payroll_ms_unemp" model="hr.salary.rule.category">
+        <field name="name">ER: US-MS Unemployment</field>
+        <field name="code">ER_US_MS_UNEMP</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="hr_payroll_ms_income_withhold" model="hr.salary.rule.category">
+        <field name="name">EE: US-MS Income Withholding</field>
+        <field name="code">EE_US_MS_INC_WITHHOLD</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+</odoo>
