@@ -38,11 +38,11 @@
 
     <template id="my_task_todo" inherit_id='project.portal_my_task' name="Todo List (requires project_task_line)" customize_show="True" active="False">
         <xpath expr="//t[@t-if='task.description']" position="before">
-            <t t-if="task.line_ids">
+            <t t-if="task.sudo().line_ids">
                 <div class="col-md-12">
                     <strong>Todo List</strong>
                     <ul class="list-unstyled">
-                        <li t-foreach="task.line_ids" t-as="line">
+                        <li t-foreach="task.sudo().line_ids" t-as="line">
                             <span t-if="line.kanban_state == 'normal'" class="text-muted"><i class="fa fa-circle"></i></span>
                             <span t-if="line.kanban_state == 'done'" class="text-success"><i class="fa fa-check-circle"></i></span>
                             <span t-if="line.kanban_state == 'blocked'" class="text-danger"><i class="fa fa-times-circle"></i></span>
