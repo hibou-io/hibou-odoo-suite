@@ -118,6 +118,7 @@ if year == 2019 or True:
                 break
 
 result += additional
+result = -result
         </field>
         <field name="register_id" ref="contrib_register_mtdor_withhold"/>
     </record>
