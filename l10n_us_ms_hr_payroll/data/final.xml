@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- HR PAYROLL STRUCTURE -->
+    <record id="hr_payroll_salary_structure_us_ms_employee" model="hr.payroll.structure">
+        <field name="code">US_MS_EMP</field>
+        <field name="name">USA Mississippi Employee</field>
+        <field eval="[(6, 0, [
+          ref('hr_payroll_rules_ms_unemp_wages'),
+          ref('hr_payroll_rules_ms_unemp'),
+          ref('hr_payroll_rules_ms_inc_withhold'),
+          ])]" name="rule_ids"/>
+        <field name="company_id" ref="base.main_company"/>    
+        <field name="parent_id" ref="l10n_us_hr_payroll.hr_payroll_salary_structure_us_employee"/>
+    </record>
+
+</odoo>

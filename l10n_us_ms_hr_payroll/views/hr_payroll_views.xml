@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_form_l10n_us_ms_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="priority">139</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//group[@name='state_filing']" position="inside">
+                <group string="Mississippi" name="ms">
+                    <field name="ms_89_350_filing_status" string="Filing Status"/>
+                    <field name="ms_89_350_exemption" string="Exemptions"/>
+                    <field name="ms_89_350_additional_withholding" string="Additional Withholding"/>
+                </group>
+            </xpath>
+        </data>
+        </field>
+    </record>
+</odoo>
