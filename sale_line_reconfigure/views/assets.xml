@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="assets_backend" name="sale line reconfigure assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/sale_line_reconfigure/static/src/js/product_configurator_controller.js"></script>
+            <script type="text/javascript" src="/sale_line_reconfigure/static/src/js/product_configurator_renderer.js"></script>
+            <script type="text/javascript" src="/sale_line_reconfigure/static/src/js/product_configurator_view.js"></script>
+            <script type="text/javascript" src="/sale_line_reconfigure/static/src/js/section_and_note_fields_backend.js"></script>
+        </xpath>
+    </template>
+</odoo>
