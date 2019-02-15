@@ -19,7 +19,7 @@ class SaleOrder(models.Model):
 
     def _auto_deposit_invoice(self):
         wizard_model = self.env['sale.advance.payment.inv'].sudo()
-        for sale in self.sudo().filtered(lambda o: o.amount_total_deposit):
+        for sale in self.sudo().filtered(lambda o: not o.invoice_ids and o.amount_total_deposit):
             # Create Deposit Invoices
             wizard = wizard_model.create({
                 'advance_payment_method': 'percentage',
