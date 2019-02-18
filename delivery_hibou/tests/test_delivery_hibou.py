@@ -74,6 +74,7 @@ class TestDeliveryHibou(common.TransactionCase):
         self.carrier.automatic_insurance_value = test_insurance_value
 
         picking_out = self.env.ref('stock.outgoing_shipment_main_warehouse')
+        picking_out.action_assign()
         self.assertEqual(picking_out.state, 'assigned')
 
         picking_out.carrier_id = self.carrier
