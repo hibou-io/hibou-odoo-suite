@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="product_template_attribute_value_view_tree_inherit" model="ir.ui.view">
+        <field name="name">product.template.attribute.value.view.tree.inherit</field>
+        <field name="model">product.template.attribute.value</field>
+        <field name="inherit_id" ref="product.product_template_attribute_value_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_default"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_attribute_value_view_form_inherit" model="ir.ui.view">
+        <field name="name">product.template.attribute.value.view.form.inherit</field>
+        <field name="model">product.template.attribute.value</field>
+        <field name="inherit_id" ref="product.product_template_attribute_value_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_default"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
