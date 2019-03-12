@@ -1,7 +1,5 @@
-from datetime import datetime
 from collections import defaultdict
 from odoo import api, models
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class HrPayslip(models.Model):
@@ -50,8 +48,7 @@ class HrPayslip(models.Model):
         days = set()
         for ts in self.env['account.analytic.line'].search(valid_ts):
             if ts.unit_amount:
-                ts_date = datetime.strptime(ts.date, DEFAULT_SERVER_DATE_FORMAT)
-                ts_iso = ts_date.isocalendar()
+                ts_iso = ts.date.isocalendar()
                 if ts_iso not in days:
                     values['number_of_days'] += 1
                     days.add(ts_iso)
@@ -79,8 +76,7 @@ class HrPayslip(models.Model):
             day_values = defaultdict(float)
             for ts in timesheets:
                 if ts.unit_amount:
-                    ts_date = datetime.strptime(ts.date, DEFAULT_SERVER_DATE_FORMAT)
-                    ts_iso = ts_date.isocalendar()
+                    ts_iso = ts.date.isocalendar()
                     day_values[ts_iso] += ts.unit_amount
             return day_values
         elif hasattr(super(HrPayslip, self), 'hour_break_down'):
