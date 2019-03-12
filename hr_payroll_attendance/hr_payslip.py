@@ -1,8 +1,6 @@
-from datetime import datetime
 from collections import defaultdict
 from odoo import api, models
 from odoo.exceptions import ValidationError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class HrPayslip(models.Model):
@@ -41,8 +39,7 @@ class HrPayslip(models.Model):
                     raise ValidationError('This pay period must not have any open attendances.')
                 if attn.worked_hours:
                     # Avoid in/outs
-                    attn_start_time = datetime.strptime(attn.check_in, DEFAULT_SERVER_DATETIME_FORMAT)
-                    attn_iso = attn_start_time.isocalendar()
+                    attn_iso = attn.check_in.isocalendar()
                     if not attn_iso in days:
                         worked_attn['number_of_days'] += 1
                         days.add(attn_iso)
@@ -73,8 +70,7 @@ class HrPayslip(models.Model):
                     raise ValidationError('This pay period must not have any open attendances.')
                 if attn.worked_hours:
                     # Avoid in/outs
-                    attn_start_time = datetime.strptime(attn.check_in, DEFAULT_SERVER_DATETIME_FORMAT)
-                    attn_iso = attn_start_time.isocalendar()
+                    attn_iso = attn.check_in.isocalendar()
                     day_values[attn_iso] += attn.worked_hours
             return day_values
         elif hasattr(super(HrPayslip, self), 'hour_break_down'):
