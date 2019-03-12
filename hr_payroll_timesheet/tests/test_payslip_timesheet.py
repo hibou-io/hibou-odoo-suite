@@ -40,12 +40,14 @@ class TestPayslipTimesheet(common.TransactionCase):
             'project_id': self.project.id,
             'date': '2018-01-01',
             'unit_amount': 5.0,
+            'name': 'test',
         })
         self.env['account.analytic.line'].create({
             'employee_id': self.employee.id,
             'project_id': self.project.id,
             'date': '2018-01-01',
             'unit_amount': 3.0,
+            'name': 'test',
         })
 
         # Day 2
@@ -54,6 +56,7 @@ class TestPayslipTimesheet(common.TransactionCase):
             'project_id': self.project.id,
             'date': '2018-01-02',
             'unit_amount': 1.0,
+            'name': 'test',
         })
 
         # Make one that should be excluded.
@@ -62,6 +65,7 @@ class TestPayslipTimesheet(common.TransactionCase):
             'project_id': self.project.id,
             'date': '2017-01-01',
             'unit_amount': 5.0,
+            'name': 'test',
         })
 
         # Create slip like a batch run.

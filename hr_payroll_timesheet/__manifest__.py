@@ -1,7 +1,7 @@
 {
     'name': 'Timesheets on Payslips',
     'description': 'Get Timesheet hours onto Employee Payslips.',
-    'version': '11.0.1.0.0',
+    'version': '12.0.1.0.0',
     'website': 'https://hibou.io/',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'license': 'AGPL-3',
