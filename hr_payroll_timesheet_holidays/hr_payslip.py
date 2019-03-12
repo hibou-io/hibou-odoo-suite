@@ -1,5 +1,5 @@
 from odoo import models, api
-from odoo.addons.hr_holidays.models.hr_holidays import HOURS_PER_DAY
+from odoo.addons.resource.models.resource import HOURS_PER_DAY
 
 
 class HrPayslip(models.Model):
@@ -13,15 +13,15 @@ class HrPayslip(models.Model):
             for leave in self._fetch_valid_leaves_timesheet(contract.employee_id.id, date_from, date_to):
                 leave_code = self._create_leave_code(leave.holiday_status_id.name)
                 if leave_code in leaves:
-                    leaves[leave_code]['number_of_days'] += leave.number_of_days_temp
-                    leaves[leave_code]['number_of_hours'] += leave.number_of_days_temp * HOURS_PER_DAY
+                    leaves[leave_code]['number_of_days'] += leave.number_of_days
+                    leaves[leave_code]['number_of_hours'] += leave.number_of_days * HOURS_PER_DAY
                 else:
                     leaves[leave_code] = {
                         'name': leave.holiday_status_id.name,
                         'sequence': 15,
                         'code': leave_code,
-                        'number_of_days': leave.number_of_days_temp,
-                        'number_of_hours': leave.number_of_days_temp * HOURS_PER_DAY,
+                        'number_of_days': leave.number_of_days,
+                        'number_of_hours': leave.number_of_days * HOURS_PER_DAY,
                         'contract_id': contract.id,
                     }
 
@@ -43,10 +43,10 @@ class HrPayslip(models.Model):
             ('date_from', '>=', date_from),
             ('date_from', '<=', date_to),
             ('payslip_status', '=', False),
-            ('type', '=', 'remove'),
+            ('holiday_status_id.unpaid', '=', False),
         ]
 
-        return self.env['hr.holidays'].search(valid_leaves)
+        return self.env['hr.leave'].search(valid_leaves)
 
     def _create_leave_code(self, name):
         return 'L_' + name.replace(' ', '_')
