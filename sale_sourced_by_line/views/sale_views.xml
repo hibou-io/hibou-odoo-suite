@@ -13,7 +13,7 @@
                 <field name="date_planned"/>
                 <field name="warehouse_id"/>
             </xpath>
-            <xpath expr="//field[@name='requested_date']" position="before">
+            <xpath expr="//field[@name='commitment_date']" position="before">
                 <field name="date_planned" />
             </xpath>
         </field>
