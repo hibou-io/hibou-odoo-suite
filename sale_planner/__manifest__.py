@@ -1,7 +1,7 @@
 {
     'name': 'Sale Order Planner',
     'summary': 'Plans order dates and warehouses.',
-    'version': '11.0.1.0.0',
+    'version': '12.0.1.0.0',
     'author': "Hibou Corp.",
     'category': 'Sale',
     'license': 'AGPL-3',
@@ -23,7 +23,6 @@ on the specific method's characteristics. (e.g. Do they deliver on Saturday?)
 
 """,
     'depends': [
-        'sale_order_dates',
         'sale_sourced_by_line',
         'base_geolocalize',
         'delivery',
@@ -32,6 +31,7 @@ on the specific method's characteristics. (e.g. Do they deliver on Saturday?)
     ],
     'demo': [],
     'data': [
+        'security/ir.model.access.csv',
         'wizard/order_planner_views.xml',
         'views/sale.xml',
         'views/stock.xml',
