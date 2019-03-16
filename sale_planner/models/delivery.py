@@ -92,11 +92,11 @@ class DeliveryCarrier(models.Model):
         # date calculations needs an extra day
         effective_transit_days = transit_days + 1
 
-        last_day = self.delivery_calendar_id.plan_days(effective_transit_days, date_planned, compute_leaves=True)
+        last_day = self.delivery_calendar_id.plan_days_end(effective_transit_days, date_planned, compute_leaves=True)
         if not last_day:
             return self._calculate_date_delivered_naive(date_planned, transit_days)
 
-        return fields.Datetime.to_string(last_day)
+        return last_day
 
     def _calculate_date_delivered_naive(self, date_planned, transit_days):
-        return fields.Datetime.to_string(date_planned + timedelta(days=transit_days))
+        return date_planned + timedelta(days=transit_days)
