@@ -132,7 +132,7 @@ class DeliveryCarrier(models.Model):
     def _get_recipient_dropship(self, picking):
         if picking.sale_id:
             return picking.sale_id.partner_shipping_id
-        return picking.sale_id.partner_shipping_id
+        return picking.partner_id
 
     def _get_recipient_dropship_no_sale(self, picking):
         return picking.company_id.partner_id
