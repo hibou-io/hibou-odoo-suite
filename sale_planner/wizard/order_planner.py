@@ -134,6 +134,7 @@ class FakeSaleOrder():
         self.team_id = None
         self.project_id = None
         self.amount_total = 0.0
+        self.date_order = fields.Date.today()
         for attr, value in kwargs.items():
             setattr(self, attr, value)
 
@@ -143,6 +144,8 @@ class FakeSaleOrder():
         """
         yield self
 
+    def _compute_amount_total_without_delivery(self):
+        return self.amount_total
 
 def distance(lat_1, lon_1, lat_2, lon_2):
     R = 6373.0
@@ -251,6 +254,8 @@ class SaleOrderMakePlan(models.TransientModel):
             base_option['carrier_id'] = order.carrier_id.id
 
         if plan_shipping and not self.env.context.get('skip_plan_shipping'):
+            if base_option.get('date_planned'):
+                fake_order.date_order = base_option['date_planned']
             options = self.generate_shipping_options(base_option, fake_order)
         else:
             options = [base_option]
@@ -724,16 +729,11 @@ class SaleOrderMakePlan(models.TransientModel):
                         _logger.warn('returning None because carrier: ' + str(carrier))
                         return None
             else:
-                carrier = carrier.verify_carrier(order_fake.partner_shipping_id)
+                carrier = carrier.available_carriers(order_fake.partner_shipping_id)
                 if not carrier:
                     return None
-                #price_unit = carrier.get_price_available(order)
-                # ^^ ends up calling carrier.get_price_from_picking(order_total, weight, volume, quantity)
-                order_total = order_fake.amount_total
-                weight = sum((line.product_id.weight or 0.0) * line.product_uom_qty for line in order_fake.order_line if line.product_id.type == 'product')
-                volume = sum((line.product_id.volume or 0.0) * line.product_uom_qty for line in order_fake.order_line if line.product_id.type == 'product')
-                quantity = sum((line.product_uom_qty or 0.0) for line in order_fake.order_line if line.product_id.type == 'product')
-                price_unit = carrier.get_price_from_picking(order_total, weight, volume, quantity)
+                res = carrier.rate_shipment(order_fake)
+                price_unit = res['price']
                 if order_fake.company_id.currency_id.id != order_fake.pricelist_id.currency_id.id:
                     price_unit = order_fake.company_id.currency_id.with_context(date=order_fake.date_order).compute(price_unit, order_fake.pricelist_id.currency_id)
 
