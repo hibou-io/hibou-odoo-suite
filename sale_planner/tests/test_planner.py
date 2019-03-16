@@ -48,26 +48,38 @@ class TestPlanner(common.TransactionCase):
             'partner_latitude': 40.51525,
             'partner_longitude': -107.54645,
         })
+        hour_from = (self.today.hour - 1) % 24
+        hour_to = (self.today.hour + 1) % 24
+        if hour_to < hour_from:
+            hour_to, hour_from = hour_from, hour_to
+
         self.warehouse_calendar_1 = self.env['resource.calendar'].create({
             'name': 'Washington Warehouse Hours',
+            'tz': 'UTC',
             'attendance_ids': [
                 (0, 0, {'name': 'today',
                         'dayofweek': str(self.today.weekday()),
-                        'hour_from': (self.today.hour - 1) % 24,
-                        'hour_to': (self.today.hour + 1) % 24}),
+                        'hour_from': hour_from,
+                        'hour_to': hour_to,
+                        'day_period': 'morning'}),
+
                 (0, 0, {'name': 'tomorrow',
                         'dayofweek': str(self.tomorrow.weekday()),
-                        'hour_from': (self.tomorrow.hour - 1) % 24,
-                        'hour_to': (self.tomorrow.hour + 1) % 24}),
+                        'hour_from': hour_from,
+                        'hour_to': hour_to,
+                        'day_period': 'morning'}),
+
             ]
         })
         self.warehouse_calendar_2 = self.env['resource.calendar'].create({
             'name': 'Colorado Warehouse Hours',
+            'tz': 'UTC',
             'attendance_ids': [
                 (0, 0, {'name': 'tomorrow',
                         'dayofweek': str(self.tomorrow.weekday()),
-                        'hour_from': (self.tomorrow.hour - 1) % 24,
-                        'hour_to': (self.tomorrow.hour + 1) % 24}),
+                        'hour_from': hour_from,
+                        'hour_to': hour_to,
+                        'day_period': 'morning'}),
             ]
         })
         self.warehouse_1 = self.env['stock.warehouse'].create({
