@@ -385,7 +385,7 @@ class SaleOrderMakePlan(models.TransientModel):
 
     def generate_base_option(self, order_fake):
         _logger.error('generate_base_option:')
-        __start_date = datetime.now() - timedelta(days=-30)
+        __start_date = datetime.now() - timedelta(days=30)
         product_lines = list(filter(lambda line: line.product_id.type == 'product', order_fake.order_line))
         if not product_lines:
             return {}
