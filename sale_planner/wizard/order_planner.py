@@ -1,7 +1,7 @@
 from math import sin, cos, sqrt, atan2, radians
 from json import dumps, loads
 from copy import deepcopy
-from datetime import datetime
+from datetime import datetime, timedelta
 from collections import defaultdict
 from logging import getLogger
 
@@ -299,7 +299,6 @@ class SaleOrderMakePlan(models.TransientModel):
         return Carrier.search(domain)
 
     def _generate_base_option(self, order_fake, policy_group):
-        policy = False
         flag_force_closest = False
         warehouse_domain = False
         if 'policy' in policy_group:
@@ -382,11 +381,11 @@ class SaleOrderMakePlan(models.TransientModel):
 
         # nobody has stock!
         primary_wh = self._find_closest_warehouse_by_partner(warehouses, order_fake.partner_shipping_id)
-        #order_fake.warehouse_id = primary_wh
         return {'warehouse_id': primary_wh.id}
 
     def generate_base_option(self, order_fake):
         _logger.error('generate_base_option:')
+        __start_date = datetime.now() - timedelta(days=-30)
         product_lines = list(filter(lambda line: line.product_id.type == 'product', order_fake.order_line))
         if not product_lines:
             return {}
@@ -410,7 +409,6 @@ class SaleOrderMakePlan(models.TransientModel):
                 policy_groups[0]['products'].append(p)
                 policy_groups[0]['buy_qty'][p.id] = buy_qty[p.id]
 
-
         for _, policy_group in policy_groups.items():
             product_set = self.env['product.product'].browse()
             for p in policy_group['products']:
@@ -418,8 +416,7 @@ class SaleOrderMakePlan(models.TransientModel):
             policy_group['products'] = product_set
             policy_group['base_option'] = self._generate_base_option(order_fake, policy_group)
 
-
-        option_policy_groups = defaultdict(lambda: {'products': self.env['product.product'].browse(), 'policies': self.env['sale.order.planning.policy'].browse(), 'date_planned': '1900', 'sub_options': [],})
+        option_policy_groups = defaultdict(lambda: {'products': self.env['product.product'].browse(), 'policies': self.env['sale.order.planning.policy'].browse(), 'date_planned': __start_date, 'sub_options': [],})
         for policy_id, policy_group in policy_groups.items():
             base_option = policy_group['base_option']
             _logger.error('  base_option: ' + str(base_option))
@@ -444,7 +441,7 @@ class SaleOrderMakePlan(models.TransientModel):
             if not option_group['sub_options']:
                 del option_group['sub_options']
             else:
-                sub_options = defaultdict(lambda: {'date_planned': '1900', 'product_ids': [], 'product_skus': []})
+                sub_options = defaultdict(lambda: {'date_planned': __start_date, 'product_ids': [], 'product_skus': []})
                 remaining_products = option_group['products']
                 for options in option_group['sub_options']:
                     for wh_id, option in options.items():
@@ -466,7 +463,7 @@ class SaleOrderMakePlan(models.TransientModel):
 
         # At this point we should have all of the policy options collapsed.
         # Collapse warehouse options.
-        base_option = {'date_planned': '1900', 'products': self.env['product.product'].browse()}
+        base_option = {'date_planned': __start_date, 'products': self.env['product.product'].browse()}
         for wh_id, intermediate_option in option_policy_groups.items():
             _logger.error('    base_option: ' + str(base_option))
             _logger.error('    intermediate_option: ' + str(intermediate_option))
@@ -596,7 +593,7 @@ class SaleOrderMakePlan(models.TransientModel):
 
     def _next_warehouse_shipping_date(self, warehouse):
         if warehouse.shipping_calendar_id:
-            return fields.Datetime.to_string(warehouse.shipping_calendar_id.plan_days(0.01, fields.Datetime.from_string(fields.Datetime.now()), compute_leaves=True))
+            return warehouse.shipping_calendar_id.plan_days_end(0, fields.Datetime.now(), compute_leaves=True)
         return False
 
     @api.model
@@ -683,15 +680,11 @@ class SaleOrderMakePlan(models.TransientModel):
         max_requested_date = None
         for option in sub_options.values():
             requested_date = option.get('requested_date')
-            if requested_date and isinstance(requested_date, str):
-                requested_date = fields.Datetime.from_string(requested_date)
             if requested_date and not max_requested_date:
                 max_requested_date = requested_date
             elif requested_date:
                 if requested_date > max_requested_date:
                     max_requested_date = requested_date
-        if max_requested_date:
-            return fields.Datetime.to_string(max_requested_date)
         return max_requested_date
 
     def _get_max_transit_days(self, sub_options):
@@ -748,7 +741,7 @@ class SaleOrderMakePlan(models.TransientModel):
             option = deepcopy(base_option)
             option['carrier_id'] = carrier.id
             option['shipping_price'] = final_price
-            option['requested_date'] = fields.Datetime.to_string(date_delivered) if (date_delivered and isinstance(date_delivered, datetime)) else date_delivered
+            option['requested_date'] = date_delivered
             option['transit_days'] = transit_days
             return option
         except Exception as e:
@@ -759,13 +752,15 @@ class SaleOrderMakePlan(models.TransientModel):
         return None
 
 
-
 class SaleOrderPlanningOption(models.TransientModel):
     _name = 'sale.order.planning.option'
     _description = 'Order Planning Option'
 
     def create(self, values):
         if 'sub_options' in values and not isinstance(values['sub_options'], str):
+            for wh_id, option in values['sub_options'].items():
+                if option.get('date_planned'):
+                    option['date_planned'] = str(option['date_planned'])
             values['sub_options'] = dumps(values['sub_options'])
         return super(SaleOrderPlanningOption, self).create(values)
 
@@ -782,13 +777,9 @@ class SaleOrderPlanningOption(models.TransientModel):
             line = ''
             for wh_id, wh_option in sub_options.items():
                 product_skus = wh_option.get('product_skus', [])
+                date_planned = wh_option.get('date_planned')
                 product_skus = ', '.join(product_skus)
                 requested_date = wh_option.get('requested_date', '')
-                if requested_date:
-                    requested_date = self._context_datetime(requested_date)
-                date_planned = wh_option.get('date_planned', '')
-                if date_planned:
-                    date_planned = self._context_datetime(date_planned)
                 shipping_price = float(wh_option.get('shipping_price', 0.0))
                 transit_days = int(wh_option.get('transit_days', 0))
 
@@ -817,8 +808,3 @@ class SaleOrderPlanningOption(models.TransientModel):
         for option in self:
             option.plan_id.select_option(option)
             return
-
-    def _context_datetime(self, date):
-        date = fields.Datetime.from_string(date)
-        date = fields.Datetime.context_timestamp(self, date)
-        return fields.Datetime.to_string(date)
