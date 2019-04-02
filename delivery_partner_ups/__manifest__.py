@@ -1,7 +1,7 @@
 {
     'name': 'UPS Partner Shipping Accounts',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '11.0.1.0.0',
+    'version': '12.0.1.0.0',
     'category': 'Stock',
     'sequence': 95,
     'summary': 'UPS Partner Shipping Accounts',

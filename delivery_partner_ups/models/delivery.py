@@ -11,9 +11,9 @@ class PartnerShippingAccount(models.Model):
     ups_zip = fields.Char(string='UPS Account ZIP')
 
     def ups_check_validity(self):
-        m = re.search('^[\dA-Z]{6}$', self.name or '')
+        m = re.search(r'^[\dA-Z]{6}$', self.name or '')
         if not m:
             raise ValidationError('UPS Account numbers must be 6 Alpha-numeric characters.')
-        m = re.search('^\d{5}$', self.ups_zip or '')
+        m = re.search(r'^\d{5}$', self.ups_zip or '')
         if not m:
             raise ValidationError('UPS requires the 5 digit account ZIP.')
