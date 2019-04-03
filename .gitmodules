@@ -1,3 +1,11 @@
 [submodule "external/hibou-shipbox"]
 	path = external/hibou-shipbox
 	url = https://github.com/hibou-io/shipbox.git
+[submodule "external/hibou-oca/server-tools"]
+	path = external/hibou-oca/server-tools
+	url = https://github.com/hibou-io/oca-server-tools.git
+	branch = 12.0
+[submodule "external/hibou-oca/sale-workflow"]
+	path = external/hibou-oca/sale-workflow
+	url = https://github.com/hibou-io/oca-sale-workflow.git
+	branch = 12.0
