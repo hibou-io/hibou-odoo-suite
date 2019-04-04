@@ -83,6 +83,7 @@
                         <group>
                             <field name="fold"/>
                             <field name="sequence" groups="base.group_no_one"/>
+                            <field name="color" groups="base.group_no_one"/>
                         </group>
                     </group>
                     <group string="Stage Description and Tooltips">
@@ -102,12 +103,48 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.view_project_kanban"/>
         <field name="arch" type="xml">
+            <!-- Add `o_kanban_small_column` to prevent strange wrapping -->
             <xpath expr="//kanban" position="attributes">
-                <attribute name="default_group_by">stage_id</attribute>
-                <attribute name="on_create">quick_create</attribute>
+                <attribute name="class">o_kanban_small_column oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors</attribute>
             </xpath>
             <xpath expr="//kanban/field[@name='name']" position="after">
                 <field name="stage_id" options="{'group_by_tooltip': {'description': 'Stage Description'}}"/>
+                <field name="stage_color"/>
+            </xpath>
+            <xpath expr="//templates//span[@t-if='record.partner_id.value']" position="after">
+                <div t-if="record.stage_id.value" class="o_kanban_tags" style="margin-top: 5px;">
+                    <span t-attf-class="o_tag o_tag_color_#{record.stage_color.raw_value}" style="font-size: 110%;">
+                        <span style="width: 12px; height: 12px;"/>
+                        <em><t t-esc="record.stage_id.value"/></em>
+                    </span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="edit_project_inherit" model="ir.ui.view">
+        <field name="name">project.project.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <header>
+                    <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}"/>
+                </header>
+            </xpath>
+            <xpath expr="//field[@name='message_follower_ids']" position="after">
+                <field name="message_ids" widget="mail_thread"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_project_project_filter_inherit" model="ir.ui.view">
+        <field name="name">project.project.select.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Stage" name="group_stage" context="{'group_by': 'stage_id'}"/>
             </xpath>
         </field>
     </record>
