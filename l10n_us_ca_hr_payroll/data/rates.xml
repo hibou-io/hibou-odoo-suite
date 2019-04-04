@@ -41,6 +41,6 @@
         <field name="code">US_CA_SDI</field>
         <field name="rate">1.0</field>
         <field name="date_from">2019-01-01</field>
-        <field name="wage_limit_year" eval="18371.0"/>
+        <field name="wage_limit_year" eval="118371.0"/>
     </record>
 </odoo>
