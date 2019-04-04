@@ -9,6 +9,7 @@ class ProjectType(models.Model):
     name = fields.Char(string='Stage Name', required=True, translate=True)
     description = fields.Text(translate=True)
     sequence = fields.Integer(default=1)
+    color = fields.Integer('Color Index')
     fold = fields.Boolean(string='Folded in Kanban',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
 
@@ -18,6 +19,7 @@ class Project(models.Model):
 
     stage_id = fields.Many2one('project.type', string='Stage',
                                group_expand='_read_group_stage_ids', track_visibility='onchange', index=True)
+    stage_color = fields.Integer(related='stage_id.color')
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
