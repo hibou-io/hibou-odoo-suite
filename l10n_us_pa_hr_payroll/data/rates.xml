@@ -9,7 +9,7 @@
             <field name="wage_limit_year" eval="10000.0"/>
         </record>
         <record id="hr_payroll_rates_pa_unemp_ee_2018" model="hr.payroll.rate">
-            <field name="name">UUS Pennsylvania Unemployment (Employee)</field>
+            <field name="name">US Pennsylvania Unemployment (Employee)</field>
             <field name="code">EE_US_PA_UNEMP</field>
             <field name="rate">0.06</field>
             <field name="date_from">2018-01-01</field>
