@@ -19,7 +19,7 @@ class AccountInvoiceLine(models.Model):
             purchase_price = product_id.uom_id._compute_price(purchase_price, product_uom_id)
         ctx = self.env.context.copy()
         ctx['date'] = invoice_id.date if invoice_id.date else fields.Date.context_today(invoice_id)
-        price = frm_cur.with_context(ctx).compute(purchase_price, to_cur, round=False)
+        price = frm_cur.with_context(ctx)._convert(purchase_price, to_cur, invoice_id.company_id, ctx['date'], round=False)
         return price
 
     @api.onchange('product_id', 'uom_id')
@@ -42,7 +42,7 @@ class AccountInvoiceLine(models.Model):
             if line.product_id and not price:
                 date = line.invoice_id.date if line.invoice_id.date else fields.Date.context_today(line.invoice_id)
                 from_cur = line.invoice_id.company_currency_id.with_context(date=date)
-                price = from_cur.compute(line.product_id.standard_price, currency, round=False)
+                price = from_cur._convert(line.product_id.standard_price, currency, line.company_id, date, round=False)
  
             line.margin = currency.round(line.price_subtotal - (price * line.quantity))
 
