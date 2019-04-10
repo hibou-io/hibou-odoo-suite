@@ -58,4 +58,4 @@ class RMASOMakeLinesLine(models.TransientModel):
     qty_invoiced = fields.Float(string='Invoiced')
     qty_delivered = fields.Float(string='Delivered')
     product_uom_qty = fields.Float(string='QTY')
-    product_uom_id = fields.Many2one('product.uom', 'UOM')
+    product_uom_id = fields.Many2one('uom.uom', 'UOM')

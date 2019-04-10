@@ -1,5 +1,8 @@
 from odoo.addons.rma.tests.test_rma import TestRMA
 from odoo.exceptions import UserError, ValidationError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class TestRMASale(TestRMA):
@@ -43,7 +46,7 @@ class TestRMASale(TestRMA):
         with self.assertRaises(UserError):
             rma.action_confirm()
 
-        order.picking_ids.force_assign()
+        order.picking_ids.action_assign()
         pack_opt = order.picking_ids.move_line_ids[0]
         lot = self.env['stock.production.lot'].create({
             'product_id': self.product1.id,
@@ -52,7 +55,7 @@ class TestRMASale(TestRMA):
         })
         pack_opt.qty_done = 1.0
         pack_opt.lot_id = lot
-        order.picking_ids.do_transfer()
+        order.picking_ids.button_validate()
         self.assertEqual(order.picking_ids.state, 'done')
         wizard = self.env['rma.sale.make.lines'].create({
             'rma_id': rma.id,
@@ -69,7 +72,7 @@ class TestRMASale(TestRMA):
 
         pack_opt.lot_id = lot
         pack_opt.qty_done = 1.0
-        rma.in_picking_id.do_transfer()
+        rma.in_picking_id.button_validate()
         rma.action_done()
 
         # Test Ordered Qty was decremented.
@@ -95,12 +98,12 @@ class TestRMASale(TestRMA):
 
         # In Odoo 10, this would not have been able to reserve.
         # In Odoo 11, reservation can still happen, but at least we can't move the same lot twice!
-        # self.assertEqual(rma2.in_picking_id.state, 'confirmed')
+        #self.assertEqual(rma2.in_picking_id.state, 'confirmed')
 
         # Requires Lot
         with self.assertRaises(UserError):
             rma2.in_picking_id.move_line_ids.write({'qty_done': 1.0})
-            rma2.in_picking_id.do_transfer()
+            rma2.in_picking_id.button_validate()
 
         # Assign existing lot
         rma2.in_picking_id.move_line_ids.write({
