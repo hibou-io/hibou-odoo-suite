@@ -102,9 +102,15 @@ class TestRMA(common.TransactionCase):
             'product_qty': 1.0,
         })
 
-        adj.action_done()
+        adj._action_done()
         self.assertEqual(self.product1.qty_available, 1.0)
         self.assertTrue(lot.quant_ids)
+        # Test some internals in Odoo 12.0
+        lot_internal_quants = lot.quant_ids.filtered(lambda q: q.location_id.usage in ['internal', 'transit'])
+        self.assertEqual(len(lot_internal_quants), 1)
+        self.assertEqual(lot_internal_quants.mapped('quantity'), [1.0])
+        # Re-compute qty as it does not depend on anything.
+        lot._product_qty()
         self.assertEqual(lot.product_qty, 1.0)
 
         # Create initial picking that will be returned by RMA
@@ -154,7 +160,7 @@ class TestRMA(common.TransactionCase):
         picking_out.move_line_ids.write({
             'qty_done': 1.0,
         })
-        picking_out.do_transfer()
+        picking_out.button_validate()
         self.assertEqual(picking_out.state, 'done')
 
         # Now we can 'return' that picking
@@ -172,10 +178,10 @@ class TestRMA(common.TransactionCase):
         pack_opt.qty_done = 1.0
         with self.assertRaises(UserError):
             # require a lot
-            rma.in_picking_id.do_transfer()
+            rma.in_picking_id.button_validate()
 
         pack_opt.lot_id = lot
-        rma.in_picking_id.do_transfer()
+        rma.in_picking_id.button_validate()
         rma.action_done()
 
         # Ensure that the same lot was in fact returned into our destination inventory
@@ -206,7 +212,7 @@ class TestRMA(common.TransactionCase):
         # Requires Lot
         with self.assertRaises(UserError):
             rma2.in_picking_id.move_line_ids.write({'qty_done': 1.0})
-            rma2.in_picking_id.do_transfer()
+            rma2.in_picking_id.button_validate()
 
         # Assign existing lot
         rma2.in_picking_id.move_line_ids.write({

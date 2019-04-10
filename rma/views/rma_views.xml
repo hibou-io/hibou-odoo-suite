@@ -125,7 +125,7 @@
     </record>
 
     <record id="view_rma_rma_search" model="ir.ui.view">
-        <field name="name">rma.rma.tree</field>
+        <field name="name">rma.rma.search</field>
         <field name="model">rma.rma</field>
         <field name="arch" type="xml">
             <search string="Search RMA">
@@ -138,8 +138,8 @@
                 <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
                 <filter string="Expired" name="expired" domain="[('validity_date', '!=', False),('validity_date', '&lt;', datetime.datetime.now())]"/>
                 <group expand="0" name="group_by" string="Group By">
-                    <filter string="State" domain="[]" context="{'group_by': 'state'}"/>
-                    <filter string="Template" domain="[]" context="{'group_by': 'Template'}"/>
+                    <filter name="group_state" string="State" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter name="group_template" string="Template" domain="[]" context="{'group_by': 'template_id'}"/>
                 </group>
             </search>
         </field>

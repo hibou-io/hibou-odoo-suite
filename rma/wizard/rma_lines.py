@@ -19,8 +19,8 @@ class RMAPickingMakeLines(models.TransientModel):
         return {
             'rma_make_lines_id': self.id,
             'product_id': move.product_id.id,
-            'qty_ordered': move.ordered_qty,
-            'qty_delivered': move.product_uom_qty,
+            'qty_ordered': move.product_uom_qty,
+            'qty_delivered': move.product_qty,
             'product_uom_qty': 0.0,
             'product_uom_id': move.product_uom.id,
         }
@@ -54,4 +54,4 @@ class RMAPickingMakeLinesLine(models.TransientModel):
     qty_ordered = fields.Float(string='Ordered')
     qty_delivered = fields.Float(string='Delivered')
     product_uom_qty = fields.Float(string='QTY')
-    product_uom_id = fields.Many2one('product.uom', 'UOM')
+    product_uom_id = fields.Many2one('uom.uom', 'UOM')

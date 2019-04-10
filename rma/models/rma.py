@@ -446,7 +446,7 @@ class RMALine(models.Model):
 
     rma_id = fields.Many2one('rma.rma', string='RMA')
     product_id = fields.Many2one('product.product', 'Product')
-    product_uom_id = fields.Many2one('product.uom', 'UOM')
+    product_uom_id = fields.Many2one('uom.uom', 'UOM')
     product_uom_qty = fields.Float(string='QTY')
     rma_template_usage = fields.Selection(related='rma_id.template_usage')
 
