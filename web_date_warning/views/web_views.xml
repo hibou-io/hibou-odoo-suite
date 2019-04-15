@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="ShipBox Assets and Fields" inherit_id="web.assets_backend" priority='15'>
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/web_date_warning/static/src/js/date_picker_warning.js"></script>
+        </xpath>
+    </template>
+</odoo>
