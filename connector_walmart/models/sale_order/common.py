@@ -6,6 +6,7 @@ import logging
 import odoo.addons.decimal_precision as dp
 
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import RetryableJobError
@@ -167,6 +168,8 @@ class SaleOrderAdapter(Component):
 
         api_instance = self.api_instance
         orders_response = api_instance.orders.all(**arguments)
+        if 'error' in orders_response:
+            raise ValidationError(str(orders_response))
         _logger.debug(orders_response)
 
         if not 'list' in orders_response:

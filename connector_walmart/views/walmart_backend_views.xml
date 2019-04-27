@@ -14,7 +14,7 @@
                         <field name="name" class="oe_inline" />
                     </h1>
                     <group name="walmart" string="Walmart Configuration">
-                        <notebook>
+                        <notebook name="api">
                             <page string="API" name="api">
                                 <group colspan="4" col="4">
                                     <field name="consumer_id"/>
@@ -38,7 +38,7 @@
                             <field name="product_categ_id"/>
                         </group>
                     </group>
-                    <notebook>
+                    <notebook name="import_config">
                         <page name="import" string="Imports">
                             <p class="oe_grey oe_inline">
                                 By clicking on the buttons,
@@ -58,9 +58,9 @@
                                 of the new records to review
                                 in the menu 'Connectors > Checkpoint'.
                             </p>
-                            <group>
+                            <group name="import_since">
                                 <div>
-                                    <label string="Import sale orders since" class="oe_inline"/>
+                                    <label for="import_orders_from_date" string="Import sale orders since" class="oe_inline"/>
                                     <field name="import_orders_from_date"
                                         class="oe_inline"
                                         nolabel="1"/>
