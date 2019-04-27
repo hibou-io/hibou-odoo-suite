@@ -12,3 +12,6 @@
 [submodule "external/hibou-oca/queue"]
 	path = external/hibou-oca/queue
 	url = https://github.com/hibou-io/oca-queue.git
+[submodule "external/hibou-oca/product-attribute"]
+	path = external/hibou-oca/product-attribute
+	url = https://github.com/hibou-io/oca-product-attribute.git
