@@ -5,8 +5,8 @@ var basicFields = require('web.basic_fields');
 var fieldRegistry = require('web.field_registry');
 
 var _setValue = function(value) {
-    this._super.apply(this, value);
-    if (this.attrs.options.warn_future || this.options.warn_past) {
+    this._super(value);
+    if (this.attrs.options.warn_future || this.attrs.options.warn_past) {
         var now = moment();
         var val = moment(value);
         var ms_diff = val - now;
