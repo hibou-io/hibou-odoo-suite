@@ -52,5 +52,67 @@
             <field name="rate">0.0425</field>
             <field name="date_from">2018-01-01</field>
         </record>
+
+        <!-- 2019 -->
+        <!-- https://www.njbia.org/get-njbias-tax-changes-for-2019/ -->
+        <!-- https://www.nj.gov/labor/ea/rates/ea2019.html -->
+        <record id="hr_payroll_rates_nj_er_unemp_2019" model="hr.payroll.rate">
+            <field name="name">US NJ Unemployment (Company)</field>
+            <field name="code">ER_US_NJ_UNEMP</field>
+            <field name="rate">2.6825</field>
+            <field name="date_from">2019-01-01</field>
+            <field name="wage_limit_year" eval="34400.0"/>
+        </record>
+        <record id="hr_payroll_rates_nc_ee_unemp_2019" model="hr.payroll.rate">
+            <field name="name">US NJ Unemployment (Employee)</field>
+            <field name="code">EE_US_NJ_UNEMP</field>
+            <field name="rate">0.3825</field>
+            <field name="date_from">2019-01-01</field>
+            <field name="wage_limit_year" eval="34400.0"/>
+        </record>
+
+        <record id="hr_payroll_rates_nc_er_sdi_2019" model="hr.payroll.rate">
+            <field name="name">US NJ State Disability Insurance (Company)</field>
+            <field name="code">ER_US_NJ_SDI</field>
+            <field name="rate">0.5000</field>
+            <field name="date_from">2019-01-01</field>
+            <field name="wage_limit_year" eval="34400.0"/>
+        </record>
+        <record id="hr_payroll_rates_nc_ee_sdi_2019" model="hr.payroll.rate">
+            <field name="name">US NJ State Disability Insurance (Employee)</field>
+            <field name="code">EE_US_NJ_SDI</field>
+            <field name="rate">0.17</field>
+            <field name="date_from">2019-01-01</field>
+            <field name="wage_limit_year" eval="34400.0"/>
+        </record>
+
+        <record id="hr_payroll_rates_nc_er_wf_2019" model="hr.payroll.rate">
+            <field name="name">US NJ Workforce Development (Company)</field>
+            <field name="code">ER_US_NJ_WF</field>
+            <field name="rate">0.1175</field>
+            <field name="date_from">2019-01-01</field>
+        </record>
+        <record id="hr_payroll_rates_nc_ee_wf_2019" model="hr.payroll.rate">
+            <field name="name">US NJ Workforce Development (Employee)</field>
+            <field name="code">EE_US_NJ_WF</field>
+            <field name="rate">0.0425</field>
+            <field name="date_from">2019-01-01</field>
+        </record>
+
+        <record id="hr_payroll_rates_nc_er_fli_2019" model="hr.payroll.rate">
+            <field name="name">US NJ Family Leave Insurance (Company)</field>
+            <field name="code">ER_US_NJ_FLI</field>
+            <field name="rate">0.00</field>
+            <field name="date_from">2019-01-01</field>
+            <field name="wage_limit_year" eval="34400.0"/>
+        </record>
+        <record id="hr_payroll_rates_nc_ee_fli_2019" model="hr.payroll.rate">
+            <field name="name">US NJ Family Leave Insurance (Employee)</field>
+            <field name="code">EE_US_NJ_FLI</field>
+            <field name="rate">0.08</field>
+            <field name="date_from">2019-01-01</field>
+            <field name="wage_limit_year" eval="34400.0"/>
+        </record>
+
     </data>
 </odoo>
