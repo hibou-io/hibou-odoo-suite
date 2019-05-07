@@ -145,6 +145,12 @@
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
 
+    <record id="hr_payroll_nj_wf_company" model="hr.salary.rule.category">
+        <field name="name">ER: US-NJ Workforce Development</field>
+        <field name="code">ER_US_NJ_WF</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
     <record id="hr_payroll_nj_income_withhold" model="hr.salary.rule.category">
         <field name="name">EE: US-NJ Income Withholding</field>
         <field name="code">EE_US_NJ_INC_WITHHOLD</field>
