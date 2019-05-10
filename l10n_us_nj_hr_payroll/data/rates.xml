@@ -91,12 +91,14 @@
             <field name="code">ER_US_NJ_WF</field>
             <field name="rate">0.1175</field>
             <field name="date_from">2019-01-01</field>
+            <field name="wage_limit_year" eval="34400.0"/>
         </record>
         <record id="hr_payroll_rates_nc_ee_wf_2019" model="hr.payroll.rate">
             <field name="name">US NJ Workforce Development (Employee)</field>
             <field name="code">EE_US_NJ_WF</field>
             <field name="rate">0.0425</field>
             <field name="date_from">2019-01-01</field>
+            <field name="wage_limit_year" eval="34400.0"/>
         </record>
 
         <record id="hr_payroll_rates_nc_er_fli_2019" model="hr.payroll.rate">

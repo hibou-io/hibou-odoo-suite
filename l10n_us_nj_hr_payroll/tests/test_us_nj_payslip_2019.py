@@ -153,6 +153,7 @@ class TestUsNJPayslip(TestUsPayslip):
         self.assertPayrollEqual(cats['EE_US_NJ_SDI'], cats['WAGE_US_NJ_SDI'] * self.EE_NJ_SDI)
         self.assertPayrollEqual(cats['ER_US_NJ_SDI'], cats['WAGE_US_NJ_SDI'] * self.ER_NJ_SDI)
         self.assertPayrollEqual(cats['EE_US_NJ_FLI'], cats['WAGE_US_NJ_FLI'] * self.EE_NJ_FLI)
+        self.assertPayrollEqual(cats['ER_US_NJ_WF'], cats['WAGE_US_NJ_WF'] * self.ER_NJ_WF)
         self.assertPayrollEqual(cats['EE_US_NJ_WF'], cats['WAGE_US_NJ_WF'] * self.EE_NJ_WF)
         self.assertPayrollEqual(cats['EE_US_NJ_INC_WITHHOLD'], wh)
 
@@ -177,3 +178,5 @@ class TestUsNJPayslip(TestUsPayslip):
         self.assertPayrollEqual(cats['EE_US_NJ_UNEMP'], round(remaining_nj_unemp_wages * self.EE_NJ_UNEMP, 2))
         self.assertPayrollEqual(cats['EE_US_NJ_SDI'], remaining_nj_unemp_wages * self.EE_NJ_SDI)
         self.assertPayrollEqual(cats['ER_US_NJ_SDI'], remaining_nj_unemp_wages * self.ER_NJ_SDI)
+        self.assertPayrollEqual(cats['EE_US_NJ_WF'], remaining_nj_unemp_wages * self.EE_NJ_WF)
+        self.assertPayrollEqual(cats['ER_US_NJ_WF'], remaining_nj_unemp_wages * self.ER_NJ_WF)
