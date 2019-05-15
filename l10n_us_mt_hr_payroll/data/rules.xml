@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_mt_unemp_wages" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_mt_unemp_wages"/>
+        <field name="name">Wage: US-MT Unemployment</field>
+        <field name="code">WAGE_US_MT_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+year = payslip.dict.date_to.year
+rate = payslip.dict.get_rate('US_MT_UNEMP')
+ytd = payslip.sum('WAGE_US_MT_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_mt_unemp" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_mt_unemp"/>
+        <field name="name">ER: US-MT Unemployment</field>
+        <field name="code">ER_US_MT_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_MT_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_US_MT_UNEMP
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_mtdor_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_mt_inc_withhold" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_mt_income_withhold"/>
+        <field name="name">EE: US-MT Income Withholding</field>
+        <field name="code">EE_US_MT_INC_WITHHOLD</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = not contract.mt_mw4_exempt</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+year = payslip.dict.date_to.year
+G = categories.GROSS
+N = contract.mt_mw4_exemptions
+additional = contract.mt_mw4_additional_withholding
+schedule_pay = contract.schedule_pay
+result = 0.00
+float_max = float('inf')
+
+if year == 2019 or True:
+    if schedule_pay == 'weekly':
+        bracket = [
+            (135.0, 0.0, 1.80, 0.0),
+            (288.0, 2.0, 4.40, 135.0),
+            (2308.0, 9.0, 6.00, 288.0),
+            (float_max, 130.0, 6.60, 2308.0),
+        ]
+        exemption_rate = 37.0
+    elif schedule_pay == 'bi-weekly':
+        bracket = [
+            (269.0, 0.0, 1.80, 0.0),
+            (577.0, 5.0, 4.40, 269.0),
+            (4615.0, 18.0, 6.00, 577.0),
+            (float_max, 261.0, 6.60, 4615.0),
+        ]
+        exemption_rate = 73.0
+    elif schedule_pay == 'semi-monthly':
+        bracket = [
+            (292.0, 0.0, 1.80, 0.0),
+            (625.0, 5.0, 4.40, 292.0),
+            (5000.0, 20.0, 6.00, 625.0),
+            (float_max, 282.0, 6.60, 5000.0),
+        ]
+        exemption_rate = 79.0
+    elif schedule_pay == 'monthly':
+        bracket = [
+            (583.0, 0.0, 1.80, 0.0),
+            (1250.0, 11.0, 4.40, 583.0),
+            (10000.0, 40.0, 6.00, 1250.0),
+            (float_max, 565.0, 6.60, 10000.0),
+        ]
+        exemption_rate = 158.0
+    elif schedule_pay == 'annually':
+        bracket = [
+            (7000.0, 0.0, 1.80, 0.0),
+            (15000.0, 126.0, 4.40, 7000.0),
+            (120000.0, 478.0, 6.00, 15000.0),
+            (float_max, 6778.0, 6.60, 120000.0),
+        ]
+        exemption_rate = 1900.0
+    else:
+        raise Exception('Invalid schedule_pay=' + schedule_pay + ' for MT Income Withholding')
+
+    T = G - (exemption_rate * N)
+    if T &lt;= 0.0:
+        result = 0.0
+    else:
+        for data in bracket:
+            if T &lt; data[0]:
+                result = round(data[1] + ((data[2] / 100.0) * (T - data[3])))
+                break
+
+result += additional
+result = -result
+        </field>
+        <field name="register_id" ref="contrib_register_mtdor_withhold"/>
+    </record>
+
+</odoo>
