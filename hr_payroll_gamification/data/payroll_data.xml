@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="salary_rule_badges" model="hr.salary.rule">
+            <field name="name">Badge Bonus</field>
+            <field name="category_id" ref="hr_payroll.BASIC"/>
+            <field name="code">BADGES</field>
+            <field name="sequence" eval="5"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = 0.0
+if inputs.BADGES:
+  result = inputs.BADGES.amount
+
+            </field>
+        </record>
+
+        <record id="salary_rule_input_badges" model="hr.rule.input">
+            <field name="name">Badges</field>
+            <field name="code">BADGES</field>
+            <field name="input_id" ref="salary_rule_badges"/>
+        </record>
+
+        <record id="hr_payroll.structure_base" model="hr.payroll.structure">
+            <field eval="[(4, ref('hr_payroll_gamification.salary_rule_badges'))]" name="rule_ids"/>
+        </record>
+
+    </data>
+</odoo>
