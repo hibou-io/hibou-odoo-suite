@@ -113,3 +113,25 @@ class TestMRPBOMAdd(TransactionCase):
         wizard.add_variants()
         self.assertEqual(len(self.bom.bom_line_ids), 2)
 
+    def test_replace(self):
+        # Ensure BoM is empty
+        self.assertEqual(len(self.bom.bom_line_ids), 0)
+
+        wizard = self.env['mrp.bom.add'].create({
+            'bom_id': self.bom.id,
+        })
+
+        wizard.product_tmpl_id = self.component
+        self.assertEqual(wizard.product_variant_count, 4)
+
+        wizard.add_variants()
+        self.assertEqual(len(self.bom.bom_line_ids), 4)
+
+        # Additive
+        wizard.add_variants()
+        self.assertEqual(len(self.bom.bom_line_ids), 8)
+
+        # remove those 8 lines when adding new ones
+        wizard.replace_existing = True
+        wizard.add_variants()
+        self.assertEqual(len(self.bom.bom_line_ids), 4)
