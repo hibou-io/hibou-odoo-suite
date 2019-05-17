@@ -8,9 +8,14 @@ class ProgramOutputView(models.TransientModel):
     bom_id = fields.Many2one('mrp.bom', string='Bill of Materials')
     bom_product_tmpl_id = fields.Many2one('product.template', string='BoM Product', related='bom_id.product_tmpl_id')
     product_tmpl_id = fields.Many2one('product.template', string='Product')
-    product_variant_count = fields.Integer(string='Variant Count', compute='_compute_variant_count')
+    product_variant_count = fields.Integer(string='Variant Count',
+                                           compute='_compute_variant_count')
     limit_possible = fields.Boolean(string='Limit to possible variants',
                                     help='Only add variants that can be selected by BoM Product')
+    replace_existing = fields.Boolean(string='Replace existing BoM lines for this template.')
+    existing_line_count = fields.Integer(string='Existing Lines',
+                                         help='Remove any existing lines for this Product Template.',
+                                         compute='_compute_variant_count')
     product_qty = fields.Float(string='Quantity to Consume', default=1.0)
     product_uom_id = fields.Many2one('uom.uom', string='Consume Unit of Measure')
     bom_routing_id = fields.Many2one('mrp.routing', related='bom_id.routing_id')
@@ -22,9 +27,12 @@ class ProgramOutputView(models.TransientModel):
         self.ensure_one()
         if not self.product_tmpl_id or not self.bom_product_tmpl_id:
             self.product_variant_count = 0
+            self.existing_line_count = 0
         else:
             products = self._compute_product_ids()
+            lines = self._compute_existing_line_ids()
             self.product_variant_count = len(products)
+            self.existing_line_count = len(lines)
 
     @api.onchange('product_tmpl_id')
     def _onchange_default_product_uom(self):
@@ -51,7 +59,14 @@ class ProgramOutputView(models.TransientModel):
                 products += p
         return products
 
+    def _compute_existing_line_ids(self):
+        return self.bom_id.bom_line_ids.filtered(lambda l: l.product_id.product_tmpl_id == self.product_tmpl_id)
+
     def add_variants(self):
+        if self.replace_existing:
+            lines = self._compute_existing_line_ids()
+            lines.unlink()
+
         attribute_values = self._compute_attribute_value_ids()
         products = self._compute_product_ids()
         if not self.product_uom_id:
