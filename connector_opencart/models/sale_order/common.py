@@ -11,8 +11,6 @@ from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import RetryableJobError
 
-_logger = logging.getLogger(__name__)
-
 
 class OpencartSaleOrder(models.Model):
     _name = 'opencart.sale.order'
@@ -89,7 +87,7 @@ class SaleOrderLine(models.Model):
         comodel_name='opencart.sale.order.line',
         inverse_name='odoo_id',
         string="Opencart Bindings",
-
+    )
 
 
 class SaleOrderAdapter(Component):
@@ -102,7 +100,6 @@ class SaleOrderAdapter(Component):
         orders_response = api_instance.orders.all(id_larger_than=filters.get('after_id'))
         if 'error' in orders_response and orders_response['error']:
             raise ValidationError(str(orders_response))
-        _logger.debug(orders_response)
 
         if 'data' not in orders_response or not isinstance(orders_response['data'], list):
             return []
