@@ -15,6 +15,7 @@
             </xpath>
             <xpath expr="//field[@name='commitment_date']" position="before">
                 <field name="date_planned" />
+                <field name="requested_date" />
             </xpath>
         </field>
     </record>
