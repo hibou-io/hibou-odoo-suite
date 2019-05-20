@@ -9,11 +9,11 @@ class TestLeaves(TestHrHolidaysBase):
         self.categ = self.env['hr.employee.category'].create({'name': 'Test Category'})
         department = self.env['hr.department'].create({'name': 'Test Department'})
         self.employee = self.env['hr.employee'].create({'name': 'Mark', 'department_id': department.id})
-        self.leave_type = self.env['hr.holidays.status'].create({
+        self.leave_type = self.env['hr.leave.type'].create({
             'name': 'Test Status',
             'color_name': 'red',
         })
-        self.test_leave = self.env['hr.holidays'].create({
+        self.test_leave = self.env['hr.leave'].create({
             'holiday_status_id': self.leave_type.id,
             'number_of_days_temp': 5,
             'holiday_type': 'category',
@@ -29,7 +29,7 @@ class TestLeaves(TestHrHolidaysBase):
         self.assertEqual(self.employee.leaves_count, 0.0)
         self.employee.write({'category_ids': [(6, False, [self.categ.id])]})
         self.assertEqual(self.employee.leaves_count, 5.0)
-        leave = self.env['hr.holidays'].search([('employee_id', '=', self.employee.id)])
+        leave = self.env['hr.leave'].search([('employee_id', '=', self.employee.id)])
         self.assertEqual(leave.holiday_status_id.id, self.leave_type.id)
 
     def test_double_validation(self):
@@ -38,6 +38,6 @@ class TestLeaves(TestHrHolidaysBase):
         self.test_leave.action_approve()
         self.test_leave.action_validate()
         self.employee.write({'category_ids': [(6, False, [self.categ.id])]})
-        leave = self.env['hr.holidays'].search([('employee_id', '=', self.employee.id)])
+        leave = self.env['hr.leave'].search([('employee_id', '=', self.employee.id)])
         self.assertEqual(leave.state, 'validate1')
         self.assertEqual(leave.first_approver_id.id, self.env.uid)

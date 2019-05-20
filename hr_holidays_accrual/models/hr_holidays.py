@@ -2,7 +2,7 @@ from odoo import api, fields, models
 
 
 class HRHolidays(models.Model):
-    _inherit = 'hr.holidays'
+    _inherit = 'hr.leave.type'
 
     grant_by_tag = fields.Boolean(string="Grant by Tag")
 
@@ -19,7 +19,7 @@ class HRHolidays(models.Model):
             }
 
     def accrue_for_employee(self, employee):
-        holidays = self.env['hr.holidays'].sudo()
+        holidays = self.env['hr.leave'].sudo()
         for leave_to_create in self:
             values = leave_to_create._accrue_for_employee_values(employee)
             if values:
@@ -32,7 +32,7 @@ class HREmployee(models.Model):
     
     @api.multi
     def write(self, values):
-        holidays = self.env['hr.holidays'].sudo()
+        holidays = self.env['hr.leave'].sudo()
         for emp in self:
             if values.get('category_ids'):
                 categ_ids_command_list = values.get('category_ids')
