@@ -10,7 +10,7 @@
         <field name="arch" type="xml">
         <data>
              <xpath expr="//filter[last()]" position="after">
-                 <filter string="Needs Payment" domain="[('is_paid', '=', False)]" help="Needs Payment Slip"/>
+                 <filter name="filter_needs_payment" string="Needs Payment" domain="[('is_paid', '=', False)]" help="Needs Payment Slip"/>
              </xpath>
         </data>
         </field>
