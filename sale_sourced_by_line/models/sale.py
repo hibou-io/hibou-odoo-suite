@@ -5,6 +5,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     date_planned = fields.Datetime('Planned Date')
+    requested_date = fields.Datetime('Requested Date')
 
 
 class SaleOrderLine(models.Model):
