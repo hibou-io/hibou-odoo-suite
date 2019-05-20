@@ -3,7 +3,7 @@
     <record id="view_hr_expense_form_inherit" model="ir.ui.view">
         <field name="name">hr.expense.form.inherit</field>
         <field name="model">hr.expense</field>
-        <field name="inherit_id" ref="hr_expense.hr_expense_form_view"/>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='employee_id']" position="after">
                 <field name="lead_id"/>
