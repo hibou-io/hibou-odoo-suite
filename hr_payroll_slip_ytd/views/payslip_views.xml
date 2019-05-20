@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_payslip_inherit" name="Payslip YTD" inherit_id="hr_payroll.report_payslip">
+        <!-- Add YTD to the table head-->
+        <xpath expr="//table[2]/thead/tr//th[last()]" position="after">
+            <th>YTD</th>
+        </xpath>
+
+        <!-- Add YTD table data-->
+         <xpath expr="//table[2]/tbody//td[last()]" position="after">
+            <td><span t-esc="o.ytd(line.code, allow_draft=True)" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.company_id.currency_id}"/></td>
+        </xpath>
+    </template>
+</odoo>
