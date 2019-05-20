@@ -7,15 +7,18 @@ class HRExpense(models.Model):
 
     vendor_id = fields.Many2one('res.partner', string='Vendor')
 
-    def _prepare_move_line(self, line):
-        values = super(HRExpense, self)._prepare_move_line(line)
-        if self.payment_mode == 'company_account':
-            if not self.vendor_id:
+    @api.multi
+    def _get_account_move_line_values(self):
+        move_line_values_by_expense = super(HRExpense, self)._get_account_move_line_values()
+        for expense in self.filtered(lambda e: e.payment_mode == 'company_account'):
+            if not expense.vendor_id:
                 raise ValidationError('You must have an assigned vendor to process a Company Paid Expense')
-            values['partner_id'] = self.vendor_id.id
-        name = values['name'] + (' - ' + str(self.reference) if self.reference else '')
-        values['name'] = name[:64]
-        return values
+            move_line_values = move_line_values_by_expense[expense.id]
+            for line_values in move_line_values:
+                new_name = expense.name.split('\n')[0][:64] + (' - ' + str(self.reference) if self.reference else '')
+                line_values['name'] = new_name[:64]
+                line_values['partner_id'] = expense.vendor_id.id
+        return move_line_values_by_expense
 
 
 class HRExpenseSheet(models.Model):
