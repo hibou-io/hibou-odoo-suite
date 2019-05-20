@@ -6,7 +6,7 @@ class Payslip(models.Model):
 
     def ytd(self, code, allow_draft=False):
         to_date = self.date_to
-        from_date = self.date_to[:4] + '-01-01'
+        from_date = str(self.date_to.year) + '-01-01'
         state_allowed = ('done', 'verify') if not allow_draft else ('done', 'verify', 'draft')
         self.env.cr.execute("""
             SELECT sum(total) as sum
