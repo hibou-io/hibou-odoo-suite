@@ -9,9 +9,17 @@ class Payslip(models.Model):
         res = super(Payslip, self).get_inputs(contracts, date_from, date_to)
         for contract in contracts:
             for input in res:
-                if input.get('code') == 'BADGES':
+                if input.get('contract_id') == contract.id and input.get('code') == 'BADGES':
                     input['amount'] = self._get_input_badges(contract, date_from, date_to)
         return res
 
     def _get_input_badges(self, contract, date_from, date_to):
-        return sum(contract.employee_id.badge_ids.filtered(lambda l: l.badge_id.payroll_type == 'fixed').mapped('badge_id.payroll_amount'))
+        amount = 0.0
+        for bu in contract.employee_id.badge_ids.filtered(lambda bu: bu.badge_id.payroll_type == 'fixed'):
+            amount += bu.badge_id.payroll_amount
+        for bu in contract.employee_id.badge_ids.filtered(lambda bu: (
+                bu.badge_id.payroll_type == 'period'
+                and date_from <= bu.create_date <= date_to
+        )):
+            amount += bu.badge_id.payroll_amount
+        return amount
