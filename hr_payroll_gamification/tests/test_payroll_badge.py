@@ -35,6 +35,7 @@ class TestPayroll(common.TransactionCase):
 
     def test_badge_payroll(self):
         additional_wage = 5.0
+        additional_wage_period = 15.0
         payslip = self.env['hr.payslip'].create({
             'employee_id': self.employee.id,
             'contract_id': self.contract.id,
@@ -59,79 +60,62 @@ class TestPayroll(common.TransactionCase):
             'user_id': self.env.user.id,
         })
 
-        self.assertEqual(self.employee.badge_ids, badge_user)
+        badge_period = self.env['gamification.badge'].create({
+            'name': 'test period',
+            'payroll_type': 'period',
+            'payroll_amount': additional_wage_period,
+        })
 
+        # Need a specific 'create_date' to test.
+        badge_user_period = self.env['gamification.badge.user'].create({
+            'badge_id': badge_period.id,
+            'employee_id': self.employee.id,
+            'user_id': self.env.user.id,
+        })
+        self.env.cr.execute('update gamification_badge_user set create_date = \'2018-02-10\' where id = %d;' % (badge_user_period.id, ))
+        badge_user_period = self.env['gamification.badge.user'].browse(badge_user_period.id)
+
+        self.assertEqual(self.employee.badge_ids, badge_user + badge_user_period)
+
+        # Includes only one badge
         payslip = self.env['hr.payslip'].create({
             'employee_id': self.employee.id,
-            'contract_id': self.contract.id,
             'date_from': '2018-01-01',
             'date_to': '2018-01-31',
         })
-        payslip.onchange_employee_id('2018-01-01', '2018-01-31', employee_id=self.employee.id, contract_id=self.contract.id)
+        # This is crazy, but...
+        res = payslip.onchange_employee_id('2018-01-01', '2018-01-31', employee_id=self.employee.id, contract_id=self.contract.id)
+        del res['value']['line_ids']
+        res['value']['input_line_ids'] = [(0, 0, l) for l in res['value']['input_line_ids']]
+        res['value']['worked_days_line_ids'] = [(0, 0, l) for l in res['value']['worked_days_line_ids']]
+        payslip.write(res['value'])
+        self.assertTrue(payslip.input_line_ids)
         payslip.compute_sheet()
-        self.assertEqual(payslip._get_input_badges(self.contract, '2018-01-01', '2018-01-31'), 5.0)
-        self.assertTrue(payslip.contract_id)
+
+        self.assertEqual(payslip._get_input_badges(self.contract, '2018-01-01', '2018-01-31'), additional_wage)
+
         basic = payslip.details_by_salary_rule_category.filtered(lambda l: l.code == 'GROSS')
         self.assertTrue(basic)
         self.assertEqual(basic.total, self.wage + additional_wage)
 
+        # Include both Badges
+        payslip = self.env['hr.payslip'].create({
+            'employee_id': self.employee.id,
+            'date_from': '2018-02-01',
+            'date_to': '2018-02-25',  # Feb...
+        })
+        # This is crazy, but...
+        res = payslip.onchange_employee_id('2018-02-01', '2018-02-25', employee_id=self.employee.id,
+                                           contract_id=self.contract.id)
+        del res['value']['line_ids']
+        res['value']['input_line_ids'] = [(0, 0, l) for l in res['value']['input_line_ids']]
+        res['value']['worked_days_line_ids'] = [(0, 0, l) for l in res['value']['worked_days_line_ids']]
+        payslip.write(res['value'])
+        self.assertTrue(payslip.input_line_ids)
+        payslip.compute_sheet()
 
+        self.assertEqual(payslip._get_input_badges(self.contract, '2018-02-01', '2018-02-25'), additional_wage + additional_wage_period)
 
-
-
-
-    # def test_payroll_rate_multicompany(self):
-    #     test_rate_other = self.env['hr.payroll.rate'].create({
-    #         'name': 'Test Rate',
-    #         'code': 'TEST',
-    #         'rate': 1.65,
-    #         'date_from': '2018-01-01',
-    #         'company_id': self.company_other.id,
-    #     })
-    #     rate = self.payslip.get_rate('TEST')
-    #     self.assertFalse(rate)
-    #     test_rate = self.env['hr.payroll.rate'].create({
-    #         'name': 'Test Rate',
-    #         'code': 'TEST',
-    #         'rate': 1.65,
-    #         'date_from': '2018-01-01',
-    #     })
-    #
-    #     rate = self.payslip.get_rate('TEST')
-    #     self.assertEqual(rate, test_rate)
-    #
-    #     test_rate_more_specific = self.env['hr.payroll.rate'].create({
-    #         'name': 'Test Rate Specific',
-    #         'code': 'TEST',
-    #         'rate': 1.65,
-    #         'date_from': '2018-01-01',
-    #         'company_id': self.payslip.company_id.id,
-    #     })
-    #     rate = self.payslip.get_rate('TEST')
-    #     self.assertEqual(rate, test_rate_more_specific)
-    #
-    # def test_payroll_rate_newer(self):
-    #     test_rate_old = self.env['hr.payroll.rate'].create({
-    #         'name': 'Test Rate',
-    #         'code': 'TEST',
-    #         'rate': 1.65,
-    #         'date_from': '2018-01-01',
-    #     })
-    #     test_rate = self.env['hr.payroll.rate'].create({
-    #         'name': 'Test Rate',
-    #         'code': 'TEST',
-    #         'rate': 2.65,
-    #         'date_from': '2019-01-01',
-    #     })
-    #
-    #     rate = self.payslip.get_rate('TEST')
-    #     self.assertEqual(rate, test_rate)
-    #
-    # def test_payroll_rate_precision(self):
-    #     test_rate = self.env['hr.payroll.rate'].create({
-    #         'name': 'Test Rate',
-    #         'code': 'TEST',
-    #         'rate': 2.65001,
-    #         'date_from': '2019-01-01',
-    #     })
-    #     self.assertEqual(round(test_rate.rate * 100000), 265001.0)
+        basic = payslip.details_by_salary_rule_category.filtered(lambda l: l.code == 'GROSS')
+        self.assertTrue(basic)
+        self.assertEqual(basic.total, self.wage + additional_wage + additional_wage_period)
