@@ -7,5 +7,6 @@ class GamificationBadge(models.Model):
     payroll_type = fields.Selection([
         ('', 'None'),
         ('fixed', 'Fixed'),
+        ('period', 'Granted in Pay Period'),
     ], string='Payroll Type')
     payroll_amount = fields.Float(string='Payroll Amount', digits=(10, 4))
