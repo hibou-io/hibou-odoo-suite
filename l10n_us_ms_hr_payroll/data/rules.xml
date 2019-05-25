@@ -12,7 +12,7 @@
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 ###
-year = int(payslip.dict.date_to[:4])
+year = payslip.dict.date_to.year
 rate = payslip.dict.get_rate('US_MS_UNEMP')
 ytd = payslip.sum('WAGE_US_MS_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
 ytd += contract.external_wages
@@ -56,7 +56,7 @@ if result_rate == 0.0:
         <field name="condition_python">result = contract.ms_89_350_filing_status</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-year = int(payslip.dict.date_to[:4])
+year = payslip.dict.date_to.year
 filing_status = contract.ms_89_350_filing_status
 schedule_pay = contract.schedule_pay
 PPAY = categories.GROSS
