@@ -22,7 +22,7 @@
                                 <td><t t-esc="timesheet.date"/></td>
                                 <td><t t-esc="timesheet.name"/></td>
                                 <td><t t-esc="timesheet.sudo().user_id.name"/></td>
-                                <td><span t-field="timesheet.unit_amount" t-field-options="{&quot;widget&quot;: &quot;duration&quot;, &quot;unit&quot;: &quot;hour&quot;, &quot;round&quot;: &quot;minute&quot;}"/></td>
+                                <td><span t-field="timesheet.unit_amount" t-options="{&quot;widget&quot;: &quot;duration&quot;, &quot;unit&quot;: &quot;hour&quot;, &quot;round&quot;: &quot;minute&quot;}"/></td>
                             </tr>
                         </t>
                     </t>
