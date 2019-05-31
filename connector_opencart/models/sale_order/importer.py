@@ -204,7 +204,7 @@ class SaleOrderImporter(Component):
                 info[k[len(info_string):]] = v
 
 
-        name = self._make_partner_name(info.get('firstname', ''), info.get('lastname'))
+        name = self._make_partner_name(info.get('firstname', ''), info.get('lastname', ''))
         street = info.get('address_1', '')
         street2 = info.get('address_2', '')
         city = info.get('city', '')
