@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_walmart_root"
+        parent="connector.menu_connector_root"
+        name="Walmart"
+        sequence="10"
+        groups="connector.group_connector_manager"/>
+
+    <menuitem id="menu_walmart_backend"
+        name="Backends"
+        parent="menu_walmart_root"
+        action="action_walmart_backend"/>
+
+</odoo>

@@ -9,3 +9,21 @@
 	path = external/hibou-oca/sale-workflow
 	url = https://github.com/hibou-io/oca-sale-workflow.git
 	branch = 12.0
+[submodule "external/hibou-oca/queue"]
+	path = external/hibou-oca/queue
+	url = https://github.com/hibou-io/oca-queue.git
+[submodule "external/hibou-oca/product-attribute"]
+	path = external/hibou-oca/product-attribute
+	url = https://github.com/hibou-io/oca-product-attribute.git
+[submodule "external/hibou-oca/bank-payment"]
+	path = external/hibou-oca/bank-payment
+	url = https://github.com/hibou-io/oca-bank-payment.git
+[submodule "external/hibou-oca/connector"]
+	path = external/hibou-oca/connector
+	url = https://github.com/hibou-io/oca-connector.git
+[submodule "external/hibou-oca/connector-ecommerce"]
+	path = external/hibou-oca/connector-ecommerce
+	url = https://github.com/hibou-io/oca-connector-ecommerce.git
+[submodule "external/hibou-oca/stock-logistics-warehouse"]
+	path = external/hibou-oca/stock-logistics-warehouse
+	url = https://github.com/hibou-io/oca-stock-logistics-warehouse.git

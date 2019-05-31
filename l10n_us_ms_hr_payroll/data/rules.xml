@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_ms_unemp_wages" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_ms_unemp_wages"/>
+        <field name="name">Wage: US-MS Unemployment</field>
+        <field name="code">WAGE_US_MS_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+year = payslip.dict.date_to.year
+rate = payslip.dict.get_rate('US_MS_UNEMP')
+ytd = payslip.sum('WAGE_US_MS_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+    <record id="hr_payroll_rules_ms_unemp" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_ms_unemp"/>
+        <field name="name">ER: US-MS Unemployment</field>
+        <field name="code">ER_US_MS_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_MS_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_US_MS_UNEMP
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_msdor_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_ms_inc_withhold" model="hr.salary.rule">
+        <field name="sequence" eval="145"/>
+        <field name="category_id" ref="hr_payroll_ms_income_withhold"/>
+        <field name="name">EE: US-MS Income Withholding</field>
+        <field name="code">EE_US_MS_INC_WITHHOLD</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.ms_89_350_filing_status</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+year = payslip.dict.date_to.year
+filing_status = contract.ms_89_350_filing_status
+schedule_pay = contract.schedule_pay
+PPAY = categories.GROSS
+EX = contract.ms_89_350_exemption
+additional = contract.ms_89_350_additional_withholding
+
+STDED = 0.0
+
+PP = 0
+if 'weekly' == schedule_pay:
+    PP = 52
+elif 'bi-weekly' == schedule_pay:
+    PP = 26
+elif 'semi-monthly' == schedule_pay:
+    PP = 24
+elif 'monthly' == schedule_pay:
+    PP = 12
+elif 'quarterly' == schedule_pay:
+    PP = 4
+elif 'semi-annually' == schedule_pay:
+    PP = 2
+elif 'annually' == schedule_pay:
+    PP = 1
+else:
+    raise Exception('Invalid schedule_pay="' + schedule_pay + '" for MO Income Withholding calculation')
+
+AGP = PPAY * PP
+
+if year == 2019 or True:
+    if filing_status == 'single':
+        STDED = 2300.0
+    elif filing_status == 'head_of_household':
+        STDED = 3400.0
+    elif filing_status == 'married_dual':
+        STDED = 2300.0
+    elif filing_status == 'married':
+        STDED = 4600.0
+
+    bracket = [
+        (10000.0, 0.05, 290.0),
+        (5000.0, 0.04, 90.0),
+        (2000.0, 0.03, 0.0),
+    ]
+
+
+TI = AGP - (EX + STDED)
+if TI &lt;= 0.01:
+    result = 0.0
+else:
+    for data in bracket:
+        if TI >= data[0]:
+            TAX = ((TI - data[0]) * data[1]) + data[2]
+            break
+    else:
+        TAX = 0.0
+
+    result = round(TAX / PP)
+
+result += additional
+result = -result
+        </field>
+        <field name="register_id" ref="contrib_register_msdor_withhold"/>
+    </record>
+
+</odoo>
