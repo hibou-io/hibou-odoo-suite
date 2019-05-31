@@ -135,6 +135,8 @@ class FakeSaleOrder():
         self.project_id = None
         self.amount_total = 0.0
         self.date_order = fields.Date.today()
+        self.shipping_account_id = False  # from delivery_hibou
+        self.ups_service_type = False  # Added in 12
         for attr, value in kwargs.items():
             setattr(self, attr, value)
 
