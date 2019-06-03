@@ -30,6 +30,7 @@
                             <field name="analytic_account_id"/>
                             <field name="fiscal_position_id"/>
                             <field name="team_id"/>
+                            <field name="user_id"/>
                             <field name="sale_prefix"/>
                             <field name="payment_mode_id"/>
                             <field name="acknowledge_order"/>
