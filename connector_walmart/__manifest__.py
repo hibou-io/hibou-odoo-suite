@@ -3,7 +3,7 @@
 
 {
     'name': 'Walmart Connector',
-    'version': '12.0.1.0.0',
+    'version': '12.0.1.1.0',
     'category': 'Connector',
     'depends': [
         'account',
