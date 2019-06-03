@@ -59,6 +59,8 @@ class WalmartBackend(models.Model):
         'field  on the sale order created by the connector.'
     )
     team_id = fields.Many2one(comodel_name='crm.team', string='Sales Team')
+    user_id = fields.Many2one(comodel_name='res.users', string='Salesperson',
+                              help="Default Salesperson for newly imported orders.")
     sale_prefix = fields.Char(
         string='Sale Prefix',
         help="A prefix put before the name of imported sales orders.\n"
