@@ -16,6 +16,7 @@ Send your shippings through Stamps.com and track them online.
 """,
     'depends': [
         'delivery',
+        'delivery_hibou',
     ],
     'demo': [],
     'data': [

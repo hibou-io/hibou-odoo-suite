@@ -257,7 +257,8 @@ class ProviderStamps(models.Model):
                         shipping.Amount = rate.Amount
                         shipping.ServiceType = rate.ServiceType
                         shipping.DeliverDays = rate.DeliverDays
-                        shipping.DimWeighting = rate.DimWeighting
+                        if hasattr(rate, 'DimWeighting'):
+                            shipping.DimWeighting = rate.DimWeighting
                         shipping.Zone = rate.Zone
                         shipping.RateCategory = rate.RateCategory
                         shipping.ToState = rate.ToState
