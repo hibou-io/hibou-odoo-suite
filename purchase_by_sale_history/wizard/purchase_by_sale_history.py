@@ -79,6 +79,12 @@ class PurchaseBySaleHistory(models.TransientModel):
         qty = ceil(history['sold_qty'] * self.procure_days / self.history_days)
         history['buy_qty'] = max((0.0, qty - product.virtual_available))
 
+    def _convert_to_purchase_line_qty(self, line, qty):
+        # Skip calculation if they are the same UOM
+        if line.product_id.uom_id != line.product_uom:
+            return line.product_id.uom_id._compute_quantity(qty, line.product_uom)
+        return qty
+
     def _apply_history(self, history, product_ids):
         line_model = self.env['purchase.order.line']
         updated_lines = line_model.browse()
@@ -98,13 +104,12 @@ class PurchaseBySaleHistory(models.TransientModel):
             self._apply_history_product(p, history_dict[p.id])
 
         for pid, history in history_dict.items():
-            # TODO: Should convert from Sale UOM to Purchase UOM
             qty = history.get('buy_qty', 0.0)
 
             # Find line that already exists on PO
             line = self.purchase_id.order_line.filtered(lambda l: l.product_id.id == pid)
             if line:
-                line.write({'product_qty': qty})
+                line.write({'product_qty': self._convert_to_purchase_line_qty(line, qty)})
                 line._onchange_quantity()
             else:
                 # Create new PO line
@@ -115,7 +120,7 @@ class PurchaseBySaleHistory(models.TransientModel):
                 })
                 line.onchange_product_id()
                 line_vals = line._convert_to_write(line._cache)
-                line_vals['product_qty'] = qty
+                line_vals['product_qty'] = self._convert_to_purchase_line_qty(line, qty)
                 line = line_model.create(line_vals)
             updated_lines += line
 
