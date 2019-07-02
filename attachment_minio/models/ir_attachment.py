@@ -36,7 +36,8 @@ class MinioAttachment(models.Model):
         if not bucket:
             raise exceptions.UserError('Incorrect configuration of attachment_minio -- Missing bucket.')
         if not client.bucket_exists(bucket):
-            client.make_bucket(bucket)
+            region = params.get_param('ir_attachment.location.region', 'us-west-1')
+            client.make_bucket(bucket, region)
         return bucket
 
     @api.model
