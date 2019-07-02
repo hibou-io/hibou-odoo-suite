@@ -38,3 +38,6 @@
 [submodule "external/hibou-oca/stock-logistics-warehouse"]
 	path = external/hibou-oca/stock-logistics-warehouse
 	url = https://github.com/hibou-io/stock-logistics-warehouse.git
+[submodule "external/camptocamp-cloud-platform"]
+	path = external/camptocamp-cloud-platform
+	url = https://github.com/camptocamp/odoo-cloud-platform.git
