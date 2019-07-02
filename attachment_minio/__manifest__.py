@@ -18,9 +18,11 @@ Before installing this app, you should add several System Parameters.
 
 Key : Example Value : Default Value
 
+ir_attachment.location : s3 : _
+
 ir_attachment.location.host : minio.yourdomain.com : _
 
-ir_attachment.location.bucket : odoo_prod : _
+ir_attachment.location.bucket : odoo-prod : _
 
 ir_attachment.location.region : us-west-1 : us-west-1
 
