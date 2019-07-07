@@ -7,12 +7,15 @@
     "author": "Hibou Corp.",
     "license": "AGPL-3",
     "description": """
-# Use MinIO (or Amazon S3) for Attachment/filestore
+#################################################
+Use MinIO (or Amazon S3) for Attachment/filestore
+#################################################
 
 MinIO provides S3 API compatible storage to scale out without a shared filesystem like NFS.
 
 
-## Setup details
+Setup details
+#############
 
 Before installing this app, you should add several System Parameters.
 
