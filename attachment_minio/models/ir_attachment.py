@@ -93,7 +93,7 @@ class MinioAttachment(models.Model):
                 # Cannot delete unparsable file
                 return True
             bucket_name = s3uri.bucket()
-            if bucket_name == self._get_s3_bucket(client):
+            if bucket_name == self._get_minio_bucket(client):
                 try:
                     client.remove_object(bucket_name, s3uri.item())
                 except NoSuchKey:
