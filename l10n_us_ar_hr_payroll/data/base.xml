@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- PARTNERS -->
+    <record id="res_partner_adws_unemp" model="res.partner">
+        <field name="name"> Arkansas Department of Workforce Solutions - Unemployment Tax</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+    <record id="res_partner_adfa_withhold" model="res.partner">
+        <field name="name">Arkansas Department of Financial Administration- Income Tax Withholding</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+
+    <!-- CONTRIBUTION REGISTERS -->
+    <record id="contrib_register_adws_unemp" model="hr.contribution.register">
+        <field name="name">Arkansas Unemployment</field>
+        <field name="note"> Arkansas Department of Workforce Solutions - Unemployment</field>
+        <field name="partner_id" ref="res_partner_adws_unemp"/>
+    </record>
+    <record id="contrib_register_adfa_withhold" model="hr.contribution.register">
+        <field name="name">Arkansas Income Tax Withholding</field>
+        <field name="note">Arkansas Department of Financial Administration - Income Tax Withholding</field>
+        <field name="partner_id" ref="res_partner_adfa_withhold"/>
+    </record>
+
+
+    <!-- HR SALARY RULE CATEGORIES-->
+    <record id="hr_payroll_ar_unemp_wages" model="hr.salary.rule.category">
+        <field name="name">Wage: US-AR Unemployment</field>
+        <field name="code">WAGE_US_AR_UNEMP</field>
+    </record>
+
+    <record id="hr_payroll_ar_unemp" model="hr.salary.rule.category">
+        <field name="name">ER: US-AR Unemployment</field>
+        <field name="code">ER_US_AR_UNEMP</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="hr_payroll_ar_income_withhold" model="hr.salary.rule.category">
+        <field name="name">EE: US-AR Income Tax Withholding</field>
+        <field name="code">EE_US_AR_INC_WITHHOLD</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+</odoo>
