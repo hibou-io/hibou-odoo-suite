@@ -43,7 +43,7 @@ result = categories.WAGE_US_SC_UNEMP
 if result_rate == 0.0:
     result = 0.0
         </field>
-        <field name="register_id" ref="contrib_register_scdew_unemp"/>
+        <field name="register_id" ref="contrib_register_sc_dew_unemp"/>
         <field name="appears_on_payslip" eval="False"/>
     </record>
 
@@ -58,7 +58,7 @@ if result_rate == 0.0:
         <field name="amount_python_compute">
 result = categories.EE_US_FED_INC_WITHHOLD
         </field>
-        <field name="register_id" ref="contrib_register_scdor_withhold"/>
+        <field name="register_id" ref="contrib_register_sc_dor_withhold"/>
     </record>
 
 </odoo>
