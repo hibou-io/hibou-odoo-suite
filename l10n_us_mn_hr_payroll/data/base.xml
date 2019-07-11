@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- PARTNERS -->
+    <record id="res_partner_mn_ui_unemp" model="res.partner">
+        <field name="name">Minnesota Unemployment Insurance (MUI) - Unemployment Tax</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+
+    <record id="res_partner_mn_dor_withhold" model="res.partner">
+        <field name="name">Minnesota Department of Revenue (MDOR) - Income Tax Withholding</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+
+    <!-- CONTRIBUTION REGISTERS -->
+    <record id="contrib_register_mn_ui_unemp" model="hr.contribution.register">
+        <field name="name">Minnesota Unemployment</field>
+        <field name="note">Minnesota Unemployment Insurance (MUI) - Unemployment</field>
+        <field name="partner_id" ref="res_partner_mn_ui_unemp"/>
+    </record>
+
+    <record id="contrib_register_mn_dor_withhold" model="hr.contribution.register">
+        <field name="name">Minnesota Income Tax Withholding</field>
+        <field name="note">Minnesota Department of Revenue (MDOR) - Income Tax Withholding</field>
+        <field name="partner_id" ref="res_partner_mn_dor_withhold"/>
+    </record>
+
+
+    <!-- HR SALARY RULE CATEGORIES-->
+    <record id="hr_payroll_mn_unemp_wages" model="hr.salary.rule.category">
+        <field name="name">Wage: US-MN Unemployment</field>
+        <field name="code">WAGE_US_MN_UNEMP</field>
+    </record>
+
+    <record id="hr_payroll_mn_unemp" model="hr.salary.rule.category">
+        <field name="name">ER: US-MN Unemployment</field>
+        <field name="code">ER_US_MN_UNEMP</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="hr_payroll_mn_income_withhold" model="hr.salary.rule.category">
+        <field name="name">EE: US-MN Income Tax Withholding</field>
+        <field name="code">EE_US_MN_INC_WITHHOLD</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+</odoo>
