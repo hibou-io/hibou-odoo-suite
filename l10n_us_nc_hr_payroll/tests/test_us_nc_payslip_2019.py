@@ -10,9 +10,8 @@ class TestUsNCPayslip(TestUsPayslip):
     NC_UNEMP = -1.0 / 100.0
     NC_INC_TAX = -0.0535
 
-
     def test_2019_taxes_weekly(self):
-        salary = 5000.0
+        salary = 20000.0
         schedule_pay = 'weekly'
         # allowance_multiplier and Portion of Standard Deduction for weekly
         allowance_multiplier = 48.08
@@ -20,11 +19,9 @@ class TestUsNCPayslip(TestUsPayslip):
 
         exemption = 1
         # Algorithm derived from percentage method in https://files.nc.gov/ncdor/documents/files/nc-30_book_web.pdf
-
         wh = -round((salary - (PST + (allowance_multiplier * exemption))) * -self.NC_INC_TAX)
 
         employee = self._createEmployee()
-
         contract = self._createContract(employee, salary, struct_id=self.ref('l10n_us_nc_hr_payroll.hr_payroll_salary_structure_us_nc_employee'), schedule_pay=schedule_pay)
         contract.nc_nc4_allowances = exemption
 
@@ -47,7 +44,6 @@ class TestUsNCPayslip(TestUsPayslip):
 
         remaining_NC_UNEMP_wages = self.NC_UNEMP_MAX_WAGE - salary if (self.NC_UNEMP_MAX_WAGE - 2*salary < salary) \
             else salary
-
         self._log('2019 North Carolina tax second payslip weekly:')
         payslip = self._createPayslip(employee, '2019-02-01', '2019-02-28')
 
@@ -249,13 +245,13 @@ class TestUsNCPayslip(TestUsPayslip):
         salary = 4000.0
         wh = 0
         schedule_pay = 'weekly'
-        excemptions = 1
+        exemptions = 1
 
         employee = self._createEmployee()
 
         contract = self._createContract(employee, salary, struct_id=self.ref(
             'l10n_us_nc_hr_payroll.hr_payroll_salary_structure_us_nc_employee'), schedule_pay=schedule_pay)
-        contract.nc_nc4_allowances = excemptions
+        contract.nc_nc4_allowances = exemptions
         contract.nc_nc4_filing_status = 'exempt'
 
         self.assertEqual(contract.schedule_pay, 'weekly')
