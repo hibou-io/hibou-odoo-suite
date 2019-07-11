@@ -248,13 +248,13 @@ class TestUsNCPayslip(TestUsPayslip):
         salary = 4000.0
         wh = 0
         schedule_pay = 'weekly'
-        excemptions = 1
+        exemptions = 1
 
         employee = self._createEmployee()
 
         contract = self._createContract(employee, salary, struct_id=self.ref(
             'l10n_us_nc_hr_payroll.hr_payroll_salary_structure_us_nc_employee'), schedule_pay=schedule_pay)
-        contract.nc_nc4_allowances = excemptions
+        contract.nc_nc4_allowances = exemptions
         contract.nc_nc4_filing_status = 'exempt'
 
         self.assertEqual(contract.schedule_pay, 'weekly')
