@@ -2,27 +2,27 @@
 <odoo>
 
     <!-- PARTNERS -->
-    <record id="res_partner_adws_unemp" model="res.partner">
+    <record id="res_partner_ar_dws_unemp" model="res.partner">
         <field name="name"> Arkansas Department of Workforce Solutions - Unemployment Tax</field>
         <field name="supplier">1</field>
         <field eval="0" name="customer"/>
     </record>
-    <record id="res_partner_adfa_withhold" model="res.partner">
+    <record id="res_partner_ar_dfa_withhold" model="res.partner">
         <field name="name">Arkansas Department of Financial Administration- Income Tax Withholding</field>
         <field name="supplier">1</field>
         <field eval="0" name="customer"/>
     </record>
 
     <!-- CONTRIBUTION REGISTERS -->
-    <record id="contrib_register_adws_unemp" model="hr.contribution.register">
+    <record id="contrib_register_ar_dws_unemp" model="hr.contribution.register">
         <field name="name">Arkansas Unemployment</field>
         <field name="note"> Arkansas Department of Workforce Solutions - Unemployment</field>
-        <field name="partner_id" ref="res_partner_adws_unemp"/>
+        <field name="partner_id" ref="res_partner_ar_dws_unemp"/>
     </record>
-    <record id="contrib_register_adfa_withhold" model="hr.contribution.register">
+    <record id="contrib_register_ar_dfa_withhold" model="hr.contribution.register">
         <field name="name">Arkansas Income Tax Withholding</field>
         <field name="note">Arkansas Department of Financial Administration - Income Tax Withholding</field>
-        <field name="partner_id" ref="res_partner_adfa_withhold"/>
+        <field name="partner_id" ref="res_partner_ar_dfa_withhold"/>
     </record>
 
 
