@@ -42,7 +42,7 @@ result = categories.WAGE_US_AR_UNEMP
 if result_rate == 0.0:
     result = 0.0
         </field>
-        <field name="register_id" ref="contrib_register_adws_unemp"/>
+        <field name="register_id" ref="contrib_register_ar_dws_unemp"/>
         <field name="appears_on_payslip" eval="False"/>
     </record>
 
@@ -60,22 +60,20 @@ annual_gross_pay = 0.00
 allowance_amt = contract.ar_w4_allowances * 26.00
 schedule_pay = contract.schedule_pay
 standard_deduction = 2200
-pay_period = 0.0
 additional_withholding = contract.ar_w4_additional_wh
 
 if contract.w4_filing_status == 'married':
             standard_deduction = standard_deduction * 2
 
-if schedule_pay == 'daily':
-    pay_period = 260.0
-elif schedule_pay == 'weekly':
-    pay_period = 52.0
-elif schedule_pay == 'bi-weekly':
-    pay_period = 26.0
-elif schedule_pay == 'semi-monthly':
-    pay_period = 24.0
-elif schedule_pay == 'monthly':
-    pay_period = 12.0
+pay_period = 0.0
+pay_periods = {
+            'weekly': 52.0,
+            'bi-weekly': 26.0,
+            'semi-monthly': 24.0,
+            'monthly': 12.0
+            }
+if schedule_pay in pay_periods:
+    pay_period = pay_periods[schedule_pay]
 else:
     raise Exception('Invalid schedule_pay="' + schedule_pay + '" for AR Income Withholding calculation')
 
@@ -109,7 +107,7 @@ for row in tax_rate_table:
 result = (result / pay_period) + additional_withholding
 result = -result
         </field>
-        <field name="register_id" ref="contrib_register_adfa_withhold"/>
+        <field name="register_id" ref="contrib_register_ar_dfa_withhold"/>
     </record>
 
 </odoo>
