@@ -50,13 +50,14 @@ class FakePartner():
         self.partner_latitude = 0.0
         self.partner_longitude = 0.0
         self.is_company = False
+        self._date_localization = kwargs.pop('date_localization', False)
         for attr, value in kwargs.items():
             setattr(self, attr, value)
 
     @property
     def date_localization(self):
-        if not hasattr(self, 'date_localization') and self.date_localization:
-            self.date_localization = 'TODAY!'
+        if not self._date_localization:
+            self._date_localization = 'TODAY!'
             # The fast way.
             if SearchEngine and self.zip:
                 with SearchEngine() as search:
@@ -64,7 +65,7 @@ class FakePartner():
                     if zipcode and zipcode.lat:
                         self.partner_latitude = zipcode.lat
                         self.partner_longitude = zipcode.lng
-                        return self.date_localization
+                        return self._date_localization
 
             # The slow way.
             result = geo_find(geo_query_address(
@@ -76,7 +77,7 @@ class FakePartner():
                 self.partner_latitude = result[0]
                 self.partner_longitude = result[1]
 
-        return self.date_localization
+        return self._date_localization
 
 
 class FakeOrderLine():
