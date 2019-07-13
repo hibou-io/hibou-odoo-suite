@@ -30,7 +30,7 @@ class WalmartPickingExporter(Component):
         ship_date_time = int(fields.Datetime.from_string(ship_date).strftime('%s')) * 1000
         lines = []
         for line in binding.move_lines:
-            sale_line = line.procurement_id.sale_line_id
+            sale_line = line.sale_line_id
             if not sale_line.walmart_bind_ids:
                 continue
             # this is a particularly interesting way to get this,
