@@ -136,7 +136,7 @@ class SaleOrderImportMapper(Component):
     @mapping
     def project_id(self, record):
         if self.backend_record.analytic_account_id:
-            return {'project_id': self.backend_record.analytic_account_id.id}
+            return {'analytic_account_id': self.backend_record.analytic_account_id.id}
 
     @mapping
     def warehouse_id(self, record):
