@@ -132,7 +132,7 @@ class FakeSaleOrder():
         self.id = 0
         self.name = 'Quote'
         self.team_id = None
-        self.project_id = None
+        self.analytic_account_id = None
         self.amount_total = 0.0
         self.date_order = fields.Date.today()
         self.shipping_account_id = False  # from delivery_hibou
