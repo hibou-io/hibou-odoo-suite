@@ -81,6 +81,11 @@ class FakePartner():
     def __getattr__(self, item):
         return False
 
+    def __getitem__(self, item):
+        if item == '__last_update':
+            return str(datetime.now())
+        return getattr(self, item)
+
 
 class FakeOrderLine():
     def __init__(self, **kwargs):
@@ -113,6 +118,11 @@ class FakeOrderLine():
 
     def __getattr__(self, item):
         return False
+
+    def __getitem__(self, item):
+        if item == '__last_update':
+            return str(datetime.now())
+        return getattr(self, item)
 
 
 class FakeSaleOrder():
@@ -157,6 +167,11 @@ class FakeSaleOrder():
 
     def __getattr__(self, item):
         return False
+
+    def __getitem__(self, item):
+        if item == '__last_update':
+            return str(datetime.now())
+        return getattr(self, item)
 
 
 def distance(lat_1, lon_1, lat_2, lon_2):
