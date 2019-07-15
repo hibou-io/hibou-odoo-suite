@@ -78,6 +78,9 @@ class FakePartner():
 
         return self.date_localization
 
+    def __getattr__(self, item):
+        return False
+
 
 class FakeOrderLine():
     def __init__(self, **kwargs):
@@ -107,6 +110,9 @@ class FakeOrderLine():
         :return:
         """
         return qty
+
+    def __getattr__(self, item):
+        return False
 
 
 class FakeSaleOrder():
@@ -148,6 +154,10 @@ class FakeSaleOrder():
 
     def _compute_amount_total_without_delivery(self):
         return self.amount_total
+
+    def __getattr__(self, item):
+        return False
+
 
 def distance(lat_1, lon_1, lat_2, lon_2):
     R = 6373.0
