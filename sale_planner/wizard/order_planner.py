@@ -50,6 +50,9 @@ class FakePartner():
         self.partner_latitude = 0.0
         self.partner_longitude = 0.0
         self.is_company = False
+        self._date_localization = kwargs.pop('date_localization', False)
+        if not kwargs.pop('PARENT', False):
+            self.parent_id = FakePartner(PARENT=True)
         for attr, value in kwargs.items():
             setattr(self, attr, value)
 
