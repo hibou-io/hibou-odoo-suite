@@ -623,7 +623,11 @@ class SaleOrderMakePlan(models.TransientModel):
 
     def _next_warehouse_shipping_date(self, warehouse):
         if warehouse.shipping_calendar_id:
-            return fields.Datetime.to_string(warehouse.shipping_calendar_id.plan_days(1.0, fields.Datetime.from_string(fields.Datetime.now()), compute_leaves=True))
+            now = fields.Datetime.from_string(fields.Datetime.now())
+            then = warehouse.shipping_calendar_id.plan_days(0.01, fields.Datetime.from_string(fields.Datetime.now()), compute_leaves=True)
+            if then < now:
+                then = warehouse.shipping_calendar_id.plan_days(1.01, fields.Datetime.from_string(fields.Datetime.now()), compute_leaves=True)
+            return fields.Datetime.to_string(then)
         return False
 
     @api.model
