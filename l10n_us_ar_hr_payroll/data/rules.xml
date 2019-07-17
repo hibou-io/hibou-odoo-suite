@@ -7,7 +7,7 @@
         <field name="name">Wage: US-AR Unemployment</field>
         <field name="code">WAGE_US_AR_UNEMP</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC and not contract.ar_w4_tax_exempt and not contract.ar_w4_texarkana_exemption)</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 rate = payslip.dict.get_rate('US_AR_UNEMP')
@@ -31,7 +31,7 @@ else:
         <field name="name">ER: US-AR Unemployment</field>
         <field name="code">ER_US_AR_UNEMP</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC and not contract.ar_w4_tax_exempt and not contract.ar_w4_texarkana_exemption)</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 rate = payslip.dict.get_rate('US_AR_UNEMP')
