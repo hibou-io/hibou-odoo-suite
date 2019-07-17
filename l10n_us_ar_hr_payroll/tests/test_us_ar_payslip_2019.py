@@ -24,6 +24,7 @@ class TestUsARPayslip(TestUsPayslip):
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
 
+        # Not exempt from rule 1 or rule 2 - unemployment wages., and actual unemployment.
         self.assertPayrollEqual(cats['WAGE_US_AR_UNEMP'], salary)
         self.assertPayrollEqual(cats['ER_US_AR_UNEMP'], cats['WAGE_US_AR_UNEMP'] * self.AR_UNEMP)
 
@@ -32,7 +33,8 @@ class TestUsARPayslip(TestUsPayslip):
         # Make a new payslip, this one will have maximums
         remaining_AR_UNEMP_wages = self.AR_UNEMP_MAX_WAGE - salary if (self.AR_UNEMP_MAX_WAGE - 2*salary < salary) \
             else salary
-
+        # We reached the cap of 10000.0 in the first payslip.
+        self.assertEqual(0.0, remaining_AR_UNEMP_wages)
         self._log('2019 Arkansas tax second payslip weekly:')
         payslip = self._createPayslip(employee, '2019-02-01', '2019-02-28')
         payslip.compute_sheet()
@@ -43,22 +45,21 @@ class TestUsARPayslip(TestUsPayslip):
 
     def test_taxes_with_state_exempt(self):
         salary = 50000.0
-        external_wages = 10000.0
         tax_exempt = True   # State withholding should be zero.
 
         employee = self._createEmployee()
         contract = self._createContract(employee,
                                         salary,
-                                        external_wages=external_wages,
                                         struct_id=self.ref('l10n_us_ar_hr_payroll.hr_payroll_salary_structure_us_ar_employee'),
-                                        futa_type=USHrContract.FUTA_TYPE_BASIC)
+                                        )
         contract.ar_w4_tax_exempt = tax_exempt
+
         self._log('2019 Arkansas exempt tax first payslip weekly:')
         payslip = self._createPayslip(employee, '2019-01-01', '2019-01-31')
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
 
-        self.assertPayrollEqual(cats.get('WAGE_US_AR_UNEMP', 0.0), 0.0)
+        self.assertPayrollEqual(cats['WAGE_US_AR_UNEMP'], self.AR_UNEMP_MAX_WAGE)
         self.assertPayrollEqual(cats.get('ER_US_AR_UNEMP', 0.0), cats.get('WAGE_US_AR_UNEMP', 0.0) * self.AR_UNEMP)
         self.assertPayrollEqual(cats.get('EE_US_AR_INC_WITHHOLD', 0.0), 0.0)
 
@@ -74,13 +75,12 @@ class TestUsARPayslip(TestUsPayslip):
                                         struct_id=self.ref('l10n_us_ar_hr_payroll.hr_payroll_salary_structure_us_ar_employee'))
         contract.ar_w4_texarkana_exemption = texarkana_exemption
 
-
         self._log('2019 Arkansas tax first payslip:')
         payslip = self._createPayslip(employee, '2019-01-01', '2019-01-31')
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
 
-        self.assertPayrollEqual(cats.get('WAGE_US_AR_UNEMP', 0.0), 0.0)
+        self.assertPayrollEqual(cats.get('WAGE_US_AR_UNEMP', 0.0), self.AR_UNEMP_MAX_WAGE)
         self.assertPayrollEqual(cats.get('ER_US_AR_UNEMP', 0.0), cats.get('WAGE_US_AR_UNEMP', 0.0) * self.AR_UNEMP)
 
         process_payslip(payslip)
@@ -172,7 +172,7 @@ class TestUsARPayslip(TestUsPayslip):
         self.assertPayrollEqual(cats['ER_US_AR_UNEMP'], remaining_AR_UNEMP_wages * self.AR_UNEMP)
 
     def test_over_fifty_thousand(self):
-        wages = 10000.00
+        wages = 10000.00  # 10000.00 monthly is over 50,000 annually.
         schedule_pay = 'monthly'
         pay_periods = 12
         additional_wh = 150.0
