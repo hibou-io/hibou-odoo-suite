@@ -363,9 +363,9 @@ class SaleOrderMakePlan(models.TransientModel):
             #order_fake.warehouse_id = warehouse
             return {'warehouse_id': warehouse.id, 'date_planned': date_planned}
 
-        _logger.error('      partial_candidates: ' + str(partial_candidates))
+        _logger.info('      partial_candidates: ' + str(partial_candidates))
         if partial_candidates:
-            _logger.error('      using...')
+            _logger.info('      using...')
             if len(partial_candidates) == 1:
                 warehouse = warehouses.filtered(lambda wh: wh.id in partial_candidates)
                 #order_fake.warehouse_id = warehouse
@@ -373,17 +373,17 @@ class SaleOrderMakePlan(models.TransientModel):
 
             sorted_warehouses = self._sort_warehouses_by_partner(
                 warehouses.filtered(lambda wh: wh.id in partial_candidates), order_fake.partner_shipping_id)
-            _logger.error('      sorted_warehouses: ' + str(sorted_warehouses) + ' warehouses: ' + str(warehouses))
+            _logger.info('      sorted_warehouses: ' + str(sorted_warehouses) + ' warehouses: ' + str(warehouses))
             primary_wh = sorted_warehouses[0]  # partial_candidates means there is at least one warehouse
             primary_wh_date_planned = self._next_warehouse_shipping_date(primary_wh)
             wh_date_planning[primary_wh.id] = primary_wh_date_planned
             for wh in sorted_warehouses:
-                _logger.error('      wh: ' + str(wh) + ' buy_qty: ' + str(policy_group['buy_qty']))
+                _logger.info('      wh: ' + str(wh) + ' buy_qty: ' + str(policy_group['buy_qty']))
                 if not policy_group['buy_qty']:
                     continue
                 stock = product_stock[wh.id]
                 for p_id, p_vals in stock.items():
-                    _logger.error('      p_id: ' + str(p_id) + ' p_vals: ' + str(p_vals))
+                    _logger.info('      p_id: ' + str(p_id) + ' p_vals: ' + str(p_vals))
                     if p_id in policy_group['buy_qty'] and self._is_in_stock(p_vals, policy_group['buy_qty'][p_id]):
                         if wh.id not in sub_options:
                             sub_options[wh.id] = {
@@ -393,7 +393,7 @@ class SaleOrderMakePlan(models.TransientModel):
                             }
                         sub_options[wh.id]['product_ids'].append(p_id)
                         sub_options[wh.id]['product_skus'].append(p_vals['sku'])
-                        _logger.error('        removing: ' + str(p_id))
+                        _logger.info('        removing: ' + str(p_id))
                         del policy_group['buy_qty'][p_id]
 
             if not policy_group['buy_qty']:
@@ -413,7 +413,7 @@ class SaleOrderMakePlan(models.TransientModel):
         return {'warehouse_id': primary_wh.id}
 
     def generate_base_option(self, order_fake):
-        _logger.error('generate_base_option:')
+        _logger.info('generate_base_option:')
         product_lines = list(filter(lambda line: line.product_id.type == 'product', order_fake.order_line))
         if not product_lines:
             return {}
@@ -449,7 +449,7 @@ class SaleOrderMakePlan(models.TransientModel):
         option_policy_groups = defaultdict(lambda: {'products': self.env['product.product'].browse(), 'policies': self.env['sale.order.planning.policy'].browse(), 'date_planned': '1900', 'sub_options': [],})
         for policy_id, policy_group in policy_groups.items():
             base_option = policy_group['base_option']
-            _logger.error('  base_option: ' + str(base_option))
+            _logger.info('  base_option: ' + str(base_option))
             b_wh_id = base_option['warehouse_id']
             if 'policy' in policy_group:
                 option_policy_groups[b_wh_id]['policies'] += policy_group['policy']
@@ -495,8 +495,8 @@ class SaleOrderMakePlan(models.TransientModel):
         # Collapse warehouse options.
         base_option = {'date_planned': '1900', 'products': self.env['product.product'].browse()}
         for wh_id, intermediate_option in option_policy_groups.items():
-            _logger.error('    base_option: ' + str(base_option))
-            _logger.error('    intermediate_option: ' + str(intermediate_option))
+            _logger.info('    base_option: ' + str(base_option))
+            _logger.info('    intermediate_option: ' + str(intermediate_option))
             if 'warehouse_id' not in base_option:
                 base_option['warehouse_id'] = wh_id
             b_wh_id = base_option['warehouse_id']
@@ -594,7 +594,7 @@ class SaleOrderMakePlan(models.TransientModel):
                                 base_option['sub_options'][o_wh_id]['date_planned'] = intermediate_option['date_planned']
 
         del base_option['products']
-        _logger.error('  returning: ' + str(base_option))
+        _logger.info('  returning: ' + str(base_option))
         order_fake.warehouse_id = self.get_warehouses(warehouse_id=base_option['warehouse_id'])
         return base_option
 
@@ -623,7 +623,7 @@ class SaleOrderMakePlan(models.TransientModel):
 
     def _next_warehouse_shipping_date(self, warehouse):
         if warehouse.shipping_calendar_id:
-            return fields.Datetime.to_string(warehouse.shipping_calendar_id.plan_days(0.01, fields.Datetime.from_string(fields.Datetime.now()), compute_leaves=True))
+            return fields.Datetime.to_string(warehouse.shipping_calendar_id.plan_days(1.0, fields.Datetime.from_string(fields.Datetime.now()), compute_leaves=True))
         return False
 
     @api.model
