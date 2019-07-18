@@ -74,8 +74,8 @@ sc_exemption_amount = 2510.00
 personal_exemption_amt = contract.w4_allowances * sc_exemption_amount
 standard_deduction = 0.00
 if contract.w4_allowances &gt; 0:
-    if annual_wages &gt; 3470.00:
-        standard_deduction = (10.0 / 100.0) * 3470.00
+    if (annual_wages * .1) &gt; 3470.00:
+        standard_deduction = 3470.00
     else:
         standard_deduction = (10.0 / 100.0) * annual_wages
 taxable_income = annual_wages - personal_exemption_amt - standard_deduction

@@ -19,16 +19,17 @@ class TestUsSCPayslip(TestUsPayslip):
         # From our annual we deduct personal exemption amounts.
         # We deduct 2510.00 per exemption. Since we have two exemptions:
         personal_exemption = self.US_SC_exemption_amount * exemptions  # 5020.0
-        # From annual, we will also deduct a standard_deduction of 10% up to 3470.00 if 1 or more exemptions
-        standard_deduction = (10.0 / 100.0) * 3470.00
-        taxable_income = annual - personal_exemption - standard_deduction  # 2594633.0
+        # From annual, we will also deduct a standard_deduction of  3470.00 or .1 of salary, which ever
+        # is small -> if 1 or more exemptions, else 0
+        standard_deduction = 3470.00
+        taxable_income = annual - personal_exemption - standard_deduction  # 2591478.0
         # We then calculate the amounts off the SC tax pdf tables.
-        # 2594633.0 is in the highest bracket
+        # 2591478.0 is in the highest bracket
         test_amt = ((taxable_income - 12250) * (7.0 / 100.0)) + 467.95
-        # test_amt = 181234.76000000004
+        # test_amt = 181013.91000000003
         # Make it per period then negative
         test_amt = (test_amt / 52.0)  # Divided by 52 since it is weekly.
-        # test_amt = 3485.2838461538468
+        # test_amt = 3481.0367307692313
         test_amt = -test_amt
 
         employee = self._createEmployee()
@@ -87,11 +88,11 @@ class TestUsSCPayslip(TestUsPayslip):
         allowances = 1
         # Hand Calculations
         personal_exemption = 2510.00
-        standard_deduction = (10.0 / 100.0) * 3470.00
+        standard_deduction = min(3470.00, .1 * annual)  # 3470.0 but min is shown for the process
         taxable = annual - personal_exemption - standard_deduction
-        # taxable = 237143.0
-        test_amt = ((taxable - 12250) * (7.0 / 100.0)) + 467.95  # 16210.460000000003
-        test_amt = test_amt / 12.0  # Put it into monthly -> 1350.871666666667
+        # taxable = 234020
+        test_amt = ((taxable - 12250) * (7.0 / 100.0)) + 467.95  # 15991.850000000002
+        test_amt = test_amt / 12.0  # Put it into monthly -> 1332.654166666667
         # Make it negative
         test_amt = -test_amt
 
