@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_payroll_rules_ar_unemp_wages" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_ar_unemp_wages"/>
+        <field name="name">Wage: US-AR Unemployment</field>
+        <field name="code">WAGE_US_AR_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_AR_UNEMP')
+year = int(payslip.dict.date_to[:4])
+ytd = payslip.sum('WAGE_US_AR_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_ar_unemp" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_ar_unemp"/>
+        <field name="name">ER: US-AR Unemployment</field>
+        <field name="code">ER_US_AR_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_AR_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_US_AR_UNEMP
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_ar_dws_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_ar_inc_withhold" model="hr.salary.rule">
+        <field name="sequence" eval="155"/>
+        <field name="category_id" ref="hr_payroll_ar_income_withhold"/>
+        <field name="name">EE: US-AR Income Tax Withholding</field>
+        <field name="code">EE_US_AR_INC_WITHHOLD</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = not (contract.ar_w4_texarkana_exemption or contract.ar_w4_tax_exempt)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+wages = categories.GROSS
+annual_gross_pay = 0.00
+allowance_amt = contract.ar_w4_allowances * 26.00
+schedule_pay = contract.schedule_pay
+standard_deduction = 2200
+additional_withholding = contract.ar_w4_additional_wh
+
+if contract.w4_filing_status == 'married':
+            standard_deduction = standard_deduction * 2
+
+pay_period = 0.0
+pay_periods = {
+            'weekly': 52.0,
+            'bi-weekly': 26.0,
+            'semi-monthly': 24.0,
+            'monthly': 12.0
+            }
+if schedule_pay in pay_periods:
+    pay_period = pay_periods[schedule_pay]
+else:
+    raise Exception('Invalid schedule_pay="' + schedule_pay + '" for AR Income Withholding calculation')
+
+annual_gross_pay = (wages * pay_period)
+net_taxable_income = annual_gross_pay - standard_deduction - allowance_amt
+if (net_taxable_income &lt; 50000.00):
+    # This formula will round the number to the nearest 50 if under 50000
+    net_taxable_income = (net_taxable_income // 50) * 50.0 + 50.0
+
+tax_rate_table = [(4299, 0.90),
+                (8499, 2.50),
+                (12699, 3.50),
+                (21199, 4.50),
+                (35099, 6.0),
+                (float('inf'), 6.9)]
+
+result = 0.0
+last = 0.0
+
+for row in tax_rate_table:
+    cap, rate = row
+    if cap &lt;= net_taxable_income:
+        taxed = cap - last
+        result = result + (taxed * (rate / 100.0))
+        last = cap
+    elif cap &gt; net_taxable_income:
+        taxed = net_taxable_income - last
+        result = result + (taxed * (rate / 100.0))
+        break
+
+result = (result / pay_period) + additional_withholding
+result = -result
+        </field>
+        <field name="register_id" ref="contrib_register_ar_dfa_withhold"/>
+    </record>
+
+</odoo>
