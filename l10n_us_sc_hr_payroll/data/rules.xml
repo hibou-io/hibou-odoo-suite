@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_sc_unemp_wages" model="hr.salary.rule">
+        <field name="sequence" eval="507"/>
+        <field name="category_id" ref="hr_payroll_sc_unemp_wages"/>
+        <field name="name">Wage: US-SC Unemployment</field>
+        <field name="code">WAGE_US_SC_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_SC_UNEMP')
+year = int(payslip.dict.date_to[:4])
+ytd = payslip.sum('WAGE_US_SC_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_sc_unemp" model="hr.salary.rule">
+        <field name="sequence" eval="522"/>
+        <field name="category_id" ref="hr_payroll_sc_unemp"/>
+        <field name="name">ER: US-SC Unemployment</field>
+        <field name="code">ER_US_SC_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_SC_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_US_SC_UNEMP
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_sc_dew_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_sc_inc_withhold" model="hr.salary.rule">
+        <field name="sequence" eval="190"/>
+        <field name="category_id" ref="hr_payroll_sc_income_withhold"/>
+        <field name="name">EE: US-SC Income Tax Withholding</field>
+        <field name="code">EE_US_SC_INC_WITHHOLD</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = True</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+wages = categories.GROSS  # Must make sure sequence is after the GROSS sequence.
+# Step 1 - Convert wages to annual amount
+pay_period = 0.0
+pay_periods = {
+            'weekly': 52.0,
+            'bi-weekly': 26.0,
+            'semi-monthly': 24.0,
+            'monthly': 12.0
+            }
+schedule_pay = contract.schedule_pay
+pay_period = pay_periods[schedule_pay]
+annual_wages = wages * pay_period
+
+# Step 2 - Deduct the personal exemption amount and standard deduction from the annual wages.
+sc_exemption_amount = 2510.00
+personal_exemption_amt = contract.w4_allowances * sc_exemption_amount
+standard_deduction = 0.00
+if contract.w4_allowances &gt; 0:
+    if (annual_wages * .1) &gt; 3470.00:
+        standard_deduction = 3470.00
+    else:
+        standard_deduction = (10.0 / 100.0) * annual_wages
+taxable_income = annual_wages - personal_exemption_amt - standard_deduction
+
+#  Step 3 - Use the balance (taxable_income) in the tables listed on the state pdf:
+#  https://dor.sc.gov/forms-site/Forms/WH1603F_2019.pdf
+#  to calculate the tax.
+
+tax_table = [
+            (2450, 1.1, 0.0),
+            (4900, 3.0, 26.95),
+            (7350, 4.0, 100.45),
+            (9800, 5.0, 198.45),
+            (12250, 6.0, 320.95),
+            (float('inf'), 7.0, 467.95)
+            ]
+last = 0.0
+for cap, rate, flat_amt in tax_table:
+    if cap > taxable_income:
+        result = ((taxable_income - last) * (rate / 100.0)) + flat_amt
+        break
+    last = cap
+
+#  Step 4 - Divide the result by the number of pay periods to get withholding amount per pay period
+result = (result / pay_period)
+
+result = -result
+        </field>
+        <field name="register_id" ref="contrib_register_sc_dor_withhold"/>
+    </record>
+
+</odoo>
