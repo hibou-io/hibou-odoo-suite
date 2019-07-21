@@ -112,6 +112,7 @@ class PaymentMultiTest(TestPayment):
 
         payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
         self.assertEqual(len(payment_ids), 2, 'Need two payments.')
+        # Useful for logging amounts of payments and their accounting
         # for pay in payment_ids:
         #     _logger.warn(str(pay) + ' amount: ' + str(pay.amount))
         #     for line in pay.move_line_ids:
