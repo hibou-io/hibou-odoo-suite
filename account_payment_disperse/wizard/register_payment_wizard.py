@@ -13,8 +13,9 @@ class AccountRegisterPayments(models.TransientModel):
     @api.model
     def default_get(self, fields):
         rec = super(AccountRegisterPayments, self).default_get(fields)
-        invoice_ids = rec['invoice_ids'][0][2]
-        rec['invoice_line_ids'] = [(0, 0, {'invoice_id': i, 'amount': 0.0}) for i in invoice_ids]
+        if 'invoice_ids' in rec:
+            invoice_ids = rec['invoice_ids'][0][2]
+            rec['invoice_line_ids'] = [(0, 0, {'invoice_id': i, 'amount': 0.0}) for i in invoice_ids]
         return rec
 
     @api.multi
@@ -63,12 +64,15 @@ class AccountRegisterPaymentsInvoiceLine(models.TransientModel):
     @api.depends('invoice_id', 'wizard_id.due_date_cutoff', 'invoice_id.partner_id')
     def _compute_balances(self):
         for line in self:
-            residual = line.invoice_id.residual
+            # Bug in the ORM 12.0?  The invoice is set, but there is no residual
+            # on anything other than the first invoice/line processed.
+            invoice = line.invoice_id.browse(line.invoice_id.id)
+            residual = invoice.residual
 
             cutoff_date = line.wizard_id.due_date_cutoff
             total_amount = 0.0
             total_reconciled = 0.0
-            for move_line in line.invoice_id.move_id.line_ids.filtered(lambda r: (
+            for move_line in invoice.move_id.line_ids.filtered(lambda r: (
                     not r.reconciled
                     and r.account_id.internal_type in ('payable', 'receivable')
                     and r.date_maturity <= cutoff_date
@@ -79,11 +83,13 @@ class AccountRegisterPaymentsInvoiceLine(models.TransientModel):
                     total_reconciled += partial_line.amount
                 for partial_line in move_line.matched_credit_ids:
                     total_reconciled += partial_line.amount
-
-            line.residual = residual
-            line.residual_due = total_amount - total_reconciled
-            line.difference = residual - (line.amount or 0.0)
-            line.partner_id = line.invoice_id.partner_id
+            values = {
+                'residual': residual,
+                'residual_due': total_amount - total_reconciled,
+                'difference': residual - (line.amount or 0.0),
+                'partner_id': invoice.partner_id.id,
+            }
+            line.update(values)
 
     @api.onchange('amount')
     def _onchange_amount(self):

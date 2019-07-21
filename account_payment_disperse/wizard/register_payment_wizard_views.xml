@@ -8,8 +8,11 @@
             <xpath expr="//field[@name='amount']" position="attributes">
                 <attribute name="attrs">{'readonly': [('multi', '=', True), ('is_manual_disperse', '!=', True)]}</attribute>
             </xpath>
-            <xpath expr="//field[@name='amount']" position="after">
+            <xpath expr="//field[@name='payment_method_code']" position="after">
                 <field name="is_manual_disperse"/>
+            </xpath>
+            <xpath expr="//group[3]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('payment_difference', '=', 0.0), ('is_manual_disperse', '=', True)]}</attribute>
             </xpath>
             <xpath expr="//form/group[1]" position="after">
                 <group name="invoice_lines" attrs="{'invisible': [('is_manual_disperse', '=', False)]}">
