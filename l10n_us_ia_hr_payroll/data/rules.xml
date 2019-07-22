@@ -69,7 +69,7 @@ standard_deduction_table = {
         'semi-monthly': (70.42, 173.33),
         'monthly': (140.83, 346.67),
         'annually': (1690.00, 4160.00)}
-t2 = t1 - standard_deduction_table[schedule_pay][0] if allowances &lt; 2 else standard_deduction_table[schedule_pay][1]
+t2 = t1 - standard_deduction_table[schedule_pay][0] if (allowances &lt; 2) else standard_deduction_table[schedule_pay][1]
 # IMPORTANT -- ALL RATES ARE ALREADY DIVIDED BY 100 -> 8.53% is in the table as 0.0853
 if schedule_pay == 'weekly':
     tax_rate_table = [
@@ -136,7 +136,7 @@ t3 = 0.0
 last = 0.0
 for row in tax_rate_table:
     cap, rate, flat_fee = row
-    if cap > t2:
+    if cap &gt; t2:
         taxed_amount = t2 - last
         t3 = flat_fee + (rate * taxed_amount)
         break
@@ -146,8 +146,9 @@ deduction_per_allowance = {
             'daily': 0.15,
             'weekly': 0.77,
             'bi-weekly': 1.54,
-            'semi-monthly': 3.33,
-            'annually': 40.00
+            'semi-monthly': 1.67,
+            'monthly': 3.33,
+            'annually': 40.00,
             }
 t4 = t3 - (deduction_per_allowance[schedule_pay] * allowances)
 t5 = t4 + contract.ia_w4_additional_wh
