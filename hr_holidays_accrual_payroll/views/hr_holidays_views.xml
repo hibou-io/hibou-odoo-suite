@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="hr_leave_allocation_view_form_manager_payslip" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.view.form.manager.payslip</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_allocation_view_form_manager"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='interval_number']" position="attributes">
+                <attribute name="attrs">{'required': [('accrual', '=', True)], 'invisible': [('interval_unit', '=', 'payslip')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='accrual']" position="after">
+                <label for="accrual_limit" attrs="{'invisible': [('accrual', '=', False)]}"/>
+                <div>
+                    <field name="accrual_limit" class="oe_inline" nolabel="1" attrs="{'invisible': [('accrual', '=', False)]}"/>
+                    <span class="ml8" attrs="{'invisible': [('accrual', '=', False)]}">Days</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
