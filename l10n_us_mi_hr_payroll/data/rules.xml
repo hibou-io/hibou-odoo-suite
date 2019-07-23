@@ -75,10 +75,8 @@ else:
     raise Exception('Invalid schedule_pay="' + schedule_pay + '" for MI Income Withholding calculation')
 
 allowance_amount = (annual_exemption_amount / pay_period)
-withholding = round((wages - allowance_amount) * 0.0425) + contract.mi_w4_additional_wh
+withholding = ((wages - allowance_amount) * 0.04250) + contract.mi_w4_additional_wh
 result = - withholding
-
-
         </field>
         <field name="register_id" ref="contrib_register_mi_dot_withhold"/>
     </record>
