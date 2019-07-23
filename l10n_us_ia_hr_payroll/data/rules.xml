@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_ia_unemp_wages" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_ia_unemp_wages"/>
+        <field name="name">Wage: US-IA Unemployment</field>
+        <field name="code">WAGE_US_IA_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_IA_UNEMP')
+year = int(payslip.dict.date_to[:4])
+ytd = payslip.sum('WAGE_US_IA_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_ia_unemp" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_ia_unemp"/>
+        <field name="name">ER: US-IA Unemployment</field>
+        <field name="code">ER_US_IA_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_IA_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_US_IA_UNEMP
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_ia_wd_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_ia_inc_withhold" model="hr.salary.rule">
+        <field name="sequence" eval="155"/>
+        <field name="category_id" ref="hr_payroll_ia_income_withhold"/>
+        <field name="name">EE: US-IA Income Tax Withholding</field>
+        <field name="code">EE_US_IA_INC_WITHHOLD</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = not contract.ia_w4_tax_exempt</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+wages = categories.GROSS
+federal_withholding = categories.EE_US_FED_INC_WITHHOLD
+schedule_pay = contract.schedule_pay
+allowances = contract.ia_w4_allowances
+# It is + federal_withholding because federal_withholding is negative.
+t1 = wages + federal_withholding
+standard_deduction_table = {
+        'daily': (6.50, 16.00),
+        'weekly': (32.50, 80.00),
+        'bi-weekly': (65.00, 160.00),
+        'semi-monthly': (70.42, 173.33),
+        'monthly': (140.83, 346.67),
+        'annually': (1690.00, 4160.00)}
+t2 = t1 - standard_deduction_table[schedule_pay][0] if (allowances &lt; 2) else standard_deduction_table[schedule_pay][1]
+# IMPORTANT -- ALL RATES ARE ALREADY DIVIDED BY 100 -> 8.53% is in the table as 0.0853
+if schedule_pay == 'weekly':
+    tax_rate_table = [
+     (25.63, 0.0033, 0.0),
+     (51.27, 0.0067, 0.08),
+     (102.52, 0.0225, 0.025),
+     (230.67, 0.0414, 1.40),
+     (384.46, 0.0563, 6.71),
+     (512.62, 0.0596, 15.37),
+     (768.92, 0.0625, 23.01),
+     (1153.38, 0.0744, 39.03),
+     (float('inf'), 0.0853, 67.63),
+      ]
+elif schedule_pay == 'bi-weekly':
+     tax_rate_table = [
+       (51.27, 0.0033, 0.00),
+       (102.54, 0.0067, 0.17),
+       (205.04, 0.00225, 0.51),
+       (461.35, 0.0414, 2.82),
+       (768.92, 0.0563, 13.43),
+       (1025.23, 0.0596, 30.75),
+       (1537.85, 0.0625, 46.03),
+       (2306.77, 0.0744, 78.07),
+       (float('inf'), 0.0853, 135.28)
+     ]
+elif schedule_pay == 'semi-monthly':
+     tax_rate_table = [
+       (55.54, 0.0033, 0.00),
+       (111.08, 0.0067, 0.18),
+       (222.13, 0.0225, 0.55),
+       (499.79, 0.0414, 3.05),
+       (833.00, 0.0563, 14.59),
+       (1110.67, 0.0596, 33.31),
+       (1666.00, 0.0625, 49.86),
+       (2499.00, 0.0744, 84.57),
+       (float('inf'), 0.0853, 146.55)
+     ]
+elif schedule_pay == 'monthly':
+     tax_rate_table = [
+       (111.08, 0.0033, 0.00),
+       (222.17, 0.0067, 0.37),
+       (444.25, 0.0225, 1.11),
+       (999.58, 0.0414, 6.11),
+       (1666.00, 0.0563, 29.10),
+       (2221.33, 0.0596, 62.66),
+       (3332.00, 0.0625, 99.72),
+       (4998.00, 0.0744, 169.14),
+       (float('inf'), 0.0853, 293.09)
+     ]
+elif schedule_pay == 'annual':
+     tax_rate_table = [
+       (1333.00, 0.0033, 0.00),
+       (2666.00, 0.0067, 4.40),
+       (5331.00, 0.0225, 13.33),
+       (11995.00, 0.0414, 73.29),
+       (19992.00, 0.0563, 349.19),
+       (26656.00, 0.0596, 799.41),
+       (39984.00, 0.0625, 1196.58),
+       (59976.00, 0.0744, 2029.58),
+       (float('inf'), 0.0853, 3516.98)
+     ]
+
+t3 = 0.0
+last = 0.0
+for row in tax_rate_table:
+    cap, rate, flat_fee = row
+    if cap &gt; t2:
+        taxed_amount = t2 - last
+        t3 = flat_fee + (rate * taxed_amount)
+        break
+    last = cap
+
+deduction_per_allowance = {
+            'daily': 0.15,
+            'weekly': 0.77,
+            'bi-weekly': 1.54,
+            'semi-monthly': 1.67,
+            'monthly': 3.33,
+            'annually': 40.00,
+            }
+t4 = t3 - (deduction_per_allowance[schedule_pay] * allowances)
+t5 = t4 + contract.ia_w4_additional_wh
+result = -t5
+        </field>
+        <field name="register_id" ref="contrib_register_ia_dor_withhold"/>
+    </record>
+
+</odoo>
