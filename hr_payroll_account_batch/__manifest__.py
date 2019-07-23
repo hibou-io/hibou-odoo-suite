@@ -6,7 +6,7 @@ Set the Accounting Date on a Payslip Batch.
 Additionally, changes to the Salary Journal and Date Account on the batch itself 
 will propagate to any draft payslip already existing on the batch.
 """,
-    'version': '11.0.1.0.0',
+    'version': '12.0.1.0.0',
     'website': 'https://hibou.io/',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'license': 'AGPL-3',
