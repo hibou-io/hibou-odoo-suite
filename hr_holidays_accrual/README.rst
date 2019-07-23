@@ -2,13 +2,12 @@
 Hibou - HR Holidays Accrual
 ***************************
 
-Use Employee Tags to grant Leave Allocations.
+**This Module is now Deprecated in 12.0**
 
-For more information and add-ons, visit `Hibou.io <https://hibou.io/>`_.
+If it comes back, it would be a new module.
 
-=============
-Main Features
-=============
+
+**Old**
 
 * Adds new boolean field `grant_by_tag` to Leave Allocations.
 * Allows user to create a Leave Allocation by employee tag, then use that tag to grant the newly created leave to as many employees as desired.
@@ -27,4 +26,4 @@ License
 
 Please see `LICENSE <https://github.com/hibou-io/hibou-odoo-suite/blob/11.0/LICENSE>`_.
 
-Copyright Hibou Corp. 2018
+Copyright Hibou Corp. 2019

@@ -1,7 +1,7 @@
 {
     'name': 'HR Holidays Accrual',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '11.0.0.0.0',
+    'version': '12.0.1.0.0',
     'category': 'Human Resources',
     'sequence': 95,
     'summary': 'Grant leave allocations with tags',
@@ -13,6 +13,6 @@ Create leave allocations by tag, then use tags to grant leaves to employees.
     'data': [
         'views/hr_holidays_views.xml',
         ],
-    'installable': True,
+    'installable': False,
     'application': False,
 }
