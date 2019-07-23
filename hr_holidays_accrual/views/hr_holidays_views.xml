@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_holidays_edit_holiday_new_inherit" model="ir.ui.view">
+        <field name="name">hr.holidays.edit.holiday.new.inherit</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/group[2]" position="after">
+                <group name="accrue" attrs="{'invisible': [('type', '!=', 'add')]}">
+                    <field name="grant_by_tag" attrs="{'invisible': [('holiday_type', '=', 'employee')]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
