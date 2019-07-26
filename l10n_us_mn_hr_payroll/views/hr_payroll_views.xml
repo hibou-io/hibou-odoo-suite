@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="hr_contract_form_l10n_us_mc_inherit" model="ir.ui.view">
+    <record id="hr_contract_form_l10n_us_mn_inherit" model="ir.ui.view">
         <field name="name">hr.contract.form.inherit</field>
         <field name="model">hr.contract</field>
         <field name="priority">128</field>
