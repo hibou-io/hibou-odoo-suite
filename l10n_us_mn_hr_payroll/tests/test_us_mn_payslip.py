@@ -1,5 +1,4 @@
 from odoo.addons.l10n_us_hr_payroll.tests.test_us_payslip import TestUsPayslip, process_payslip
-from odoo.addons.l10n_us_hr_payroll.models.l10n_us_hr_payroll import USHrContract
 
 
 class TestUsMNPayslip(TestUsPayslip):
@@ -133,7 +132,7 @@ class TestUsMNPayslip(TestUsPayslip):
                                         salary, struct_id=self.ref('l10n_us_mn_hr_payroll.hr_payroll_salary_structure_us_mn_employee'),
                                         schedule_pay=schedule_pay)
         contract.mn_w4mn_allowances = allowances
-        contract.mn_w4mn_tax_exempt = True
+        contract.mn_w4mn_filing_status = 'exempt'
 
         self.assertEqual(contract.schedule_pay, 'weekly')
 

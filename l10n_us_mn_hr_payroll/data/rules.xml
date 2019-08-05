@@ -12,7 +12,7 @@
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 rate = payslip.dict.get_rate('US_MN_UNEMP')
-year = int(payslip.dict.date_to[:4])
+year = payslip.dict.date_to.year
 ytd = payslip.sum('WAGE_US_MN_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
 ytd += contract.external_wages
 remaining = rate.wage_limit_year - ytd
@@ -53,7 +53,7 @@ if result_rate == 0.0:
         <field name="name">EE: US-MN Income Tax Withholding</field>
         <field name="code">EE_US_MN_INC_WITHHOLD</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = not contract.mn_w4mn_tax_exempt</field>
+        <field name="condition_python">result = contract.mn_w4mn_filing_status != 'exempt'</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 # Step 1 - Determine Employee's Total Wages for one payroll period.

@@ -6,9 +6,8 @@ class USMNHrContract(models.Model):
 
     mn_w4mn_allowances = fields.Integer(string="MN Allowances")
     mn_w4mn_additional_wh = fields.Float(string="MN Additional Withholding")
-    mn_w4mn_tax_exempt = fields.Boolean(string="MN Tax Exempt")
     mn_w4mn_filing_status = fields.Selection([
-        # ('exempt', 'Exempt'),
+        ('exempt', 'Exempt'),
         ('single', 'Single'),
         ('married', 'Married'),
-    ], string='MN Filing Status', default='single')
+    ], string='MN Filing Status')
