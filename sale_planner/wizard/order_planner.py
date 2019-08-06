@@ -59,26 +59,28 @@ class FakePartner():
     @property
     def date_localization(self):
         if not self._date_localization:
-            self._date_localization = 'TODAY!'
-            # The fast way.
-            if SearchEngine and self.zip:
-                with SearchEngine() as search:
-                    zipcode = search.by_zipcode(str(self.zip).split('-')[0])
-                    if zipcode and zipcode.lat:
-                        self.partner_latitude = zipcode.lat
-                        self.partner_longitude = zipcode.lng
-                        return self._date_localization
+            try:
+                self._date_localization = 'TODAY!'
+                # The fast way.
+                if SearchEngine and self.zip:
+                    with SearchEngine() as search:
+                        zipcode = search.by_zipcode(str(self.zip).split('-')[0])
+                        if zipcode and zipcode.lat:
+                            self.partner_latitude = zipcode.lat
+                            self.partner_longitude = zipcode.lng
+                            return self._date_localization
 
-            # The slow way.
-            result = geo_find(geo_query_address(
-                city=self.city,
-                state=self.state_id.name,
-                country=self.country_id.name,
-            ))
-            if result:
-                self.partner_latitude = result[0]
-                self.partner_longitude = result[1]
-
+                # The slow way.
+                result = geo_find(geo_query_address(
+                    city=self.city,
+                    state=self.state_id.name,
+                    country=self.country_id.name,
+                ))
+                if result:
+                    self.partner_latitude = result[0]
+                    self.partner_longitude = result[1]
+            except:
+                self._date_localization = 'ERROR'
         return self._date_localization
 
     def __getattr__(self, item):
