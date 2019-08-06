@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_mn_unemp_wages" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_mn_unemp_wages"/>
+        <field name="name">Wage: US-MN Unemployment</field>
+        <field name="code">WAGE_US_MN_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_MN_UNEMP')
+year = payslip.dict.date_to.year
+ytd = payslip.sum('WAGE_US_MN_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_mn_unemp" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_mn_unemp"/>
+        <field name="name">ER: US-MN Unemployment</field>
+        <field name="code">ER_US_MN_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_MN_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_US_MN_UNEMP
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_mn_ui_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_mn_inc_withhold" model="hr.salary.rule">
+        <field name="sequence" eval="155"/>
+        <field name="category_id" ref="hr_payroll_mn_income_withhold"/>
+        <field name="name">EE: US-MN Income Tax Withholding</field>
+        <field name="code">EE_US_MN_INC_WITHHOLD</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.mn_w4mn_filing_status != 'exempt'</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+# Step 1 - Determine Employee's Total Wages for one payroll period.
+wages = categories.GROSS
+allowances = contract.mn_w4mn_allowances
+schedule_pay = contract.schedule_pay
+
+# Step 2 - Multiply the wages from step by number of payroll periods per year. This gives annual wage.
+pay_period = 0.0
+pay_periods = {
+            'weekly': 52.0,
+            'bi-weekly': 26.0,
+            'semi-monthly': 24.0,
+            'monthly': 12.0
+            }
+if schedule_pay in pay_periods:
+    pay_period = pay_periods[schedule_pay]
+else:
+    raise Exception('Invalid schedule_pay="' + schedule_pay + '" for AR Income Withholding calculation')
+
+annual_wages = wages * pay_period
+
+# Step 3 - Multiple the number of employee's withholding allowances by $4,250
+allowance_amount = 4250.00 * allowances
+
+# Step 4 - Subtract the result in step 3 from the result in step 2.
+taxable_wages = annual_wages - allowance_amount
+
+# Step 5 - Use the result in step 4 (taxable wages) and the tax chart to calculate step 5 amount.
+mn_w4_filing_status = contract.mn_w4mn_filing_status
+tax_table = []
+if mn_w4_filing_status == 'single':
+    tax_table = [
+            (28920, 2400, 5.35, 0.00),
+            (89510, 28920, 7.05, 1418.82),
+            (166290, 89510, 7.85, 5690.42),
+            (float('inf'), 166290, 9.85, 11717.65)
+            ]
+elif mn_w4_filing_status == 'married':
+    tax_table = [
+            (47820, 9050, 5.35, 0.00),
+            (163070, 47820, 7.05, 2074.20),
+            (282200, 163070, 7.85, 10199.33),
+            (float('inf'), 282200, 9.85, 19551.04)
+            ]
+else:
+    raise Exception('Invalid w4_filing_status="' + mn_w4_filing_status + '" for MN Income Withholding calculation')
+
+last = 0.0
+result = 0.0
+for row in tax_table:
+    cap, subtract_amt, rate, flat_fee = row
+    if cap > taxable_wages:
+        taxed_amount = taxable_wages - subtract_amt
+        result = ((rate / 100.00) * taxed_amount) + flat_fee
+        break
+
+# Make the result per pay period once more.
+result = result / pay_period
+
+# Round Result - Make sign negative as well - Add additional withholding here as well
+result = -round(result) - contract.mn_w4mn_additional_wh
+        </field>
+        <field name="register_id" ref="contrib_register_mn_dor_withhold"/>
+    </record>
+
+</odoo>
