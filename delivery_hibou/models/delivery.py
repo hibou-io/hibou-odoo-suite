@@ -13,6 +13,8 @@ class DeliveryCarrier(models.Model):
                                             help='Priority for this carrier. Will affect pickings '
                                                  'and procurements related to this carrier.')
 
+    # Utility
+
     def get_insurance_value(self, order=None, picking=None):
         value = 0.0
         if order:
@@ -60,6 +62,16 @@ class DeliveryCarrier(models.Model):
         elif picking.picking_type_id.code == 'incoming':
             return 'in'
         return 'out'
+
+    def is_amazon(self, order=None, picking=None):
+        """
+        Amazon MWS orders potentially need to be flagged for
+        clean up on the carrier's side.
+
+        Override to return based on criteria in your company.
+        :return:
+        """
+        return False
 
     # Shipper Company
 
@@ -145,8 +157,3 @@ class DeliveryCarrier(models.Model):
 
     def _get_recipient_out(self, picking):
         return picking.partner_id
-
-
-
-
-
