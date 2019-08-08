@@ -46,7 +46,7 @@ def get_rate(service):
     ret_val.ToState = rate.ToState
     add_on = service.create_add_on()
     add_on.AddOnType = "US-A-DC"
-    ret_val.AddOns.AddOnV7.append(add_on)
+    ret_val.AddOns.AddOnV15.append(add_on)
 
     return ret_val
 

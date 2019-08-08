@@ -114,6 +114,7 @@ class ProviderStamps(models.Model):
         ret_val.PackageType = self._stamps_package_type()
         ret_val.ServiceType = self.stamps_service_type
         ret_val.WeightLb = weight
+        ret_val.ContentType = 'Merchandise'
         return ret_val
 
     def _stamps_get_addresses_for_picking(self, picking):
@@ -143,6 +144,7 @@ class ProviderStamps(models.Model):
             ret_val.Height = h
             ret_val.ServiceType = self.stamps_service_type
             ret_val.WeightLb = weight
+            ret_val.ContentType = 'Merchandise'
             ret.append((package.name + ret_val.ShipDate + str(ret_val.WeightLb), ret_val))
         if not ret:
             weight = self._stamps_convert_weight(picking.shipping_weight)
@@ -159,6 +161,7 @@ class ProviderStamps(models.Model):
             ret_val.Height = h
             ret_val.ServiceType = self.stamps_service_type
             ret_val.WeightLb = weight
+            ret_val.ContentType = 'Merchandise'
             ret.append((picking.name + ret_val.ShipDate + str(ret_val.WeightLb), ret_val))
 
         return ret
@@ -266,14 +269,14 @@ class ProviderStamps(models.Model):
                         add_on.AddOnType = 'US-A-DC'
                         add_on2 = service.create_add_on()
                         add_on2.AddOnType = 'SC-A-HP'
-                        shipping.AddOns.AddOnV7 = [add_on, add_on2]
+                        shipping.AddOns.AddOnV15 = [add_on, add_on2]
+                        extended_postage_info = service.create_extended_postage_info()
+                        if self.is_amazon(picking=picking):
+                            extended_postage_info.bridgeProfileType = 'Amazon MWS'
                         label = service.get_label(from_address, to_address, shipping,
-                                                  transaction_id=txn_id, image_type=self.stamps_image_type)
+                                                  transaction_id=txn_id, image_type=self.stamps_image_type,
+                                                  extended_postage_info=extended_postage_info)
                         package_labels.append((txn_id, label))
-                        # self.service.get_tracking(label.StampsTxID)
-                        # self.service.get_tracking(label.TrackingNumber)
-                        # self.service.remove_label(label.StampsTxID)
-                        # print label
             except WebFault as e:
                 _logger.warn(e)
                 if package_labels:
