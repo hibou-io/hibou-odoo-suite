@@ -11,7 +11,7 @@
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 rate = payslip.dict.get_rate('US_AR_UNEMP')
-year = int(payslip.dict.date_to[:4])
+year = payslip.dict.date_to.year
 ytd = payslip.sum('WAGE_US_AR_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
 ytd += contract.external_wages
 remaining = rate.wage_limit_year - ytd
@@ -52,15 +52,15 @@ if result_rate == 0.0:
         <field name="name">EE: US-AR Income Tax Withholding</field>
         <field name="code">EE_US_AR_INC_WITHHOLD</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = not (contract.ar_w4_texarkana_exemption or contract.ar_w4_tax_exempt)</field>
+        <field name="condition_python">result = not (contract.ar_ar4ec_texarkana_exemption or contract.ar_ar4ec_tax_exempt)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 wages = categories.GROSS
 annual_gross_pay = 0.00
-allowance_amt = contract.ar_w4_allowances * 26.00
+allowance_amt = contract.ar_ar4ec_allowances * 26.00
 schedule_pay = contract.schedule_pay
 standard_deduction = 2200
-additional_withholding = contract.ar_w4_additional_wh
+additional_withholding = contract.ar_ar4ec_additional_wh
 
 if contract.w4_filing_status == 'married':
             standard_deduction = standard_deduction * 2

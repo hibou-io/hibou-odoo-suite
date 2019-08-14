@@ -4,13 +4,13 @@
     'license': 'AGPL-3',
     'category': 'Localization',
     'depends': ['l10n_us_hr_payroll'],
-    'version': '11.0.2019.0.0',
+    'version': '12.0.2019.0.0',
     'description': """
-USA::Arkansas Payroll Rules.
+USA - Arkansas Payroll Rules.
 ==================================
 
-* Contribution register and partner for Arkansas Department of Financial Administration - Income Tax Withholding
-* Contribution register and partner for Arkansas Department of Workforce Solutions -  Unemployment
+* Contribution register and partner for Arkansas Department of Financial Administration (ADFA) - Income Tax Withholding
+* Contribution register and partner for Arkansas Department of Workforce Solutions (ADWS) -  Unemployment
 * Contract level Arkansas Exemptions
 * Company level Arkansas Unemployment Rate
 * Salary Structure for Arkansas

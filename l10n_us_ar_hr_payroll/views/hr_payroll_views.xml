@@ -10,10 +10,10 @@
             <data>
                 <xpath expr="//group[@name='state_filing']" position="inside">
                     <group string="Arkansas" name="ar">
-                        <field name="ar_w4_allowances" string="Allowances"/>
-                        <field name="ar_w4_additional_wh" string="Additional Withholding"/>
-                        <field name="ar_w4_tax_exempt" string="Tax Exempt"/>
-                        <field name="ar_w4_texarkana_exemption" string="Texarkana Exemption"/>
+                        <field name="ar_ar4ec_allowances" string="Allowances"/>
+                        <field name="ar_ar4ec_additional_wh" string="Additional Withholding"/>
+                        <field name="ar_ar4ec_tax_exempt" string="Tax Exempt"/>
+                        <field name="ar_ar4ec_texarkana_exemption" string="Texarkana Exemption"/>
                     </group>
                 </xpath>
             </data>

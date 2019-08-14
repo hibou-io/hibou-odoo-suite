@@ -1,5 +1,4 @@
 from odoo.addons.l10n_us_hr_payroll.tests.test_us_payslip import TestUsPayslip, process_payslip
-from odoo.addons.l10n_us_hr_payroll.models.l10n_us_hr_payroll import USHrContract
 
 
 class TestUsARPayslip(TestUsPayslip):
@@ -31,17 +30,17 @@ class TestUsARPayslip(TestUsPayslip):
         process_payslip(payslip)
 
         # Make a new payslip, this one will have maximums
-        remaining_AR_UNEMP_wages = self.AR_UNEMP_MAX_WAGE - salary if (self.AR_UNEMP_MAX_WAGE - 2*salary < salary) \
+        remaining_ar_unemp_wages = self.AR_UNEMP_MAX_WAGE - salary if (self.AR_UNEMP_MAX_WAGE - 2*salary < salary) \
             else salary
         # We reached the cap of 10000.0 in the first payslip.
-        self.assertEqual(0.0, remaining_AR_UNEMP_wages)
+        self.assertEqual(0.0, remaining_ar_unemp_wages)
         self._log('2019 Arkansas tax second payslip weekly:')
         payslip = self._createPayslip(employee, '2019-02-01', '2019-02-28')
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
 
-        self.assertPayrollEqual(cats['WAGE_US_AR_UNEMP'], remaining_AR_UNEMP_wages)
-        self.assertPayrollEqual(cats['ER_US_AR_UNEMP'], remaining_AR_UNEMP_wages * self.AR_UNEMP)
+        self.assertPayrollEqual(cats['WAGE_US_AR_UNEMP'], remaining_ar_unemp_wages)
+        self.assertPayrollEqual(cats['ER_US_AR_UNEMP'], remaining_ar_unemp_wages * self.AR_UNEMP)
 
     def test_taxes_with_state_exempt(self):
         salary = 50000.0
@@ -52,7 +51,7 @@ class TestUsARPayslip(TestUsPayslip):
                                         salary,
                                         struct_id=self.ref('l10n_us_ar_hr_payroll.hr_payroll_salary_structure_us_ar_employee'),
                                         )
-        contract.ar_w4_tax_exempt = tax_exempt
+        contract.ar_ar4ec_tax_exempt = tax_exempt
 
         self._log('2019 Arkansas exempt tax first payslip weekly:')
         payslip = self._createPayslip(employee, '2019-01-01', '2019-01-31')
@@ -73,7 +72,7 @@ class TestUsARPayslip(TestUsPayslip):
         contract = self._createContract(employee,
                                         salary,
                                         struct_id=self.ref('l10n_us_ar_hr_payroll.hr_payroll_salary_structure_us_ar_employee'))
-        contract.ar_w4_texarkana_exemption = texarkana_exemption
+        contract.ar_ar4ec_texarkana_exemption = texarkana_exemption
 
         self._log('2019 Arkansas tax first payslip:')
         payslip = self._createPayslip(employee, '2019-01-01', '2019-01-31')
@@ -99,8 +98,8 @@ class TestUsARPayslip(TestUsPayslip):
                                         wages,
                                         struct_id=self.ref('l10n_us_ar_hr_payroll.hr_payroll_salary_structure_us_ar_employee'),
                                         schedule_pay=schedule_pay)
-        contract.ar_w4_additional_wh = 0.0
-        contract.ar_w4_allowances = exemptions
+        contract.ar_ar4ec_additional_wh = 0.0
+        contract.ar_ar4ec_allowances = exemptions
 
         self.assertEqual(contract.schedule_pay, 'monthly')
 
@@ -114,7 +113,7 @@ class TestUsARPayslip(TestUsPayslip):
         # TODO: change to hand the test_ar_amt already be divided by pay periods
         self.assertPayrollEqual(cats['EE_US_AR_INC_WITHHOLD'], -(test_ar_amt / pay_periods))
 
-        contract.ar_w4_additional_wh = additional_wh
+        contract.ar_ar4ec_additional_wh = additional_wh
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
 
@@ -137,8 +136,8 @@ class TestUsARPayslip(TestUsPayslip):
                                         struct_id=self.ref(
                                             'l10n_us_ar_hr_payroll.hr_payroll_salary_structure_us_ar_employee'),
                                         schedule_pay=schedule_pay)
-        contract.ar_w4_additional_wh = 0.0
-        contract.ar_w4_allowances = exemptions
+        contract.ar_ar4ec_additional_wh = 0.0
+        contract.ar_ar4ec_allowances = exemptions
 
         self.assertEqual(contract.schedule_pay, 'monthly')
 
@@ -151,7 +150,7 @@ class TestUsARPayslip(TestUsPayslip):
         self.assertPayrollEqual(cats['ER_US_AR_UNEMP'], cats['WAGE_US_AR_UNEMP'] * self.AR_UNEMP)
         self.assertPayrollEqual(cats['EE_US_AR_INC_WITHHOLD'], -(test_ar_amt / pay_periods))
 
-        contract.ar_w4_additional_wh = additional_wh
+        contract.ar_ar4ec_additional_wh = additional_wh
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
         self.assertPayrollEqual(cats['EE_US_AR_INC_WITHHOLD'], -(test_ar_amt / pay_periods) - additional_wh)
@@ -160,7 +159,7 @@ class TestUsARPayslip(TestUsPayslip):
 
         # Make a new payslip, this one will have maximums
 
-        remaining_AR_UNEMP_wages = self.AR_UNEMP_MAX_WAGE - wages if (self.AR_UNEMP_MAX_WAGE - 2 * wages < wages) \
+        remaining_ar_unemp_wages = self.AR_UNEMP_MAX_WAGE - wages if (self.AR_UNEMP_MAX_WAGE - 2 * wages < wages) \
             else wages
 
         self._log('2019 Arkansas tax second payslip weekly:')
@@ -168,8 +167,8 @@ class TestUsARPayslip(TestUsPayslip):
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
 
-        self.assertPayrollEqual(cats['WAGE_US_AR_UNEMP'], remaining_AR_UNEMP_wages)
-        self.assertPayrollEqual(cats['ER_US_AR_UNEMP'], remaining_AR_UNEMP_wages * self.AR_UNEMP)
+        self.assertPayrollEqual(cats['WAGE_US_AR_UNEMP'], remaining_ar_unemp_wages)
+        self.assertPayrollEqual(cats['ER_US_AR_UNEMP'], remaining_ar_unemp_wages * self.AR_UNEMP)
 
     def test_over_fifty_thousand(self):
         wages = 10000.00  # 10000.00 monthly is over 50,000 annually.
@@ -186,8 +185,8 @@ class TestUsARPayslip(TestUsPayslip):
                                         struct_id=self.ref(
                                             'l10n_us_ar_hr_payroll.hr_payroll_salary_structure_us_ar_employee'),
                                         schedule_pay=schedule_pay)
-        contract.ar_w4_additional_wh = 0.0
-        contract.ar_w4_allowances = exemptions
+        contract.ar_ar4ec_additional_wh = 0.0
+        contract.ar_ar4ec_allowances = exemptions
 
         self.assertEqual(contract.schedule_pay, 'monthly')
 
@@ -200,7 +199,7 @@ class TestUsARPayslip(TestUsPayslip):
         self.assertPayrollEqual(cats['ER_US_AR_UNEMP'], cats['WAGE_US_AR_UNEMP'] * self.AR_UNEMP)
         self.assertPayrollEqual(cats['EE_US_AR_INC_WITHHOLD'], -(test_ar_amt / pay_periods))
 
-        contract.ar_w4_additional_wh = additional_wh
+        contract.ar_ar4ec_additional_wh = additional_wh
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
         self.assertPayrollEqual(cats['EE_US_AR_INC_WITHHOLD'], -(test_ar_amt / pay_periods) - additional_wh)
@@ -209,7 +208,7 @@ class TestUsARPayslip(TestUsPayslip):
 
         # Make a new payslip, this one will have maximums
 
-        remaining_AR_UNEMP_wages = self.AR_UNEMP_MAX_WAGE - wages if (self.AR_UNEMP_MAX_WAGE - 2 * wages < wages) \
+        remaining_ar_unemp_wages = self.AR_UNEMP_MAX_WAGE - wages if (self.AR_UNEMP_MAX_WAGE - 2 * wages < wages) \
             else wages
 
         self._log('2019 Arkansas tax second payslip weekly:')
@@ -217,8 +216,8 @@ class TestUsARPayslip(TestUsPayslip):
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
 
-        self.assertPayrollEqual(cats['WAGE_US_AR_UNEMP'], remaining_AR_UNEMP_wages)
-        self.assertPayrollEqual(cats['ER_US_AR_UNEMP'], remaining_AR_UNEMP_wages * self.AR_UNEMP)
+        self.assertPayrollEqual(cats['WAGE_US_AR_UNEMP'], remaining_ar_unemp_wages)
+        self.assertPayrollEqual(cats['ER_US_AR_UNEMP'], remaining_ar_unemp_wages * self.AR_UNEMP)
 
     def test_married(self):
         wages = 5500.00
@@ -237,8 +236,8 @@ class TestUsARPayslip(TestUsPayslip):
                                         struct_id=self.ref(
                                             'l10n_us_ar_hr_payroll.hr_payroll_salary_structure_us_ar_employee'),
                                         schedule_pay=schedule_pay)
-        contract.ar_w4_additional_wh = additional_wh
-        contract.ar_w4_allowances = exemptions
+        contract.ar_ar4ec_additional_wh = additional_wh
+        contract.ar_ar4ec_allowances = exemptions
         contract.w4_filing_status = w4_filing_status
 
         self.assertEqual(contract.w4_filing_status, 'married')
@@ -269,8 +268,8 @@ class TestUsARPayslip(TestUsPayslip):
                                         struct_id=self.ref(
                                             'l10n_us_ar_hr_payroll.hr_payroll_salary_structure_us_ar_employee'),
                                         schedule_pay=schedule_pay)
-        contract.ar_w4_additional_wh = 0
-        contract.ar_w4_allowances = exemptions
+        contract.ar_ar4ec_additional_wh = 0
+        contract.ar_ar4ec_allowances = exemptions
         contract.w4_filling_status = w4_filling_status
 
         self.assertEqual(contract.w4_filling_status, 'single')
@@ -284,7 +283,7 @@ class TestUsARPayslip(TestUsPayslip):
         self.assertPayrollEqual(cats['ER_US_AR_UNEMP'], cats['WAGE_US_AR_UNEMP'] * self.AR_UNEMP)
         self.assertPayrollEqual(cats['EE_US_AR_INC_WITHHOLD'], -(test_ar_amt / pay_periods))
 
-        contract.ar_w4_additional_wh = additional_wh
+        contract.ar_ar4ec_additional_wh = additional_wh
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
         self.assertPayrollEqual(cats['EE_US_AR_INC_WITHHOLD'], -(test_ar_amt / pay_periods) - additional_wh)
