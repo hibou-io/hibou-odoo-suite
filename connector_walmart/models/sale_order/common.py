@@ -173,7 +173,8 @@ class SaleOrderAdapter(Component):
         if not 'list' in orders_response:
             return []
 
-        next = orders_response['list']['meta']['nextCursor']
+        # 'meta' may not be there (though it is in the example on the API docs even when nextCursor is none)
+        next = orders_response.get('list', {}).get('meta', {}).get('nextCursor')
         if next:
             self.env[self._apply_on].with_delay().import_batch(
                 self.backend_record,

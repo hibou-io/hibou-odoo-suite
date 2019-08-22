@@ -389,12 +389,12 @@ class Orders(Resource):
 
     def acknowledge(self, id):
         url = self.url + '/%s/acknowledge' % id
-        return self.send_request(method='POST', url=url)
+        return self.connection.send_request(method='POST', url=url)
 
     def cancel(self, id, lines):
         url = self.url + '/%s/cancel' % id
-        return self.send_request(
-            method='POST', url=url, data=self.get_cancel_payload(lines))
+        return self.connection.send_request(
+            method='POST', url=url, body=self.get_cancel_payload(lines))
 
     def get_cancel_payload(self, lines):
         element = ElementMaker(
