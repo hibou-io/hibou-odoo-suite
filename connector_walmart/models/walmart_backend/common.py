@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # © 2017,2018 Hibou Corp.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -20,21 +19,9 @@ class WalmartBackend(models.Model):
     _description = 'Walmart Backend'
     _inherit = 'connector.backend'
 
-    consumer_id = fields.Char(
-        string='Consumer ID',
-        required=True,
-        help='Walmart Consumer ID',
-    )
-    channel_type = fields.Char(
-        string='Channel Type',
-        required=True,
-        help='Walmart Channel Type',
-    )
-    private_key = fields.Char(
-        string='Private Key',
-        required=True,
-        help='Walmart Private Key'
-    )
+    name = fields.Char(string='Name')
+    client_id = fields.Char(string='Client ID')
+    client_secret = fields.Char(string='Client Secret')
     warehouse_id = fields.Many2one(
         comodel_name='stock.warehouse',
         string='Warehouse',
@@ -59,6 +46,8 @@ class WalmartBackend(models.Model):
         'field  on the sale order created by the connector.'
     )
     team_id = fields.Many2one(comodel_name='crm.team', string='Sales Team')
+    user_id = fields.Many2one(comodel_name='res.users', string='Salesperson',
+                              help="Default Salesperson for newly imported orders.")
     sale_prefix = fields.Char(
         string='Sale Prefix',
         help="A prefix put before the name of imported sales orders.\n"
@@ -87,7 +76,7 @@ class WalmartBackend(models.Model):
     @api.multi
     def work_on(self, model_name, **kwargs):
         self.ensure_one()
-        walmart_api = Walmart(self.consumer_id, self.channel_type, self.private_key)
+        walmart_api = Walmart(self.client_id, self.client_secret)
         _super = super(WalmartBackend, self)
         with _super.work_on(model_name, walmart_api=walmart_api, **kwargs) as work:
             yield work
@@ -96,9 +85,8 @@ class WalmartBackend(models.Model):
     def _scheduler_import_sale_orders(self):
         # potential hook for customization (e.g. pad from date or provide its own)
         backends = self.search([
-            ('consumer_id', '!=', False),
-            ('channel_type', '!=', False),
-            ('private_key', '!=', False),
+            ('client_id', '!=', False),
+            ('client_secret', '!=', False),
             ('import_orders_from_date', '!=', False),
         ])
         return backends.import_sale_orders()
