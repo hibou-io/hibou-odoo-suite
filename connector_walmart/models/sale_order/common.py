@@ -199,10 +199,10 @@ class SaleOrderAdapter(Component):
         """ Returns the order after ack
         :rtype: dict
         """
-        _logger.warn('BEFORE ACK ' + str(id))
+        _logger.info('BEFORE ACK ' + str(id))
         api_instance = self.api_instance
         record = api_instance.orders.acknowledge(id)
-        _logger.warn('AFTER ACK RECORD: ' + str(record))
+        _logger.info('AFTER ACK RECORD: ' + str(record))
         if 'order' in record:
             return record['order']
         raise RetryableJobError('Acknowledge Order "' + str(id) + '" did not return an order response.')
