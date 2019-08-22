@@ -17,9 +17,8 @@
                         <notebook name="api">
                             <page string="API" name="api">
                                 <group colspan="4" col="4">
-                                    <field name="consumer_id"/>
-                                    <field name="channel_type"/>
-                                    <field name="private_key" password="1"/>
+                                    <field name="client_id"/>
+                                    <field name="client_secret" password="1"/>
                                 </group>
                             </page>
                         </notebook>
