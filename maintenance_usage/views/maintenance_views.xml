@@ -51,10 +51,10 @@
                 <field name="employee_id"/>
                 <field name="department_id"/>
                 <separator/>
-                <group  expand='0' string='Group by...'>
-                    <filter string='Equipment' domain="[]" context="{'group_by': 'equipment_id'}"/>
-                    <filter string='Employee' domain="[]" context="{'group_by': 'employee_id'}"/>
-                    <filter string='Department' domain="[]" context="{'group_by': 'department_id'}"/>
+                <group expand='0' string='Group by...'>
+                    <filter name="equipment" string='Equipment' domain="[]" context="{'group_by': 'equipment_id'}"/>
+                    <filter name="employee" string='Employee' domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter name="department" string='Department' domain="[]" context="{'group_by': 'department_id'}"/>
                 </group>
             </search>
         </field>
