@@ -21,7 +21,7 @@ class TestUsMIPayslip(TestUsPayslip):
         schedule_pay = 'weekly'
         exemptions = 1
         allowance_amount = self.ANNUAL_EXEMPTION_AMOUNT / self.PAY_PERIOD_DIVISOR[schedule_pay]
-        wh = -round((salary - (allowance_amount * exemptions)) * -self.MI_INC_TAX)
+        wh = -((salary - (allowance_amount * exemptions)) * -self.MI_INC_TAX)
 
         employee = self._createEmployee()
         contract = self._createContract(employee,
@@ -100,7 +100,7 @@ class TestUsMIPayslip(TestUsPayslip):
         allowance_amount = self.ANNUAL_EXEMPTION_AMOUNT / self.PAY_PERIOD_DIVISOR[schedule_pay]
         allowances = 2
 
-        wh = -round((salary - (allowance_amount * allowances)) * -self.MI_INC_TAX)
+        wh = -((salary - (allowance_amount * allowances)) * -self.MI_INC_TAX)
 
         employee = self._createEmployee()
         contract = self._createContract(employee, salary, struct_id=self.ref(
@@ -139,7 +139,7 @@ class TestUsMIPayslip(TestUsPayslip):
         allowance_amount = self.ANNUAL_EXEMPTION_AMOUNT / self.PAY_PERIOD_DIVISOR[schedule_pay]
         allowances = 1
 
-        wh = -round((salary - (allowance_amount * allowances)) * -self.MI_INC_TAX)
+        wh = -((salary - (allowance_amount * allowances)) * -self.MI_INC_TAX)
 
         employee = self._createEmployee()
         contract = self._createContract(employee, salary, struct_id=self.ref(
@@ -178,7 +178,7 @@ class TestUsMIPayslip(TestUsPayslip):
         allowance_amount = self.ANNUAL_EXEMPTION_AMOUNT / self.PAY_PERIOD_DIVISOR[schedule_pay]
         allowances = 1
 
-        wh = -round((salary - (allowance_amount * allowances)) * -self.MI_INC_TAX)
+        wh = -((salary - (allowance_amount * allowances)) * -self.MI_INC_TAX)
 
         employee = self._createEmployee()
         contract = self._createContract(employee, salary, struct_id=self.ref(
@@ -259,7 +259,7 @@ class TestUsMIPayslip(TestUsPayslip):
         additional_wh = 40.0
         allowances = 1
 
-        wh = -round(((salary - (allowance_amount * allowances)) * -self.MI_INC_TAX) + additional_wh)
+        wh = -(((salary - (allowance_amount * allowances)) * -self.MI_INC_TAX) + additional_wh)
 
         employee = self._createEmployee()
         contract = self._createContract(employee,
