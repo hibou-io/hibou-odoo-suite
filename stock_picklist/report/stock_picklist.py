@@ -10,7 +10,7 @@ class StockPicklist(models.AbstractModel):
     _template = 'stock_picklist.report_picklist'
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         report_name = 'stock_picklist.report_picklist'
         report = self.env['ir.actions.report']._get_report_from_name(report_name)
         stock_pickings = self.env['stock.picking'].browse(docids)
