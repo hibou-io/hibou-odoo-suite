@@ -5,7 +5,7 @@ from odoo import api, fields, models
 class MaintenanceEquipmentCategory(models.Model):
     _inherit = 'maintenance.equipment.category'
 
-    usage_uom_id = fields.Many2one('product.uom', string='Usage UOM')
+    usage_uom_id = fields.Many2one('uom.uom', string='Usage UOM')
 
 
 class MaintenanceEquipment(models.Model):
@@ -14,7 +14,7 @@ class MaintenanceEquipment(models.Model):
     employee_id = fields.Many2one(track_visibility=False)
     department_id = fields.Many2one(track_visibility=False)
     usage_qty = fields.Float(string='Usage', default=0.0)
-    usage_uom_id = fields.Many2one('product.uom', related='category_id.usage_uom_id')
+    usage_uom_id = fields.Many2one('uom.uom', related='category_id.usage_uom_id')
     usage_log_ids = fields.One2many('maintenance.usage.log', 'equipment_id', string='Usage')
     usage_count = fields.Integer(string='Usage Count', compute='_compute_usage_count')
     maintenance_usage = fields.Float(string='Preventative Usage')
