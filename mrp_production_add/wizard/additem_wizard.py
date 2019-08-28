@@ -16,7 +16,7 @@ class AddProductionItem(models.TransientModel):
         'Product Quantity', digits=dp.get_precision('Product Unit of Measure'),
         required=True,
         default=1.0)
-    product_uom_id = fields.Many2one('product.uom', 'Unit of Measure')
+    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure')
     production_id = fields.Many2one(
         'mrp.production', 'Production Order',
         default=_default_production_id)
@@ -25,7 +25,7 @@ class AddProductionItem(models.TransientModel):
     def _onchange_product_id(self):
         for item in self:
             if item.product_id:
-                item.product_uom_id = item.product_id.uom_id.id
+                item.product_uom_id = item.product_id.uom_id
             else:
                 item.product_uom_id = False
 
