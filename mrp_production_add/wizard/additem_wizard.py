@@ -25,7 +25,7 @@ class AddProductionItem(models.TransientModel):
     def _onchange_product_id(self):
         for item in self:
             if item.product_id:
-                item.product_uom_id = item.product_id.uom_id
+                item.product_uom_id = item.product_id.uom_id.id
             else:
                 item.product_uom_id = False
 
