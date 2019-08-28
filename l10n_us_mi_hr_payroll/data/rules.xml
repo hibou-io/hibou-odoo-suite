@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_mi_unemp_wages" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_mi_unemp_wages"/>
+        <field name="name">Wage: US-MI Unemployment</field>
+        <field name="code">WAGE_US_MI_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_MI_UNEMP')
+year = payslip.dict.date_to.year
+ytd = payslip.sum('WAGE_US_MI_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_mi_unemp" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_mi_unemp"/>
+        <field name="name">ER: US-MI Unemployment</field>
+        <field name="code">ER_US_MI_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_MI_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_US_MI_UNEMP
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_mi_uia_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_mi_inc_withhold" model="hr.salary.rule">
+        <field name="sequence" eval="155"/>
+        <field name="category_id" ref="hr_payroll_mi_income_withhold"/>
+        <field name="name">EE: US-MI Income Tax Withholding</field>
+        <field name="code">EE_US_MI_INC_WITHHOLD</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = not contract.mi_w4_tax_exempt</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+wages = categories.GROSS
+allowances = contract.mi_w4_exemptions
+schedule_pay = contract.schedule_pay
+annual_exemption_amount = 4400.00 * allowances
+allowance_amount = 0.0
+
+pay_period = 0.0
+pay_periods = {
+            'weekly': 52.0,
+            'bi-weekly': 26.0,
+            'semi-monthly': 24.0,
+            'monthly': 12.0
+            }
+if schedule_pay in pay_periods:
+    pay_period = pay_periods[schedule_pay]
+else:
+    raise Exception('Invalid schedule_pay="' + schedule_pay + '" for MI Income Withholding calculation')
+
+allowance_amount = (annual_exemption_amount / pay_period)
+withholding = ((wages - allowance_amount) * 0.04250) + contract.mi_w4_additional_wh
+result = - withholding
+        </field>
+        <field name="register_id" ref="contrib_register_mi_dot_withhold"/>
+    </record>
+
+</odoo>
