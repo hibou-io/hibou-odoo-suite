@@ -56,10 +56,10 @@ class LandedCost(models.Model):
             }
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 # Prorate the value at what's still in stock
-                _logger.warn('(line.move_id.remaining_qty / line.move_id.product_qty) * line.additional_landed_cost')
-                _logger.warn('(%s / %s) * %s' % (line.move_id.remaining_qty, line.move_id.product_qty, line.additional_landed_cost))
+                _logger.info('(line.move_id.remaining_qty / line.move_id.product_qty) * line.additional_landed_cost')
+                _logger.info('(%s / %s) * %s' % (line.move_id.remaining_qty, line.move_id.product_qty, line.additional_landed_cost))
                 cost_to_add = (line.move_id.remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
-                _logger.warn('cost_to_add: ' + str(cost_to_add))
+                _logger.info('cost_to_add: ' + str(cost_to_add))
 
                 new_landed_cost_value = line.move_id.landed_cost_value + line.additional_landed_cost
                 line.move_id.write({

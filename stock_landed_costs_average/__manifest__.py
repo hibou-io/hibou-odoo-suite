@@ -1,7 +1,7 @@
 {
     'name': 'Landed Costs Average',
     'summary': 'Use Landed Costs on Average Cost inventory.',
-    'version': '11.0.1.0.0',
+    'version': '12.0.1.0.0',
     'author': "Hibou Corp. <hello@hibou.io>",
     'category': 'Warehouse',
     'license': 'AGPL-3',
