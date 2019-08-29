@@ -1,6 +1,6 @@
 {
     'name': 'Equipment Repair',
-    'version': '11.0.1.0.0',
+    'version': '12.0.1.0.0',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'category': 'Human Resources',
     'summary': 'Consume products on Maintenance Requests',

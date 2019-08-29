@@ -72,7 +72,7 @@ class MaintenanceRequestRepairLine(models.Model):
     product_uom_qty = fields.Float('Quantity', default=1.0,
                                    digits=dp.get_precision('Product Unit of Measure'), required=True,
                                    states={'done': [('readonly', True)]})
-    product_uom_id = fields.Many2one('product.uom', 'Product Unit of Measure', required=True,
+    product_uom_id = fields.Many2one('uom.uom', 'Product Unit of Measure', required=True,
                                      states={'done': [('readonly', True)]})
     state = fields.Selection([
         ('draft', 'Draft'),
