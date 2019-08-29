@@ -38,6 +38,9 @@
             <xpath expr="//group[@name='maintenance']" position="inside">
                 <field name="maintenance_usage"/>
             </xpath>
+            <xpath expr="//field[@name='maintenance_team_id']" position="attributes">
+                <attribute name="attrs">{'required': ['|', ('period', '!=', 0), ('maintenance_usage', '!=', 0)]}</attribute>
+            </xpath>
         </field>
     </record>
 
