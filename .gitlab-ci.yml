@@ -18,6 +18,16 @@ before_script:
   - IMAGE_TAG=$(echo $CI_COMMIT_REF_SLUG | sed "s/^\([[:digit:]][[:digit:]]\)-\([[:digit:]]\)/\1\.\2/g")
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
 
+merge_request:
+  before_script:
+    - apk add curl jq
+  stage: build
+  only:
+    - /(^new\/)|(^mig\/)|(^imp\/)|(^fix\/)/
+  script:
+    - ls -lah
+    - RELEASE=$(echo $CI_COMMIT_REF_NAME | sed "s{.*\/\(.*\)\/.*{\1{g") HOST=$(echo $CI_PROJECT_URL | sed 's{\(^https://[^/]*/\).*{\1{g') CI_PROJECT_ID=${CI_PROJECT_ID} CI_COMMIT_REF_NAME=${CI_COMMIT_REF_NAME} GITLAB_USER_ID=${GITLAB_USER_ID} PRIVATE_TOKEN=${PRIVATE_TOKEN} ./.gitlab-ci-automerge.sh 
+
 build:
   stage: build
   script:
