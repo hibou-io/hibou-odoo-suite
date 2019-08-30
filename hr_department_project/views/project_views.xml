@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="edit_project_inherited">
+        <field name="name">project.project.form.inherited</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="before">
+                <field name="department_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_project_project_filter_inherited">
+        <field name="name">project.project.select.inherited</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/filter[@name='Manager']" position="before">
+                <filter string="Department" name="group_department" context="{'group_by': 'department_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
