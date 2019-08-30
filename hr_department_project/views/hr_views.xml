@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="view_department_form_inherited">
+        <field name="name">hr.department.form.inherited</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//widget[@name='web_ribbon']" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" name="project_tree_view" type="object" icon="fa-puzzle-piece">
+                        <field string="Projects" name="project_count" widget="statinfo"/>
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
