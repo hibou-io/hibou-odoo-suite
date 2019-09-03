@@ -29,7 +29,7 @@ merge_request:
     - docker tag registry.gitlab.com/hibou-io/hibou-odoo/flow flow
     - ENVS=`env | grep "CI_\|GITLAB_" | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' '`
     - docker run $ENVS flow gitlab-automerge --target-branch "${RELEASE}-test" --automerge
-    - docker run $ENVS flow gitlab-automerge
+    - docker run $ENVS flow gitlab-automerge --remove-source
 
 build:
   stage: build
