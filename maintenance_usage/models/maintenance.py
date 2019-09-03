@@ -30,7 +30,6 @@ class MaintenanceEquipment(models.Model):
         record._log_usage()
         return record
 
-    @api.multi
     def write(self, values):
         usage_qty = values.get('usage_qty')
         employee_id = values.get('employee_id')
@@ -62,7 +61,6 @@ class MaintenanceEquipment(models.Model):
         values['date'] = fields.Datetime.now()
         self.env['maintenance.usage.log'].create(values)
 
-    @api.multi
     def _check_maintenance_usage(self, usage_qty):
         for e in self.filtered(lambda e: e.maintenance_usage):
             try:
