@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="hr_equipment_category_view_form_inherited">
+        <field name="name">maintenance.equipment.category.inherited</field>
+        <field name="model">maintenance.equipment.category</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_category_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='note']" position="before">
+                <group>
+                    <field name="usage_uom_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="hr_equipment_view_form_inherited">
+        <field name="name">equipment.form.inherited</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+        <field name="priority" eval="200"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_usage_log"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-tachometer"
+                            help="show the usage logs for equipment" >
+                    <field string="Usage" name="usage_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//form/sheet/group/group[1]" position="inside">
+                <label for="usage_qty"/>
+                <div class="o_row" name="usage">
+                    <field name="usage_qty" nolabel="1"/>
+                    <field name="usage_uom_id" nolabel="1" readonly="1"/>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='maintenance']" position="inside">
+                <field name="maintenance_usage"/>
+            </xpath>
+            <xpath expr="//field[@name='maintenance_team_id']" position="attributes">
+                <attribute name="attrs">{'required': ['|', ('period', '!=', 0), ('maintenance_usage', '!=', 0)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- maintenance.usage.log : views -->
+    <record id="hr_equipment_usage_log_view_search" model="ir.ui.view">
+        <field name="name">equipment.usage.log.search</field>
+        <field name="model">maintenance.usage.log</field>
+        <field name="arch" type="xml">
+            <search string="Equipment Usage Search">
+                <field name="equipment_id"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <separator/>
+                <group expand='0' string='Group by...'>
+                    <filter name="equipment" string='Equipment' domain="[]" context="{'group_by': 'equipment_id'}"/>
+                    <filter name="employee" string='Employee' domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter name="department" string='Department' domain="[]" context="{'group_by': 'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_equipment_usage_log_view_form" model="ir.ui.view">
+        <field name="name">equipment.usage.log.form</field>
+        <field name="model">maintenance.usage.log</field>
+        <field name="arch" type="xml">
+            <form string="Equipment Usage Form">
+                <header/>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="equipment_id"/>
+                            <field name="employee_id"/>
+                            <field name="department_id"/>
+                        </group>
+                        <group name="usage_info" string="Usage">
+                            <label for="qty"/>
+                            <div class="o_row" name="usage">
+                                <field name="qty" nolabel="1"/>
+                                <field name="uom_id" nolabel="1" readonly="1"/>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_equipment_usage_log_view_tree" model="ir.ui.view">
+        <field name="name">equipment.usage.log.tree</field>
+        <field name="model">maintenance.usage.log</field>
+        <field name="arch" type="xml">
+            <tree string="Equipment Usage">
+                <field name="date"/>
+                <field name="equipment_id"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="qty"/>
+                <field name="uom_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_equipment_usage_log_view_graph" model="ir.ui.view">
+        <field name="name">equipment.usage.log.graph</field>
+        <field name="model">maintenance.usage.log</field>
+        <field name="arch" type="xml">
+            <graph string="Equipment Usage">
+                <field name="equipment_id"/>
+                <field name="qty"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="hr_equipment_usage_log_view_pivot" model="ir.ui.view">
+        <field name="name">equipment.usage.log.pivot</field>
+        <field name="model">maintenance.usage.log</field>
+        <field name="arch" type="xml">
+            <pivot string="Equipment Usage">
+                <field name="equipment_id"/>
+                <field name="qty"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_equipment_usage_log_view_calendar" model="ir.ui.view">
+        <field name="name">equipment.usage.log.calendar</field>
+        <field name="model">maintenance.usage.log</field>
+        <field name="arch" type="xml">
+            <calendar date_start="date" color="equipment_id">
+                <field name="equipment_id"/>
+                <field name="qty"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- maintenance.usage.log : actions -->
+    <record id="maintenance_usage_log_action_reports" model="ir.actions.act_window">
+        <field name="name">Equipment Usage</field>
+        <field name="res_model">maintenance.usage.log</field>
+        <field name="view_mode">tree,form,graph,pivot,calendar</field>
+        <field name="help" type="html">
+            <p>
+                No usage.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="maintenance_usage_reporting"
+        action="maintenance_usage_log_action_reports"
+        parent="maintenance.maintenance_reporting"/>
+</odoo>
