@@ -52,4 +52,3 @@ class MaintenanceRequest(models.Model):
         for request in self:
             if request.department_id and request.department_id.project_ids:
                 request.project_id = request.department_id.project_ids[0]
-
