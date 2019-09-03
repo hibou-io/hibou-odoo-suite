@@ -19,14 +19,17 @@ before_script:
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
 
 merge_request:
-  before_script:
-    - apk add curl jq
+  variables:
+    GIT_STRATEGY: none
   stage: build
   only:
     - /(^new\/)|(^mig\/)|(^imp\/)|(^fix\/)/
   script:
-    - ls -lah
-    - RELEASE=$(echo $CI_COMMIT_REF_NAME | sed "s{.*\/\(.*\)\/.*{\1{g") HOST=$(echo $CI_PROJECT_URL | sed 's{\(^https://[^/]*/\).*{\1{g') CI_PROJECT_ID=${CI_PROJECT_ID} CI_COMMIT_REF_NAME=${CI_COMMIT_REF_NAME} GITLAB_USER_ID=${GITLAB_USER_ID} PRIVATE_TOKEN=${PRIVATE_TOKEN} ./.gitlab-ci-automerge.sh 
+    - docker pull registry.gitlab.com/hibou-io/hibou-odoo/flow
+    - docker tag registry.gitlab.com/hibou-io/hibou-odoo/flow flow
+    - ENVS=`env | grep "CI_\|GITLAB_" | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' '`
+    - docker run $ENVS flow gitlab-automerge --target-branch "${RELEASE}-test" --automerge
+    - docker run $ENVS flow gitlab-automerge
 
 build:
   stage: build
