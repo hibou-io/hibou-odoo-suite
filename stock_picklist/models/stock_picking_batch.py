@@ -5,7 +5,6 @@ from odoo.exceptions import UserError
 class StockPickingBatch(models.Model):
     _inherit = 'stock.picking.batch'
 
-    @api.multi
     def print_pick_list(self):
         pickings = self.mapped('picking_ids')
         if not pickings:
