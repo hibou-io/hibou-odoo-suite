@@ -29,7 +29,6 @@ class AddProductionItem(models.TransientModel):
             else:
                 item.product_uom_id = False
 
-    @api.multi
     def add_item(self):
         for item in self:
             if item.product_qty <= 0:
@@ -42,8 +41,8 @@ class AddProductionItem(models.TransientModel):
                 'product_uom_id': item.product_uom_id.id,
             })
 
-            move = item.production_id._generate_raw_move(bom_line, {'qty': item.product_qty, 'parent_line': None})
-            item.production_id._adjust_procure_method()
+            move = item.production_id._get_move_raw_values(bom_line, {'qty': item.product_qty, 'parent_line': None})
+            move = self.env['stock.move'].create(move)
             move.write({'unit_factor': 0.0})
             move._action_confirm()
 

@@ -30,7 +30,6 @@
      <record id="action_add_production_item" model="ir.actions.act_window">
         <field name="name">Add Item View</field>
         <field name="res_model">wiz.add.production.item</field>
-        <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_create_add_production_item" />
         <field name="target">new</field>
