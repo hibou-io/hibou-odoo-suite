@@ -40,6 +40,16 @@ build:
     - docker build --pull -t $CONTAINER_IMAGE:$IMAGE_TAG -f Dockerfile-GitLab .
     - docker push $CONTAINER_IMAGE:$IMAGE_TAG
 
+publish:
+  stage: build
+  script:
+    - docker pull registry.gitlab.com/hibou-io/hibou-odoo/flow
+    - docker tag registry.gitlab.com/hibou-io/hibou-odoo/flow flow
+    - ENVS=`env | grep "CI_\|GITLAB_" | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' '`
+    - docker run -v $PWD:/src $ENVS flow odoo-publish -n "Hibou Odoo Suite" -v $RELEASE
+  only:
+    - /^\d\d\.\d/
+
 trigger:
   variables:
     GIT_STRATEGY: none
