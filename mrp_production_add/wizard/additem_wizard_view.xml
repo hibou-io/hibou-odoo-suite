@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_create_add_production_item" model="ir.ui.view">
+        <field name="name">view.create.add_production_item</field>
+        <field name="model">wiz.add.production.item</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <group colspan="4" col="4">
+                    <separator string="Add Product" colspan="4"/>
+                    <field name="product_id" colspan="2"/>
+                    <field name="product_uom_id" colspan="2"/>
+                    <field name="product_qty" colspan="2"/>
+                    <field name="production_id" colspan="2"
+                           invisible="context.get('active_id')"/>
+                </group>
+                <footer>
+                    <button class="oe_highlight"
+                            name="add_item"
+                            string="Add"
+                            type="object" />
+                    or
+                    <button class="oe_link"
+                            special="cancel"
+                            string="Cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+     <record id="action_add_production_item" model="ir.actions.act_window">
+        <field name="name">Add Item View</field>
+        <field name="res_model">wiz.add.production.item</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_create_add_production_item" />
+        <field name="target">new</field>
+    </record>
+</odoo>
