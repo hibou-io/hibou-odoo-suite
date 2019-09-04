@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            id="picklist"
+            model="stock.picking"
+            string="Picklist"
+            report_type="qweb-pdf"
+            name="stock_picklist.report_picklist"
+        />
+
+        <template id="report_picklist">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <table class="table table-condensed">
+                        <thead>
+                            <th/>
+                            <th>Qty</th>
+                            <th>Product</th>
+                            <th>Barcode</th>
+                            <th>Location</th>
+                        </thead>
+                        <tbody>
+                        <t t-foreach="docs" t-as="l">
+                            <t t-foreach="l.lines" t-as="p">
+                                <tr>
+                                    <td><img t-att-src="p.product_id.image_512 or '/web/static/src/img/placeholder.png'" width="50" height="50"/></td>
+<!--                                    <td><<img t-att-src="p.product_id.image_64 and ('data:image/png;base64,' + to_text(product_id.image_64)) or '/web/static/src/img/placeholder.png'" width="50" height="50"/></td>-->
+                                    <td><span t-esc="p.qty"/></td>
+                                    <td>
+                                        <span t-if="p.product_id.seller_ids" t-field="p.product_id.seller_ids[0].name" /> -
+                                        <span t-field="p.product_id.default_code" /> :
+                                        <span t-if="p.product_id.seller_ids" t-field="p.product_id.seller_ids[0].product_code" />
+                                        <br />
+                                        <span t-field="p.product_id.name"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <img t-if="p.product_id.barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', p.product_id.barcode, 400, 80)" style="width:200px;height:40px"/>
+                                        <br />
+                                        <span t-if="p.product_id.barcode" t-field="p.product_id.barcode" />
+                                    </td>
+                                    <td><span t-esc="l.location_id.name"/></td>
+                                </tr>
+                            </t>
+                        </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>
