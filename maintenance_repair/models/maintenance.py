@@ -82,7 +82,6 @@ class MaintenanceRequestRepairLine(models.Model):
     standard_price = fields.Float(string='Est. Cost', states={'done': [('readonly', True)]})
     cost = fields.Float(string='Cost', compute='_compute_actual_cost', stored=True)
     
-    @api.multi
     def unlink(self):
         if self.filtered(lambda l: l.state == 'done'):
             raise UserError(_('Only draft lines can be deleted.'))
@@ -103,7 +102,6 @@ class MaintenanceRequestRepairLine(models.Model):
             else:
                 line.cost = 0.0
 
-    @api.multi
     def action_complete(self):
         # Create stock movements. - Inspired by mrp_repair
         MoveObj = self.env['stock.move']

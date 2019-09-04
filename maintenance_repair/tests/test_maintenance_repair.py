@@ -11,7 +11,7 @@ class TestMaintenanceRepair(common.TransactionCase):
         })
 
         loc_from = self.env.ref('stock.stock_location_stock')
-        loc_to = self.env.ref('stock.location_inventory')
+        loc_to = self.env.ref('stock.stock_location_output')
         request = self.env['maintenance.request'].create({
             'name': 'Repair Monitor',
             'equipment_id': equipment.id,
