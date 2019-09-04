@@ -73,7 +73,7 @@
         <field name="model">maintenance.request</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_request_view_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='top_priority']" position="after">
+            <xpath expr="//filter[@name='done']" position="after">
                 <filter string="To Repair" name="to_repair" domain="[('repair_status', '=', 'to repair')]"/>
             </xpath>
         </field>
