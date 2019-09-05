@@ -5,7 +5,9 @@ class AccountPaymentTerm(models.Model):
     _inherit = 'account.payment.term'
 
     deposit_percentage = fields.Float(string='Deposit Percentage',
-                                      help='Require deposit when paying on the front end.')
+                                      help='Require Percentage deposit when paying on the front end.')
+    deposit_flat = fields.Float(string='Deposit Flat',
+                                      help='Require Flat deposit when paying on the front end.')
 
 
 class PaymentTransaction(models.Model):
