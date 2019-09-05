@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group/group" position="inside">
                 <field name="deposit_percentage"/>
+                <field name="deposit_flat"/>
             </xpath>
         </field>
     </record>

@@ -10,7 +10,10 @@ class SaleOrder(models.Model):
     @api.depends('amount_total', 'payment_term_id.deposit_percentage')
     def _amount_total_deposit(self):
         for order in self:
-            order.amount_total_deposit = order.amount_total * float(order.payment_term_id.deposit_percentage) / 100.0
+            percent_deposit = order.amount_total * float(order.payment_term_id.deposit_percentage) / 100.0
+            flat_deposite = float(order.payment_term_id.deposit_flat)
+            order.amount_total_deposit = percent_deposit + flat_deposite
+
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
@@ -22,8 +25,8 @@ class SaleOrder(models.Model):
         for sale in self.sudo().filtered(lambda o: not o.invoice_ids and o.amount_total_deposit):
             # Create Deposit Invoices
             wizard = wizard_model.create({
-                'advance_payment_method': 'percentage',
-                'amount': sale.payment_term_id.deposit_percentage,
+                'advance_payment_method': 'fixed',
+                'amount': sale.amount_total_deposit,
             })
             wizard.with_context(active_ids=sale.ids).create_invoices()
             # Validate Invoices
