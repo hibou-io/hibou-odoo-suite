@@ -7,7 +7,6 @@ class HRExpense(models.Model):
 
     vendor_id = fields.Many2one('res.partner', string='Vendor')
 
-    @api.multi
     def _get_account_move_line_values(self):
         move_line_values_by_expense = super(HRExpense, self)._get_account_move_line_values()
         for expense in self.filtered(lambda e: e.payment_mode == 'company_account'):
