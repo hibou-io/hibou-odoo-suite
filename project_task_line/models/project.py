@@ -7,7 +7,6 @@ class ProjectTask(models.Model):
     line_ids = fields.One2many('project.task.line', 'task_id', string='Todo List')
     subtask_count_done = fields.Integer(compute='_compute_subtask_count', string="Sub-task Done count")
 
-    @api.multi
     def _compute_subtask_count(self):
         for task in self:
             task.subtask_count = self.search_count([('id', 'child_of', task.id), ('id', '!=', task.id)])
