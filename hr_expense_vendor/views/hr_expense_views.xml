@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_hr_expense_sheet_form_inherit" model="ir.ui.view">
+        <field name="name">hr.expense.sheet.form.inherit</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='expense_line_ids']/tree/field[@name='name']" position="after">
+                <field name="vendor_id" domain="[('supplier', '=', True)]"
+                       context="{'default_supplier': True}" groups="account.group_account_user"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_expense_form_view_inherit" model="ir.ui.view">
+        <field name="name">hr.expense.form.inherit</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="vendor_id" context="{'res_partner_search_mode': 'supplier'}" groups="account.group_account_user"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
