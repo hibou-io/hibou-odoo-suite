@@ -11,12 +11,12 @@
         </field>
     </record>
 
-    <record id="view_hr_expense_filter_inherit" model="ir.ui.view">
-        <field name="name">hr.expense.filter.inherit</field>
+    <record id="hr_expense_view_search_inherit" model="ir.ui.view">
+        <field name="name">	hr.expense.view.search.inherit</field>
         <field name="model">hr.expense</field>
-        <field name="inherit_id" ref="hr_expense.view_hr_expense_filter"/>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='product_id']" position="after">
+            <xpath expr="//field[@name='employee_id']" position="after">
                 <field name="lead_id"/>
             </xpath>
         </field>
