@@ -13,7 +13,7 @@
             </xpath>
             <xpath expr="//page[@name='description_page']" position="after">
                 <page name="task_lines" string="Todo List">
-                    <field name="line_ids" widget="one2many_list">
+                    <field name="line_ids" widget="one2many_list" context="{'default_task_id': id}">
                         <tree>
                             <field name="sequence" widget="handle"/>
                             <field name="name"/>
