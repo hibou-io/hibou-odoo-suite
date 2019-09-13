@@ -5,7 +5,6 @@ from ..models.res_users import admin_auth_generate_login
 class PortalWizard(models.TransientModel):
     _inherit = 'portal.wizard'
 
-    @api.multi
     def admin_auth_generate_login(self):
         self.ensure_one()
         self.user_ids.admin_auth_generate_login()
@@ -23,7 +22,6 @@ class PortalWizardUser(models.TransientModel):
 
     force_login_url = fields.Char(string='Force Login URL')
 
-    @api.multi
     def admin_auth_generate_login(self):
         ir_model_access = self.env['ir.model.access']
         for row in self.filtered(lambda r: r.in_portal):
