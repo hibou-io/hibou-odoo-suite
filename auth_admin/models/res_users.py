@@ -72,7 +72,6 @@ def check_admin_auth_login(env, u_user_id, e_expires, o_org_user_id, hash_):
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    @api.multi
     def admin_auth_generate_login(self):
         self.ensure_one()
 
