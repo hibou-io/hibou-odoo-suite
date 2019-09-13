@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="portal_wizard" model="ir.ui.view">
+        <field name="name">Portal Access Management - Auth Admin</field>
+        <field name="model">portal.wizard</field>
+        <field name="inherit_id" ref="portal.wizard_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='in_portal']" position="after">
+                <field name="force_login_url"/>
+            </xpath>
+            <xpath expr="//button[last()]" position="after">
+                <button string="Generate Login URL" type="object" name="admin_auth_generate_login" class="btn-primary" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
