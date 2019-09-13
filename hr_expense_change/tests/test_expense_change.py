@@ -1,11 +1,11 @@
-from odoo.addons.hr_expense.tests.test_expenses import TestCheckJournalEntry
+from odoo.addons.hr_expense.tests.test_expenses import TestAccountEntry
 
 
-class TestExpenseChange(TestCheckJournalEntry):
+class TestAccountEntry(TestAccountEntry):
 
     def test_expense_change_basic(self):
         # posts expense and gets move ready at self.expense.account_move_id.id
-        self.test_journal_entry()
+        self.test_account_entry()
         self.assertEqual(self.expense.expense_line_ids.date, self.expense.account_move_id.date)
 
         ctx = {'active_model': 'hr.expense', 'active_ids': self.expense.expense_line_ids.ids}
