@@ -41,7 +41,6 @@ class ExpenseChangeWizard(models.TransientModel):
             vals['date'] = self.date
         return vals
 
-    @api.multi
     def affect_change(self):
         self.ensure_one()
         vals = self._new_expense_vals()
