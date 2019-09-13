@@ -1,7 +1,7 @@
-from odoo.addons.hr_expense_change.tests.test_expense_change import TestExpenseChange
+from odoo.addons.hr_expense_change.tests.test_expense_change import TestAccountEntry
 
 
-class TestWizard(TestExpenseChange):
+class TestWizard(TestAccountEntry):
     def test_expense_change_basic(self):
         self.analytic_account = self.env['account.analytic.account'].create({
             'name': 'test account',
