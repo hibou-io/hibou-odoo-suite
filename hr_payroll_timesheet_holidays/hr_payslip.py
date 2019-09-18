@@ -1,3 +1,4 @@
+from collections import defaultdict
 from odoo import models, api
 from odoo.addons.resource.models.resource import HOURS_PER_DAY
 
@@ -50,3 +51,23 @@ class HrPayslip(models.Model):
 
     def _create_leave_code(self, name):
         return 'L_' + name.replace(' ', '_')
+
+
+    @api.multi
+    def hour_break_down(self, code):
+        """
+        :param code: what kind of worked days you need aggregated
+        :return: dict: keys are isocalendar tuples, values are hours.
+        """
+        self.ensure_one()
+        if code.startswith('L_'):
+            leaves = self._fetch_valid_leaves(self.employee_id.id, self.date_from, self.date_to)
+            day_values = defaultdict(float)
+            for leave in leaves:
+                leave_code = self._create_leave_code(leave.holiday_status_id.name)
+                if leave_code == code:
+                    leave_iso = leave.date_from.isocalendar()
+                    day_values[leave_iso] += leave.number_of_days * HOURS_PER_DAY
+            return day_values
+        elif hasattr(super(HrPayslip, self), 'hour_break_down'):
+            return super(HrPayslip, self).hour_break_down(code)
