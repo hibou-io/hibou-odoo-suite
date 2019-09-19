@@ -1,7 +1,7 @@
 {
     'name': 'US ZIP Code to City/State',
     'summary': 'Determines the City and State from a provided ZIP code.',
-    'version': '11.0.1.0.0',
+    'version': '12.0.1.0.0',
     'author': "Hibou Corp.",
     'category': 'Localization',
     'license': 'AGPL-3',
