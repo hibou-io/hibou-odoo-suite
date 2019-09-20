@@ -52,8 +52,8 @@
         </field>
     </record>
 
-    <record id="stock_view_picking_internal_search_inherit" model="ir.ui.view">
-        <field name="name">stock.view.picking.internal.search.inherit</field>
+    <record id="view_picking_internal_search_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.internal.search.inherit</field>
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_internal_search" />
         <field name="arch" type="xml">
@@ -61,8 +61,9 @@
                 <filter name="has_catch_weight" string="Has Catch Weight" domain="[('has_catch_weight','=',True)]" help="Pickings with Catch Weight"/>
             </xpath>
             <xpath expr="//group/filter[@name='picking_type']" position="after">
-                <filter string="Has Catch Weight" domain="[]" context="{'group_by':'has_catch_weight'}"/>
+                <filter name="has_catch_weight" string="Has Catch Weight" domain="[]" context="{'group_by':'has_catch_weight'}"/>
             </xpath>
         </field>
     </record>
+
 </odoo>

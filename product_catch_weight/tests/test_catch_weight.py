@@ -12,8 +12,8 @@ class TestPicking(TransactionCase):
         self.nominal_weight = 50.0
         self.partner1 = self.env.ref('base.res_partner_2')
         self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.ref_uom_id = self.env.ref('product.product_uom_kgm')
-        self.product_uom_id = self.env['product.uom'].create({
+        self.ref_uom_id = self.env.ref('uom.product_uom_kgm')
+        self.product_uom_id = self.env['uom.uom'].create({
             'name': '50 ref',
             'category_id': self.ref_uom_id.category_id.id,
             'uom_type': 'bigger',

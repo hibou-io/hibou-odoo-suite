@@ -6,7 +6,7 @@ class StockProductionLot(models.Model):
 
     catch_weight_ratio = fields.Float(string='Catch Weight Ratio', digits=(10, 6), compute='_compute_catch_weight_ratio')
     catch_weight = fields.Float(string='Catch Weight', digits=(10, 4))
-    catch_weight_uom_id = fields.Many2one('product.uom', related='product_id.catch_weight_uom_id')
+    catch_weight_uom_id = fields.Many2one('uom.uom', related='product_id.catch_weight_uom_id')
 
     @api.depends('catch_weight')
     def _compute_catch_weight_ratio(self):
@@ -22,7 +22,7 @@ class StockProductionLot(models.Model):
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    product_catch_weight_uom_id = fields.Many2one('product.uom', related="product_id.catch_weight_uom_id")
+    product_catch_weight_uom_id = fields.Many2one('uom.uom', related="product_id.catch_weight_uom_id")
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
         vals = super(StockMove, self)._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant)
@@ -40,9 +40,9 @@ class StockMoveLine(models.Model):
 
     catch_weight_ratio = fields.Float(string='Catch Weight Ratio', digits=(10, 6), default=1.0)
     catch_weight = fields.Float(string='Catch Weight', digits=(10,4))
-    catch_weight_uom_id = fields.Many2one('product.uom', string='Catch Weight UOM')
+    catch_weight_uom_id = fields.Many2one('uom.uom', string='Catch Weight UOM')
     lot_catch_weight = fields.Float(related='lot_id.catch_weight')
-    lot_catch_weight_uom_id = fields.Many2one('product.uom', related='product_id.catch_weight_uom_id')
+    lot_catch_weight_uom_id = fields.Many2one('uom.uom', related='product_id.catch_weight_uom_id')
 
 
 class StockPicking(models.Model):
@@ -61,4 +61,4 @@ class StockQuant(models.Model):
 
     lot_catch_weight_ratio = fields.Float(related='lot_id.catch_weight_ratio')
     lot_catch_weight = fields.Float(related='lot_id.catch_weight')
-    lot_catch_weight_uom_id = fields.Many2one('product.uom', related='lot_id.catch_weight_uom_id')
+    lot_catch_weight_uom_id = fields.Many2one('uom.uom', related='lot_id.catch_weight_uom_id')
