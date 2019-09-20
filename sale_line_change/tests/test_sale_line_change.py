@@ -26,7 +26,7 @@ class TestSaleLineChange(common.TransactionCase):
             })]
         })
         self.dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
-        self.warehouse0_route = self.warehouse0.route_ids.filtered(lambda r: r.name.find('Ship') >= 0)
+        self.warehouse0_route = self.warehouse0.route_ids.filtered(lambda r: r.name.find('Deliver') >= 0)
 
     def test_00_sale_change_warehouse(self):
         so = self.so1
@@ -48,7 +48,7 @@ class TestSaleLineChange(common.TransactionCase):
         new_picking = so.picking_ids - org_picking
         self.assertTrue(new_picking)
         self.assertEqual(new_picking.picking_type_id.warehouse_id, self.warehouse1)
-        self.assertEqual(new_picking.scheduled_date, '2018-01-01 00:00:00')
+        self.assertEqual(str(new_picking.scheduled_date), '2018-01-01 00:00:00')
 
     def test_01_sale_change_route(self):
         so = self.so1
@@ -96,4 +96,4 @@ class TestSaleLineChange(common.TransactionCase):
         # Check parameters on new picking
         self.assertTrue(so.picking_ids)
         self.assertEqual(so.picking_ids.picking_type_id.warehouse_id, self.warehouse0)
-        self.assertEqual(so.picking_ids.scheduled_date, '2018-01-01 00:00:00')
+        self.assertEqual(str(so.picking_ids.scheduled_date), '2018-01-01 00:00:00')

@@ -1,7 +1,7 @@
 {
     'name': 'Sale Line Change',
     'summary': 'Change Confirmed Sale Lines Routes or Warehouses.',
-    'version': '11.0.1.0.0',
+    'version': '12.0.1.0.0',
     'author': "Hibou Corp.",
     'category': 'Sale',
     'license': 'AGPL-3',
