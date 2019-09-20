@@ -1,6 +1,6 @@
 {
     'name': 'Product Catch Weight',
-    'version': '11.0.1.0.0',
+    'version': '12.0.1.0.0',
     'category': 'Warehouse',
     'depends': [
         'sale_stock',

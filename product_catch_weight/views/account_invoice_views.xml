@@ -25,21 +25,21 @@
 
 
     <template id="report_invoice_document_inherit" name="report_invoice_document_catch_weight" inherit_id="account.report_invoice_document">
-        <xpath expr="//thead/tr/th[4]" position="after">
+        <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[4]" position="after">
             <t t-if="o.invoice_line_ids.filtered(lambda l: l.catch_weight_uom_id)">
                 <th class="text-right">Catch Weight</th>
                 <th class="text-right">CW Unit Price</th>
             </t>
         </xpath>
-        <xpath expr="//tbody/tr[1]/td[4]" position="after">
-            <t t-if="o.invoice_line_ids.filtered(lambda l: l.catch_weight_uom_id)">
-                <t t-if="l.catch_weight_uom_id">
+        <xpath expr="//tbody[hasclass('invoice_tbody')]/t[2]/tr/t/td[4]" position="after">
+            <t t-if="o.invoice_line_ids.filtered(lambda line: line.catch_weight_uom_id)">
+                <t t-if="line.catch_weight_uom_id">
                     <td class="text-right">
-                        <strong t-field="l.catch_weight"/>
-                        <span t-field="l.catch_weight_uom_id"/>
+                        <strong t-field="line.catch_weight"/>
+                        <span t-field="line.catch_weight_uom_id"/>
                         <hr style="padding: 0; margin: 0;"/>
-                        <t t-if="o.type in ('out_invoice', 'out_refund')" t-set="lots" t-value="l.sale_line_ids.mapped('move_ids.move_line_ids.lot_id')"/>
-                        <t t-else="" t-set="lots" t-value="l.purchase_line_id.mapped('move_ids.move_line_ids.lot_id')"/>
+                        <t t-if="o.type in ('out_invoice', 'out_refund')" t-set="lots" t-value="line.sale_line_ids.mapped('move_ids.move_line_ids.lot_id')"/>
+                        <t t-else="" t-set="lots" t-value="line.purchase_line_id.mapped('move_ids.move_line_ids.lot_id')"/>
                         <ul class="list-unstyled">
                             <li t-foreach="lots" t-as="lot">
                                 <span t-field="lot.name"/>: <span t-field="lot.catch_weight"/>
@@ -47,9 +47,9 @@
                         </ul>
                     </td>
                     <td class="text-right">
-                        <span t-esc="'{:0.2f}'.format(l.uom_id._compute_price(l.price_unit, l.catch_weight_uom_id))"/>
+                        <span t-esc="'{:0.2f}'.format(line.uom_id._compute_price(line.price_unit, line.catch_weight_uom_id))"/>
                          /
-                        <span t-field="l.catch_weight_uom_id"/>
+                        <span t-field="line.catch_weight_uom_id"/>
                     </td>
                 </t>
                 <t t-else="">
@@ -57,10 +57,9 @@
                     <td/>
                 </t>
             </t>
-
         </xpath>
-        <xpath expr="//tbody/tr[2]/td[4]" position="after">
-            <t t-if="o.invoice_line_ids.filtered(lambda l: l.catch_weight_uom_id)">
+        <xpath expr="//tbody[hasclass('invoice_tbody')]/t[2]/t[3]/tr/td" position="after">
+            <t t-if="o.invoice_line_ids.filtered(lambda line: line.catch_weight_uom_id)">
                 <td/>
                 <td/>
             </t>
