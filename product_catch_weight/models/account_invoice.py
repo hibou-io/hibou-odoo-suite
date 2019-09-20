@@ -8,7 +8,7 @@ class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
     catch_weight = fields.Float(string='Catch Weight', digits=(10, 4), compute='_compute_price', store=True)
-    catch_weight_uom_id = fields.Many2one('product.uom', related='product_id.catch_weight_uom_id')
+    catch_weight_uom_id = fields.Many2one('uom.uom', related='product_id.catch_weight_uom_id')
 
     @api.one
     @api.depends('price_unit', 'discount', 'invoice_line_tax_ids', 'quantity',
