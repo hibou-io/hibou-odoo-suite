@@ -80,7 +80,7 @@ class SaleLineChangeOrderLine(models.TransientModel):
             })
 
     def _apply_procurement(self):
-        self.mapped('sale_line_id')._action_launch_procurement_rule()
+        self.mapped('sale_line_id')._action_launch_stock_rule()
 
     def apply(self):
         changed_lines = self.filtered(lambda l: (
