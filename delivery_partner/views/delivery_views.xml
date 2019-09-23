@@ -81,12 +81,12 @@
         </field>
     </record>
 
-    <record id="view_order_form_with_carrier_inherit" model="ir.ui.view">
-        <field name="name">delivery.sale.order.form.view.with_carrier.inherit</field>
+    <record id="view_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="delivery.view_order_form_with_carrier"/>
+        <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='id']" position="before">
+            <xpath expr="//field[@name='payment_term_id']" position="before">
                 <field name="shipping_account_id" options="{'no_create': True, 'no_open': True}" domain="['|', ('partner_id', '=', False), ('partner_id', '=', partner_id)]"/>
             </xpath>
         </field>
