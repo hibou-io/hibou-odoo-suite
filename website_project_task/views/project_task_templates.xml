@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="view_task_form2_inherit" model="ir.ui.view">
+        <field name="name">project.task.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="preview_task" type="object" class="oe_stat_button" icon="fa-globe icon">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Task</span>
+                        <span class="o_stat_text">Preview</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
 
     <template id="my_tasks" inherit_id='project.portal_my_tasks' name="Stage Colors etc.">
         <xpath expr="//td/span[hasclass('badge-info')]" position="attributes">
@@ -9,10 +25,10 @@
 
 
     <template id="task_tag_grid" inherit_id='project.portal_my_tasks' customize_show="True" name="Task Tags on table">
-        <xpath expr="//thead/tr/th[1]" position="attributes">
+        <xpath expr="//t/t/t/t/thead/tr/th[1]" position="attributes">
             <attribute name="class">col-md-8</attribute>
         </xpath>
-        <xpath expr="//thead/tr/th[2]" position="after">
+        <xpath expr="//t/t/t/t/thead/tr/th[2]" position="after">
             <th>Tags</th>
         </xpath>
         <!-- Strange number of columns -->
