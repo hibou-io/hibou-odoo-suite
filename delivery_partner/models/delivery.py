@@ -24,7 +24,6 @@ class PartnerShippingAccount(models.Model):
     ], string='Carrier', required=True)
     note = fields.Text(string='Internal Note')
 
-    @api.multi
     def name_get(self):
         delivery_types = self._fields['delivery_type']._description_selection(self.env)
 
