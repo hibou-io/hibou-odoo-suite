@@ -2,7 +2,7 @@
     'name': 'Product Variant Always on SO',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'category': 'Hidden',
-    'version': '12.0.1.0.0',
+    'version': '13.0.1.0.0',
     'description':
         """
 Product Variant Always on SO
@@ -15,8 +15,9 @@ you may wish to have it behave as if it has attributes that
     'depends': [
         'sale',
     ],
-    'auto_install': False,
     'data': [
         'views/product_views.xml',
     ],
+    'installable': True,
+    'auto_install': False,
 }
