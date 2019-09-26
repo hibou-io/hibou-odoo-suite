@@ -7,15 +7,22 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='route_id']" position="before">
                 <field name="date_planned"/>
-                <field name="warehouse_id"/>
+<!--                <field name="warehouse_id"/>-->
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='route_id']" position="before">
                 <field name="date_planned"/>
-                <field name="warehouse_id"/>
+<!--                <field name="warehouse_id"/>-->
             </xpath>
-            <xpath expr="//field[@name='commitment_date']" position="before">
-                <field name="date_planned" />
-                <field name="requested_date" />
+            <xpath expr="//label[@for='commitment_date']" position="before">
+                <label for="date_planned" string="Planned Date"/>
+                <div class="o_row">
+                    <field name="date_planned" />
+                </div>
+                <label for="requested_date" string="Requested Date"/>
+                <div class="o_row">
+                    <field name="requested_date" />
+                </div>
+
             </xpath>
         </field>
     </record>
@@ -26,7 +33,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='route_id']" position="before">
                 <field name="date_planned"/>
-                <field name="warehouse_id"/>
+<!--                <field name="warehouse_id"/>-->
             </xpath>
         </field>
     </record>

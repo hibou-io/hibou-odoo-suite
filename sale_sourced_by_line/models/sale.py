@@ -11,10 +11,9 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
+    # warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
     date_planned = fields.Datetime('Planned Date')
 
-    @api.multi
     def _prepare_procurement_values(self, group_id=False):
         vals = super(SaleOrderLine, self)._prepare_procurement_values(group_id=group_id)
         if self.warehouse_id:
