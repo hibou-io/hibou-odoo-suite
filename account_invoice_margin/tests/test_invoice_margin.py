@@ -6,7 +6,7 @@ class TestInvoiceMargin(TestSaleMargin):
 
     def setUp(self):
         super(TestInvoiceMargin, self).setUp()
-        self.AccountInvoice = self.env['account.invoice']
+        self.AccountMove = self.env['account.move']
 
     def test_invoice_margin(self):
         """ Test the sale_margin module in Odoo. """
@@ -42,12 +42,12 @@ class TestInvoiceMargin(TestSaleMargin):
         sale_order_so11.order_line.write({'qty_delivered': 10.0})
 
         # Invoice the sales order.
-        inv_id = sale_order_so11.action_invoice_create()
-        inv = self.AccountInvoice.browse(inv_id)
+        inv_id = sale_order_so11._create_invoices()
+        inv = self.AccountMove.browse(inv_id)
         self.assertEqual(inv.margin, sale_order_so11.margin)
 
         account = self.env['account.account'].search([('internal_type', '=', 'other')], limit=1)
-        inv = self.AccountInvoice.create({
+        inv = self.AccountMove.create({
             'partner_id': self.partner_id,
             'invoice_line_ids': [
                 (0, 0, {
