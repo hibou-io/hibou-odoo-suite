@@ -22,7 +22,6 @@ class PurchaseBySaleHistory(models.TransientModel):
                                                   'If it is left blank then all warehouses and inventory '
                                                   'will be considered.')
 
-    @api.multi
     @api.depends('history_start', 'history_end')
     def _compute_history_days(self):
         for wiz in self:
@@ -32,7 +31,6 @@ class PurchaseBySaleHistory(models.TransientModel):
                 delta = fields.Date.from_string(wiz.history_end) - fields.Date.from_string(wiz.history_start)
                 wiz.history_days = delta.days
 
-    @api.multi
     @api.depends('purchase_id', 'purchase_id.order_line', 'purchase_id.partner_id')
     def _compute_product_count(self):
         for wiz in self:
@@ -130,7 +128,6 @@ class PurchaseBySaleHistory(models.TransientModel):
         for line in other_lines:
             line._onchange_quantity()
 
-    @api.multi
     def action_confirm(self):
         self.ensure_one()
         history_product_ids = self._history_product_ids()

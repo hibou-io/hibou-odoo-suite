@@ -64,7 +64,6 @@ class TestPurchaseBySaleHistory(common.TransactionCase):
         self.env['sale.order'].create({
             'partner_id': sale_partner.id,
             'date_order': sale_date,
-            'confirmation_date': sale_date,
             'picking_policy': 'direct',
             'order_line': [
                 (0, 0, {'product_id': product11.id, 'product_uom_qty': 3.0}),
@@ -93,7 +92,6 @@ class TestPurchaseBySaleHistory(common.TransactionCase):
         self.env['sale.order'].create({
             'partner_id': sale_partner.id,
             'date_order': sale_date,
-            'confirmation_date': sale_date,
             'picking_policy': 'direct',
             'order_line': [
                 (0, 0, {'product_id': product11.id, 'product_uom_qty': 3.0}),
@@ -112,7 +110,6 @@ class TestPurchaseBySaleHistory(common.TransactionCase):
         self.env['sale.order'].create({
             'partner_id': sale_partner.id,
             'date_order': sale_date,
-            'confirmation_date': sale_date,
             'picking_policy': 'direct',
             'warehouse_id': wh2.id,
             'order_line': [
@@ -132,7 +129,6 @@ class TestPurchaseBySaleHistory(common.TransactionCase):
         self.env['sale.order'].create({
             'partner_id': sale_partner.id,
             'date_order': sale_date,
-            'confirmation_date': sale_date,
             'picking_policy': 'direct',
             'order_line': [
                 (0, 0, {'product_id': product11.id, 'product_uom_qty': 3.0}),
