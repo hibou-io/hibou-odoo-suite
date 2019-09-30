@@ -5,8 +5,8 @@ from odoo.addons import decimal_precision as dp
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    margin = fields.Float(compute='_product_margin', digits=dp.get_precision('Product Price'), store=True)
-    purchase_price = fields.Float(string='Cost', digits=dp.get_precision('Product Price'))
+    margin = fields.Float(compute='_product_margin', digits='Product Price', store=True)
+    purchase_price = fields.Float(string='Cost', digits='Product Price')
 
     def _compute_margin(self, move_id, product_id, product_uom_id, sale_line_ids):
         # if sale_line_ids and don't re-browse
@@ -39,12 +39,13 @@ class AccountMoveLine(models.Model):
         for line in self:
             currency = line.move_id.currency_id
             price = line.purchase_price
+            margin = line.price_subtotal - (price * line.quantity)
             if line.product_id and not price:
                 date = line.move_id.date if line.move_id.date else fields.Date.context_today(line.move_id)
                 from_cur = line.move_id.company_currency_id.with_context(date=date)
                 price = from_cur._convert(line.product_id.standard_price, currency, line.company_id, date, round=False)
  
-            line.margin = currency.round(line.price_subtotal - (price * line.quantity))
+            line.margin = currency.round(margin) if currency else margin
 
 
 class AccountMove(models.Model):
@@ -53,7 +54,7 @@ class AccountMove(models.Model):
     margin = fields.Monetary(compute='_product_margin',
                              help="It gives profitability by calculating the difference between the Unit Price and the cost.",
                              currency_field='currency_id',
-                             digits=dp.get_precision('Product Price'),
+                             digits='Product Price',
                              store=True)
 
     @api.depends('invoice_line_ids.margin')
