@@ -42,12 +42,12 @@ class TestInvoiceMargin(TestSaleMargin):
         sale_order_so11.order_line.write({'qty_delivered': 10.0})
 
         # Invoice the sales order.
-        inv_id = sale_order_so11._create_invoices()
-        inv = self.AccountMove.browse(inv_id)
+        inv = sale_order_so11._create_invoices()
         self.assertEqual(inv.margin, sale_order_so11.margin)
 
         account = self.env['account.account'].search([('internal_type', '=', 'other')], limit=1)
         inv = self.AccountMove.create({
+            'type': 'in_invoice',
             'partner_id': self.partner_id,
             'invoice_line_ids': [
                 (0, 0, {
@@ -65,4 +65,5 @@ class TestInvoiceMargin(TestSaleMargin):
                     'quantity': 10.0,})
                 ],
         })
+        self.assertEqual(len(inv.invoice_line_ids), 2)
         self.assertEqual(inv.margin, 6000.0)
