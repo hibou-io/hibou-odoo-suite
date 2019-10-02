@@ -8,25 +8,26 @@ class AccountMoveLine(models.Model):
     margin = fields.Float(compute='_product_margin', digits='Product Price', store=True)
     purchase_price = fields.Float(string='Cost', digits='Product Price')
 
-    def _compute_margin(self, move_id, product_id, product_uom_id, sale_line_ids):
+    def _compute_margin(self, move, product, product_uom, sale_lines):
         # if sale_line_ids and don't re-browse
-        for line in sale_line_ids:
+        for line in sale_lines:
             return line.purchase_price
-        frm_cur = move_id.company_currency_id
-        to_cur = move_id.currency_id
-        purchase_price = product_id.standard_price
-        if product_uom_id != product_id.uom_id:
-            purchase_price = product_id.uom_id._compute_price(purchase_price, product_uom_id)
+        frm_cur = move.company_currency_id
+        to_cur = move.currency_id
+        purchase_price = product.standard_price
+        if product_uom and product_uom != product.uom_id:
+            purchase_price = product.uom_id._compute_price(purchase_price, product_uom)
         ctx = self.env.context.copy()
-        ctx['date'] = move_id.date if move_id.date else fields.Date.context_today(move_id)
-        price = frm_cur.with_context(ctx)._convert(purchase_price, to_cur, move_id.company_id, ctx['date'], round=False)
+        ctx['date'] = move.date if move.date else fields.Date.context_today(move)
+        price = frm_cur.with_context(ctx)._convert(purchase_price, to_cur, move.company_id, ctx['date'], round=False)
         return price
 
     @api.onchange('product_id', 'product_uom_id')
     def product_id_change_margin(self):
-        if not self.product_id or not self.product_uom_id:
-            return
-        self.purchase_price = self._compute_margin(self.move_id, self.product_id, self.product_uom_id, self.sale_line_ids)
+        for line in self:
+            if not line.product_id:
+                return
+            line.purchase_price = line._compute_margin(line.move_id, line.product_id, line.product_uom_id, line.sale_line_ids)
 
     @api.model_create_multi
     def create(self, vals):
@@ -44,6 +45,7 @@ class AccountMoveLine(models.Model):
                 date = line.move_id.date if line.move_id.date else fields.Date.context_today(line.move_id)
                 from_cur = line.move_id.company_currency_id.with_context(date=date)
                 price = from_cur._convert(line.product_id.standard_price, currency, line.company_id, date, round=False)
+                margin = line.price_subtotal - (price * line.quantity)
  
             line.margin = currency.round(margin) if currency else margin
 
