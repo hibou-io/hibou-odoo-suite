@@ -725,7 +725,7 @@ class SaleOrderMakePlan(models.TransientModel):
         return max_requested_date
 
     def _get_max_transit_days(self, sub_options):
-        return max(wh_option.get('transit_days', 0) for wh_option in sub_options.values())
+        return max(wh_option.get('transit_days', 0) or 0 for wh_option in sub_options.values())
 
     def _generate_shipping_carrier_option(self, base_option, order_fake, carrier):
         # some carriers look at the order carrier_id
@@ -789,11 +789,15 @@ class SaleOrderPlanningOption(models.TransientModel):
     _description = 'Order Planning Option'
 
     def create(self, values):
+        def datetime_converter(o):
+            if isinstance(o, datetime):
+                return str(o)
+
         if 'sub_options' in values and not isinstance(values['sub_options'], str):
             for wh_id, option in values['sub_options'].items():
                 if option.get('date_planned'):
                     option['date_planned'] = str(option['date_planned'])
-            values['sub_options'] = dumps(values['sub_options'])
+            values['sub_options'] = dumps(values['sub_options'], default=datetime_converter)
         return super(SaleOrderPlanningOption, self).create(values)
 
     @api.multi
@@ -808,12 +812,12 @@ class SaleOrderPlanningOption(models.TransientModel):
 
             line = ''
             for wh_id, wh_option in sub_options.items():
-                product_skus = wh_option.get('product_skus', [])
-                date_planned = wh_option.get('date_planned')
+                product_skus = (str(s) for s in wh_option.get('product_skus', []))
+                date_planned = wh_option.get('date_planned') or ''
                 product_skus = ', '.join(product_skus)
-                requested_date = wh_option.get('requested_date', '')
-                shipping_price = float(wh_option.get('shipping_price', 0.0))
-                transit_days = int(wh_option.get('transit_days', 0))
+                requested_date = wh_option.get('requested_date', '') or ''
+                shipping_price = float(wh_option.get('shipping_price', 0.0) or 0)
+                transit_days = int(wh_option.get('transit_days', 0) or 0)
 
                 line += """WH %d :: %s
   Date Planned:   %s
