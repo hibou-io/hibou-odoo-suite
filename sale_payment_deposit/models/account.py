@@ -13,7 +13,6 @@ class AccountPaymentTerm(models.Model):
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
-    @api.multi
     def _post_process_after_done(self):
         now = fields.Datetime.now()
         res = super(PaymentTransaction, self)._post_process_after_done()

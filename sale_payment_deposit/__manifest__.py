@@ -2,7 +2,7 @@
     'name': 'Sale Payment Deposit',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'category': 'Sales',
-    'version': '12.0.1.0.0',
+    'version': '13.0.1.0.0',
     'description':
         """
 Sale Deposits
