@@ -3,7 +3,6 @@ from odoo.exceptions import ValidationError
 from odoo.addons.sale.models.sale import SaleOrder
 
 
-@api.multi
 def _create_payment_transaction(self, vals):
     # This is a copy job from odoo.addons.sale.models.sale due to the closed nature of the vals.update(dict) call
     # Ultimately, only the 'vals.update' with the new amount is really used.
