@@ -50,7 +50,6 @@
     <record id="partner_shipping_account_action_main" model="ir.actions.act_window">
         <field name="name">Shipping Accounts</field>
         <field name="res_model">partner.shipping.account</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p>
