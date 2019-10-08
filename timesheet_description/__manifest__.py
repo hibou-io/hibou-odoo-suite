@@ -16,7 +16,7 @@ Optionally, allows you to display your timesheet entries in markdown on the fron
         'hr_timesheet',
     ],
     'data': [
-        # 'views/project_templates.xml',
+        'views/project_templates.xml',
         'views/timesheet_views.xml',
     ],
     'installable': True,
