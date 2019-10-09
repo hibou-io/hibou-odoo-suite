@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_mrp_bom_add_form_view" model="ir.ui.view">
+        <field name="name">mrp.bom.add.form</field>
+        <field name="model">mrp.bom.add</field>
+        <field name="arch" type="xml">
+            <form string="Add to Bill of Materials">
+                <group>
+                     <group>
+                         <field name="bom_id" invisible="1"/>
+                         <field name="bom_product_tmpl_id" invisible="1"/>
+                         <field name="bom_routing_id" invisible="1"/>
+                         <field name="product_tmpl_id"/>
+                         <field name="limit_possible"/>
+                         <field name="product_variant_count"/>
+                         <field name="replace_existing"/>
+                         <field name="existing_line_count"/>
+                     </group>
+                     <group>
+                         <field name="product_qty"/>
+                         <field name="product_uom_id"/>
+                         <field name="operation_id" domain="[('routing_id', '=', bom_routing_id)]"/>
+                     </group>
+                </group>
+                <footer>
+                    <button string="Add" class="btn-primary" type="object" name="add_variants"/>
+                </footer>
+           </form>
+        </field>
+    </record>
+
+    <record id="action_mrp_bom_add" model="ir.actions.act_window">
+        <field name="name">Add to Bill of Materials</field>
+        <field name="res_model">mrp.bom.add</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_mrp_bom_add_form_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="mrp_bom_form_view_inherit" model="ir.ui.view">
+        <field name="name">mrp.bom.form.inherit</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bom_line_ids']" position="after">
+                <button string="Add Bulk" type="action" name="%(mrp_bom_add.action_mrp_bom_add)d" context="{'default_bom_id': id}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
