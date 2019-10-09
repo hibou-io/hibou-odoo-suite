@@ -21,7 +21,6 @@ class ProgramOutputView(models.TransientModel):
     bom_routing_id = fields.Many2one('mrp.routing', related='bom_id.routing_id')
     operation_id = fields.Many2one('mrp.routing.workcenter', 'Consume in Operation')
 
-    @api.multi
     @api.depends('product_tmpl_id', 'limit_possible')
     def _compute_variant_count(self):
         self.ensure_one()
@@ -54,9 +53,7 @@ class ProgramOutputView(models.TransientModel):
         values = self._compute_attribute_value_ids()
         products = self.env['product.product']
         for p in self.product_tmpl_id.product_variant_ids:
-            if not p.attribute_value_ids.filtered(lambda a: a not in values):
-                # This product's attribute values are in the values set.
-                products += p
+            products += p
         return products
 
     def _compute_existing_line_ids(self):
@@ -78,7 +75,6 @@ class ProgramOutputView(models.TransientModel):
                 'product_id': p.id,
                 'product_qty': self.product_qty,
                 'product_uom_id': self.product_uom_id.id,
-                'attribute_value_ids': [(4, a.id, 0) for a in p.attribute_value_ids if a in attribute_values],
                 'operation_id': self.operation_id.id,
             }))
         self.bom_id.write({'bom_line_ids': lines})
