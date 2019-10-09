@@ -37,7 +37,7 @@
                             <field name="tag_ids" widget="many2many_tags" placeholder="Tags" options="{'no_create': True}"/>
                             <field name="partner_id" options="{'no_create_edit': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="partner_shipping_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="company_id" invisible="1" options="{'no_create': True}" can_create="true" can_write="true" modifiers="{}"/>
+                            <field name="company_id" options="{'no_create': True}" modifiers="{}"/>
                         </group>
                     </group>
                     <notebook>
@@ -161,6 +161,7 @@
                         <group>
                             <field name="usage"/>
                             <field name="valid_days"/>
+                            <field name="company_id"/>
                         </group>
                     </group>
                     <group>

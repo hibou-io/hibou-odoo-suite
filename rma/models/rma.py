@@ -41,6 +41,7 @@ class RMATemplate(models.Model):
         ('make_to_order', 'Apply Procurements')
         ], string="Outbound Procurement Method", default='make_to_stock')
     out_to_refund = fields.Boolean(string='Outbound Mark Refund')
+    company_id = fields.Many2one('res.company', 'Company')
 
     def _values_for_in_picking(self, rma):
         return {

@@ -15,6 +15,7 @@
     'data': [
         'data/ir_sequence_data.xml',
         'security/ir.model.access.csv',
+        'security/rma_security.xml',
         'views/rma_views.xml',
         'views/stock_picking_views.xml',
         'wizard/rma_lines_views.xml',
