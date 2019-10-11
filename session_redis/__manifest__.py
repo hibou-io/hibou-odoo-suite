@@ -16,6 +16,7 @@ session_redis = True
 ;session_redis_dbindex = 1
 ;session_redis_pass = x
 ;session_redis_expire = 604800
+;session_redis_prefix = test
 
     """,
     "summary": "",
