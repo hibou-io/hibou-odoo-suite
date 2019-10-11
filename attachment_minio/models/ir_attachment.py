@@ -15,12 +15,13 @@ class MinioAttachment(models.Model):
 
     @api.model
     def _get_minio_client(self):
+        config = tools.config
         params = self.env['ir.config_parameter'].sudo()
-        host = params.get_param('ir_attachment.location.host')
-        region = params.get_param('ir_attachment.location.region', 'us-west-1')
-        access_key = params.get_param('ir_attachment.location.access_key')
-        secret_key = params.get_param('ir_attachment.location.secret_key')
-        secure = params.get_param('ir_attachment.location.secure')
+        host = params.get_param('ir_attachment.location.host') or config.get('attachment_minio_host')
+        region = params.get_param('ir_attachment.location.region') or config.get('attachment_minio_region', 'us-west-1')
+        access_key = params.get_param('ir_attachment.location.access_key') or config.get('attachment_minio_access_key')
+        secret_key = params.get_param('ir_attachment.location.secret_key') or config.get('attachment_minio_secret_key')
+        secure = params.get_param('ir_attachment.location.secure') or config.get('attachment_minio_secure')
         if not all((host, access_key, secret_key)):
             raise exceptions.UserError('Incorrect configuration of attachment_minio.')
         return Minio(host,
@@ -31,8 +32,9 @@ class MinioAttachment(models.Model):
 
     @api.model
     def _get_minio_bucket(self, client, name=None):
+        config = tools.config
         params = self.env['ir.config_parameter'].sudo()
-        bucket = name or params.get_param('ir_attachment.location.bucket')
+        bucket = name or params.get_param('ir_attachment.location.bucket') or config.get('attachment_minio_bucket')
         if not bucket:
             raise exceptions.UserError('Incorrect configuration of attachment_minio -- Missing bucket.')
         if not client.bucket_exists(bucket):

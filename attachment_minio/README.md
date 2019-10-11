@@ -1,12 +1,3 @@
-{
-    "name": "Attachment MinIO",
-    "version": "12.0.1.0.0",
-    "depends": [
-        "base_attachment_object_storage",
-    ],
-    "author": "Hibou Corp.",
-    "license": "AGPL-3",
-    "description": """
 # Use MinIO (or Amazon S3) for Attachment/filestore
 
 MinIO provides S3 API compatible storage to scale out without a shared filesystem like NFS.
@@ -59,17 +50,3 @@ env.cr.commit()
 
 If `attachment_minio` is not already installed, you can then install it and the migration 
 should be noted in the logs.  **Ensure that the timeouts are long enough that the migration can finish.**
-
-    """,
-    "summary": "",
-    "website": "",
-    "category": 'Tools',
-    "auto_install": False,
-    "installable": True,
-    "application": False,
-    "external_dependencies": {
-        "python": [
-            "minio",
-        ],
-    },
-}
