@@ -29,7 +29,7 @@ class RedisSessionStore(werkzeug.contrib.sessions.SessionStore):
         self.expire = kwargs.get('expire', DEFAULT_SESSION_TIMEOUT)
         if self.expire == DEFAULT_SESSION_TIMEOUT:
             self.expire = int(tools.config.get('session_redis_expire', DEFAULT_SESSION_TIMEOUT))
-        self.key_prefix = kwargs.get('key_prefix', '')
+        self.key_prefix = kwargs.get('key_prefix', tools.config.get('session_redis_prefix', ''))
         self.redis = redis.Redis(
             host=tools.config.get('session_redis_host', 'localhost'),
             port=int(tools.config.get('session_redis_port', 6379)),
