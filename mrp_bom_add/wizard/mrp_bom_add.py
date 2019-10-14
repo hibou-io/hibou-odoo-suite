@@ -44,16 +44,15 @@ class ProgramOutputView(models.TransientModel):
         if not self.limit_possible:
             return other_val_ids
         main_product_value_ids = self.bom_product_tmpl_id.mapped('attribute_line_ids.value_ids')
-        for v in other_val_ids:
-            if v in main_product_value_ids:
-                attr_val_ids += v
-        return attr_val_ids
+        return main_product_value_ids.filtered(lambda v: v in other_val_ids)
 
     def _compute_product_ids(self):
         values = self._compute_attribute_value_ids()
         products = self.env['product.product']
         for p in self.product_tmpl_id.product_variant_ids:
-            products += p
+            if not p.product_template_attribute_value_ids.mapped('product_attribute_value_id').filtered(lambda a: a not in values):
+                # This product's attribute values are in the values set.
+                products += p
         return products
 
     def _compute_existing_line_ids(self):
@@ -70,11 +69,18 @@ class ProgramOutputView(models.TransientModel):
             self.product_uom_id = self.product_tmpl_id.uom_id
         lines = []
         for p in products:
+            bom_product_template_attribute_values = self.bom_product_tmpl_id.attribute_line_ids\
+                .mapped('product_template_value_ids')
+            p_values = p.product_template_attribute_value_ids.mapped('product_attribute_value_id')
+            bom_product_template_attribute_value_ids = bom_product_template_attribute_values \
+                .filtered(lambda v: v.product_attribute_value_id in attribute_values and v.product_attribute_value_id in p_values)
             lines.append((0, 0, {
                 'bom_id': self.bom_id.id,
                 'product_id': p.id,
                 'product_qty': self.product_qty,
                 'product_uom_id': self.product_uom_id.id,
+                'bom_product_template_attribute_value_ids': [(4, a.id, 0)
+                                                             for a in bom_product_template_attribute_value_ids],
                 'operation_id': self.operation_id.id,
             }))
         self.bom_id.write({'bom_line_ids': lines})

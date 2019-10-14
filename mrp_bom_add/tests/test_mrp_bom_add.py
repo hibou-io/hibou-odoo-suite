@@ -76,11 +76,11 @@ class TestMRPBOMAdd(TransactionCase):
         })
         wizard.product_tmpl_id = self.component
         self.assertEqual(wizard._compute_attribute_value_ids(),
-                         self.component.mapped('product_variant_ids.attribute_value_ids'))
+                         self.component.mapped('attribute_line_ids.value_ids'))
         self.assertEqual(wizard._compute_product_ids(), self.component.product_variant_ids)
         wizard.limit_possible = True
         self.assertEqual(wizard._compute_attribute_value_ids(),
-                         self.manufacture.mapped('product_variant_ids.attribute_value_ids'))
+                         self.manufacture.mapped('attribute_line_ids.value_ids'))
 
     def test_main(self):
         # Ensure BoM is empty
