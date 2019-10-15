@@ -19,7 +19,7 @@ class Payslip(models.Model):
             amount += bu.badge_id.payroll_amount
         for bu in contract.employee_id.badge_ids.filtered(lambda bu: (
                 bu.badge_id.payroll_type == 'period'
-                and date_from <= bu.create_date <= date_to
+                and date_from <= str(bu.create_date) <= date_to
         )):
             amount += bu.badge_id.payroll_amount
         return amount
