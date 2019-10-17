@@ -1,5 +1,6 @@
 from odoo.tests import common
 from odoo import fields
+from datetime import date
 
 
 class TestPayroll(common.TransactionCase):
@@ -42,7 +43,7 @@ class TestPayroll(common.TransactionCase):
             'date_from': '2018-01-01',
             'date_to': '2018-01-31',
         })
-        self.assertEqual(payslip._get_input_badges(self.contract, '2018-01-01', '2018-01-31'), 0.0)
+        self.assertEqual(payslip._get_input_badges(self.contract, date(2018, 1, 1), date(2018, 1, 31)), 0.0)
         payslip.compute_sheet()
         basic = payslip.details_by_salary_rule_category.filtered(lambda l: l.code == 'GROSS')
         self.assertTrue(basic)
@@ -84,7 +85,7 @@ class TestPayroll(common.TransactionCase):
             'date_to': '2018-01-31',
         })
         # This is crazy, but...
-        res = payslip.onchange_employee_id('2018-01-01', '2018-01-31', employee_id=self.employee.id, contract_id=self.contract.id)
+        res = payslip.onchange_employee_id(date(2018, 1, 1), date(2018, 1, 31), employee_id=self.employee.id, contract_id=self.contract.id)
         del res['value']['line_ids']
         res['value']['input_line_ids'] = [(0, 0, l) for l in res['value']['input_line_ids']]
         res['value']['worked_days_line_ids'] = [(0, 0, l) for l in res['value']['worked_days_line_ids']]
@@ -92,7 +93,7 @@ class TestPayroll(common.TransactionCase):
         self.assertTrue(payslip.input_line_ids)
         payslip.compute_sheet()
 
-        self.assertEqual(payslip._get_input_badges(self.contract, '2018-01-01', '2018-01-31'), additional_wage)
+        self.assertEqual(payslip._get_input_badges(self.contract, date(2018, 1, 1), date(2018, 1, 31)), additional_wage)
 
         basic = payslip.details_by_salary_rule_category.filtered(lambda l: l.code == 'GROSS')
         self.assertTrue(basic)
@@ -105,7 +106,7 @@ class TestPayroll(common.TransactionCase):
             'date_to': '2018-02-25',  # Feb...
         })
         # This is crazy, but...
-        res = payslip.onchange_employee_id('2018-02-01', '2018-02-25', employee_id=self.employee.id,
+        res = payslip.onchange_employee_id(date(2018, 2, 1), date(2018, 2, 25), employee_id=self.employee.id,
                                            contract_id=self.contract.id)
         del res['value']['line_ids']
         res['value']['input_line_ids'] = [(0, 0, l) for l in res['value']['input_line_ids']]
@@ -114,7 +115,7 @@ class TestPayroll(common.TransactionCase):
         self.assertTrue(payslip.input_line_ids)
         payslip.compute_sheet()
 
-        self.assertEqual(payslip._get_input_badges(self.contract, '2018-02-01', '2018-02-25'), additional_wage + additional_wage_period)
+        self.assertEqual(payslip._get_input_badges(self.contract, date(2018, 2, 1), date(2018, 2, 25)), additional_wage + additional_wage_period)
 
         basic = payslip.details_by_salary_rule_category.filtered(lambda l: l.code == 'GROSS')
         self.assertTrue(basic)
