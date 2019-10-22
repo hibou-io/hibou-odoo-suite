@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="mrp_production_add_production_item_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.add_production_item.form.view</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='move_raw_ids']" position="before">
+            <group col="2" colspan="2">
+                <button name="%(action_add_production_item)d"
+                        type="action"
+                        attrs="{'invisible': [('state', 'in', ('cancel', 'done'))]}"
+                        string="Add extra item"
+                        class="oe_highlight"/>
+            </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
