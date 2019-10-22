@@ -41,9 +41,17 @@ class AddProductionItem(models.TransientModel):
                 'product_uom_id': item.product_uom_id.id,
             })
 
-            move = item.production_id._get_move_raw_values(bom_line, {'qty': item.product_qty, 'parent_line': None})
+            move = item.production_id._get_move_raw_values(bom_line, {
+                'qty': item.product_qty,
+                'product': item.product_id,
+                'original_qty': item.product_qty,
+                'parent_line': None})
             move = self.env['stock.move'].create(move)
-            move.write({'unit_factor': 0.0})
+            move.write({
+                'group_id': item.production_id.procurement_group_id.id,
+                'unit_factor': move.product_uom_qty / item.production_id.product_qty,
+                'reference': item.production_id.name,
+            })
             move._action_confirm()
 
         return True
