@@ -258,13 +258,13 @@ class RMA(models.Model):
         if self.template_usage and hasattr(self, '_create_in_picking_' + self.template_usage):
             return getattr(self, '_create_in_picking_' + self.template_usage)()
         values = self.template_id._values_for_in_picking(self)
-        return self.env['stock.picking'].sudo().create(values)
+        return self.env['stock.picking'].with_context(force_company=self.company_id.id).sudo().create(values)
 
     def _create_out_picking(self):
         if self.template_usage and hasattr(self, '_create_out_picking_' + self.template_usage):
             return getattr(self, '_create_out_picking_' + self.template_usage)()
         values = self.template_id._values_for_out_picking(self)
-        return self.env['stock.picking'].sudo().create(values)
+        return self.env['stock.picking'].with_context(force_company=self.company_id.id).sudo().create(values)
 
     def _find_candidate_return_picking(self, product_ids, pickings, location_id):
         done_pickings = pickings.filtered(lambda p: p.state == 'done' and p.location_dest_id.id == location_id)
@@ -305,7 +305,7 @@ class RMA(models.Model):
             vals.update(move_line_values_update)
             move_lines.append((l1, l2, vals))
         values['move_lines'] = move_lines
-        return self.env['stock.picking'].sudo().create(values)
+        return self.env['stock.picking'].with_context(force_company=self.company_id.id).sudo().create(values)
 
     def _new_in_picking(self, old_picking):
         new_picking = old_picking.copy({
