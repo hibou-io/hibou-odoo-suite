@@ -27,6 +27,7 @@ class ProductConfiguratorController(product_configurator.ProductConfiguratorCont
             'sale_line': sale_line,
             # get_attribute_exclusions deprecated, use product method
             'get_attribute_exclusions': self._get_attribute_exclusions,
+            # get_attribute_value_defaults deprecated due to ecommerce templates
             'get_attribute_value_defaults': self._get_attribute_value_defaults,
         })
 

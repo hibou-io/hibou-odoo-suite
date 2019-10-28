@@ -8,7 +8,7 @@
 
     <template id="variants_inherit" inherit_id="sale.variants">
         <xpath expr="//t[@t-set='attribute_exclusions']" position="after">
-            <t t-set="attribute_value_defaults" t-value="get_attribute_value_defaults(product, sale_line)"/>
+            <t t-set="attribute_value_defaults" t-value="product.get_default_attribute_values(sale_line)"/>
         </xpath>
         <xpath expr="//t[@t-foreach='variant_id.product_template_value_ids']/option" position="attributes">
             <attribute name="t-att-data-is_custom">value_id.is_custom</attribute>
