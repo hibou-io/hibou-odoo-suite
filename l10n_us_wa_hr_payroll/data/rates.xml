@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="hr_payroll_rates_wa_unemp_2018" model="hr.payroll.rate">
+            <field name="name">US Washington Unemployment</field>
+            <field name="code">US_WA_UNEMP</field>
+            <field name="rate">1.16</field>
+            <field name="date_from">2018-01-01</field>
+            <field name="wage_limit_year" eval="47300.0"/>
+        </record>
+        <record id="hr_payroll_rates_wa_unemp_2019" model="hr.payroll.rate">
+            <field name="name">US Washington Unemployment</field>
+            <field name="code">US_WA_UNEMP</field>
+            <field name="rate">1.03</field>
+            <field name="date_from">2019-01-01</field>
+            <field name="wage_limit_year" eval="49800.0"/>
+        </record>
+    </data>
+</odoo>

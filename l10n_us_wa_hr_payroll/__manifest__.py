@@ -4,7 +4,7 @@
     'license': 'AGPL-3',
     'category': 'Localization',
     'depends': ['l10n_us_hr_payroll'],
-    'version': '11.0.2018.0.0',
+    'version': '12.0.2019.0.0',
     'description': """
 USA::Washington Payroll Rules.
 ==============================
@@ -19,9 +19,10 @@ USA::Washington Payroll Rules.
     'website': 'https://hibou.io/',
     'data': [
         'security/ir.model.access.csv',
-        'hr_payroll_view.xml',
+        'views/hr_payroll_views.xml',
         'data/base.xml',
-        'data/rules_2018.xml',
+        'data/rates.xml',
+        'data/rules.xml',
         'data/final.xml',
     ],
     'installable': True

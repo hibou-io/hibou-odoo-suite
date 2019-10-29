@@ -26,62 +26,26 @@
 
 <!-- HR SALARY RULE CATEGORIES-->
     <record id="hr_payroll_wa_unemp_wages" model="hr.salary.rule.category">
-        <field name="name">Washington Unemployment - Wages</field>
-        <field name="code">WA_UNEMP_WAGES</field>
+        <field name="name">Wage: US-WA Unemployment</field>
+        <field name="code">WAGE_US_WA_UNEMP</field>
     </record>
 
     <record id="hr_payroll_wa_unemp" model="hr.salary.rule.category">
-        <field name="name">Washington Unemployment</field>
-        <field name="code">WA_UNEMP</field>
+        <field name="name">ER: US-WA Unemployment</field>
+        <field name="code">ER_US_WA_UNEMP</field>
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
 
     <record id="hr_payroll_wa_lni" model="hr.salary.rule.category">
-        <field name="name">Washington LNI</field>
-        <field name="code">WA_LNI</field>
+        <field name="name">ER: US-WA LNI</field>
+        <field name="code">ER_US_WA_LNI</field>
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
 
     <record id="hr_payroll_wa_lni_withhold" model="hr.salary.rule.category">
-        <field name="name">Washington LNI Withholding</field>
-        <field name="code">WA_LNI_WITHHOLD</field>
+        <field name="name">EE: US-WA LNI</field>
+        <field name="code">EE_US_WA_LNI</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
-    </record>
-
-<!-- HR SALARY RULES -->
-    <record id="hr_payroll_rules_wa_lni_withhold" model="hr.salary.rule">
-        <field name="sequence" eval="150"/>
-        <field name="category_id" ref="hr_payroll_wa_lni_withhold"/>
-        <field name="name">Washington LNI Withholding</field>
-        <field name="code">WA_LNI_WITHHOLD</field>
-        <field name="condition_select">none</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">
-hours = worked_days.WORK100.number_of_hours
-rate = contract.wa_lni.rate_emp_withhold
-if rate:
-    result = -(hours * rate)
-
-        </field>
-        <field name="register_id" ref="contrib_register_wador_lni"/>
-    </record>
-    <record id="hr_payroll_rules_wa_lni" model="hr.salary.rule">
-        <field name="sequence" eval="155"/>
-        <field name="category_id" ref="hr_payroll_wa_lni"/>
-        <field name="name">Washington LNI</field>
-        <field name="code">WA_LNI</field>
-        <field name="appears_on_payslip" eval="False"/>
-        <field name="condition_select">none</field>
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">
-hours = worked_days.WORK100.number_of_hours
-rate = contract.wa_lni.rate
-withholding = categories.WA_LNI_WITHHOLD
-if rate:
-    result = -(hours * rate) - withholding
-
-        </field>
-        <field name="register_id" ref="contrib_register_wador_lni"/>
     </record>
 
     </data>

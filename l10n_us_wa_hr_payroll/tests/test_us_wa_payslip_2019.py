@@ -5,8 +5,8 @@ class TestUsWAPayslip(TestUsPayslip):
     ###
     #    Taxes and Rates
     ###
-    WA_UNEMP_MAX_WAGE = 47300.0
-    WA_UNEMP_RATE = 1.16
+    WA_UNEMP_MAX_WAGE = 49800.0
+    WA_UNEMP_RATE = 1.03
 
     def setUp(self):
         super(TestUsWAPayslip, self).setUp()
@@ -16,7 +16,7 @@ class TestUsWAPayslip(TestUsPayslip):
             'rate_emp_withhold': 0.05575,
         })
 
-    def test_2018_taxes(self):
+    def test_2019_taxes(self):
         salary = 25000.0
 
         employee = self._createEmployee()
@@ -28,8 +28,8 @@ class TestUsWAPayslip(TestUsPayslip):
         # tax rates
         wa_unemp = self.WA_UNEMP_RATE / -100.0
 
-        self._log('2018 Washington tax first payslip:')
-        payslip = self._createPayslip(employee, '2018-01-01', '2018-01-31')
+        self._log('2019 Washington tax first payslip:')
+        payslip = self._createPayslip(employee, '2019-01-01', '2019-01-31')
         payslip.onchange_contract()
         hours_in_period = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'WORK100').number_of_hours
         payslip.compute_sheet()
@@ -49,8 +49,8 @@ class TestUsWAPayslip(TestUsPayslip):
         remaining_wa_unemp_wages = self.WA_UNEMP_MAX_WAGE - salary if (self.WA_UNEMP_MAX_WAGE - 2*salary < salary) \
             else salary
 
-        self._log('2018 Washington tax second payslip:')
-        payslip = self._createPayslip(employee, '2018-02-01', '2018-02-28')
+        self._log('2019 Washington tax second payslip:')
+        payslip = self._createPayslip(employee, '2019-02-01', '2019-02-28')
         payslip.onchange_contract()
         payslip.compute_sheet()
 
