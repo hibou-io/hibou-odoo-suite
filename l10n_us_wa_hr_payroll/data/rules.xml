@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- HR SALARY RULES-->
+    <record id="hr_payroll_rules_wa_unemp_wages_2018" model="hr.salary.rule">
+        <field name="sequence" eval="423"/>
+        <field name="category_id" ref="hr_payroll_wa_unemp_wages"/>
+        <field name="name">Wage: US-WA Unemployment</field>
+        <field name="code">WAGE_US_WA_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+###
+year = payslip.dict.date_to.year
+rate = payslip.dict.get_rate('US_WA_UNEMP')
+ytd = payslip.sum('WAGE_US_WA_UNEMP', str(year) + '-01-01', str(year+1) + '-01-01')
+ytd += contract.external_wages
+remaining = rate.wage_limit_year - ytd
+if remaining &lt;= 0.0:
+    result = 0
+elif remaining &lt; categories.BASIC:
+    result = remaining
+else:
+    result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_wa_unemp_2018" model="hr.salary.rule">
+        <field name="sequence" eval="443"/>
+        <field name="category_id" ref="hr_payroll_wa_unemp"/>
+        <field name="name">ER: US-WA Unemployment</field>
+        <field name="code">ER_US_WA_UNEMP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = (contract.futa_type != contract.FUTA_TYPE_BASIC)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip.dict.get_rate('US_WA_UNEMP')
+result_rate = -rate.rate
+result = categories.WAGE_US_WA_UNEMP
+
+# result_rate of 0 implies 100% due to bug
+if result_rate == 0.0:
+    result = 0.0
+        </field>
+        <field name="register_id" ref="contrib_register_wador_unemp"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rules_wa_lni_withhold" model="hr.salary.rule">
+        <field name="sequence" eval="150"/>
+        <field name="category_id" ref="hr_payroll_wa_lni_withhold"/>
+        <field name="name">EE: US-WA LNI</field>
+        <field name="code">EE_US_WA_LNI</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+hours = worked_days.WORK100.number_of_hours
+rate = contract.wa_lni.rate_emp_withhold
+if rate:
+    result = -(hours * rate)
+
+        </field>
+        <field name="register_id" ref="contrib_register_wador_lni"/>
+    </record>
+
+    <record id="hr_payroll_rules_wa_lni" model="hr.salary.rule">
+        <field name="sequence" eval="155"/>
+        <field name="category_id" ref="hr_payroll_wa_lni"/>
+        <field name="name">ER: US-WA LNI</field>
+        <field name="code">ER_US_WA_LNI</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+hours = worked_days.WORK100.number_of_hours
+rate = contract.wa_lni.rate
+withholding = categories.EE_US_WA_LNI
+if rate:
+    result = -(hours * rate) - withholding
+
+        </field>
+        <field name="register_id" ref="contrib_register_wador_lni"/>
+    </record>
+
+</odoo>

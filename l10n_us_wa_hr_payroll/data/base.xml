@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+<!-- CONTRIBUTION REGISTERS -->
+    <record id="res_partner_wador_unemp" model="res.partner">
+        <field name="name">Washington Employment Security Department - Unemployment Tax</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+    <record id="res_partner_wador_lni" model="res.partner">
+        <field name="name">Washington Labor &amp; Industries - LNI</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+    <record id="contrib_register_wador_unemp" model="hr.contribution.register">
+        <field name="name">Washington Employment</field>
+        <field name="note">Washington Employment Security Department - Unemployment</field>
+        <field name="partner_id" ref="res_partner_wador_unemp"/>
+    </record>
+    <record id="contrib_register_wador_lni" model="hr.contribution.register">
+        <field name="name">Washington Labor &amp; Industries</field>
+        <field name="note">Washington Labor &amp; Industries - LNI</field>
+        <field name="partner_id" ref="res_partner_wador_lni"/>
+    </record>
+
+
+<!-- HR SALARY RULE CATEGORIES-->
+    <record id="hr_payroll_wa_unemp_wages" model="hr.salary.rule.category">
+        <field name="name">Wage: US-WA Unemployment</field>
+        <field name="code">WAGE_US_WA_UNEMP</field>
+    </record>
+
+    <record id="hr_payroll_wa_unemp" model="hr.salary.rule.category">
+        <field name="name">ER: US-WA Unemployment</field>
+        <field name="code">ER_US_WA_UNEMP</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="hr_payroll_wa_lni" model="hr.salary.rule.category">
+        <field name="name">ER: US-WA LNI</field>
+        <field name="code">ER_US_WA_LNI</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="hr_payroll_wa_lni_withhold" model="hr.salary.rule.category">
+        <field name="name">EE: US-WA LNI</field>
+        <field name="code">EE_US_WA_LNI</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    </data>
+</odoo>
