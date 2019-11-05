@@ -1,13 +1,3 @@
-# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
-
-{
-    'name': 'Payroll Payments',
-    'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '13.0.1.0.0',
-    'category': 'Human Resources',
-    'sequence': 95,
-    'summary': 'Register payments for Payroll Payslips',
-    'description': """
 Pay your Payroll
 ================
 
@@ -33,18 +23,3 @@ Tested
 ------
 
 Passes original Payroll Accounting tests and additional ones for gouping behavior.
-    """,
-    'website': 'https://hibou.io/',
-    'depends': [
-        'hr_payroll_account',
-        'account_batch_payment',
-    ],
-    'data': [
-        #'wizard/hr_payroll_register_payment_views.xml',
-        'views/account_views.xml',
-        'views/hr_payslip_views.xml',
-    ],
-    'installable': True,
-    'application': False,
-    'license': 'OPL-1',
-}
