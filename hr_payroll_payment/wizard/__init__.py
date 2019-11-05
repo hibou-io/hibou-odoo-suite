@@ -1,4 +1,3 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from . import models
-from . import wizard
+from . import hr_payroll_payslips_by_employees
