@@ -53,6 +53,7 @@ class RMATemplate(models.Model):
             'carrier_id': self.in_carrier_id.id if self.in_carrier_id else False,
             'move_lines': [(0, None, {
                 'name': rma.name + ' IN: ' + l.product_id.name_get()[0][1],
+                'picking_type_id': self.in_type_id.id,
                 'product_id': l.product_id.id,
                 'product_uom_qty': l.product_uom_qty,
                 'product_uom': l.product_uom_id.id,
@@ -71,6 +72,7 @@ class RMATemplate(models.Model):
             'carrier_id': self.out_carrier_id.id if self.out_carrier_id else False,
             'move_lines': [(0, None, {
                 'name': rma.name + ' OUT: ' + l.product_id.name_get()[0][1],
+                'picking_type_id': self.out_type_id.id,
                 'product_id': l.product_id.id,
                 'product_uom_qty': l.product_uom_qty,
                 'product_uom': l.product_uom_id.id,
