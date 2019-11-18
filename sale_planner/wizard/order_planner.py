@@ -627,6 +627,8 @@ class SaleOrderMakePlan(models.TransientModel):
         if warehouse.shipping_calendar_id:
             now = fields.Datetime.from_string(fields.Datetime.now())
             then = warehouse.shipping_calendar_id.plan_days(0.01, fields.Datetime.from_string(fields.Datetime.now()), compute_leaves=True)
+            if not then:
+                return False
             if then < now:
                 then = warehouse.shipping_calendar_id.plan_days(1.01, fields.Datetime.from_string(fields.Datetime.now()), compute_leaves=True)
             return fields.Datetime.to_string(then)
