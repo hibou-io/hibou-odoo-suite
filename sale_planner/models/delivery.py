@@ -72,9 +72,9 @@ class DeliveryCarrier(models.Model):
                 return self._calculate_transit_days_naive(date_planned, date_delivered)
             if current_date_planned == date_planned:
                 date_planned += timedelta(days=1)
-                transit_days += 1
             else:
                 date_planned = current_date_planned
+            transit_days += 1
 
         if transit_days > 1:
             transit_days -= 1
