@@ -9,6 +9,7 @@ from copy import deepcopy, copy
 from odoo import fields, _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
+from odoo.exceptions import ValidationError
 from odoo.addons.queue_job.exception import NothingToDoJob, FailedJobError
 
 _logger = logging.getLogger(__name__)
@@ -41,13 +42,12 @@ class SaleOrderBatchImporter(Component):
 
 
 class SaleOrderImportMapper(Component):
-
-
     _name = 'opencart.sale.order.mapper'
     _inherit = 'opencart.import.mapper'
     _apply_on = 'opencart.sale.order'
 
     direct = [('order_id', 'external_id'),
+              ('store_id', 'store_id'),
               # ('customerOrderId', 'customer_order_id'),
               ]
 
@@ -88,7 +88,7 @@ class SaleOrderImportMapper(Component):
     @mapping
     def name(self, record):
         name = str(record['order_id'])
-        prefix = self.backend_record.sale_prefix
+        prefix = self.options.store.sale_prefix or self.backend_record.sale_prefix
         if prefix:
             name = prefix + name
         return {'name': name}
@@ -99,13 +99,15 @@ class SaleOrderImportMapper(Component):
 
     @mapping
     def fiscal_position_id(self, record):
-        if self.backend_record.fiscal_position_id:
-            return {'fiscal_position_id': self.backend_record.fiscal_position_id.id}
+        fiscal_position = self.options.store.fiscal_position_id or self.backend_record.fiscal_position_id
+        if fiscal_position:
+            return {'fiscal_position_id': fiscal_position.id}
 
     @mapping
     def team_id(self, record):
-        if self.backend_record.team_id:
-            return {'team_id': self.backend_record.team_id.id}
+        team = self.options.store.team_id or self.backend_record.team_id
+        if team:
+            return {'team_id': team.id}
 
     @mapping
     def payment_mode_id(self, record):
@@ -121,21 +123,36 @@ class SaleOrderImportMapper(Component):
 
     @mapping
     def project_id(self, record):
-        if self.backend_record.analytic_account_id:
-            return {'project_id': self.backend_record.analytic_account_id.id}
+        analytic_account = self.options.store.analytic_account_id or self.backend_record.analytic_account_id
+        if analytic_account:
+            return {'project_id': analytic_account.id}
 
     @mapping
     def warehouse_id(self, record):
-        if self.backend_record.warehouse_id:
-            return {'warehouse_id': self.backend_record.warehouse_id.id}
+        warehouse = self.options.store.warehouse_id or self.backend_record.warehouse_id
+        if warehouse:
+            return {'warehouse_id': warehouse.id}
 
     @mapping
     def shipping_method(self, record):
         method = record['shipping_method']
-        carrier = self.env['delivery.carrier'].search([('opencart_code', '=', method)], limit=1)
+        carrier_domain = [('opencart_code', '=', method)]
+        company = self.options.store.company_id or self.backend_record.company_id
+        if company:
+            carrier_domain += [
+                '|', ('company_id', '=', company.id), ('company_id', '=', False)
+            ]
+        carrier = self.env['delivery.carrier'].search(carrier_domain, limit=1)
         if not carrier:
             raise ValueError('Delivery Carrier for methodCode "%s", cannot be found.' % (method, ))
         return {'carrier_id': carrier.id, 'shipping_method_code': method}
+
+    @mapping
+    def company_id(self, record):
+        company = self.options.store.company_id or self.backend_record.company_id
+        if not company:
+            raise ValidationError('Company not found in Opencart Backend or Store')
+        return {'company_id': company.id}
 
     @mapping
     def backend_id(self, record):
@@ -204,7 +221,7 @@ class SaleOrderImporter(Component):
                 info[k[len(info_string):]] = v
 
 
-        name = self._make_partner_name(info.get('firstname', ''), info.get('lastname'))
+        name = self._make_partner_name(info.get('firstname', ''), info.get('lastname', ''))
         street = info.get('address_1', '')
         street2 = info.get('address_2', '')
         city = info.get('city', '')
@@ -275,14 +292,21 @@ class SaleOrderImporter(Component):
             "self.invoice_partner should have been defined "
             "in SaleOrderImporter._import_addresses")
 
+    def _get_store(self, record):
+        store_binder = self.binder_for('opencart.store')
+        return store_binder.to_internal(record['store_id'])
+
     def _create_data(self, map_record, **kwargs):
         # non dependencies
+        # our current handling of partners doesn't require anything special for the store
         self._check_special_fields()
+        store = self._get_store(map_record.source)
         return super(SaleOrderImporter, self)._create_data(
             map_record,
             partner_id=self.partner.id,
             partner_invoice_id=self.invoice_partner.id,
             partner_shipping_id=self.shipping_partner.id,
+            store=store,
             **kwargs
         )
 
@@ -298,8 +322,7 @@ class SaleOrderImporter(Component):
         return binding
 
     def _import_dependencies(self):
-        record = self.opencart_record
-
+        record = self.opencart_record  # maybe iterate over products if we need to
         self._import_addresses()
 
 class SaleOrderLineImportMapper(Component):

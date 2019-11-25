@@ -7,6 +7,10 @@
         <field name="arch" type="xml">
             <form string="Opencart Backend">
                 <header>
+                    <button name="synchronize_metadata"
+                        type="object"
+                        class="oe_highlight"
+                        string="Synchronize Metadata"/>
                 </header>
                 <sheet>
                     <label for="name" class="oe_edit_only"/>
@@ -104,6 +108,59 @@
     <menuitem id="menu_opencart_backend"
         name="Backends"
         parent="menu_opencart_root"
+        sequence="10"
         action="action_opencart_backend"/>
+
+    <!-- Store -->
+    <record id="view_opencart_store_form" model="ir.ui.view">
+        <field name="name">opencart.store.form</field>
+        <field name="model">opencart.store</field>
+        <field name="arch" type="xml">
+            <form string="Opencart Store">
+                <header>
+                </header>
+                <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" class="oe_inline" />
+                    </h1>
+                    <group name="main_configuration" string="Override Configuration">
+                        <group name="order_configuration" string="Order Defaults">
+                            <field name="warehouse_id"/>
+                            <field name="analytic_account_id"/>
+                            <field name="fiscal_position_id"/>
+                            <field name="team_id"/>
+                            <field name="sale_prefix"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_opencart_store_tree" model="ir.ui.view">
+        <field name="name">opencart.store.tree</field>
+        <field name="model">opencart.store</field>
+        <field name="arch" type="xml">
+            <tree string="Opencart Store">
+                <field name="backend_id"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_opencart_store" model="ir.actions.act_window">
+        <field name="name">Opencart Stores</field>
+        <field name="res_model">opencart.store</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_opencart_store_tree"/>
+    </record>
+
+    <menuitem id="menu_opencart_store"
+        name="Stores"
+        parent="menu_opencart_root"
+        sequence="20"
+        action="action_opencart_store"/>
 
 </odoo>

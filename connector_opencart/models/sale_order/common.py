@@ -27,6 +27,7 @@ class OpencartSaleOrder(models.Model):
         inverse_name='opencart_order_id',
         string='Walmart Order Lines'
     )
+    store_id = fields.Many2one('opencart.store', string='Store')
 
     total_amount = fields.Float(
         string='Total amount',

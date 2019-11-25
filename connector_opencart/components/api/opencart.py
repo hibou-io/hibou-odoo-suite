@@ -21,6 +21,10 @@ class Opencart:
     def orders(self):
         return Orders(connection=self)
 
+    @property
+    def stores(self):
+        return Stores(connection=self)
+
     def get_headers(self, url, method):
         headers = {}
         if method in ('POST', 'PUT', ):
@@ -100,3 +104,18 @@ class Orders(Resource):
             "tracking": tracking,
         }
         return dumps(payload)
+
+
+class Stores(Resource):
+    """
+    Retrieves Store details
+    """
+
+    path = 'stores'
+
+    def all(self):
+        return self.connection.send_request(method='GET', url=self.url)
+
+    def get(self, id):
+        url = self.url + ('/%s' % id)
+        return self.connection.send_request(method='GET', url=url)

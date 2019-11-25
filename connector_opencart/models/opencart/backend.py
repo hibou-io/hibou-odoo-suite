@@ -7,6 +7,7 @@ from logging import getLogger
 from contextlib import contextmanager
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from ...components.api.opencart import Opencart
 
 _logger = getLogger(__name__)
@@ -78,6 +79,17 @@ class OpencartBackend(models.Model):
         _super = super(OpencartBackend, self)
         with _super.work_on(model_name, opencart_api=opencart_api, **kwargs) as work:
             yield work
+
+    @api.multi
+    def synchronize_metadata(self):
+        try:
+            for backend in self:
+                self.env['opencart.store'].import_batch(backend)
+            return True
+        except Exception as e:
+            _logger.error(e)
+            raise UserError(_("Check your configuration, we can't get the data. "
+                              "Here is the error:\n%s") % (e, ))
 
     @api.model
     def _scheduler_import_sale_orders(self):
