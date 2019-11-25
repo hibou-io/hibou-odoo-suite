@@ -1,5 +1,6 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
 "access_opencart_backend","opencart_backend connector manager","model_opencart_backend","connector.group_connector_manager",1,1,1,1
+"access_opencart_store","opencart_store connector manager","model_opencart_store","connector.group_connector_manager",1,1,1,1
 "access_opencart_binding","opencart_binding connector manager","model_opencart_binding","connector.group_connector_manager",1,1,1,1
 "access_opencart_sale_order","opencart_sale_order connector manager","model_opencart_sale_order","connector.group_connector_manager",1,1,1,1
 "access_opencart_sale_order_line","opencart_sale_order_line connector manager","model_opencart_sale_order_line","connector.group_connector_manager",1,1,1,1

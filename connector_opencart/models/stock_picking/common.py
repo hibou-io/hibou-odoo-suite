@@ -44,6 +44,7 @@ class StockPicking(models.Model):
         string="Opencart Bindings",
     )
 
+
 class StockPickingAdapter(Component):
     _name = 'opencart.stock.picking.adapter'
     _inherit = 'opencart.adapter'

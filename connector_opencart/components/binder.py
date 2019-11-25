@@ -16,6 +16,7 @@ class OpencartModelBinder(Component):
     _name = 'opencart.binder'
     _inherit = ['base.binder', 'base.opencart.connector']
     _apply_on = [
+        'opencart.store',
         'opencart.sale.order',
         'opencart.sale.order.line',
         'opencart.stock.picking',
