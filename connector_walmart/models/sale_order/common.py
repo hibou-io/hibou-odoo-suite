@@ -4,6 +4,7 @@
 import logging
 
 import odoo.addons.decimal_precision as dp
+from urllib.parse import parse_qs
 
 from odoo import models, fields, api
 from odoo.addons.queue_job.job import job
@@ -161,7 +162,8 @@ class SaleOrderAdapter(Component):
         :return: List
         """
         if next_cursor:
-            arguments = {'nextCursor': next_cursor}
+            # next_cursor looks like '?somefield=xxx&blah=yyy'
+            arguments = parse_qs(next_cursor.strip('?'))
         else:
             arguments = {'createdStartDate': from_date.isoformat()}
 
