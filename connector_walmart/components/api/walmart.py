@@ -152,7 +152,7 @@ class Walmart(object):
                     ))
                 elif response.status_code == 400:
                     data = response.json()
-                    if data["error"][0]["code"] == \
+                    if data.get("error", [{}])[0].get("code", '') == \
                             "INVALID_TOKEN.GMP_GATEWAY_API":
                         # Refresh the token as the current token has expired
                         self.authenticate()
