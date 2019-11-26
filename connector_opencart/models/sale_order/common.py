@@ -1,8 +1,6 @@
 # © 2019 Hibou Corp.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import logging
-
 import odoo.addons.decimal_precision as dp
 
 from odoo import models, fields, api
@@ -106,7 +104,8 @@ class SaleOrderAdapter(Component):
             return []
 
         orders = orders_response['data']
-        return map(lambda o: o['order_id'], orders)
+        # Note that `store_id is None` is checked as it may not be in the output.
+        return map(lambda o: (o['order_id'], o.get('store_id', None)), orders)
 
     def read(self, id):
         api_instance = self.api_instance

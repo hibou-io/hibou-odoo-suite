@@ -143,8 +143,8 @@
         <field name="model">opencart.store</field>
         <field name="arch" type="xml">
             <tree string="Opencart Store">
-                <field name="backend_id"/>
                 <field name="name"/>
+                <field name="backend_id"/>
             </tree>
         </field>
     </record>
