@@ -11,6 +11,7 @@
         'delivery',
         'sale_stock',
         'connector_ecommerce',
+        'base_technical_user',
     ],
     'author': 'Hibou Corp.',
     'license': 'AGPL-3',

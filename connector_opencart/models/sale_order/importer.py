@@ -1,18 +1,12 @@
 # © 2019 Hibou Corp.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import logging
-
-from datetime import datetime, timedelta
 from copy import deepcopy, copy
 
 from odoo import fields, _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 from odoo.exceptions import ValidationError
-from odoo.addons.queue_job.exception import NothingToDoJob, FailedJobError
-
-_logger = logging.getLogger(__name__)
 
 
 class SaleOrderBatchImporter(Component):
@@ -20,12 +14,22 @@ class SaleOrderBatchImporter(Component):
     _inherit = 'opencart.delayed.batch.importer'
     _apply_on = 'opencart.sale.order'
 
-    def _import_record(self, external_id, job_options=None, **kwargs):
+    def _import_record(self, external_id, store_id, job_options=None, **kwargs):
         if not job_options:
             job_options = {
                 'max_retries': 0,
                 'priority': 5,
             }
+        if store_id is not None:
+            store_binder = self.binder_for('opencart.store')
+            store = store_binder.to_internal(store_id)
+            user = store.sudo().warehouse_id.company_id.user_tech_id
+            if user and user != self.env.user:
+                # Note that this is a component, which has an env through it's 'colletion'
+                # however, when importing the 'model' is actually what runs the delayed job
+                env = self.env(user=user)
+                self.collection.env = env
+                self.model.env = env
         return super(SaleOrderBatchImporter, self)._import_record(
             external_id, job_options=job_options)
 
@@ -34,10 +38,10 @@ class SaleOrderBatchImporter(Component):
         if filters is None:
             filters = {}
         external_ids = list(self.backend_adapter.search(filters))
-        for external_id in external_ids:
-            self._import_record(external_id)
+        for ids in external_ids:
+            self._import_record(ids[0], ids[1])
         if external_ids:
-            last_id = list(sorted(external_ids))[-1]
+            last_id = list(sorted(external_ids, key=lambda i: i[0]))[-1][0]
             self.backend_record.import_orders_after_id = last_id
 
 
@@ -316,9 +320,6 @@ class SaleOrderImporter(Component):
         if binding.fiscal_position_id:
             binding.odoo_id._compute_tax_id()
 
-        # if binding.backend_id.acknowledge_order == 'order_create':
-        #     binding.with_delay().acknowledge_order(binding.backend_id, binding.external_id)
-
         return binding
 
     def _import_dependencies(self):
@@ -362,5 +363,4 @@ class SaleOrderLineImportMapper(Component):
         if not product:
             # we could use a record like (0, 0, values)
             product = self.env['product.product'].create(self._product_values(record))
-
-        return {'product_id': product.id}
+        return {'product_id': product.id, 'product_uom': product.uom_id.id}
