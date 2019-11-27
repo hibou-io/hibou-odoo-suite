@@ -1,12 +1,8 @@
 # © 2019 Hibou Corp.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import NothingToDoJob
-from logging import getLogger
-
-_logger = getLogger(__name__)
 
 
 class OpencartPickingExporter(Component):
@@ -30,6 +26,7 @@ class OpencartPickingExporter(Component):
         """
         if binding.external_id:
             return 'Already exported'
+
         tracking = self._get_tracking(binding)
         if not tracking:
             raise NothingToDoJob('Cancelled: the delivery order does not contain tracking.')

@@ -4,9 +4,6 @@
 import requests
 from urllib.parse import urlencode
 from json import loads, dumps
-import logging
-
-_logger = logging.getLogger(__name__)
 
 
 class Opencart:
@@ -73,10 +70,17 @@ class Orders(Resource):
         url = self.url + ('/%s' % id)
         return self.connection.send_request(method='GET', url=url)
 
-    def ship(self, id, tracking):
-        url = self.connection.base_url + ('trackingnumber/%s' % id)
-        res = self.connection.send_request(method='PUT', url=url, body=self.get_tracking_payload(tracking))
-        return self.connection.send_request(method='POST', url=url, body=self.get_status_payload('Shipped'))
+    def ship(self, id, tracking, tracking_comment=None):
+        def url(stem):
+            return self.connection.base_url + ('%s/%s' % (stem, id))
+        res = self.connection.send_request(method='PUT', url=url('trackingnumber'), body=self.get_tracking_payload(tracking))
+        if tracking_comment:
+            res = self.connection.send_request(method='PUT', url=url('orderhistory'), body=self.get_orderhistory_payload(
+                3,  # "Shipped"
+                True,  # Notify!
+                tracking_comment,
+            ))
+        return res
 
 
     def cancel(self, id):
@@ -102,6 +106,21 @@ class Orders(Resource):
         """
         payload = {
             "tracking": tracking,
+        }
+        return dumps(payload)
+
+    def get_orderhistory_payload(self, status_id, notify, comment):
+        """
+        {
+          "order_status_id": "5",
+          "notify": "1",
+          "comment": "demo comment"
+        }
+        """
+        payload = {
+            'order_status_id': str(status_id),
+            'notify': '1' if notify else '0',
+            'comment': str(comment)
         }
         return dumps(payload)
 
