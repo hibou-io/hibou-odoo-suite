@@ -1,13 +1,10 @@
 # © 2019 Hibou Corp.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import logging
-from odoo import api, models, fields
+from odoo import api, models, fields, _
 from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import RetryableJobError
-
-_logger = logging.getLogger(__name__)
 
 
 class OpencartStockPicking(models.Model):
@@ -52,7 +49,8 @@ class StockPickingAdapter(Component):
 
     def create(self, id, tracking):
         api_instance = self.api_instance
-        result = api_instance.orders.ship(id, tracking)
+        tracking_comment = _('Order shipped with tracking number: %s') % (tracking, )
+        result = api_instance.orders.ship(id, tracking, tracking_comment)
         if 'success' in result:
             return result['success']
         raise RetryableJobError('Shipping Order %s did not return an order response. (tracking: %s) %s' % (

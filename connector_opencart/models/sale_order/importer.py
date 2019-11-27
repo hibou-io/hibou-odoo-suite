@@ -139,8 +139,8 @@ class SaleOrderImportMapper(Component):
 
     @mapping
     def shipping_method(self, record):
-        method = record['shipping_method']
-        carrier_domain = [('opencart_code', '=', method)]
+        method = record['shipping_method'] or ''
+        carrier_domain = [('opencart_code', '=', method.strip())]
         company = self.options.store.company_id or self.backend_record.company_id
         if company:
             carrier_domain += [
@@ -164,14 +164,8 @@ class SaleOrderImportMapper(Component):
 
     @mapping
     def total_amount(self, record):
-        # lines = record['total']
         total_amount = record['total']
-        total_amount_tax = 0.0
-        # for l in lines:
-        #     item_amount, tax_amount = walk_charges(l['charges'])
-        #     total_amount += item_amount + tax_amount
-        #     total_amount_tax += tax_amount
-        return {'total_amount': total_amount, 'total_amount_tax': total_amount_tax}
+        return {'total_amount': total_amount}
 
 
 class SaleOrderImporter(Component):
@@ -323,8 +317,8 @@ class SaleOrderImporter(Component):
         return binding
 
     def _import_dependencies(self):
-        record = self.opencart_record  # maybe iterate over products if we need to
         self._import_addresses()
+
 
 class SaleOrderLineImportMapper(Component):
 
