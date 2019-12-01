@@ -15,7 +15,7 @@ class HRExpense(models.Model):
                 raise ValidationError('You must have an assigned vendor to process a Company Paid Expense')
             move_line_values = move_line_values_by_expense[expense.id]
             for line_values in move_line_values:
-                new_name = expense.name.split('\n')[0][:64] + (' - ' + str(self.reference) if self.reference else '')
+                new_name = expense.name.split('\n')[0][:64] + (' - ' + str(expense.reference) if expense.reference else '')
                 line_values['name'] = new_name[:64]
                 line_values['partner_id'] = expense.vendor_id.id
         return move_line_values_by_expense
