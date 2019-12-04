@@ -17,6 +17,7 @@
     'license': 'AGPL-3',
     'website': 'https://hibou.io',
     'data': [
+        'data/connector_opencart_data.xml',
         'security/ir.model.access.csv',
         'views/delivery_views.xml',
         'views/opencart_backend_views.xml',
