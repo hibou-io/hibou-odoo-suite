@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from copy import deepcopy, copy
+from html import unescape
 
 from odoo import fields, _
 from odoo.addons.component.core import Component
@@ -65,14 +66,14 @@ class SaleOrderImportMapper(Component):
         record = map_record.source
 
         line_builder = self.component(usage='order.line.builder.shipping')
-        line_builder.price_unit = 0.0
+        line_builder.price_unit = record.get('shipping_exclude_tax', 0.0)
 
         if values.get('carrier_id'):
             carrier = self.env['delivery.carrier'].browse(values['carrier_id'])
             line_builder.product = carrier.product_id
+            line = (0, 0, line_builder.get_line())
+            values['order_line'].append(line)
 
-        line = (0, 0, line_builder.get_line())
-        values['order_line'].append(line)
         return values
 
     def finalize(self, map_record, values):
@@ -120,9 +121,8 @@ class SaleOrderImportMapper(Component):
             [('name', '=', record_method)],
             limit=1,
         )
-        assert method, ("method %s should exist because the import fails "
-                        "in SaleOrderImporter._before_import when it is "
-                        " missing" % record_method)
+        if not method:
+            raise ValueError('Payment Mode named "%s", cannot be found.' % (record_method, ))
         return {'payment_mode_id': method.id}
 
     @mapping
@@ -138,8 +138,11 @@ class SaleOrderImportMapper(Component):
             return {'warehouse_id': warehouse.id}
 
     @mapping
-    def shipping_method(self, record):
-        method = record['shipping_method'] or ''
+    def shipping_code(self, record):
+        method = record.get('shipping_code') or record.get('shipping_method')
+        if not method:
+            return {'carrier_id': False}
+
         carrier_domain = [('opencart_code', '=', method.strip())]
         company = self.options.store.company_id or self.backend_record.company_id
         if company:
@@ -148,8 +151,8 @@ class SaleOrderImportMapper(Component):
             ]
         carrier = self.env['delivery.carrier'].search(carrier_domain, limit=1)
         if not carrier:
-            raise ValueError('Delivery Carrier for methodCode "%s", cannot be found.' % (method, ))
-        return {'carrier_id': carrier.id, 'shipping_method_code': method}
+            raise ValueError('Delivery Carrier for method Code "%s", cannot be found.' % (method, ))
+        return {'carrier_id': carrier.id}
 
     @mapping
     def company_id(self, record):
@@ -328,7 +331,6 @@ class SaleOrderLineImportMapper(Component):
 
     direct = [('quantity', 'product_uom_qty'),
               ('price', 'price_unit'),
-              ('name', 'name'),
               ('order_product_id', 'external_id'),
               ]
 
@@ -340,12 +342,16 @@ class SaleOrderLineImportMapper(Component):
         reference = record['model']
         values = {
             'default_code': reference,
-            'name': record.get('name', reference),
+            'name': unescape(record.get('name', reference)),  # unknown if other fields, but have observed &quot; in product names
             'type': 'product',
             'list_price': record.get('price', 0.0),
             'categ_id': self.backend_record.product_categ_id.id,
         }
         return self._finalize_product_values(record, values)
+
+    @mapping
+    def name(self, record):
+        return unescape(record['name'])
 
     @mapping
     def product_id(self, record):
