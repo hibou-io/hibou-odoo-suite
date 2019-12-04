@@ -10,3 +10,10 @@ class ProcurementGroup(models.Model):
         if warehouse_id:
             domain.append(('warehouse_id', '=', warehouse_id))
         return domain
+
+    def _get_exceptions_domain(self):
+        domain = super(ProcurementGroup, self)._get_exceptions_domain()
+        warehouse_id = self.env.context.get('warehouse_id')
+        if warehouse_id:
+            domain.append(('warehouse_id', '=', warehouse_id))
+        return domain
