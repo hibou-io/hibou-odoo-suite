@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_position_us_ca_inherit_from_view" model="ir.ui.view">
+        <field name="name">account.fiscal.position.form.inherit</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="inherit_id" ref="account.view_account_position_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_us_ca"/>
+                <field name="ca_base_tax_id" attrs="{'invisible': [('is_us_ca', '=', False)]}" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_tax_form" model="ir.ui.view">
+        <field name="name">account.tax.form.inherit</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description']" position="after">
+                <field name="ca_county" />
+                <field name="ca_location_zips" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

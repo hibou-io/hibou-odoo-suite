@@ -1,0 +1,13 @@
+{'name': 'US CA California State SalesTax API',
+ 'version': '12.0.1.0.0',
+ 'category': 'Tools',
+ 'depends': ['account',
+             ],
+ 'author': 'Hibou Corp.',
+ 'license': 'AGPL-3',
+ 'website': 'https://hibou.io/',
+ 'data': ['views/account_fiscal_position_view.xml',
+          ],
+ 'installable': True,
+ 'application': False,
+ }
