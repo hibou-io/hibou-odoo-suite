@@ -11,18 +11,19 @@ class HrPayslip(models.Model):
         leaves = {}
 
         for contract in contracts.filtered(lambda c: c.paid_hourly_attendance):
+            hours_per_day = contract.resource_calendar_id.hours_per_day or HOURS_PER_DAY
             for leave in self._fetch_valid_leaves(contract.employee_id.id, date_from, date_to):
                 leave_code = self._create_leave_code(leave.holiday_status_id.name)
                 if leave_code in leaves:
                     leaves[leave_code]['number_of_days'] += leave.number_of_days
-                    leaves[leave_code]['number_of_hours'] += leave.number_of_days * HOURS_PER_DAY
+                    leaves[leave_code]['number_of_hours'] += leave.number_of_days * hours_per_day
                 else:
                     leaves[leave_code] = {
                         'name': leave.holiday_status_id.name,
                         'sequence': 15,
                         'code': leave_code,
                         'number_of_days': leave.number_of_days,
-                        'number_of_hours': leave.number_of_days * HOURS_PER_DAY,
+                        'number_of_hours': leave.number_of_days * hours_per_day,
                         'contract_id': contract.id,
                     }
 
@@ -60,13 +61,14 @@ class HrPayslip(models.Model):
         """
         self.ensure_one()
         if code.startswith('L_'):
+            hours_per_day = self.contract_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY
             leaves = self._fetch_valid_leaves(self.employee_id.id, self.date_from, self.date_to)
             day_values = defaultdict(float)
             for leave in leaves:
                 leave_code = self._create_leave_code(leave.holiday_status_id.name)
                 if leave_code == code:
                     leave_iso = leave.date_from.isocalendar()
-                    day_values[leave_iso] += leave.number_of_days * HOURS_PER_DAY
+                    day_values[leave_iso] += leave.number_of_days * hours_per_day
             return day_values
         elif hasattr(super(HrPayslip, self), 'hour_break_down'):
             return super(HrPayslip, self).hour_break_down(code)
