@@ -5,7 +5,7 @@ class EquipmentChargeType(models.Model):
     _name = 'maintenance.equipment.charge.type'
 
     name = fields.Char(string='Charge Type')
-    uom_id = fields.Many2one('product.uom', string='Charge UOM')
+    uom_id = fields.Many2one('uom.uom', string='Charge UOM')
 
 
 class Equipment(models.Model):
@@ -42,5 +42,5 @@ class EquipmentCharge(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee')
     department_id = fields.Many2one('hr.department', string='Department')
     qty = fields.Float(string='Quantity', default=1.0)
-    uom_id = fields.Many2one('product.uom', related='type_id.uom_id')
+    uom_id = fields.Many2one('uom.uom', related='type_id.uom_id')
     amount = fields.Float(string='Amount')
