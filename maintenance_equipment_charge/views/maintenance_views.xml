@@ -31,12 +31,11 @@
                 <field name="employee_id"/>
                 <field name="department_id"/>
                 <field name="type_id"/>
-                <separator/>
-                <group  expand='0' string='Group by...'>
-                    <filter string='Charge Type' domain="[]" context="{'group_by': 'type_id'}"/>
-                    <filter string='Equipment' domain="[]" context="{'group_by': 'equipment_id'}"/>
-                    <filter string='Employee' domain="[]" context="{'group_by': 'employee_id'}"/>
-                    <filter string='Department' domain="[]" context="{'group_by': 'department_id'}"/>
+                <group expand="0" string="Group By">
+                    <filter string="Charge Type" name="groupby_type_id" domain="[]" context="{'group_by':'type_id'}"/>
+                    <filter string='Equipment' name="groupby_equipment_id" domain="[]" context="{'group_by': 'equipment_id'}"/>
+                    <filter string='Employee' name="groupby_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string='Department' name="groupby_department_id" domain="[]" context="{'group_by': 'department_id'}"/>
                 </group>
             </search>
         </field>
