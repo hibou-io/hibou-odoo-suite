@@ -14,7 +14,6 @@ class Equipment(models.Model):
     charge_ids = fields.One2many('maintenance.equipment.charge', 'equipment_id', 'Charges', copy=False)
     charge_count = fields.Integer(string='Charges', compute='_compute_charge_count')
 
-    @api.multi
     def _compute_charge_count(self):
         for equipment in self:
             self.charge_count = len(equipment.charge_ids)
