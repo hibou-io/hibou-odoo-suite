@@ -1,0 +1,5 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"manage_maintenance_equipment_charge","manage maintenance.equipment.charge","model_maintenance_equipment_charge","stock.group_stock_manager",1,1,1,1
+"access_maintenance_equipment_charge","access maintenance.equipment.charge","model_maintenance_equipment_charge","base.group_user",1,0,1,0
+"manage_maintenance_equipment_charge_type","manage maintenance.equipment.charge.type","model_maintenance_equipment_charge_type","stock.group_stock_manager",1,1,1,1
+"access_maintenance_equipment_charge_type","access maintenance.equipment.charge.type","model_maintenance_equipment_charge_type","base.group_user",1,0,1,0

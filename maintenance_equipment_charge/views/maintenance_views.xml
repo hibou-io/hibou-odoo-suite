@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="maintenance.equipment.charge.type" id="equipment_charge_other">
+        <field name="name">Other</field>
+    </record>
+
+    <record model="ir.ui.view" id="hr_equipment_view_form_inherited">
+        <field name="name">equipment.form.inherited</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_charges"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-dollar"
+                            help="show the usage charges for equipment" >
+                    <field string="Charges" name="charge_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- maintenance.equipment.charge : views -->
+    <record id="hr_equipment_charge_view_search" model="ir.ui.view">
+        <field name="name">equipment.charge.search</field>
+        <field name="model">maintenance.equipment.charge</field>
+        <field name="arch" type="xml">
+            <search string="Equipment Charge Search">
+                <field name="equipment_id"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="type_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Charge Type" name="groupby_type_id" domain="[]" context="{'group_by':'type_id'}"/>
+                    <filter string='Equipment' name="groupby_equipment_id" domain="[]" context="{'group_by': 'equipment_id'}"/>
+                    <filter string='Employee' name="groupby_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string='Department' name="groupby_department_id" domain="[]" context="{'group_by': 'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_equipment_charge_view_form" model="ir.ui.view">
+        <field name="name">equipment.charge.form</field>
+        <field name="model">maintenance.equipment.charge</field>
+        <field name="arch" type="xml">
+            <form string="Equipment Charge Form">
+                <header/>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="equipment_id"/>
+                            <field name="employee_id"/>
+                            <field name="department_id"/>
+                        </group>
+                        <group name="charge_info" string="Charge">
+                            <field name="type_id" widget="selection"/>
+                            <label for="qty"/>
+                            <div class="o_row" name="qty">
+                                <field name="qty" nolabel="1"/>
+                                <field name="uom_id" nolabel="1" readonly="1"/>
+                            </div>
+                            <field name="amount"/>
+                            <field name="name"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_equipment_charge_view_tree" model="ir.ui.view">
+        <field name="name">equipment.charge.tree</field>
+        <field name="model">maintenance.equipment.charge</field>
+        <field name="arch" type="xml">
+            <tree string="Equipment Charge">
+                <field name="date"/>
+                <field name="type_id"/>
+                <field name="equipment_id"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="qty"/>
+                <field name="amount"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_equipment_charge_view_graph" model="ir.ui.view">
+        <field name="name">equipment.charge.graph</field>
+        <field name="model">maintenance.equipment.charge</field>
+        <field name="arch" type="xml">
+            <graph string="Equipment Charge">
+                <field name="type_id"/>
+                <field name="equipment_id"/>
+                <field name="amount"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="hr_equipment_charge_view_pivot" model="ir.ui.view">
+        <field name="name">equipment.charge.pivot</field>
+        <field name="model">maintenance.equipment.charge</field>
+        <field name="arch" type="xml">
+            <pivot string="Equipment Charge">
+                <field name="type_id"/>
+                <field name="equipment_id"/>
+                <field name="amount"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_equipment_charge_view_calendar" model="ir.ui.view">
+        <field name="name">equipment.charge.calendar</field>
+        <field name="model">maintenance.equipment.charge</field>
+        <field name="arch" type="xml">
+            <calendar date_start="date" color="equipment_id">
+                <field name="equipment_id"/>
+                <field name="amount"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- maintenance.equipment.charge : actions -->
+    <record id="maintenance_charge_action_reports" model="ir.actions.act_window">
+        <field name="name">Equipment Charges</field>
+        <field name="res_model">maintenance.equipment.charge</field>
+        <field name="view_mode">tree,form,graph,pivot,calendar</field>
+        <field name="help" type="html">
+            <p>
+                No charges.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="maintenance_equipment_charge_reporting"
+        action="maintenance_charge_action_reports"
+        parent="maintenance.maintenance_reporting"/>
+
+    <!-- maintenance.equipment.charge.type : views -->
+    <record id="hr_equipment_charge_type_view_form" model="ir.ui.view">
+        <field name="name">equipment.charge.type.form</field>
+        <field name="model">maintenance.equipment.charge.type</field>
+        <field name="arch" type="xml">
+            <form string="Equipment Charge Type Form">
+                <header/>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="uom_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_equipment_charge_type_view_tree" model="ir.ui.view">
+        <field name="name">equipment.charge.type.tree</field>
+        <field name="model">maintenance.equipment.charge.type</field>
+        <field name="arch" type="xml">
+            <tree string="Equipment Charge Type">
+                <field name="name"/>
+                <field name="uom_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- maintenance.equipment.charge.type : actions -->
+    <record id="maintenance_charge_type_action" model="ir.actions.act_window">
+        <field name="name">Equipment Charge Types</field>
+        <field name="res_model">maintenance.equipment.charge.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="maintenance_equipment_charge_type"
+        action="maintenance_charge_type_action"
+        parent="maintenance.menu_maintenance_configuration"/>
+</odoo>
