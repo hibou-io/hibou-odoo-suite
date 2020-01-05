@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_940_futa_wage_base" model="hr.rule.parameter">
+        <field name="name">Federal 940 FUTA Wage Base</field>
+        <field name="code">fed_940_futa_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_940_futa_wage_base_2016" model="hr.rule.parameter.value">
+        <field name="parameter_value">7000.00</field>
+        <field name="rule_parameter_id" ref="rule_parameter_940_futa_wage_base"/>
+        <field name="date_from" eval="datetime(2016, 1, 1).date()"/>
+    </record>
+
+    <!-- Rate -->
+    <record id="rule_parameter_940_futa_rate_basic" model="hr.rule.parameter">
+        <field name="name">Federal 940 FUTA Rate Basic</field>
+        <field name="code">fed_940_futa_rate_basic</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_940_futa_rate_basic_2016" model="hr.rule.parameter.value">
+        <field name="parameter_value">6.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_940_futa_rate_basic"/>
+        <field name="date_from" eval="datetime(2016, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_940_futa_rate_normal" model="hr.rule.parameter">
+        <field name="name">Federal 940 FUTA Rate Normal</field>
+        <field name="code">fed_940_futa_rate_normal</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_940_futa_rate_normal_2016" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.6</field>
+        <field name="rule_parameter_id" ref="rule_parameter_940_futa_rate_normal"/>
+        <field name="date_from" eval="datetime(2016, 1, 1).date()"/>
+    </record>
+
+</odoo>

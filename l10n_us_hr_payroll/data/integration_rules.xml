@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Commissions from hr_payroll_commission -->
+    <record id="hr_salary_rule_commission" model="hr.salary.rule">
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.COMMISSION.amount > 0.0 if inputs.COMMISSION else False</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.COMMISSION.amount if inputs.COMMISSION else 0</field>
+        <field name="code">BASIC_COM</field>
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="name">Commissions</field>
+        <field name="sequence" eval="20"/>
+        <field name="struct_id" ref="l10n_us_hr_payroll.hr_payroll_structure"/>
+    </record>
+
+    <!-- Badges from hr_payroll_gamification -->
+    <record id="hr_salary_rule_gamification" model="hr.salary.rule">
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.BADGES.amount > 0.0 if inputs.BADGES else False</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.BADGES.amount if inputs.BADGES else 0</field>
+        <field name="code">BASIC_BADGES</field>
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="name">Badges</field>
+        <field name="sequence" eval="20"/>
+        <field name="struct_id" ref="l10n_us_hr_payroll.hr_payroll_structure"/>
+    </record>
+
+</odoo>

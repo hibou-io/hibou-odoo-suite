@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Social Security -->
+    <!-- Wage Base -->
+    <record id="rule_parameter_941_fica_ss_wage_base" model="hr.rule.parameter">
+        <field name="name">Federal 941 FICA Social Security Wage Base</field>
+        <field name="code">fed_941_fica_ss_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_941_fica_ss_wage_base_2016" model="hr.rule.parameter.value">
+        <field name="parameter_value">128400.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fica_ss_wage_base"/>
+        <field name="date_from" eval="datetime(2016, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_941_fica_ss_wage_base_2019" model="hr.rule.parameter.value">
+        <field name="parameter_value">132900.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fica_ss_wage_base"/>
+        <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+    </record>
+        <record id="rule_parameter_941_fica_ss_wage_base_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">137700.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fica_ss_wage_base"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <!-- Rate -->
+    <record id="rule_parameter_941_fica_ss_rate" model="hr.rule.parameter">
+        <field name="name">Federal 941 FICA Rate</field>
+        <field name="code">fed_941_fica_ss_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_941_fica_ss_rate_2016" model="hr.rule.parameter.value">
+        <field name="parameter_value">6.2</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fica_ss_rate"/>
+        <field name="date_from" eval="datetime(2016, 1, 1).date()"/>
+    </record>
+
+    <!-- Medicare -->
+    <!-- Wage Base -->
+    <record id="rule_parameter_941_fica_m_wage_base" model="hr.rule.parameter">
+        <field name="name">Federal 941 FICA Medicare Wage Base</field>
+        <field name="code">fed_941_fica_m_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_941_fica_m_wage_base_2016" model="hr.rule.parameter.value">
+        <field name="parameter_value">"inf"</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fica_m_wage_base"/>
+        <field name="date_from" eval="datetime(2016, 1, 1).date()"/>
+    </record>
+
+    <!-- Rate -->
+    <record id="rule_parameter_941_fica_m_rate" model="hr.rule.parameter">
+        <field name="name">Federal 941 FICA Rate</field>
+        <field name="code">fed_941_fica_m_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_941_fica_m_rate_2016" model="hr.rule.parameter.value">
+        <field name="parameter_value">1.45</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fica_m_rate"/>
+        <field name="date_from" eval="datetime(2016, 1, 1).date()"/>
+    </record>
+
+    <!-- Medicare Additional -->
+    <!-- Wage Base -->
+    <record id="rule_parameter_941_fica_m_add_wage_start" model="hr.rule.parameter">
+        <field name="name">Federal 941 FICA Medicare Additional Wage Start</field>
+        <field name="code">fed_941_fica_m_add_wage_start</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_941_fica_m_add_wage_start_2016" model="hr.rule.parameter.value">
+        <field name="parameter_value">200000.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fica_m_add_wage_start"/>
+        <field name="date_from" eval="datetime(2016, 1, 1).date()"/>
+    </record>
+
+    <!-- Rate -->
+    <record id="rule_parameter_941_fica_m_add_rate" model="hr.rule.parameter">
+        <field name="name">Federal 941 FICA Medicare Additional Rate</field>
+        <field name="code">fed_941_fica_m_add_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_941_fica_m_add_rate_2016" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.9</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fica_m_add_rate"/>
+        <field name="date_from" eval="datetime(2016, 1, 1).date()"/>
+    </record>
+
+</odoo>
