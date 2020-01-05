@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="structure_type_employee" model="hr.payroll.structure.type">
+        <field name="name">USA Employee</field>
+        <field name="default_resource_calendar_id" ref="resource.resource_calendar_std"/>
+        <field name="country_id" ref="base.us"/>
+    </record>
+
+    <record id="hr_payroll_structure" model="hr.payroll.structure">
+        <field name="name">USA Employee Standard</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="type_id" ref="l10n_us_hr_payroll.structure_type_employee"/>
+        <field name="regular_pay" eval="True"/>
+        <field name="unpaid_work_entry_type_ids" eval="[
+            (4, ref('hr_payroll.work_entry_type_unpaid_leave')),
+        ]"/>
+    </record>
+
+</odoo>
