@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_salary_rule_gamification" model="hr.salary.rule">
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.BADGES.amount > 0.0 if inputs.BADGES else False</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.BADGES.amount if inputs.BADGES else 0</field>
+        <field name="code">BADGES</field>
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="name">Badges</field>
+        <field name="sequence" eval="90"/>
+        <field name="struct_id" ref="hr_payroll.structure_002"/>
+    </record>
+
+</odoo>
