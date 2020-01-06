@@ -44,6 +44,15 @@ class TestPayrollRate(common.TransactionCase):
         rate = self.payslip.get_rate('TEST')
         self.assertEqual(rate, test_rate)
 
+        test_rate.parameter_value = """[
+        (1, 2, 3),
+        (4, 5, 6),
+        ]"""
+
+        value = self.payslip.rule_parameter('TEST')
+        self.assertEqual(len(value), 2)
+        self.assertEqual(value[0], (1, 2, 3))
+
     def test_payroll_rate_multicompany(self):
         test_rate_other = self.env['hr.payroll.rate'].create({
             'name': 'Test Rate',

@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
 
     <!-- HR PAYROLL STRUCTURE -->
-    <record id="hr_payroll_salary_structure_us_employee" model="hr.payroll.structure">
+    <record id="structure_type_employee" model="hr.payroll.structure">
         <field name="code">US_EMP</field>
         <field name="name">USA Employee</field>
         <field eval="[(6, 0, [
-          ref('hr_payroll_rules_fica_comp_ss'),
-          ref('hr_payroll_rules_fica_comp_m'),
+            ref('hr_payroll_rule_er_fed_940'),
 
-          ref('hr_payroll_rules_fica_emp_ss_wages_2018'),
-          ref('hr_payroll_rules_fica_emp_m_wages_2018'),
-          ref('hr_payroll_rules_fica_emp_m_add_wages_2018'),
-          ref('hr_payroll_rules_fica_emp_ss_2018'),
-          ref('hr_payroll_rules_fica_emp_m_2018'),
-          ref('hr_payroll_rules_fica_emp_m_add_2018'),
-          ref('hr_payroll_rules_futa_wages_2018'),
-          ref('hr_payroll_rules_futa_2018'),
-          ref('hr_payroll_rules_fed_inc_withhold_2018_single'),
-          ref('hr_payroll_rules_fed_inc_withhold_2018_married'),
+            ref('hr_payroll_rule_ee_fed_941_ss'),
+            ref('hr_payroll_rule_er_fed_941_ss'),
+            ref('hr_payroll_rule_ee_fed_941_m'),
+            ref('hr_payroll_rule_er_fed_941_m'),
+            ref('hr_payroll_rule_ee_fed_941_m_add'),
+
+            ref('hr_payroll_rule_ee_fed_941_fit'),
+
+            ref('hr_salary_rule_commission'),
+            ref('hr_salary_rule_gamification'),
           ])]" name="rule_ids"/>
-        <field name="company_id" ref="base.main_company"/>    
+        <field name="company_id" ref="base.main_company"/>
         <field name="parent_id" ref="hr_payroll.structure_base"/>
     </record>
 
-    </data>
 </odoo>
