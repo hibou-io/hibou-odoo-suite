@@ -40,6 +40,10 @@
                             <field name="fed_941_fit_w4_deductions" string="Deductions"/>
                             <field name="fed_941_fit_w4_additional_withholding" string="Additional Withholding"/>
                         </group>
+
+                        <group name="state_fl_florida" string="FL Florida" attrs="{'invisible':[('state_id', '!=', %(base.state_us_10)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                        </group>
                     </group>
                 </sheet>
             </form>

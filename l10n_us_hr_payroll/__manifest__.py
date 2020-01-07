@@ -28,6 +28,7 @@ USA Payroll Rules.
         'data/federal/fed_941_fica_rules.xml',
         'data/federal/fed_941_fit_parameters.xml',
         'data/federal/fed_941_fit_rules.xml',
+        'data/state/fl_florida.xml',
         'data/final.xml',
         'views/hr_contract_views.xml',
         'views/us_payroll_config_views.xml',

@@ -9,6 +9,7 @@ from .federal.fed_941 import ee_us_941_fica_ss, \
                              er_us_941_fica_ss, \
                              er_us_941_fica_m, \
                              ee_us_941_fit
+from .state.general import general_state_unemployment
 
 
 class HRPayslip(models.Model):
@@ -38,6 +39,7 @@ class HRPayslip(models.Model):
             'er_us_941_fica_ss': er_us_941_fica_ss,
             'er_us_941_fica_m': er_us_941_fica_m,
             'ee_us_941_fit': ee_us_941_fit,
+            'general_state_unemployment': general_state_unemployment,
         }
 
     def get_year(self):

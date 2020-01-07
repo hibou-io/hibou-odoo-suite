@@ -24,6 +24,21 @@ def migrate(cr, installed_version):
     env = Environment(cr, SUPERUSER_ID, {})
     new_structure = env.ref('l10n_us_hr_payroll.structure_type_employee')
 
+    def get_state(code, cache={}):
+        country_key = 'US_COUNTRY'
+        if code in cache:
+            _logger.warn('  return from cache: ' + str(cache[code]))
+            return cache[code]
+        if country_key not in cache:
+            cache[country_key] = env.ref('base.us')
+        us_country = cache[country_key]
+        us_state = env['res.country.state'].search([
+            ('country_id', '=', us_country.id),
+            ('code', '=', code),
+        ], limit=1)
+        cache[code] = us_state
+        return us_state
+
     # We will assume all contracts without a struct (because we deleted it), or with one like US_xx_EMP, need config
     contracts = env['hr.contract'].search([
         '|',
@@ -34,13 +49,17 @@ def migrate(cr, installed_version):
     for contract in contracts:
         _logger.warn('Migrating contract: ' + str(contract) + ' for employee: ' + str(contract.employee_id))
         # Could we somehow detect the state off of the current/orphaned salary structure?
+        state_code = False
         old_struct_code = contract.struct_id.code
+        if old_struct_code:
+            state_code = old_struct_code.split('_')[1]
         temp_values = temp_field_values(cr, 'hr_contract', contract.id, fields_to_move)
         # Resolve mapping to the new field names.
         values = {FIELDS_CONTRACT_TO_US_PAYROLL_FORMS_2020[k]: v for k, v in temp_values.items()}
         values.update({
             'name': 'MIG: ' + str(contract.name),
             'employee_id': contract.employee_id.id,
+            'state_id': get_state(state_code).id,
         })
         us_payroll_config = env['hr.contract.us_payroll_config'].create(values)
         contract.write({
