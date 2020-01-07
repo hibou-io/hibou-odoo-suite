@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_nc_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US NC North Carolina SUTA Wage Base</field>
+        <field name="code">us_nc_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nc_suta_wage_base_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">24300.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nc_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_nc_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">25200.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nc_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_nc_suta_rate" model="hr.rule.parameter">
+        <field name="name">US NC North Carolina SUTA Rate</field>
+        <field name="code">us_nc_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nc_suta_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nc_suta_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_nc_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nc_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_nc_sit_allowance_rate" model="hr.rule.parameter">
+        <field name="name">US NC North Carolina Allowance Rate</field>
+        <field name="code">us_nc_sit_allowance_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <!-- https://files.nc.gov/ncdor/documents/files/NC-30_book_Web_1-16-19_v4_Final.pdf -->
+        <!-- Allowance Table  Page 19. + SD For single or married + SD for Head of household (SD Page. 16-18)-->
+        <record id="rule_parameter_us_nc_sit_allowance_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly':        {'allowance':  48.08, 'standard_deduction': 192.31, 'standard_deduction_hh':  288.46},
+                'bi-weekly':     {'allowance':  96.15, 'standard_deduction': 384.62, 'standard_deduction_hh':  576.92},
+                'semi-monthly':  {'allowance': 104.17, 'standard_deduction': 416.67, 'standard_deduction_hh':  625.00},
+                'monthly':       {'allowance': 208.33, 'standard_deduction': 833.33, 'standard_deduction_hh': 1250.00},
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nc_sit_allowance_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://files.nc.gov/ncdor/documents/files/2020-NC-30_Final.pdf -->
+        <!-- Allowance Table  Page 19. + SD For single or married + SD for Head of household (SD Page. 16-18)-->
+        <record id="rule_parameter_us_nc_sit_allowance_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly':        {'allowance':  48.08, 'standard_deduction': 206.73, 'standard_deduction_hh':  310.10},
+                'bi-weekly':     {'allowance':  96.15, 'standard_deduction': 413.46, 'standard_deduction_hh':  620.19},
+                'semi-monthly':  {'allowance': 104.17, 'standard_deduction': 447.92, 'standard_deduction_hh':  671.88},
+                'monthly':       {'allowance': 208.33, 'standard_deduction': 895.83, 'standard_deduction_hh': 1343.75},
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nc_sit_allowance_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_nc_dor" model="res.partner">
+        <field name="name">US North Carolina - Department of Taxation - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_nc_dor_sit" model="res.partner">
+        <field name="name">US North Carolina - Department of Taxation - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_nc_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US NC North Carolina State Unemployment</field>
+        <field name="code">ER_US_NC_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nc_suta_wage_base', rate='us_nc_suta_rate', state_code='NC')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nc_suta_wage_base', rate='us_nc_suta_rate', state_code='NC')</field>
+        <field name="partner_id" ref="res_partner_us_nc_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_nc_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US NC North Carolina State Income Tax Withholding</field>
+        <field name="code">EE_US_NC_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = nc_northcarolina_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = nc_northcarolina_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_nc_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

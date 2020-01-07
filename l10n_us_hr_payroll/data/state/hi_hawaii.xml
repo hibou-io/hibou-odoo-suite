@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_hi_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US HI Hawaii SUTA Wage Base</field>
+        <field name="code">us_hi_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_hi_suta_wage_base_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">46800.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_hi_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_hi_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">48100.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_hi_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_hi_suta_rate" model="hr.rule.parameter">
+        <field name="name">US HI Hawaii SUTA Rate</field>
+        <field name="code">us_hi_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_hi_suta_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.40</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_hi_suta_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_hi_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.40</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_hi_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_hi_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US HI Hawaii SIT Tax Rate</field>
+        <field name="code">us_hi_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_hi_sit_tax_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': (
+                    ( 2400,    0.00, 1.40),
+                    ( 4800,   34.00, 3.20),
+                    ( 9600,  110.00, 5.50),
+                    (14400,  374.00, 6.40),
+                    (19200,  682.00, 6.80),
+                    (24000, 1008.00, 7.20),
+                    (36000, 1354.00, 7.60),
+                    ('inf', 2266.00, 7.90),
+                ),
+                'married': (
+                    ( 4800,    0.00, 1.40),
+                    ( 9600,   67.00, 3.20),
+                    (19200,  221.00, 5.50),
+                    (28800,  749.00, 6.40),
+                    (38400, 1363.00, 6.80),
+                    (48000, 2016.00, 7.20),
+                    (72000, 2707.00, 7.60),
+                    ('inf', 4531.00, 7.90),
+                ),
+                'head_of_household': (
+                    ( 2400,    0.00, 1.40),
+                    ( 4800,   34.00, 3.20),
+                    ( 9600,  110.00, 5.50),
+                    (14400,  374.00, 6.40),
+                    (19200,  682.00, 6.80),
+                    (24000, 1008.00, 7.20),
+                    (36000, 1354.00, 7.60),
+                    ('inf', 2266.00, 7.90),
+                ),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_hi_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://files.hawaii.gov/tax/forms/2019/19table.pdf -->
+        <!-- Table from Schedule I, II and III -->
+        <record id="rule_parameter_us_hi_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': (
+                    ( 2400,    0.00, 1.40),
+                    ( 4800,   34.00, 3.20),
+                    ( 9600,  110.00, 5.50),
+                    (14400,  374.00, 6.40),
+                    (19200,  682.00, 6.80),
+                    (24000, 1008.00, 7.20),
+                    (36000, 1354.00, 7.60),
+                    ('inf', 2266.00, 7.90),
+                ),
+                'married': (
+                    ( 4800,    0.00, 1.40),
+                    ( 9600,   67.00, 3.20),
+                    (19200,  221.00, 5.50),
+                    (28800,  749.00, 6.40),
+                    (38400, 1363.00, 6.80),
+                    (48000, 2016.00, 7.20),
+                    (72000, 2707.00, 7.60),
+                    ('inf', 4531.00, 7.90),
+                ),
+                'head_of_household': (
+                    ( 2400,    0.00, 1.40),
+                    ( 4800,   34.00, 3.20),
+                    ( 9600,  110.00, 5.50),
+                    (14400,  374.00, 6.40),
+                    (19200,  682.00, 6.80),
+                    (24000, 1008.00, 7.20),
+                    (36000, 1354.00, 7.60),
+                    ('inf', 2266.00, 7.90),
+                ),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_hi_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_hi_sit_personal_exemption_rate" model="hr.rule.parameter">
+        <field name="name">US HI Hawaii Personal Exemption Rate</field>
+        <field name="code">us_hi_sit_personal_exemption_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_hi_sit_personal_exemption_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">1144</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_hi_sit_personal_exemption_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_hi_sit_personal_exemption_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1144</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_hi_sit_personal_exemption_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_hi_dor" model="res.partner">
+        <field name="name">US Hawaii - Department of Labor and Industrial Relations - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_hi_dor_sit" model="res.partner">
+        <field name="name">US Hawaii - Department of Taxation - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_hi_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US HI Hawaii State Unemployment</field>
+        <field name="code">ER_US_HI_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_hi_suta_wage_base', rate='us_hi_suta_rate', state_code='HI')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_hi_suta_wage_base', rate='us_hi_suta_rate', state_code='HI')</field>
+        <field name="partner_id" ref="res_partner_us_hi_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_hi_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US HI Hawaii State Income Tax Withholding</field>
+        <field name="code">EE_US_HI_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = hi_hawaii_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = hi_hawaii_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_hi_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

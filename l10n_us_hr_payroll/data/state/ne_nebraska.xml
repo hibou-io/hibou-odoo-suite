@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_ne_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US NE Nebraska SUTA Wage Base</field>
+        <field name="code">us_ne_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ne_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">9000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ne_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_ne_suta_rate" model="hr.rule.parameter">
+        <field name="name">US NE Nebraska SUTA Rate</field>
+        <field name="code">us_ne_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ne_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.25</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ne_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    <!-- Table based on Percentage method from https://revenue.nebraska.gov/sites/revenue.nebraska.gov/files/doc/business/2017cir-en_whole.pdf -->
+    <record id="rule_parameter_us_ne_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US NE Nebraska SIT Tax Rate</field>
+        <field name="code">us_ne_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ne_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': {
+                    'weekly': (
+                        (   57,  0.00,  0.00),
+                        (  105,  0.00,  2.26),
+                        (  342,  1.08,  3.22),
+                        (  496,  8.71,  4.91),
+                        (  629, 16.27,  6.20),
+                        ( 1182, 24.52,  6.59),
+                        ('inf', 60.96,  6.95),
+                    ),
+                    'bi-weekly': (
+                        (  114,   0.00,  0.00),
+                        (  211,   0.00,  2.26),
+                        (  684,   2.19,  3.22),
+                        (  992,  17.42,  4.91),
+                        ( 1259,  32.54,  6.20),
+                        ( 2364,  49.09,  6.59),
+                        ('inf', 121.91,  6.95),
+                    ),
+                    'semi-monthly': (
+                        (  124,   0.00,  0.00),
+                        (  228,   0.00,  2.26),
+                        (  741,   2.35,  3.22),
+                        ( 1074,  18.87,  4.91),
+                        ( 1364,  35.22,  6.20),
+                        ( 2561,  53.20,  6.59),
+                        ('inf', 132.08,  6.95),
+                    ),
+                    'monthly': (
+                        (  248,   0.00,  0.00),
+                        (  457,   0.00,  2.26),
+                        ( 1483,   4.72,  3.22),
+                        ( 2148,  37.76,  4.91),
+                        ( 2728,  70.41,  6.20),
+                        ( 5123, 106.37,  6.59),
+                        ('inf', 264.20,  6.95),
+                    ),
+                    'quarterly': (
+                        (   744,    0.00,  0.00),
+                        (  1370,    0.00,  2.26),
+                        (  4448,   14.15,  3.22),
+                        (  6445,  113.26,  4.91),
+                        (  8183,  211.31,  6.20),
+                        ( 15368,  319.07,  6.59),
+                        ( 'inf',  792.56,  6.95),
+                    ),
+                    'semi-annual': (
+                        (  1488,     0.00,  0.00),
+                        (  2740,     0.00,  2.26),
+                        (  8895,    28.30,  3.22),
+                        ( 12890,   226.49,  4.91),
+                        ( 16365,   422.64,  6.20),
+                        ( 30735,   638.09,  6.59),
+                        ( 'inf',  1585.07,  6.95),
+                    ),
+                    'annually': (
+                        (  2975,    0.00, 0.00),
+                        (  5480,    0.00, 2.26),
+                        ( 17790,   56.61, 3.22),
+                        ( 25780,  452.99, 4.91),
+                        ( 32730,  845.30, 6.20),
+                        ( 61470, 1276.20, 6.59),
+                        ( 'inf', 3170.17, 6.95),
+                    ),
+                },
+                'married': {
+                    'weekly': (
+                        (  137,  0.00, 0.00),
+                        (  204,  0.00, 2.26),
+                        (  508,  1.51, 3.22),
+                        (  790, 11.30, 4.91),
+                        (  981, 25.15, 6.20),
+                        ( 1300, 36.99, 6.59),
+                        ('inf', 58.01, 6.95),
+                    ),
+                    'bi-weekly': (
+                        (  273,   0.00, 0.00),
+                        (  408,   0.00, 2.26),
+                        ( 1016,   3.05, 3.22),
+                        ( 1581,  22.63, 4.91),
+                        ( 1961,  50.37, 6.20),
+                        ( 2601,  73.93, 6.59),
+                        ('inf', 116.11, 6.95),
+                    ),
+                    'semi-monthly': (
+                        (  296,   0.00, 0.00),
+                        (  442,   0.00, 2.26),
+                        ( 1101,   3.30, 3.22),
+                        ( 1713,  24.52, 4.91),
+                        ( 2125,  54.57, 6.20),
+                        ( 2818,  80.11, 6.59),
+                        ('inf', 125.78, 6.95),
+                    ),
+                    'monthly': (
+                        (  592,   0.00,  0.00),
+                        (  884,   0.00,  2.26),
+                        ( 2202,   6.60,  3.22),
+                        ( 3425,  49.04,  4.91),
+                        ( 4249,  109.09, 6.20),
+                        ( 5635,  160.18, 6.59),
+                        ('inf',  251.52, 6.95),
+                    ),
+                    'quarterly': (
+                        (  1775,   0.00,   0.00),
+                        (  2653,   0.00,   2.26),
+                        (  6605,   19.84,  3.22),
+                        ( 10275,  147.09,  4.91),
+                        ( 12748,  327.29,  6.20),
+                        ( 16905,  480.62,  6.59),
+                        ( 'inf',  754.57,  6.95),
+                    ),
+                    'semi-annual': (
+                        (  3550,    0.00,  0.00),
+                        (  5305,    0.00,  2.26),
+                        ( 13210,   39.66,  3.22),
+                        ( 20550,  294.20,  4.91),
+                        ( 25495,  654.59,  6.20),
+                        ( 33810,  961.18,  6.59),
+                        ( 'inf', 1509.14,  6.95),
+                    ),
+                    'annually': (
+                        (  7100,    0.00, 0.00),
+                        ( 10610,    0.00, 2.26),
+                        ( 26420,   79.33, 3.22),
+                        ( 41100,  588.41, 4.91),
+                        ( 50990, 1309.20, 6.20),
+                        ( 67620, 1992.38, 6.59),
+                        ( 'inf', 3018.30, 6.95),
+                    ),
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ne_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_ne_sit_allowances_rate" model="hr.rule.parameter">
+        <field name="name">US NE Nebraska Allowances Rate</field>
+        <field name="code">us_ne_sit_allowances_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ne_sit_allowances_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly' :        37.69,
+                'bi-weekly' :     75.38,
+                'semi-monthly':   81.67,
+                'monthly' :      163.33,
+                'quarterly' :    490.00,
+                'semi-annual':   980.00,
+                'annually':     1960.00,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ne_sit_allowances_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_ne_dor" model="res.partner">
+        <field name="name">US Nebraska - Nebraska Department of Labor - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_ne_dor_sit" model="res.partner">
+        <field name="name">US Nebraska - Nebraska Department of Revenue - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_ne_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US NE Nebraska State Unemployment</field>
+        <field name="code">ER_US_NE_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ne_suta_wage_base', rate='us_ne_suta_rate', state_code='NE')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ne_suta_wage_base', rate='us_ne_suta_rate', state_code='NE')</field>
+        <field name="partner_id" ref="res_partner_us_ne_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_ne_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US NE Nebraska State Income Tax Withholding</field>
+        <field name="code">EE_US_NE_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = ne_nebraska_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = ne_nebraska_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_ne_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

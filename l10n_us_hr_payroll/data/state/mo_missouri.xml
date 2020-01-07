@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_mo_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US MO Missouri SUTA Wage Base</field>
+        <field name="code">us_mo_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_mo_suta_wage_base_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">12000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mo_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_mo_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">11500.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mo_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_mo_suta_rate" model="hr.rule.parameter">
+        <field name="name">US MO Missouri SUTA Rate</field>
+        <field name="code">us_mo_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_mo_suta_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.376</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mo_suta_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_mo_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.376</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mo_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_mo_sit_rate" model="hr.rule.parameter">
+        <field name="name">US MO Missouri SIT Rate Table</field>
+        <field name="code">us_mo_sit_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <!-- https://dor.mo.gov/forms/4282_2019.pdf -->
+        <record id="rule_parameter_us_mo_sit_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">[
+                (1053.0, 1.5),
+                (1053.0, 2.0),
+                (1053.0, 2.5),
+                (1053.0, 3.0),
+                (1053.0, 3.5),
+                (1053.0, 4.0),
+                (1053.0, 4.5),
+                (1053.0, 5.0),
+                ( 'inf', 5.4),
+            ]</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mo_sit_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://dor.mo.gov/forms/4282_2020.pdf -->
+        <!-- Income Tax Withholding Percentage Table-->
+        <record id="rule_parameter_us_mo_sit_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">[
+                (1073.0, 1.5),
+                (1073.0, 2.0),
+                (1073.0, 2.5),
+                (1073.0, 3.0),
+                (1073.0, 3.5),
+                (1073.0, 4.0),
+                (1073.0, 4.5),
+                (1073.0, 5.0),
+                ( 'inf', 5.4),
+            ]</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mo_sit_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_mo_sit_deduction" model="hr.rule.parameter">
+        <field name="name">US MO Missouri SIT Deduction</field>
+        <field name="code">us_mo_sit_deduction</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <!-- https://dor.mo.gov/forms/4282_2019.pdf -->
+        <record id="rule_parameter_us_mo_sit_deduction_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single':             12400.0,
+                'married':            24800.0,
+                'head_of_household':  18650.0,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mo_sit_deduction"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://dor.mo.gov/forms/4282_2020.pdf -->
+        <!-- 2020 Missouri Withholding Tax Formula Page.12 -->
+        <record id="rule_parameter_us_mo_sit_deduction_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single':             12400.0,
+                'married':            24800.0,
+                'head_of_household':  18650.0,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mo_sit_deduction"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_mo_dor" model="res.partner">
+        <field name="name">US Missouri - Department of Taxation - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_mo_dor_sit" model="res.partner">
+        <field name="name">US Missouri - Department of Taxation - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_mo_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US MO Missouri State Unemployment</field>
+        <field name="code">ER_US_MO_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_mo_suta_wage_base', rate='us_mo_suta_rate', state_code='MO')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_mo_suta_wage_base', rate='us_mo_suta_rate', state_code='MO')</field>
+        <field name="partner_id" ref="res_partner_us_mo_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_mo_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US MO Missouri State Income Tax Withholding</field>
+        <field name="code">EE_US_MO_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = mo_missouri_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = mo_missouri_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_mo_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>
