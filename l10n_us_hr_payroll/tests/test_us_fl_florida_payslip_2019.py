@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from .common import TestUsPayslip, process_payslip
 from odoo.addons.l10n_us_hr_payroll.models.hr_contract import USHRContract
 
