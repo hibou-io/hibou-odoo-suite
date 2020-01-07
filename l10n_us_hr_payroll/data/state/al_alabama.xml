@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_al_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US AL Alabama SUTA Wage Base</field>
+        <field name="code">us_al_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_al_suta_wage_base_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">8000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_al_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_al_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">8000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_al_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_al_suta_rate" model="hr.rule.parameter">
+        <field name="name">US AL Alabama SUTA Rate</field>
+        <field name="code">us_al_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_al_suta_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.7</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_al_suta_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_al_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.7</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_al_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_al_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US AL Alabama SIT Tax Rate</field>
+        <field name="code">us_al_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_al_sit_tax_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                '0': [
+                    (  500, 2),
+                    ( 3000, 4),
+                    ('inf', 5),
+                ],
+                'M': [
+                    ( 1000, 2),
+                    ( 6000, 4),
+                    ('inf', 5),
+                ],
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_al_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_al_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                '0' : [
+                    (  500, 2),
+                    ( 2500, 4),
+                    ('inf', 5),
+                ],
+                'M': [
+                    ( 1000, 2),
+                    ( 5000, 4),
+                    ('inf', 5),
+                ],
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_al_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_al_sit_dependent_rate" model="hr.rule.parameter">
+        <field name="name">US AL Alabama Dependent Rate</field>
+        <field name="code">us_al_sit_dependent_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <!-- https://revenue.alabama.gov/wp-content/uploads/2019/01/whbooklet_0119.pdf -->
+        <!-- Page 7. D-->
+        <record id="rule_parameter_us_al_sit_dependent_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">[
+                (  1000,  20000),
+                (   500, 100000),
+                (   300,  'inf'),
+            ]</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_al_sit_dependent_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://revenue.alabama.gov/wp-content/uploads/2019/01/whbooklet_0119.pdf -->
+        <!-- Page 7. D-->
+        <record id="rule_parameter_us_al_sit_dependent_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">[
+                (  1000,  20000),
+                (   500, 100000),
+                (   300,  'inf'),
+            ]</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_al_sit_dependent_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_al_sit_standard_deduction_rate" model="hr.rule.parameter">
+        <field name="name">US AL Alabama Standard Deduction Rate</field>
+        <field name="code">us_al_sit_standard_deduction_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <!-- https://revenue.alabama.gov/wp-content/uploads/2019/01/whbooklet_0119.pdf -->
+        <!-- Page 7. A-->
+        <record id="rule_parameter_us_al_sit_standard_deduction_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                '0':  ((23499.0, 2500.0), (33000.0, 2500.0,  25.0, 500.0), ('inf', 2000.0)),
+                'S':  ((23499.0, 2500.0), (33000.0, 2500.0,  25.0, 500.0), ('inf', 2000.0)),
+                'MS': ((10749.0, 3750.0), (15500.0, 3750.0,  88.0, 250.0), ('inf', 2000.0)),
+                'M':  ((23499.0, 7500.0), (33000.0, 7500.0, 175.0, 500.0), ('inf', 4000.0)),
+                'H':  ((23499.0, 4700.0), (33000.0, 7500.0, 175.0, 500.0), ('inf', 4000.0)),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_al_sit_standard_deduction_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://revenue.alabama.gov/wp-content/uploads/2019/01/whbooklet_0119.pdf -->
+        <!-- Page 7. A-->
+        <record id="rule_parameter_us_al_sit_standard_deduction_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                '0':  ((23499.0, 2500.0), (33000.0, 2500.0,  25.0, 500.0), ('inf', 2000.0)),
+                'S':  ((23499.0, 2500.0), (33000.0, 2500.0,  25.0, 500.0), ('inf', 2000.0)),
+                'MS': ((10749.0, 3750.0), (15500.0, 3750.0,  88.0, 250.0), ('inf', 2000.0)),
+                'M':  ((23499.0, 7500.0), (33000.0, 7500.0, 175.0, 500.0), ('inf', 4000.0)),
+                'H':  ((23499.0, 4700.0), (33000.0, 7500.0, 175.0, 500.0), ('inf', 4000.0)),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_al_sit_standard_deduction_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_al_sit_personal_exemption_rate" model="hr.rule.parameter">
+        <field name="name">US AL Alabama Personal Exemption Rate</field>
+        <field name="code">us_al_sit_personal_exemption_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <!-- https://revenue.alabama.gov/wp-content/uploads/2019/01/whbooklet_0119.pdf -->
+        <!-- Page 7. C-->
+        <record id="rule_parameter_us_al_sit_personal_exemption_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                '0' :    0,
+                'S' : 1500,
+                'MS': 1500,
+                'M' : 3000,
+                'H' : 3000,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_al_sit_personal_exemption_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://revenue.alabama.gov/wp-content/uploads/2019/01/whbooklet_0119.pdf -->
+        <!-- Page 7. C-->
+        <record id="rule_parameter_us_al_sit_personal_exemption_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                '0' :    0,
+                'S' : 1500,
+                'MS': 1500,
+                'M' : 3000,
+                'H' : 3000,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_al_sit_personal_exemption_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_al_dor" model="res.partner">
+        <field name="name">US Alabama - Department of Economic Security (IDES) - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_al_dor_sit" model="res.partner">
+        <field name="name">US Alabama - Department of Revenue (IDOR) - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_al_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US AL Alabama State Unemployment</field>
+        <field name="code">ER_US_AL_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_al_suta_wage_base', rate='us_al_suta_rate', state_code='AL')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_al_suta_wage_base', rate='us_al_suta_rate', state_code='AL')</field>
+        <field name="partner_id" ref="res_partner_us_al_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_al_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US AL Alabama State Income Tax Withholding</field>
+        <field name="code">EE_US_AL_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = al_alabama_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = al_alabama_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_al_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

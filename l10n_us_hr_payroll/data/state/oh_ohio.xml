@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_oh_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US OH Ohio SUTA Wage Base</field>
+        <field name="code">us_oh_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_oh_suta_wage_base_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">9500.00</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_oh_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_oh_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">9000.00</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_oh_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_oh_suta_rate" model="hr.rule.parameter">
+        <field name="name">US OH Ohio SUTA Rate</field>
+        <field name="code">us_oh_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_oh_suta_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.7</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_oh_suta_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_oh_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.7</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_oh_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_oh_sit_rate" model="hr.rule.parameter">
+        <field name="name">US OH Ohio SIT Rate Table</field>
+        <field name="code">us_oh_sit_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_oh_sit_rate_2019" model="hr.rule.parameter.value">
+            <!-- https://www.tax.ohio.gov/Portals/0/employer_withholding/2019%20tables/WTH_OptionalComputerFormula_2019.pdf -->
+            <!-- wage_less_than, base_amount, rate_over -->
+            <field name="parameter_value">[
+                    (   5000.00,       0.0,  0.005),
+                    (  10000.00,      25.0,  0.010),
+                    (  15000.00,      75.0,  0.020),
+                    (  20000.00,     175.0,  0.025),
+                    (  40000.00,     300.0,  0.030),
+                    (  80000.00,     900.0,  0.035),
+                    ( 100000.00,    2300.0,  0.040),
+                    (     'inf',    3100.0,  0.050),
+                ]</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_oh_sit_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_oh_sit_rate_2020" model="hr.rule.parameter.value">
+            <!-- https://www.tax.ohio.gov/Portals/0/employer_withholding/2020%20tables/WTH_OptionalComputerFormula_2020.pdf -->
+            <!-- wage_less_than, base_amount, rate_over -->
+            <field name="parameter_value">[
+                    (   5000.00,       0.0,  0.005),
+                    (  10000.00,      25.0,  0.010),
+                    (  15000.00,      75.0,  0.020),
+                    (  20000.00,     175.0,  0.025),
+                    (  40000.00,     300.0,  0.030),
+                    (  80000.00,     900.0,  0.035),
+                    ( 100000.00,    2300.0,  0.040),
+                    (     'inf',    3100.0,  0.050),
+                ]</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_oh_sit_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_oh_sit_exemption_rate" model="hr.rule.parameter">
+        <field name="name">US OH Ohio SIT Exemption Rate</field>
+        <field name="code">us_oh_sit_exemption_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_oh_sit_exemption_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">650.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_oh_sit_exemption_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_oh_sit_exemption_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">650.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_oh_sit_exemption_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_oh_sit_multiplier" model="hr.rule.parameter">
+        <field name="name">US OH Ohio SIT Multiplier Value</field>
+        <field name="code">us_oh_sit_multiplier</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_oh_sit_multiplier_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.075</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_oh_sit_multiplier"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_oh_sit_multiplier_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.032</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_oh_sit_multiplier"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_oh_dor" model="res.partner">
+        <field name="name">US Ohio - OBG - Unemployment</field>
+    </record>
+
+    <record id="res_partner_us_oh_dor_sit" model="res.partner">
+        <field name="name">US Ohio - OBG - Income Withholding</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_oh_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US OH Ohio State Unemployment (JFS-20125)</field>
+        <field name="code">ER_US_OH_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_oh_suta_wage_base', rate='us_oh_suta_rate', state_code='OH')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_oh_suta_wage_base', rate='us_oh_suta_rate', state_code='OH')</field>
+        <field name="partner_id" ref="res_partner_us_oh_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_oh_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US OH Ohio State Income Tax Withholding (IT 501)</field>
+        <field name="code">EE_US_OH_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = oh_ohio_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = oh_ohio_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_oh_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

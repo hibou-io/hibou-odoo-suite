@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_wi_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US WI Wisconsin SUTA Wage Base</field>
+        <field name="code">us_wi_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_wi_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">14000.00</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_wi_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <!-- Rate based on this file https://dwd.wisconsin.gov/ui/employers/taxrates.htm -->
+    <record id="rule_parameter_us_wi_suta_rate" model="hr.rule.parameter">
+        <field name="name">US WI Wisconsin SUTA Rate</field>
+        <field name="code">us_wi_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_wi_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">3.05</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_wi_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_wi_sit_exemption_rate" model="hr.rule.parameter">
+        <field name="name">US WI Wisconsin Exemption Rate</field>
+        <field name="code">us_wi_sit_exemption_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_wi_sit_exemption_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">22</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_wi_sit_exemption_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Table based on https://www.revenue.wi.gov/DOR%20Publications/pb166.pdf page 25. -->
+    <record id="rule_parameter_us_wi_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US WI Wisconsin SIT Tax Rate</field>
+        <field name="code">us_wi_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_wi_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single':  (
+                    (  5730, 0.0000,     0.00),
+                    ( 15200, 4.0000,     0.00),
+                    ( 16486, 4.4800,   378.80),
+                    ( 26227, 6.5408,   436.41),
+                    ( 62950, 7.0224,  1073.55),
+                    (240190, 6.2700,  3652.39),
+                    ( 'inf', 7.6500, 14765.34),
+                ),
+                'married': (
+                    (  7870, 0.0000,     0.00),
+                    ( 18780, 4.0000,     0.00),
+                    ( 21400, 5.8400,   436.40),
+                    ( 28308, 7.0080,   589.41),
+                    ( 60750, 7.5240,  1073.52),
+                    (240190, 6.2700,  3514.46),
+                    ( 'inf', 7.6500, 14765.35),
+                ),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_wi_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_wi_dor" model="res.partner">
+        <field name="name">US Wisconsin - Department of Workforce Development - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_wi_dor_sit" model="res.partner">
+        <field name="name">US Wisconsin - Department of Revenue - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_wi_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US WI Wisconsin State Unemployment</field>
+        <field name="code">ER_US_WI_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_wi_suta_wage_base', rate='us_wi_suta_rate', state_code='WI')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_wi_suta_wage_base', rate='us_wi_suta_rate', state_code='WI')</field>
+        <field name="partner_id" ref="res_partner_us_wi_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_wi_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US WI Wisconsin State Income Tax Withholding</field>
+        <field name="code">EE_US_WI_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = wi_wisconsin_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = wi_wisconsin_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_wi_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_me_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US ME Maine SUTA Wage Base</field>
+        <field name="code">us_me_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_me_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">12000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_me_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_me_suta_rate" model="hr.rule.parameter">
+        <field name="name">US ME Maine SUTA Rate</field>
+        <field name="code">us_me_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_me_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.92</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_me_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    <!-- table based on https://www.maine.gov/revenue/forms/with/2020/20_WH_Tab&Instructions.pdf step 6.-->
+    <record id="rule_parameter_us_me_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US ME Maine SIT Tax Rate</field>
+        <field name="code">us_me_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_me_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': (
+                    (  22200,     0,  5.80),
+                    (  52600,  1288,  6.75),
+                    (  'inf',  3340,  7.15),
+                ),
+                'married': (
+                    (  44450,     0,  5.80),
+                    ( 105200,  2578,  6.75),
+                    ( 'inf',   6679,  7.15),
+                ),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_me_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_me_sit_standard_deduction_rate" model="hr.rule.parameter">
+        <field name="name">US ME Maine Standard Deduction Rate</field>
+        <field name="code">us_me_sit_standard_deduction_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_me_sit_standard_deduction_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single':   {
+                    ( 82900,   9550),
+                    (157900,  75000),
+                },
+                'married':  {
+                    (165800,  21950),
+                    (315800, 150000),
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_me_sit_standard_deduction_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_me_sit_personal_exemption_rate" model="hr.rule.parameter">
+        <field name="name">US ME Maine Personal Exemption Rate</field>
+        <field name="code">us_me_sit_personal_exemption_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_me_sit_personal_exemption_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">4300</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_me_sit_personal_exemption_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_me_dor" model="res.partner">
+        <field name="name">US Maine - Department Of Labor | ReEmploy - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_me_dor_sit" model="res.partner">
+        <field name="name">US Maine - Department Of Revenue Services - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_me_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US ME Maine State Unemployment</field>
+        <field name="code">ER_US_ME_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_me_suta_wage_base', rate='us_me_suta_rate', state_code='ME')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_me_suta_wage_base', rate='us_me_suta_rate', state_code='ME')</field>
+        <field name="partner_id" ref="res_partner_us_me_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_me_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US ME Maine State Income Tax Withholding</field>
+        <field name="code">EE_US_ME_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = me_maine_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = me_maine_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_me_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

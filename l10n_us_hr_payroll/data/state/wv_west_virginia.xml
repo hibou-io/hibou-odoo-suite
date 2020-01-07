@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_wv_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US WV West Virginia SUTA Wage Base</field>
+        <field name="code">us_wv_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_wv_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">12000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_wv_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_wv_suta_rate" model="hr.rule.parameter">
+        <field name="name">US WV West Virginia SUTA Rate</field>
+        <field name="code">us_wv_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_wv_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.7</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_wv_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    <!-- Table base on this https://tax.wv.gov/Documents/TaxForms/it100.1a.pdf page 16-->
+    <record id="rule_parameter_us_wv_sit_exemption_rate" model="hr.rule.parameter">
+        <field name="name">US WV West Virginia Exemption Rate</field>
+        <field name="code">us_wv_sit_exemption_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_wv_sit_exemption_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly' :        38.46,
+                'bi-weekly' :     76.92,
+                'semi-monthly':   83.33,
+                'monthly' :      166.67,
+                'annually':     2000.00,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_wv_sit_exemption_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    <!-- Table base on this https://tax.wv.gov/Documents/TaxForms/it100.1a.pdf page 17-->
+    <record id="rule_parameter_us_wv_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US WV West Virginia SIT Tax Rate</field>
+        <field name="code">us_wv_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_wv_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': {
+                    'weekly':(
+                        (  192,  0.00, 3.0),
+                        (  481,  5.76, 4.0),
+                        (  769, 17.32, 4.5),
+                        ( 1154, 30.28, 6.0),
+                        ('inf', 53.38, 6.5),
+                    ),
+                    'bi-weekly':(
+                        (  385,   0.00, 3.0),
+                        (  962,  11.55, 4.0),
+                        ( 1538,  34.63, 4.5),
+                        ( 2308,  60.55, 6.0),
+                        ('inf', 106.75, 6.5),
+                    ),
+                    'semi-monthly':(
+                        (  417,   0.00, 3.0),
+                        ( 1042 , 12.51, 4.0),
+                        ( 1667,  37.51, 4.5),
+                        ( 2500,  65.64, 6.0),
+                        ('inf', 115.62, 6.5),
+                    ),
+                    'monthly':(
+                        (  833,   0.00, 3.0),
+                        ( 2083,  24.99, 4.0),
+                        ( 3333,  74.99, 4.5),
+                        ( 5000, 131.24, 6.0),
+                        ('inf', 231.26, 6.5),
+                    ),
+                    'annually':(
+                        ( 10000,    0.00, 3.0),
+                        ( 25000,  300.00, 4.0),
+                        ( 40000,  900.00, 4.5),
+                        ( 60000, 1575.00, 6.0),
+                        ( 'inf', 2775.00, 6.5),
+                    ),
+                },
+                'married': {
+                    'weekly':(
+                        (  115,  0.00, 3.0),
+                        (  288,  3.45, 4.0),
+                        (  462, 10.37, 4.5),
+                        (  692, 18.20, 6.0),
+                        ('inf', 32.00, 6.5),
+                    ),
+                    'bi-weekly':(
+                        (  231,  0.00, 3.0),
+                        (  577,  6.93, 4.0),
+                        (  923, 20.77, 4.5),
+                        ( 1385, 36.34, 6.0),
+                        ('inf', 64.06, 6.5),
+                    ),
+                    'semi-monthly':(
+                        (  250,  0.00, 3.0),
+                        (  625,  7.50, 4.0),
+                        ( 1000, 22.50, 4.5),
+                        ( 1500, 39.38, 6.0),
+                        ('inf', 69.38, 6.5),
+                    ),
+                    'monthly':(
+                        (  500,   0.00, 3.0),
+                        ( 1250,  15.00, 4.0),
+                        ( 2000,  45.00, 4.5),
+                        ( 3000,  78.75, 6.0),
+                        ('inf', 138.75, 6.5),
+                    ),
+                    'annually':(
+                        ( 6000,    0.00, 3.0),
+                        (15000,  180.00, 4.0),
+                        (24000,  540.00, 4.5),
+                        (36000,  945.00, 6.0),
+                        ('inf', 1665.00, 6.5),
+                    ),
+                },
+                'head_household': {
+                    'weekly':(
+                        (  192,  0.00, 3.0),
+                        (  481,  5.76, 4.0),
+                        (  769, 17.32, 4.5),
+                        ( 1154, 30.28, 6.0),
+                        ('inf', 53.38, 6.5),
+                    ),
+                    'bi-weekly':(
+                        (  385,   0.00, 3.0),
+                        (  962,  11.55, 4.0),
+                        ( 1538,  34.63, 4.5),
+                        ( 2308,  60.55, 6.0),
+                        ('inf', 106.75, 6.5),
+                    ),
+                    'semi-monthly':(
+                        (  417,   0.00, 3.0),
+                        ( 1042,  12.51, 4.0),
+                        ( 1667,  37.51, 4.5),
+                        ( 2500,  65.64, 6.0),
+                        ('inf', 115.62, 6.5),
+                    ),
+                    'monthly':(
+                        (  833,   0.00, 3.0),
+                        ( 2083,  24.99, 4.0),
+                        ( 3333,  74.99, 4.5),
+                        ( 5000, 131.24, 6.0),
+                        ('inf', 231.26, 6.5),
+                    ),
+                    'annually':(
+                        ( 10000,    0.00, 3.0),
+                        ( 25000,  300.00, 4.0),
+                        ( 40000,  900.00, 4.5),
+                        ( 60000, 1575.00, 6.0),
+                        ( 'inf', 2775.00, 6.5),
+                    ),
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_wv_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_wv_dor" model="res.partner">
+        <field name="name">US West Virginia - WorkForce - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_wv_dor_sit" model="res.partner">
+        <field name="name">US West Virginia - Department of Revenue - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_wv_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US WV West Virginia State Unemployment</field>
+        <field name="code">ER_US_WV_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_wv_suta_wage_base', rate='us_wv_suta_rate', state_code='WV')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_wv_suta_wage_base', rate='us_wv_suta_rate', state_code='WV')</field>
+        <field name="partner_id" ref="res_partner_us_wv_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_wv_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US WV West Virginia State Income Tax Withholding</field>
+        <field name="code">EE_US_WV_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = wv_west_virginia_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = wv_west_virginia_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_wv_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

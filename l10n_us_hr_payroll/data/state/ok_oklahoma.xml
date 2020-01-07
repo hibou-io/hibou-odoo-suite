@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_ok_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US OK Oklahoma SUTA Wage Base</field>
+        <field name="code">us_ok_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ok_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">18700.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ok_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_ok_suta_rate" model="hr.rule.parameter">
+        <field name="name">US OK Oklahoma SUTA Rate</field>
+        <field name="code">us_ok_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ok_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.5</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ok_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    <!-- table from https://www.ok.gov/tax/documents/2020WHTables.pdf -->
+    <record id="rule_parameter_us_ok_sit_allowances_rate" model="hr.rule.parameter">
+        <field name="name">US OK Oklahoma Allowances Rate</field>
+        <field name="code">us_ok_sit_allowances_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ok_sit_allowances_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly' :        19.23,
+                'bi-weekly' :     38.46,
+                'semi-monthly':   41.67,
+                'monthly' :       83.33,
+                'quarterly' :    250.00,
+                'semi-annual':   500.00,
+                'annually':     1000.00,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ok_sit_allowances_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    <!-- table from https://www.ok.gov/tax/documents/2020WHTables.pdf -->
+    <record id="rule_parameter_us_ok_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US OK Oklahoma SIT Tax Rate</field>
+        <field name="code">us_ok_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ok_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': {
+                    'weekly': (
+                        (  122, 0.00, 0.00),
+                        (  141, 0.50, 0.00),
+                        (  170, 1.00, 0.10),
+                        (  194, 2.00, 0.38),
+                        (  216, 3.00, 0.87),
+                        (  261, 4.00, 1.53),
+                        ('inf', 5.00, 3.30),
+                    ),
+                    'bi-weekly': (
+                        (  244, 0.00, 0.00),
+                        (  283, 0.50, 0.00),
+                        (  340, 1.00, 0.19),
+                        (  388, 2.00, 0.77),
+                        (  433, 3.00, 1.73),
+                        (  521, 4.00, 3.06),
+                        ('inf', 5.00, 6.60),
+                    ),
+                    'semi-monthly': (
+                        (  265, 0.00, 0.00),
+                        (  306, 0.50, 0.00),
+                        (  369, 1.00, 0.21),
+                        (  421, 2.00, 0.83),
+                        (  469, 3.00, 1.88),
+                        (  565, 4.00, 3.31),
+                        ('inf', 5.00, 7.15),
+                    ),
+                    'monthly': (
+                        (  529, 0.00,  0.00),
+                        (  613, 0.50,  0.00),
+                        (  738, 1.00,  0.42),
+                        (  842, 2.00,  1.67),
+                        (  938, 3.00,  3.75),
+                         (1129, 4.00,  6.63),
+                        ('inf', 5.00, 14.29),
+                    ),
+                    'quarterly': (
+                        ( 1588, 0.00,  0.00),
+                        ( 1838, 0.50,  0.00),
+                        ( 2213, 1.00,  1.25),
+                        ( 2525, 2.00,  5.00),
+                        ( 2813, 3.00, 11.25),
+                        ( 3388, 4.00, 19.88),
+                        ('inf', 5.00, 42.88),
+                    ),
+                    'semi-annual': (
+                        ( 3175, 0.00,  0.00),
+                        ( 3675, 0.50,  0.00),
+                        ( 4425, 1.00,  2.50),
+                        ( 5050, 2.00, 10.00),
+                         (5625, 3.00, 22.50),
+                        ( 6775, 4.00, 39.75),
+                        ('inf', 5.00, 85.75),
+                    ),
+                    'annually': (
+                        ( 6350, 0.00,   0.00),
+                        ( 7350, 0.50,   0.00),
+                        ( 8850, 1.00,   5.00),
+                        (10100, 2.00,  20.00),
+                        (11250, 3.00,  45.00),
+                        (13550, 4.00,  79.50),
+                        ('inf', 5.00, 171.50),
+                    ),
+                },
+                'married': {
+                    'weekly': (
+                        (  244, 0.00, 0.00),
+                        (  283, 0.50, 0.00),
+                        (  340, 1.00, 0.19),
+                        (  388, 2.00, 0.77),
+                        (  433, 3.00, 1.73),
+                        (  479, 4.00, 3.06),
+                        ('inf', 5.00, 4.90),
+                    ),
+                    'bi-weekly': (
+                        (  488, 0.00, 0.00),
+                        (  565, 0.50, 0.00),
+                        (  681, 1.00, 0.38),
+                        (  777, 2.00, 1.54),
+                        (  865, 3.00, 3.46),
+                        (  958, 4.00, 6.12),
+                        ('inf', 5.00, 9.81),
+                    ),
+                    'semi-monthly': (
+                        (  529, 0.00,  0.00),
+                        (  613, 0.50,  0.00),
+                        (  738, 1.00,  0.42),
+                        (  842, 2.00,  1.67),
+                        (  938, 3.00,  3.75),
+                        ( 1038, 4.00,  6.63),
+                        ('inf', 5.00, 10.63),
+                    ),
+                    'monthly': (
+                        ( 1058, 0.00,  0.00),
+                        ( 1225, 0.50,  0.00),
+                        ( 1475, 1.00,  0.83),
+                        ( 1683, 2.00,  3.33),
+                        ( 1875, 3.00,  7.50),
+                        ( 2075, 4.00, 13.25),
+                        ('inf', 5.00, 21.25),
+                    ),
+                    'quarterly': (
+                        ( 3175, 0.00,  0.00),
+                        ( 3675, 0.50,  0.00),
+                        ( 4425, 1.00,  2.50),
+                        ( 5050, 2.00, 10.00),
+                        ( 5625, 3.00, 22.50),
+                        ( 6225, 4.00, 39.75),
+                        ('inf', 5.00, 63.75),
+                    ),
+                    'semi-annual': (
+                        (  6350, 0.00,   0.00),
+                        (  7350, 0.50,   0.00),
+                        (  8850, 1.00,   5.00),
+                        ( 10100, 2.00,  20.00),
+                        ( 11250, 3.00,  45.00),
+                        ( 12450, 4.00,  79.50),
+                        ( 'inf', 5.00, 127.50),
+                    ),
+                    'annually': (
+                        (  12700, 0.00,   0.00),
+                        (  14700, 0.50,   0.00),
+                        (  17700, 1.00,  10.00),
+                        (  20200, 2.00,  40.00),
+                        (  22500, 3.00,  90.00),
+                        (  24900, 4.00, 159.00),
+                        (  'inf', 5.00, 255.00),
+                    ),
+                },
+                'head_household': {
+                    'weekly': (
+                        (  122, 0.00, 0.00),
+                        (  141, 0.50, 0.00),
+                        (  170, 1.00, 0.10),
+                        (  194, 2.00, 0.38),
+                        (  216, 3.00, 0.87),
+                        (  261, 4.00, 1.53),
+                        ('inf', 5.00, 3.30),
+                    ),
+                    'bi-weekly': (
+                        (  244, 0.00, 0.00),
+                        (  283, 0.50, 0.00),
+                        (  340, 1.00, 0.19),
+                        (  388, 2.00, 0.77),
+                        (  433, 3.00, 1.73),
+                        (  521, 4.00, 3.06),
+                        ('inf', 5.00, 6.60),
+                    ),
+                    'semi-monthly': (
+                        (  265, 0.00, 0.00),
+                        (  306, 0.50, 0.00),
+                        (  369, 1.00, 0.21),
+                        (  421, 2.00, 0.83),
+                        (  469, 3.00, 1.88),
+                        (  565, 4.00, 3.31),
+                        ('inf', 5.00, 7.15),
+                    ),
+                    'monthly': (
+                        (  529, 0.00,  0.00),
+                        (  613, 0.50,  0.00),
+                        (  738, 1.00,  0.42),
+                        (  842, 2.00,  1.67),
+                        (  938, 3.00,  3.75),
+                        ( 1129, 4.00,  6.63),
+                        ('inf', 5.00, 14.29),
+                    ),
+                    'quarterly': (
+                        ( 1588, 0.00,  0.00),
+                        ( 1838, 0.50,  0.00),
+                        ( 2213, 1.00,  1.25),
+                        ( 2525, 2.00,  5.00),
+                        ( 2813, 3.00, 11.25),
+                        ( 3388, 4.00, 19.88),
+                        ('inf', 5.00, 42.88),
+                    ),
+                    'semi-annual': (
+                        ( 3175, 0.00,  0.00),
+                        ( 3675, 0.50,  0.00),
+                        ( 4425, 1.00,  2.50),
+                        ( 5050, 2.00, 10.00),
+                        ( 5625, 3.00, 22.50),
+                        ( 6775, 4.00, 39.75),
+                        ('inf', 5.00, 85.75),
+                    ),
+                    'annually': (
+                        ( 6350, 0.00,   0.00),
+                        ( 7350, 0.50,   0.00),
+                        ( 8850, 1.00,   5.00),
+                        (10100, 2.00,  20.00),
+                        (11250, 3.00,  45.00),
+                        (13550, 4.00,  79.50),
+                        ('inf', 5.00, 171.50),
+                    ),
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ok_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_ok_dor" model="res.partner">
+        <field name="name">US Oklahoma - Employment Security Commission - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_ok_dor_sit" model="res.partner">
+        <field name="name">US Oklahoma - Tax Commission - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_ok_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US OK Oklahoma State Unemployment</field>
+        <field name="code">ER_US_OK_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ok_suta_wage_base', rate='us_ok_suta_rate', state_code='OK')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ok_suta_wage_base', rate='us_ok_suta_rate', state_code='OK')</field>
+        <field name="partner_id" ref="res_partner_us_ok_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_ok_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US OK Oklahoma State Income Tax Withholding</field>
+        <field name="code">EE_US_OK_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = ok_oklahoma_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = ok_oklahoma_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_ok_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

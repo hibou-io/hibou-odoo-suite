@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_id_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US ID Idaho SUTA Wage Base</field>
+        <field name="code">us_id_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_id_suta_wage_base_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">40000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_id_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_id_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">41600.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_id_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_id_suta_rate" model="hr.rule.parameter">
+        <field name="name">US ID Idaho SUTA Rate</field>
+        <field name="code">us_id_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_id_suta_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_id_suta_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_id_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_id_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_id_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US ID Idaho SIT Tax Rate</field>
+        <field name="code">us_id_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_id_sit_tax_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': {
+                    'weekly': (
+                        (  235,  0.00, 0.000),
+                        (  264,  0.00, 1.125),
+                        (  294,  0.00, 3.125),
+                        (  324,  1.00, 3.625),
+                        (  353,  2.00, 4.625),
+                        (  383,  4.00, 5.625),
+                        (  457,  5.00, 6.625),
+                        ('inf', 10.00, 6.925),
+                    ),
+                    'bi-weekly': (
+                        (  469,  0.00, 0.000),
+                        (  529,  0.00, 1.125),
+                        (  588,  1.00, 3.125),
+                        (  647,  3.00, 3.625),
+                        (  706,  5.00, 4.625),
+                        (  766,  7.00, 5.625),
+                        (  914, 11.00, 6.625),
+                        ('inf', 21.00, 6.925),
+                    ),
+                    'semi-monthly': (
+                        (  508,  0.00, 0.000),
+                        (  573,  0.00, 1.125),
+                        (  637,  1.00, 3.125),
+                        (  701,  3.00, 3.625),
+                        (  765,  5.00, 4.625),
+                        (  829,  8.00, 5.625),
+                        (  990, 12.00, 6.625),
+                        ('inf', 22.00, 6.925),
+                    ),
+                    'monthly': (
+                        ( 1017,  0.00, 0.000),
+                        ( 1145,  0.00, 1.125),
+                        ( 1273,  1.00, 3.125),
+                        ( 1402,  5.00, 3.625),
+                        ( 1530, 10.00, 4.625),
+                        ( 1659, 16.00, 5.625),
+                        ( 1980, 23.00, 6.625),
+                        ('inf', 45.00, 6.925),
+                    ),
+                    'annually': (
+                        (12200,   0.00, 0.000),
+                        (13741,   0.00, 1.125),
+                        (15281,  17.00, 3.125),
+                        (16822,  65.00, 3.625),
+                        (18362, 121.00, 4.625),
+                        (19903, 192.00, 5.625),
+                        (23754, 279.00, 6.625),
+                        ('inf', 534.00, 6.925),
+                    ),
+                },
+                'married': {
+                    'weekly': (
+                        (  469,  0.00, 0.000),
+                        (  529,  0.00, 1.125),
+                        (  588,  0.00, 3.125),
+                        (  647,  1.00, 3.625),
+                        (  706,  2.00, 4.625),
+                        (  766,  4.00, 5.625),
+                        (  914,  5.00, 6.625),
+                        ('inf', 10.00, 6.925),
+                    ),
+                    'bi-weekly': (
+                        (  938,  0.00, 0.000),
+                        ( 1057,  0.00, 1.125),
+                        ( 1175,  1.00, 3.125),
+                        ( 1294,  5.00, 3.625),
+                        ( 1412,  9.00, 4.625),
+                        ( 1531, 15.00, 5.625),
+                        ( 1827, 21.00, 6.625),
+                        ('inf', 41.00, 6.925),
+                    ),
+                    'semi-monthly': (
+                        ( 1017,  0.00, 0.000),
+                        ( 1145,  0.00, 1.125),
+                        ( 1273,  1.00, 3.125),
+                        ( 1402,  5.00, 3.625),
+                        ( 1530, 10.00, 4.625),
+                        ( 1659, 16.00, 5.625),
+                        ( 1980, 23.00, 6.625),
+                        ('inf', 45.00, 6.925),
+                    ),
+                    'monthly': (
+                        ( 2033,  0.00, 0.000),
+                        ( 2290,  0.00, 1.125),
+                        ( 2547,  3.00, 3.125),
+                        ( 2804, 11.00, 3.625),
+                        ( 3060, 20.00, 4.625),
+                        ( 3317, 32.00, 5.625),
+                        ( 3959, 47.00, 6.625),
+                        ('inf', 89.00, 6.925),
+                    ),
+                    'annually': (
+                        (24400,    0.00, 0.000),
+                        (27482,    0.00, 1.125),
+                        (30562,   35.00, 3.125),
+                        (33644,  131.00, 3.625),
+                        (36724,  243.00, 4.625),
+                        (39806,  385.00, 5.625),
+                        (47508,  558.00, 6.625),
+                        ('inf', 1068.00, 6.925),
+                    ),
+                },
+                'head of household': {
+                    'weekly': (
+                        (  235,  0.00, 0.000),
+                        (  264,  0.00, 1.125),
+                        (  294,  0.00, 3.125),
+                        (  324,  1.00, 3.625),
+                        (  353,  2.00, 4.625),
+                        (  383,  4.00, 5.625),
+                        (  457,  5.00, 6.625),
+                        ('inf', 10.00, 6.925),
+                    ),
+                    'bi-weekly': (
+                        (  469,  0.00, 0.000),
+                        (  529,  0.00, 1.125),
+                        (  588,  1.00, 3.125),
+                        (  647,  3.00, 3.625),
+                        (  706,  5.00, 4.625),
+                        (  766,  7.00, 5.625),
+                        (  914, 11.00, 6.625),
+                        ('inf', 21.00, 6.925),
+                    ),
+                    'semi-monthly': (
+                        (  508,  0.00, 0.000),
+                        (  573,  0.00, 1.125),
+                        (  637,  1.00, 3.125),
+                        (  701,  3.00, 3.625),
+                        (  765,  5.00, 4.625),
+                        (  829,  8.00, 5.625),
+                        (  990, 12.00, 6.625),
+                        ('inf', 22.00, 6.925),
+                    ),
+                    'monthly': (
+                        ( 1017,  0.00, 0.000),
+                        ( 1145,  0.00, 1.125),
+                        ( 1273,  1.00, 3.125),
+                        ( 1402,  5.00, 3.625),
+                        ( 1530, 10.00, 4.625),
+                        ( 1659, 16.00, 5.625),
+                        ( 1980, 23.00, 6.625),
+                        ('inf', 45.00, 6.925),
+                    ),
+                    'annually': (
+                        (12200,   0.00, 0.000),
+                        (13741,   0.00, 1.125),
+                        (15281,  17.00, 3.125),
+                        (16822,  65.00, 3.625),
+                        (18362, 121.00, 4.625),
+                        (19903, 192.00, 5.625),
+                        (23754, 279.00, 6.625),
+                        ('inf', 534.00, 6.925),
+                    ),
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_id_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://tax.idaho.gov/pubs/EPB00744_06-16-2020.pdf -->
+        <!-- Page 1 to 3 -->
+        <record id="rule_parameter_us_id_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': {
+                    'weekly': (
+                        (  238,  0.00, 0.000),
+                        (  269,  0.00, 1.125),
+                        (  299,  0.00, 3.125),
+                        (  329,  1.00, 3.625),
+                        (  359,  2.00, 4.625),
+                        (  389,  4.00, 5.625),
+                        (  465,  5.00, 6.625),
+                        ('inf', 10.00, 6.925),
+                    ),
+                    'bi-weekly': (
+                        (  477,  0.00, 0.000),
+                        (  537,  0.00, 1.125),
+                        (  598,  1.00, 3.125),
+                        (  658,  3.00, 3.625),
+                        (  718,  5.00, 4.625),
+                        (  778,  8.00, 5.625),
+                        (  929, 11.00, 6.625),
+                        ('inf', 21.00, 6.925),
+                    ),
+                    'semi-monthly': (
+                        (  517,  0.00, 0.000),
+                        (  582,  0.00, 1.125),
+                        (  647,  1.00, 3.125),
+                        (  713,  3.00, 3.625),
+                        (  778,  5.00, 4.625),
+                        (  843,  8.00, 5.625),
+                        ( 1007, 12.00, 6.625),
+                        ('inf', 23.00, 6.925),
+                    ),
+                    'monthly': (
+                        ( 1033,  0.00, 0.000),
+                        ( 1164,  0.00, 1.125),
+                        ( 1295,  1.00, 3.125),
+                        ( 1425,  6.00, 3.625),
+                        ( 1556, 10.00, 4.625),
+                        ( 1687, 16.00, 5.625),
+                        ( 2013, 24.00, 6.625),
+                        ('inf', 45.00, 6.925),
+                    ),
+                    'annually': (
+                        (12400,   0.00, 0.000),
+                        (13968,   0.00, 1.125),
+                        (15536,  18.00, 3.125),
+                        (17104,  67.00, 3.625),
+                        (18672, 124.00, 4.625),
+                        (20240, 197.00, 5.625),
+                        (24160, 285.00, 6.625),
+                        ('inf', 545.00, 6.925),
+                    ),
+                },
+                'married': {
+                    'weekly': (
+                        (  477,  0.00, 0.000),
+                        (  537,  0.00, 1.125),
+                        (  598,  0.00, 3.125),
+                        (  658,  1.00, 3.625),
+                        (  718,  3.00, 4.625),
+                        (  778,  5.00, 5.625),
+                        (  929, 11.00, 6.625),
+                        ('inf', 21.00, 6.925),
+                    ),
+                    'bi-weekly': (
+                        (  954,  0.00, 0.000),
+                        ( 1074,  0.00, 1.125),
+                        ( 1195,  1.00, 3.125),
+                        ( 1316,  5.00, 3.625),
+                        ( 1436,  9.00, 4.625),
+                        ( 1557, 15.00, 5.625),
+                        ( 1858, 22.00, 6.625),
+                        ('inf', 42.00, 6.925),
+                    ),
+                    'semi-monthly': (
+                        ( 1033,  0.00, 0.000),
+                        ( 1164,  0.00, 1.125),
+                        ( 1295,  1.00, 3.125),
+                        ( 1425,  6.00, 3.625),
+                        ( 1556, 10.00, 4.625),
+                        ( 1687, 16.00, 5.625),
+                        ( 2013, 24.00, 6.625),
+                        ('inf', 45.00, 6.925),
+                    ),
+                    'monthly': (
+                        ( 2067,  0.00, 0.000),
+                        ( 2328,  0.00, 1.125),
+                        ( 2589,  3.00, 3.125),
+                        ( 2851, 11.00, 3.625),
+                        ( 3112, 21.00, 4.625),
+                        ( 3373, 33.00, 5.625),
+                        ( 4027, 47.00, 6.625),
+                        ('inf', 91.00, 6.925),
+                    ),
+                    'annually': (
+                        (24400,    0.00, 0.000),
+                        (27482,    0.00, 1.125),
+                        (30562,   35.00, 3.125),
+                        (33644,  131.00, 3.625),
+                        (36724,  243.00, 4.625),
+                        (39806,  385.00, 5.625),
+                        (47508,  558.00, 6.625),
+                        ('inf', 1068.00, 6.925),
+                    ),
+                },
+                'head of household': {
+                    'weekly': (
+                        (  238,  0.00, 0.000),
+                        (  269,  0.00, 1.125),
+                        (  299,  0.00, 3.125),
+                        (  329,  1.00, 3.625),
+                        (  359,  2.00, 4.625),
+                        (  389,  4.00, 5.625),
+                        (  465,  5.00, 6.625),
+                        ('inf', 10.00, 6.925),
+                    ),
+                    'bi-weekly': (
+                        (  477,  0.00, 0.000),
+                        (  537,  0.00, 1.125),
+                        (  598,  1.00, 3.125),
+                        (  658,  3.00, 3.625),
+                        (  718,  5.00, 4.625),
+                        (  778,  8.00, 5.625),
+                        (  929, 11.00, 6.625),
+                        ('inf', 21.00, 6.925),
+                    ),
+                    'semi-monthly': (
+                        (  517,  0.00, 0.000),
+                        (  582,  0.00, 1.125),
+                        (  647,  1.00, 3.125),
+                        (  713,  3.00, 3.625),
+                        (  778,  5.00, 4.625),
+                        (  843,  8.00, 5.625),
+                        ( 1007, 12.00, 6.625),
+                        ('inf', 23.00, 6.925),
+                    ),
+                    'monthly': (
+                        ( 1033,  0.00, 0.000),
+                        ( 1164,  0.00, 1.125),
+                        ( 1295,  1.00, 3.125),
+                        ( 1425,  6.00, 3.625),
+                        ( 1556, 10.00, 4.625),
+                        ( 1687, 16.00, 5.625),
+                        ( 2013, 24.00, 6.625),
+                        ('inf', 45.00, 6.925),
+                    ),
+                    'annually': (
+                        (12400,   0.00, 0.000),
+                        (13968,   0.00, 1.125),
+                        (15536,  18.00, 3.125),
+                        (17104,  67.00, 3.625),
+                        (18672, 124.00, 4.625),
+                        (20240, 197.00, 5.625),
+                        (24160, 285.00, 6.625),
+                        ('inf', 545.00, 6.925),
+                    ),
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_id_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_id_sit_ictcat_rate" model="hr.rule.parameter">
+        <field name="name">US ID Idaho Child Tax Credit Allowance Rate</field>
+        <field name="code">us_id_sit_ictcat_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_id_sit_ictcat_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly':           56.92,
+                'bi-weekly':       113.85,
+                'semi-monthly':    123.33,
+                'monthly':         246.67,
+                'annually':       2960.00,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_id_sit_ictcat_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://tax.idaho.gov/i-1026.cfm?seg=compute -->
+        <!-- Idaho Child Tax Credit Allowances Table -->
+        <record id="rule_parameter_us_id_sit_ictcat_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly':        56.92,
+                'bi-weekly':    113.85,
+                'semi-monthly': 123.33,
+                'monthly':      246.67,
+                'annually':    2960.00,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_id_sit_ictcat_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_id_dor" model="res.partner">
+        <field name="name">US Idaho - Department of Labor (IDOL) - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_id_dor_sit" model="res.partner">
+        <field name="name">US Idaho - State Tax Commission (ISTC) - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_id_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US ID Idaho State Unemployment</field>
+        <field name="code">ER_US_ID_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_id_suta_wage_base', rate='us_id_suta_rate', state_code='ID')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_id_suta_wage_base', rate='us_id_suta_rate', state_code='ID')</field>
+        <field name="partner_id" ref="res_partner_us_id_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_id_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US ID Idaho State Income Tax Withholding</field>
+        <field name="code">EE_US_ID_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = id_idaho_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = id_idaho_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_id_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>
