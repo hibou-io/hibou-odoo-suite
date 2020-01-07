@@ -16,6 +16,8 @@
 
             ref('hr_payroll_rule_ee_fed_941_fit'),
 
+            ref('hr_payroll_rule_er_us_fl_suta'),
+
             ref('hr_salary_rule_commission'),
             ref('hr_salary_rule_gamification'),
           ])]" name="rule_ids"/>
