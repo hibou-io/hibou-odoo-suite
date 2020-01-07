@@ -17,4 +17,16 @@
         ]"/>
     </record>
 
+    <!-- State Unemployment -->
+    <record id="hr_payroll_category_ee_us_suta" model="hr.salary.rule.category">
+        <field name="name">EE: State Unemployment SUTA</field>
+        <field name="code">EE_US_SUTA</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    <record id="hr_payroll_category_er_us_suta" model="hr.salary.rule.category">
+        <field name="name">ER: State Unemployment SUTA</field>
+        <field name="code">ER_US_SUTA</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
 </odoo>

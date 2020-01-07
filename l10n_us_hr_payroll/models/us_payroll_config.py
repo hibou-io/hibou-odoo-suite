@@ -14,6 +14,7 @@ class HRContractUSPayrollConfig(models.Model):
     name = fields.Char(string="Description")
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True)
     state_id = fields.Many2one('res.country.state', string="Applied State")
+    state_code = fields.Char(related='state_id.code')
 
     fed_940_type = fields.Selection([
         (FUTA_TYPE_EXEMPT, 'Exempt (0%)'),

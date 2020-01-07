@@ -61,6 +61,10 @@ class TestUsPayslip(common.TransactionCase):
             'employee_id': employee.id,
         }
 
+        # Backwards compatability with 'futa_type'
+        if 'futa_type' in kwargs:
+            kwargs['fed_940_type'] = kwargs['futa_type']
+
         for key, val in kwargs.items():
             # Assume any Odoo object is in a Many2one
             if hasattr(val, 'id'):
@@ -148,3 +152,17 @@ class TestUsPayslip(common.TransactionCase):
         payslip = self._createPayslip(employee, '2019-01-01', '2019-01-14')
 
         payslip.compute_sheet()
+
+    def get_us_state(self, code, cache={}):
+        country_key = 'US_COUNTRY'
+        if code in cache:
+            return cache[code]
+        if country_key not in cache:
+            cache[country_key] = self.env.ref('base.us')
+        us_country = cache[country_key]
+        us_state = self.env['res.country.state'].search([
+            ('country_id', '=', us_country.id),
+            ('code', '=', code),
+        ], limit=1)
+        cache[code] = us_state
+        return us_state
