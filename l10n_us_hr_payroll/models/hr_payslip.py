@@ -11,6 +11,7 @@ from .federal.fed_941 import ee_us_941_fica_ss, \
                              ee_us_941_fit
 from .state.general import general_state_unemployment, \
                            general_state_income_withholding
+from .state.mt_montana import mt_montana_state_income_withholding
 
 
 class HRPayslip(models.Model):
@@ -41,6 +42,7 @@ class HRPayslip(models.Model):
             'ee_us_941_fit': ee_us_941_fit,
             'general_state_unemployment': general_state_unemployment,
             'general_state_income_withholding': general_state_income_withholding,
+            'mt_montana_state_income_withholding': mt_montana_state_income_withholding,
         })
         return res
 
