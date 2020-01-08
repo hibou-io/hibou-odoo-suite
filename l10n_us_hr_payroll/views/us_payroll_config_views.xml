@@ -44,6 +44,10 @@
                         <group name="state_fl_florida" string="FL Florida" attrs="{'invisible':[('state_id', '!=', %(base.state_us_10)s)]}">
                             <p colspan="2"><h3>No additional fields.</h3></p>
                         </group>
+                        <group name="state_pa_pennsylvania" string="PA Pennsylvania" attrs="{'invisible':[('state_id', '!=', %(base.state_us_39)s)]}">
+                            <field name="state_income_tax_exempt"/>
+                            <field name="state_income_tax_additional_withholding"/>
+                        </group>
                     </group>
                 </sheet>
             </form>

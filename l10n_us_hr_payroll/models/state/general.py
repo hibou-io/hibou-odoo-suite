@@ -99,14 +99,12 @@ def general_state_income_withholding(payslip, categories, worked_days, inputs, w
     Returns SUTA eligible wage and rate.
     WAGE = GROSS - WAGE_US_941_FIT_EXEMPT
 
-    The Federal Income Tax Filing status (W4) is used for Exemption.
-
     :return: result, result_rate (wage, percent)
     """
     if not _state_applies(payslip, state_code):
         return 0.0, 0.0
 
-    if not payslip.contract_id.us_payroll_config_value('fed_941_fit_w4_filing_status'):
+    if payslip.contract_id.us_payroll_config_value('state_income_tax_exempt'):
         return 0.0, 0.0
 
     # Determine Wage
@@ -116,4 +114,10 @@ def general_state_income_withholding(payslip, categories, worked_days, inputs, w
     ytd_wage += payslip.contract_id.external_wages
 
     wage = categories.GROSS - categories.WAGE_US_941_FIT_EXEMPT
-    return _general_rate(payslip, wage, ytd_wage, wage_base=wage_base, wage_start=wage_start, rate=rate)
+    result, result_rate = _general_rate(payslip, wage, ytd_wage, wage_base=wage_base, wage_start=wage_start, rate=rate)
+    additional = payslip.contract_id.us_payroll_config_value('state_income_tax_additional_withholding')
+    if additional:
+        tax = result * (result_rate / 100.0)
+        tax -= additional  # assumed result_rate is negative and that the 'additional' should increase it.
+        return result, ((tax / result) * 100.0)
+    return result, result_rate
