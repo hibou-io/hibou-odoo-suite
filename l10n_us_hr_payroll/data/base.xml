@@ -13,4 +13,11 @@
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
 
+    <!-- State Income Tax -->
+    <record id="hr_payroll_category_ee_us_sit" model="hr.salary.rule.category">
+        <field name="name">EE: State Income Tax Withholding</field>
+        <field name="code">EE_US_SIT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
 </odoo>

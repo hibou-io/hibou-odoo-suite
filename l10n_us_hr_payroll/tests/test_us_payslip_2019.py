@@ -211,7 +211,7 @@ class TestUsPayslip2019(TestUsPayslip):
         self.assertPayrollEqual(cats['ER_US_940_FUTA'], (self.FUTA_MAX_WAGE - external_wages) * self.FUTA)
 
     def test_2019_taxes_with_full_futa(self):
-        self.debug = True
+        self.debug = False
         futa_rate = self.FUTA_RATE_BASIC / -100.0
         # social security salary
         salary = self.FICA_M_ADD_START_WAGE

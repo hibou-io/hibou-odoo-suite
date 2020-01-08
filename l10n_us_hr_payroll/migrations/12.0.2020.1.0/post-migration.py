@@ -27,7 +27,6 @@ def migrate(cr, installed_version):
     def get_state(code, cache={}):
         country_key = 'US_COUNTRY'
         if code in cache:
-            _logger.warn('  return from cache: ' + str(cache[code]))
             return cache[code]
         if country_key not in cache:
             cache[country_key] = env.ref('base.us')
