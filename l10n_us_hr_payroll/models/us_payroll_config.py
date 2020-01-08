@@ -46,3 +46,15 @@ class HRContractUSPayrollConfig(models.Model):
                                              help='Form W4 (2020+) 4(b)')
     fed_941_fit_w4_additional_withholding = fields.Float(string='Federal W4 Additional Withholding [4(c)]',
                                                          help='Form W4 (2020+) 4(c)')
+
+    mt_mw4_sit_exemptions = fields.Integer(string='Montana MW-4 Exemptions',
+                                           help='MW-4 Box G')
+    # Don't use the main state_income_tax_exempt because of special meaning and reporting
+    # Use additional withholding but name it on the form 'MW-4 Box H'
+    mt_mw4_sit_exempt = fields.Selection([
+        ('', 'Not Exempt'),
+        ('tribe', 'Registered Tribe'),
+        ('reserve', 'Reserve or National Guard'),
+        ('north_dakota', 'North Dakota'),
+        ('montana_for_marriage', 'Montana for Marriage'),
+    ], string='Montana MW-4 Exempt from Withholding', help='MW-4 Section 2')
