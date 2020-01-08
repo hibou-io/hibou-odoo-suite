@@ -29,3 +29,15 @@ class TestUsPAPayslip(TestUsPayslip):
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
         self.assertPayrollEqual(cats['EE_US_SIT'], wh)
+
+        # Test Additional
+        contract.us_payroll_config_id.state_income_tax_additional_withholding = 100.0
+        payslip.compute_sheet()
+        cats = self._getCategories(payslip)
+        self.assertPayrollEqual(cats['EE_US_SIT'], wh - 100.0)
+
+        # Test Exempt
+        contract.us_payroll_config_id.state_income_tax_exempt = True
+        payslip.compute_sheet()
+        cats = self._getCategories(payslip)
+        self.assertPayrollEqual(cats.get('EE_US_SIT', 0.0), 0.0)

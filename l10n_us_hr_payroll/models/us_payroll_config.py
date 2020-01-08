@@ -15,6 +15,8 @@ class HRContractUSPayrollConfig(models.Model):
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True)
     state_id = fields.Many2one('res.country.state', string="Applied State")
     state_code = fields.Char(related='state_id.code')
+    state_income_tax_exempt = fields.Boolean(string='State Income Tax Exempt')
+    state_income_tax_additional_withholding = fields.Float(string='State Income Tax Additional Withholding')
 
     fed_940_type = fields.Selection([
         (FUTA_TYPE_EXEMPT, 'Exempt (0%)'),

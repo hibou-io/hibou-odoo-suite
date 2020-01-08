@@ -90,7 +90,7 @@
         <field name="sequence" eval="450"/>
         <field name="struct_id" ref="hr_payroll_structure"/>
         <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
-        <field name="name">ER: US PA Pennsylvania State Unemployment (RT-6)</field>
+        <field name="name">ER: US PA Pennsylvania State Unemployment (UC-2)</field>
         <field name="code">ER_US_PA_SUTA</field>
         <field name="condition_select">python</field>
         <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_pa_suta_wage_base', rate='us_pa_suta_rate', state_code='PA')</field>
@@ -104,7 +104,7 @@
         <field name="sequence" eval="195"/>
         <field name="struct_id" ref="hr_payroll_structure"/>
         <field name="category_id" ref="hr_payroll_category_ee_us_suta"/>
-        <field name="name">EE: US PA Pennsylvania State Unemployment (RT-6)</field>
+        <field name="name">EE: US PA Pennsylvania State Unemployment (UC-2)</field>
         <field name="code">EE_US_PA_SUTA</field>
         <field name="condition_select">python</field>
         <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, rate='us_pa_suta_ee_rate', state_code='PA')</field>
@@ -118,7 +118,7 @@
         <field name="sequence" eval="195"/>
         <field name="struct_id" ref="hr_payroll_structure"/>
         <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
-        <field name="name">EE: US PA Pennsylvania State Income Tax Withholding</field>
+        <field name="name">EE: US PA Pennsylvania State Income Tax Withholding (PA-501)</field>
         <field name="code">EE_US_PA_SIT</field>
         <field name="condition_select">python</field>
         <field name="condition_python">result, _ = general_state_income_withholding(payslip, categories, worked_days, inputs, rate='us_pa_sit_rate', state_code='PA')</field>
