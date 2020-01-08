@@ -174,7 +174,7 @@ class TestUsPayslip(common.TransactionCase):
         cache[code] = us_state
         return us_state
 
-    def _test_er_suta(self, state_code, rate, date, wage_base=None, **extra_contract):
+    def _test_suta(self, category, state_code, rate, date, wage_base=None, **extra_contract):
         if wage_base:
             # Slightly larger than 1/2 the wage_base
             wage = round(wage_base / 2.0) + 100.0
@@ -197,28 +197,29 @@ class TestUsPayslip(common.TransactionCase):
         contract.us_payroll_config_id.fed_940_type = USHRContract.FUTA_TYPE_EXEMPT
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
-        self.assertPayrollEqual(cats.get('ER_US_SUTA', 0.0), 0.0)
+        self.assertPayrollEqual(cats.get(category, 0.0), 0.0)
 
         contract.us_payroll_config_id.fed_940_type = USHRContract.FUTA_TYPE_BASIC
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
-        self.assertPayrollEqual(cats.get('ER_US_SUTA', 0.0), 0.0)
+        self.assertPayrollEqual(cats.get(category, 0.0), 0.0)
 
         # Test Normal
         contract.us_payroll_config_id.fed_940_type = USHRContract.FUTA_TYPE_NORMAL
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
-        self.assertPayrollEqual(cats.get('ER_US_SUTA', 0.0), wage * rate)
+        self.assertPayrollEqual(cats.get(category, 0.0), wage * rate)
+        process_payslip(payslip)
+
+        # Second Payslip
+        payslip = self._createPayslip(employee, date + timedelta(days=31), date + timedelta(days=60))
+        payslip.compute_sheet()
+        cats = self._getCategories(payslip)
 
         if wage_base:
-            process_payslip(payslip)
-
             remaining_unemp_wages = wage_base - wage
             self.assertTrue((remaining_unemp_wages * rate) <= 0.01)  # less than 0.01 because rate is negative
-            payslip = self._createPayslip(employee, date + timedelta(days=31), date + timedelta(days=60))
-            payslip.compute_sheet()
-            cats = self._getCategories(payslip)
-            self.assertPayrollEqual(cats.get('ER_US_SUTA', 0.0), remaining_unemp_wages * rate)
+            self.assertPayrollEqual(cats.get(category, 0.0), remaining_unemp_wages * rate)
 
             # As if they were paid once already, so the first "two payslips" would remove all of the tax obligation
             # 1 wage - Payslip (confirmed)
@@ -227,4 +228,12 @@ class TestUsPayslip(common.TransactionCase):
             contract.external_wages = wage
             payslip.compute_sheet()
             cats = self._getCategories(payslip)
-            self.assertPayrollEqual(cats.get('ER_US_SUTA', 0.0), 0.0)
+            self.assertPayrollEqual(cats.get(category, 0.0), 0.0)
+        else:
+            self.assertPayrollEqual(cats.get(category, 0.0), wage * rate)
+
+    def _test_er_suta(self, state_code, rate, date, wage_base=None, **extra_contract):
+        self._test_suta('ER_US_SUTA', state_code, rate, date, wage_base=wage_base, **extra_contract)
+
+    def _test_ee_suta(self, state_code, rate, date, wage_base=None, **extra_contract):
+        self._test_suta('EE_US_SUTA', state_code, rate, date, wage_base=wage_base, **extra_contract)
