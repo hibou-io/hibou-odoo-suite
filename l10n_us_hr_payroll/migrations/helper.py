@@ -39,7 +39,12 @@ def temp_field_values(cr, table_name, id, field_names):
     values = cr.dictfetchone()
     if not values:
         return {}
-    return {k.lstrip(TMP_PREFIX): v for k, v in values.items()}
+
+    def _remove_tmp_prefix(key):
+        if key.startswith(TMP_PREFIX):
+            return key[len(TMP_PREFIX):]
+        return key
+    return {_remove_tmp_prefix(k): v for k, v in values.items()}
 
 
 """

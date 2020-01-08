@@ -1,6 +1,7 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from odoo.addons.l10n_us_hr_payroll.migrations.data import FIELDS_CONTRACT_TO_US_PAYROLL_FORMS_2020
+from odoo.addons.l10n_us_hr_payroll.migrations.data import FIELDS_CONTRACT_TO_US_PAYROLL_FORMS_2020, \
+                                                           XMLIDS_COPY_ACCOUNTING_2020
 from odoo.addons.l10n_us_hr_payroll.migrations.helper import field_exists, \
                                                              temp_field_exists, \
                                                              remove_temp_field, \
@@ -68,3 +69,17 @@ def migrate(cr, installed_version):
 
     for field in fields_to_move:
         remove_temp_field(cr, 'hr_contract', field)
+
+    # Some added rules should have the same accounting side effects of other migrated rules
+    # To ease the transition, we will copy the accounting fields from one to the other.
+    for source, destinations in XMLIDS_COPY_ACCOUNTING_2020.items():
+        source_rule = env.ref(source, raise_if_not_found=False)
+        if source_rule:
+            for destination in destinations:
+                destination_rule = env.ref(destination, raise_if_not_found=False)
+                if destination_rule:
+                    _logger.warn('Mirgrating accounting from rule: ' + source + ' to rule: ' + destination)
+                    destination_rule.write({
+                        'account_debit': source_rule.account_debit.id,
+                        'account_credit': source_rule.account_credit.id,
+                    })
