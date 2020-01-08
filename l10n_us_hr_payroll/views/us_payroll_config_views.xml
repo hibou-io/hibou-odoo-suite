@@ -50,6 +50,12 @@
                             <field name="mt_mw4_sit_exemptions" string="Exemptions"/>
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding (Box H)"/>
                         </group>
+                        <group name="state_oh_ohio" string="OH Ohio" attrs="{'invisible':[('state_id', '!=', %(base.state_us_30)s)]}">
+                            <p colspan="2"><h3>Form IT-4 - State Income Tax</h3></p>
+                            <field name="state_income_tax_exempt"/>
+                            <field name="oh_it4_sit_exemptions" string="Exemptions"/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding (Line 5)"/>
+                        </group>
                         <group name="state_pa_pennsylvania" string="PA Pennsylvania" attrs="{'invisible':[('state_id', '!=', %(base.state_us_39)s)]}">
                             <field name="state_income_tax_exempt"/>
                             <field name="state_income_tax_additional_withholding"/>

@@ -58,7 +58,7 @@
 
     <record id="rule_parameter_us_mt_sit_rate" model="hr.rule.parameter">
         <field name="name">US MT Montana SIT Rate Table</field>
-        <field name="code">us_mt_suta_sit_rate</field>
+        <field name="code">us_mt_sit_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
@@ -102,7 +102,7 @@
 
     <record id="rule_parameter_us_mt_sit_exemption_rate" model="hr.rule.parameter">
         <field name="name">US MT Montana SIT Exemption Rate Table</field>
-        <field name="code">us_mt_suta_sit_exemption_rate</field>
+        <field name="code">us_mt_sit_exemption_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
