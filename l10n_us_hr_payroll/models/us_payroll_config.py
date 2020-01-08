@@ -58,3 +58,7 @@ class HRContractUSPayrollConfig(models.Model):
         ('north_dakota', 'North Dakota'),
         ('montana_for_marriage', 'Montana for Marriage'),
     ], string='Montana MW-4 Exempt from Withholding', help='MW-4 Section 2')
+
+    # Ohio will use generic SIT exempt and additional fields
+    oh_it4_sit_exemptions = fields.Integer(string='Ohio IT-4 Exemptions',
+                                           help='Line 4')

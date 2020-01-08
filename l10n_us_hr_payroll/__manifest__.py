@@ -27,6 +27,7 @@ United States of America - Payroll Rules.
         'data/federal/fed_941_fit_rules.xml',
         'data/state/fl_florida.xml',
         'data/state/mt_montana.xml',
+        'data/state/oh_ohio.xml',
         'data/state/pa_pennsylvania.xml',
         'views/hr_contract_views.xml',
         'views/us_payroll_config_views.xml',
