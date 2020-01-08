@@ -96,7 +96,7 @@ def general_state_unemployment(payslip, categories, worked_days, inputs, wage_ba
 
 def general_state_income_withholding(payslip, categories, worked_days, inputs, wage_base=None, wage_start=None, rate=None, state_code=None):
     """
-    Returns SUTA eligible wage and rate.
+    Returns SIT eligible wage and rate.
     WAGE = GROSS - WAGE_US_941_FIT_EXEMPT
 
     :return: result, result_rate (wage, percent)
