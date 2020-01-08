@@ -12,6 +12,7 @@ from .federal.fed_941 import ee_us_941_fica_ss, \
 from .state.general import general_state_unemployment, \
                            general_state_income_withholding
 from .state.mt_montana import mt_montana_state_income_withholding
+from .state.oh_ohio import oh_ohio_state_income_withholding
 
 
 class HRPayslip(models.Model):
@@ -44,6 +45,7 @@ class HRPayslip(models.Model):
             'general_state_unemployment': general_state_unemployment,
             'general_state_income_withholding': general_state_income_withholding,
             'mt_montana_state_income_withholding': mt_montana_state_income_withholding,
+            'oh_ohio_state_income_withholding': oh_ohio_state_income_withholding,
         }
 
     def get_year(self):

@@ -50,7 +50,7 @@
     <data noupdate="1">
         <record id="rule_parameter_us_mt_sit_rate_2019" model="hr.payroll.rate">
             <field name="name">US MT Montana SIT Rate Table</field>
-            <field name="code">us_mt_suta_sit_rate</field>
+            <field name="code">us_mt_sit_rate</field>
             <field name="parameter_value">{
                 'weekly': [
                     (    135.00,       0.0,  1.80),
@@ -90,7 +90,7 @@
     <data noupdate="1">
         <record id="rule_parameter_us_mt_sit_exemption_rate_2019" model="hr.payroll.rate">
             <field name="name">US MT Montana SIT Exemption Rate Table</field>
-            <field name="code">us_mt_suta_sit_exemption_rate</field>
+            <field name="code">us_mt_sit_exemption_rate</field>
             <field name="parameter_value">{
                 'weekly':         37.0,
                 'bi-weekly':      73.0,
