@@ -10,9 +10,12 @@ from .federal.fed_941 import ee_us_941_fica_ss, \
                              er_us_941_fica_m, \
                              ee_us_941_fit
 from .state.general import general_state_unemployment, \
-                           general_state_income_withholding
+                           general_state_income_withholding, \
+                           is_us_state
 from .state.mt_montana import mt_montana_state_income_withholding
 from .state.oh_ohio import oh_ohio_state_income_withholding
+from .state.wa_washington import wa_washington_fml_er, \
+                                 wa_washington_fml_ee
 
 
 class HRPayslip(models.Model):
@@ -44,8 +47,11 @@ class HRPayslip(models.Model):
             'ee_us_941_fit': ee_us_941_fit,
             'general_state_unemployment': general_state_unemployment,
             'general_state_income_withholding': general_state_income_withholding,
+            'is_us_state': is_us_state,
             'mt_montana_state_income_withholding': mt_montana_state_income_withholding,
             'oh_ohio_state_income_withholding': oh_ohio_state_income_withholding,
+            'wa_washington_fml_er': wa_washington_fml_er,
+            'wa_washington_fml_ee': wa_washington_fml_ee,
         }
 
     def get_year(self):
