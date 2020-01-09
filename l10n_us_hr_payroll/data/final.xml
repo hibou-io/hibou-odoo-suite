@@ -29,6 +29,12 @@
             ref('hr_payroll_rule_ee_us_pa_suta'),
             ref('hr_payroll_rule_ee_us_pa_sit'),
 
+            ref('hr_payroll_rule_er_us_wa_suta'),
+            ref('hr_payroll_rule_er_us_wa_fml'),
+            ref('hr_payroll_rule_ee_us_wa_fml'),
+            ref('hr_payroll_rule_er_us_wa_lni'),
+            ref('hr_payroll_rule_ee_us_wa_lni'),
+
             ref('hr_salary_rule_commission'),
             ref('hr_salary_rule_gamification'),
           ])]" name="rule_ids"/>

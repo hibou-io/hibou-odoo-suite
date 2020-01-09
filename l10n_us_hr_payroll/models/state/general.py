@@ -9,6 +9,10 @@ def _state_applies(payslip, state_code):
     return state_code == payslip.dict.contract_id.us_payroll_config_value('state_code')
 
 
+# Export for eval context
+is_us_state = _state_applies
+
+
 def _general_rate(payslip, wage, ytd_wage, wage_base=None, wage_start=None, rate=None):
     """
     Function parameters:

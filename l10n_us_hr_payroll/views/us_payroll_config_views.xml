@@ -26,7 +26,6 @@
                     </group>
                     <group>
                         <group name="federal" string="Federal">
-                            <field name="state_id" domain="[('country_id', '=', %(base.us)s)]" options="{'no_create': True}"/>
                             <p colspan="2"><h3>Form 940 - Federal Unemployment</h3></p>
                             <field name="fed_940_type" string="Federal Unemployment Rate"/>
                             <p colspan="2"><h3>Form 941 / W4 - Federal Income Tax</h3></p>
@@ -39,6 +38,10 @@
                             <field name="fed_941_fit_w4_other_income" string="Other Income"/>
                             <field name="fed_941_fit_w4_deductions" string="Deductions"/>
                             <field name="fed_941_fit_w4_additional_withholding" string="Additional Withholding"/>
+                            <p colspan="2"><h3>State Information and Extra</h3></p>
+                            <field name="state_id" domain="[('country_id', '=', %(base.us)s)]" options="{'no_create': True}"/>
+                            <field name="workers_comp_ee_code"/>
+                            <field name="workers_comp_er_code"/>
                         </group>
 
                         <group name="state_fl_florida" string="FL Florida" attrs="{'invisible':[('state_id', '!=', %(base.state_us_10)s)]}">
@@ -59,6 +62,10 @@
                         <group name="state_pa_pennsylvania" string="PA Pennsylvania" attrs="{'invisible':[('state_id', '!=', %(base.state_us_39)s)]}">
                             <field name="state_income_tax_exempt"/>
                             <field name="state_income_tax_additional_withholding"/>
+                        </group>
+                        <group name="state_wa_washington" string="WA Washington" attrs="{'invisible':[('state_id', '!=', %(base.state_us_48)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                            <p colspan="2">Ensure that your Employee and Employer workers' comp code fields are filled in for WA LNI withholding.</p>
                         </group>
                     </group>
                 </sheet>

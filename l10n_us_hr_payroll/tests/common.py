@@ -151,6 +151,9 @@ class TestUsPayslip(common.TransactionCase):
     def assertPayrollEqual(self, first, second):
         self.assertAlmostEqual(first, second, self.payroll_digits)
 
+    def assertPayrollAlmostEqual(self, first, second):
+        self.assertAlmostEqual(first, second, self.payroll_digits-1)
+
     def test_semi_monthly(self):
         salary = 80000.0
         employee = self._createEmployee()

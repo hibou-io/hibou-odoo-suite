@@ -17,6 +17,10 @@ class HRContractUSPayrollConfig(models.Model):
     state_code = fields.Char(related='state_id.code')
     state_income_tax_exempt = fields.Boolean(string='State Income Tax Exempt')
     state_income_tax_additional_withholding = fields.Float(string='State Income Tax Additional Withholding')
+    workers_comp_ee_code = fields.Char(string='Workers\' Comp Code (Employee Withholding)',
+                                       help='Code for a Payroll Rate, used by some states or your own rules.')
+    workers_comp_er_code = fields.Char(string='Workers\' Comp Code (Employer Withholding)',
+                                       help='Code for a Payroll Rate, used by some states or your own rules.')
 
     fed_940_type = fields.Selection([
         (FUTA_TYPE_EXEMPT, 'Exempt (0%)'),
