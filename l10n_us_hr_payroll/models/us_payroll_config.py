@@ -66,3 +66,8 @@ class HRContractUSPayrollConfig(models.Model):
     # Ohio will use generic SIT exempt and additional fields
     oh_it4_sit_exemptions = fields.Integer(string='Ohio IT-4 Exemptions',
                                            help='Line 4')
+
+    va_va4_sit_exemptions = fields.Integer(string='Virginia VA-4(P) Personal Exemptions',
+                                           help='VA-4(P) 1(a)')
+    va_va4_sit_other_exemptions = fields.Integer(string='Virginia VA-4(P) Age & Blindness Exemptions',
+                                           help='VA-4(P) 1(b)')

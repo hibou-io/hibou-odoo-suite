@@ -30,6 +30,7 @@ United States of America - Payroll Rules.
         'data/state/oh_ohio.xml',
         'data/state/pa_pennsylvania.xml',
         'data/state/tx_texas.xml',
+        'data/state/va_virginia.xml',
         'data/state/wa_washington.xml',
         'views/hr_contract_views.xml',
         'views/us_payroll_config_views.xml',
