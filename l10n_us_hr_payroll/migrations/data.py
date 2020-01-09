@@ -17,6 +17,9 @@ FIELDS_CONTRACT_TO_US_PAYROLL_FORMS_2020 = {
     'oh_income_allowances': 'oh_it4_sit_exemptions',
 
     'pa_additional_withholding': 'state_income_tax_additional_withholding',
+
+    'va_va4_exemptions': 'va_va4_sit_exemptions',
+
 }
 
 XMLIDS_TO_REMOVE_2020 = [
@@ -65,6 +68,11 @@ XMLIDS_TO_REMOVE_2020 = [
     'l10n_us_tx_hr_payroll.hr_payroll_tx_oa',
     'l10n_us_tx_hr_payroll.hr_payroll_tx_etia',
     'l10n_us_tx_hr_payroll.hr_payroll_rules_tx_unemp_wages_2018',
+
+    'l10n_us_va_hr_payroll.hr_payroll_va_unemp_wages',
+    'l10n_us_va_hr_payroll.hr_payroll_va_unemp',
+    'l10n_us_va_hr_payroll.hr_payroll_va_income_withhold',
+    'l10n_us_va_hr_payroll.hr_payroll_rules_va_unemp_wages_2018',
 
     'l10n_us_wa_hr_payroll.hr_payroll_wa_unemp_wages',
     'l10n_us_wa_hr_payroll.hr_payroll_wa_unemp',
@@ -119,6 +127,13 @@ XMLIDS_TO_RENAME_2020 = {
     'l10n_us_tx_hr_payroll.hr_payroll_rules_tx_unemp_2018': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_tx_suta',
     'l10n_us_tx_hr_payroll.hr_payroll_rules_tx_oa_2018': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_tx_suta_oa',
     'l10n_us_tx_hr_payroll.hr_payroll_rules_tx_etia_2018': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_tx_suta_etia',
+
+    'l10n_us_va_hr_payroll.res_partner_vador_unemp': 'l10n_us_hr_payroll.res_partner_us_va_dor',
+    'l10n_us_va_hr_payroll.res_partner_vador_withhold': 'l10n_us_hr_payroll.res_partner_us_va_dor_sit',
+    'l10n_us_va_hr_payroll.contrib_register_vador_unemp': 'l10n_us_hr_payroll.contrib_register_us_va_dor',
+    'l10n_us_va_hr_payroll.contrib_register_vador_withhold': 'l10n_us_hr_payroll.contrib_register_us_va_dor_sit',
+    'l10n_us_va_hr_payroll.hr_payroll_rules_va_unemp_2018': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_va_suta',
+    'l10n_us_va_hr_payroll.hr_payroll_rules_va_inc_withhold_2018': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_va_sit',
 
     'l10n_us_wa_hr_payroll.res_partner_wador_unemp': 'l10n_us_hr_payroll.res_partner_us_wa_dor',
     'l10n_us_wa_hr_payroll.res_partner_wador_lni': 'l10n_us_hr_payroll.res_partner_us_wa_dor_lni',
