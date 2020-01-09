@@ -48,7 +48,7 @@ class TestUsOhPayslip(TestUsPayslip):
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
         # Instead of PayrollEqual after initial first round of testing.
-        self.assertAlmostEqual(cats.get('EE_US_SIT', 0.0), -expected, 1)
+        self.assertPayrollAlmostEqual(cats.get('EE_US_SIT', 0.0), -expected)
         return payslip
 
     def test_2020_sit_1(self):

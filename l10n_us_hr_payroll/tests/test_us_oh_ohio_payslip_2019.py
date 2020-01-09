@@ -34,7 +34,7 @@ class TestUsOhPayslip(TestUsPayslip):
         cats = self._getCategories(payslip)
 
         self.assertPayrollEqual(cats['ER_US_SUTA'], salary * self.OH_UNEMP)
-        self.assertAlmostEqual(cats['EE_US_SIT'], -wd, 1)  # Off by 0.6 cents so it rounds off by a penny
+        self.assertPayrollAlmostEqual(cats['EE_US_SIT'], -wd)  # Off by 0.6 cents so it rounds off by a penny
         #self.assertPayrollEqual(cats['EE_US_SIT'], -wd)
 
         process_payslip(payslip)
