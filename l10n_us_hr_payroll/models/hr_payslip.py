@@ -1,6 +1,8 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools.safe_eval import safe_eval
+from odoo.exceptions import UserError
 
 from .federal.fed_940 import er_us_940_futa
 from .federal.fed_941 import ee_us_941_fica_ss, \
@@ -12,6 +14,7 @@ from .federal.fed_941 import ee_us_941_fica_ss, \
 from .state.general import general_state_unemployment, \
                            general_state_income_withholding, \
                            is_us_state
+from .state.ga_georgia import ga_georgia_state_income_withholding
 from .state.mt_montana import mt_montana_state_income_withholding
 from .state.oh_ohio import oh_ohio_state_income_withholding
 from .state.va_virginia import va_virginia_state_income_withholding
@@ -49,6 +52,7 @@ class HRPayslip(models.Model):
             'general_state_unemployment': general_state_unemployment,
             'general_state_income_withholding': general_state_income_withholding,
             'is_us_state': is_us_state,
+            'ga_georgia_state_income_withholding': ga_georgia_state_income_withholding,
             'mt_montana_state_income_withholding': mt_montana_state_income_withholding,
             'oh_ohio_state_income_withholding': oh_ohio_state_income_withholding,
             'va_virginia_state_income_withholding': va_virginia_state_income_withholding,
