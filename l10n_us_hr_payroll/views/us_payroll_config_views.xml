@@ -55,6 +55,12 @@
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding 6."/>
                             <field name="state_income_tax_exempt" string="Exempt 8."/>
                         </group>
+                        <group name="state_ms_mississippi" string="MS Mississippi" attrs="{'invisible':[('state_id', '!=', %(base.state_us_37)s)]}">
+                            <p colspan="2"><h3>Form 89-350 - State Income Tax</h3></p>
+                            <field name="ms_89_350_sit_filing_status" string="Marital Status 1. 2. 3. 8."/>
+                            <field name="ms_89_350_sit_exemption_value" string="Exemptions (Total) 6."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 7."/>
+                        </group>
                         <group name="state_mt_montana" string="MT Montana" attrs="{'invisible':[('state_id', '!=', %(base.state_us_21)s)]}">
                             <p colspan="2"><h3>Form MT-4 - State Income Tax</h3></p>
                             <field name="mt_mw4_sit_exempt" string="Exempt"/>

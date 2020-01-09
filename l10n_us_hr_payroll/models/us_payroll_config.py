@@ -64,6 +64,16 @@ class HRContractUSPayrollConfig(models.Model):
     ga_g4_sit_additional_allowances = fields.Integer(string='Georgia G-4 Additional Allowances',
                                                      help='G-4 5.')
 
+    ms_89_350_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
+        ('single', 'Single'),
+        ('married', 'Married (spouse NOT employed)'),
+        ('married_dual', 'Married (spouse IS employed)'),
+        ('head_of_household', 'Head of Household'),
+    ], string='Mississippi 89-350 Filing Status', help='89-350 1. 2. 3. 8.')
+    ms_89_350_sit_exemption_value = fields.Float(string='Mississippi 89-350 Exemption Total',
+                                                 help='89-350 Box 6 (including filing status amounts)')
+
     mt_mw4_sit_exemptions = fields.Integer(string='Montana MW-4 Exemptions',
                                            help='MW-4 Box G')
     # Don't use the main state_income_tax_exempt because of special meaning and reporting
