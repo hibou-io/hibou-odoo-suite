@@ -29,6 +29,10 @@
             ref('hr_payroll_rule_ee_us_pa_suta'),
             ref('hr_payroll_rule_ee_us_pa_sit'),
 
+            ref('hr_payroll_rule_er_us_tx_suta'),
+            ref('hr_payroll_rule_er_us_tx_suta_oa'),
+            ref('hr_payroll_rule_er_us_tx_suta_etia'),
+
             ref('hr_payroll_rule_er_us_wa_suta'),
             ref('hr_payroll_rule_er_us_wa_fml'),
             ref('hr_payroll_rule_ee_us_wa_fml'),
