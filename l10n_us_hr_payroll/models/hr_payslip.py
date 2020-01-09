@@ -14,6 +14,7 @@ from .state.general import general_state_unemployment, \
                            is_us_state
 from .state.mt_montana import mt_montana_state_income_withholding
 from .state.oh_ohio import oh_ohio_state_income_withholding
+from .state.va_virginia import va_virginia_state_income_withholding
 from .state.wa_washington import wa_washington_fml_er, \
                                  wa_washington_fml_ee
 
@@ -49,6 +50,7 @@ class HRPayslip(models.Model):
             'is_us_state': is_us_state,
             'mt_montana_state_income_withholding': mt_montana_state_income_withholding,
             'oh_ohio_state_income_withholding': oh_ohio_state_income_withholding,
+            'va_virginia_state_income_withholding': va_virginia_state_income_withholding,
             'wa_washington_fml_er': wa_washington_fml_er,
             'wa_washington_fml_ee': wa_washington_fml_ee,
         })

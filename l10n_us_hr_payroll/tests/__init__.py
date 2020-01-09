@@ -19,5 +19,8 @@ from . import test_us_pa_pennsylvania_payslip_2020
 from . import test_us_tx_texas_payslip_2019
 from . import test_us_tx_texas_payslip_2020
 
+from . import test_us_va_virginia_payslip_2019
+from . import test_us_va_virginia_payslip_2020
+
 from . import test_us_wa_washington_payslip_2019
 from . import test_us_wa_washington_payslip_2020
