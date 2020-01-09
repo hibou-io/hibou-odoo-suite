@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_tx_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US TX Texas SUTA Wage Base</field>
+        <field name="code">us_tx_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_tx_suta_wage_base_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">9000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_tx_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">9000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_tx_suta_rate" model="hr.rule.parameter">
+        <field name="name">US TX Texas SUTA Rate</field>
+        <field name="code">us_tx_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_tx_suta_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.7</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_tx_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.7</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_tx_suta_oa_rate" model="hr.rule.parameter">
+        <field name="name">US TX Texas Obligation Assessment Rate</field>
+        <field name="code">us_tx_suta_oa_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_tx_suta_oa_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_oa_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_tx_suta_oa_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_oa_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_tx_suta_etia_rate" model="hr.rule.parameter">
+        <field name="name">US TX Texas Employment &amp; Training Investment Assessment Rate</field>
+        <field name="code">us_tx_suta_etia_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_tx_suta_etia_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.1</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_etia_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_tx_suta_etia_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.1</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_etia_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_tx_dor" model="res.partner">
+        <field name="name">US Texas - Workforce Commission (Unemployment)</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_tx_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US TX Texas State Unemployment (C-3)</field>
+        <field name="code">ER_US_TX_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_tx_suta_wage_base', rate='us_tx_suta_rate', state_code='TX')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_tx_suta_wage_base', rate='us_tx_suta_rate', state_code='TX')</field>
+        <field name="partner_id" ref="res_partner_us_tx_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_er_us_tx_suta_oa" model="hr.salary.rule">
+        <field name="sequence" eval="451"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US TX Texas Obligation Assessment (C-3)</field>
+        <field name="code">ER_US_TX_SUTA_OA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_tx_suta_wage_base', rate='us_tx_suta_oa_rate', state_code='TX')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_tx_suta_wage_base', rate='us_tx_suta_oa_rate', state_code='TX')</field>
+        <field name="partner_id" ref="res_partner_us_tx_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_er_us_tx_suta_etia" model="hr.salary.rule">
+        <field name="sequence" eval="451"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US TX Texas Employment &amp; Training Investment Assessment (C-3)</field>
+        <field name="code">ER_US_TX_SUTA_ETIA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_tx_suta_wage_base', rate='us_tx_suta_etia_rate', state_code='TX')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_tx_suta_wage_base', rate='us_tx_suta_etia_rate', state_code='TX')</field>
+        <field name="partner_id" ref="res_partner_us_tx_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+</odoo>
