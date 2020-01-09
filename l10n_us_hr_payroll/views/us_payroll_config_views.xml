@@ -67,6 +67,7 @@
                             <p colspan="2"><h3>No additional fields.</h3></p>
                         </group>
                         <group name="state_va_virginia" string="VA Virginia" attrs="{'invisible':[('state_id', '!=', %(base.state_us_47)s)]}">
+                            <p colspan="2"><h3>Form VA-4/VA-4P - State Income Tax</h3></p>
                             <field name="va_va4_sit_exemptions" string="Personal Exemptions (Line 1(a))"/>
                             <field name="va_va4_sit_other_exemptions" string="Age &amp; Blindness Exemptions (Line 1(b))"/>
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding (Line 2)"/>
