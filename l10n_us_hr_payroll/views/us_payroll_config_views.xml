@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="us_payroll_config_tree" model="ir.ui.view">
+        <field name="name">hr.contract.us_payroll_config.tree</field>
+        <field name="model">hr.contract.us_payroll_config</field>
+        <field name="arch" type="xml">
+            <tree string="Employee Payroll Forms">
+                <field name="employee_id"/>
+                <field name="name"/>
+                <field name="state_id"/>
+                <field name="create_date"/>
+                <field name="write_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="us_payroll_config_form" model="ir.ui.view">
+        <field name="name">hr.contract.us_payroll_config.form</field>
+        <field name="model">hr.contract.us_payroll_config</field>
+        <field name="arch" type="xml">
+            <form string="Employee Payroll Forms">
+                <sheet>
+                    <group name="General">
+                        <field name="employee_id"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <group name="federal" string="Federal">
+                            <p colspan="2"><h3>Form 940 - Federal Unemployment</h3></p>
+                            <field name="fed_940_type" string="Federal Unemployment Rate"/>
+                            <p colspan="2"><h3>Form 941 / W4 - Federal Income Tax</h3></p>
+                            <field name="fed_941_fica_exempt" string="FICA Exempt"/>
+                            <field name="fed_941_fit_w4_filing_status" string="Filing Status"/>
+                            <field name="fed_941_fit_w4_allowances" string="Allowances (Old W4)"/>
+                            <field name="fed_941_fit_w4_is_nonresident_alien" string="Is Nonresident Alien"/>
+                            <field name="fed_941_fit_w4_multiple_jobs_higher" string="Multiple Jobs Checked"/>
+                            <field name="fed_941_fit_w4_dependent_credit" string="Dependent Credit"/>
+                            <field name="fed_941_fit_w4_other_income" string="Other Income"/>
+                            <field name="fed_941_fit_w4_deductions" string="Deductions"/>
+                            <field name="fed_941_fit_w4_additional_withholding" string="Additional Withholding"/>
+                            <p colspan="2"><h3>State Information and Extra</h3></p>
+                            <field name="state_id" domain="[('country_id', '=', %(base.us)s)]" options="{'no_create': True}"/>
+                            <field name="workers_comp_ee_code"/>
+                            <field name="workers_comp_er_code"/>
+                        </group>
+
+                        <group name="state_fl_florida" string="FL Florida" attrs="{'invisible':[('state_id', '!=', %(base.state_us_10)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                        </group>
+                        <group name="state_ga_georgia" string="GA Georgia" attrs="{'invisible':[('state_id', '!=', %(base.state_us_11)s)]}">
+                            <p colspan="2"><h3>Form G-4 - State Income Tax</h3></p>
+                            <field name="ga_g4_sit_filing_status" string="Marital Status 3."/>
+                            <field name="ga_g4_sit_dependent_allowances" string="Dependent Allowances 4."/>
+                            <field name="ga_g4_sit_additional_allowances" string="Additional Allowances 5."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 6."/>
+                            <field name="state_income_tax_exempt" string="Exempt 8."/>
+                        </group>
+                        <group name="state_ms_mississippi" string="MS Mississippi" attrs="{'invisible':[('state_id', '!=', %(base.state_us_37)s)]}">
+                            <p colspan="2"><h3>Form 89-350 - State Income Tax</h3></p>
+                            <field name="ms_89_350_sit_filing_status" string="Marital Status 1. 2. 3. 8."/>
+                            <field name="ms_89_350_sit_exemption_value" string="Exemptions (Total) 6."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 7."/>
+                        </group>
+                        <group name="state_mt_montana" string="MT Montana" attrs="{'invisible':[('state_id', '!=', %(base.state_us_21)s)]}">
+                            <p colspan="2"><h3>Form MT-4 - State Income Tax</h3></p>
+                            <field name="mt_mw4_sit_exempt" string="Exempt"/>
+                            <field name="mt_mw4_sit_exemptions" string="Exemptions"/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding (Box H)"/>
+                        </group>
+                        <group name="state_oh_ohio" string="OH Ohio" attrs="{'invisible':[('state_id', '!=', %(base.state_us_30)s)]}">
+                            <p colspan="2"><h3>Form IT-4 - State Income Tax</h3></p>
+                            <field name="state_income_tax_exempt"/>
+                            <field name="oh_it4_sit_exemptions" string="Exemptions"/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding (Line 5)"/>
+                        </group>
+                        <group name="state_pa_pennsylvania" string="PA Pennsylvania" attrs="{'invisible':[('state_id', '!=', %(base.state_us_39)s)]}">
+                            <field name="state_income_tax_exempt"/>
+                            <field name="state_income_tax_additional_withholding"/>
+                        </group>
+                        <group name="state_tx_texas" string="TX Texas" attrs="{'invisible':[('state_id', '!=', %(base.state_us_44)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                        </group>
+                        <group name="state_va_virginia" string="VA Virginia" attrs="{'invisible':[('state_id', '!=', %(base.state_us_47)s)]}">
+                            <p colspan="2"><h3>Form VA-4/VA-4P - State Income Tax</h3></p>
+                            <field name="va_va4_sit_exemptions" string="Personal Exemptions (Line 1(a))"/>
+                            <field name="va_va4_sit_other_exemptions" string="Age &amp; Blindness Exemptions (Line 1(b))"/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding (Line 2)"/>
+                            <field name="state_income_tax_exempt" string="Exempt (Line 3 or 4)"/>
+                        </group>
+                        <group name="state_wa_washington" string="WA Washington" attrs="{'invisible':[('state_id', '!=', %(base.state_us_48)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                            <p colspan="2">Ensure that your Employee and Employer workers' comp code fields are filled in for WA LNI withholding.</p>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="us_payroll_config_search" model="ir.ui.view">
+        <field name="name">hr.contract.us_payroll_config.search</field>
+        <field name="model">hr.contract.us_payroll_config</field>
+        <field name="arch" type="xml">
+            <search string="Employee Payroll Forms Search">
+                <field name="employee_id"/>
+                <field name="name"/>
+                <field name="state_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="us_payroll_config_action_main" model="ir.actions.act_window">
+        <field name="name">Employee Payroll Forms</field>
+        <field name="res_model">hr.contract.us_payroll_config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>
+                No Forms
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="us_payroll_config_menu_main" name="Payroll Forms"
+              action="us_payroll_config_action_main"
+              sequence="10" parent="hr.menu_hr_root"/>
+</odoo>

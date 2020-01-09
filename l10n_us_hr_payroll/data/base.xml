@@ -1,83 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <data>
-<!-- CONTRIBUTION REGISTERS -->
-    <record id="res_partner_eftps_941" model="res.partner">
-        <field name="name">EFTPS - Form 941</field>
-        <field name="supplier">1</field>
-        <field eval="0" name="customer"/>
-    </record>
-    <record id="res_partner_eftps_940" model="res.partner">
-        <field name="name">EFTPS - Form 940</field>
-        <field name="supplier">1</field>
-        <field eval="0" name="customer"/>
-    </record>
-    <record id="contrib_register_eftps_941" model="hr.contribution.register">
-        <field name="name">EFTPS - 941 (FICA + Federal Witholding)</field>
-        <field name="note">Electronic Federal Tax Payment System - Form 941</field>
-        <field name="partner_id" ref="res_partner_eftps_941"/>
-    </record>
-    <record id="contrib_register_eftps_940" model="hr.contribution.register">
-        <field name="name">EFTPS - 940 (FUTA)</field>
-        <field name="note">Electronic Federal Tax Payment System - Form 940</field>
-        <field name="partner_id" ref="res_partner_eftps_940"/>
-    </record>
 
-
-<!-- HR SALARY RULE CATEGORIES-->
-    <record id="hr_payroll_fica_emp_ss_wages" model="hr.salary.rule.category">
-        <field name="name">Wage: US FICA Social Security</field>
-        <field name="code">WAGE_US_FICA_SS</field>
-    </record>
-    <record id="hr_payroll_fica_emp_m_wages" model="hr.salary.rule.category">
-        <field name="name">Wage: US FICA Medicare</field>
-        <field name="code">WAGE_US_FICA_M</field>
-    </record>
-    <record id="hr_payroll_fica_emp_m_add_wages" model="hr.salary.rule.category">
-        <field name="name">Wage: US FICA Medicare Additional</field>
-        <field name="code">WAGE_US_FICA_M_ADD</field>
-    </record>
-    <record id="hr_payroll_futa_wages" model="hr.salary.rule.category">
-        <field name="name">Wage: US FUTA Federal Unemployment</field>
-        <field name="code">WAGE_US_FUTA</field>
-    </record>
-
-    <record id="hr_payroll_fica_emp_ss" model="hr.salary.rule.category">
-        <field name="name">EE: US FICA Social Security</field>
-        <field name="code">EE_US_FICA_SS</field>
+    <!-- State Unemployment -->
+    <record id="hr_payroll_category_ee_us_suta" model="hr.salary.rule.category">
+        <field name="name">EE: State Unemployment SUTA</field>
+        <field name="code">EE_US_SUTA</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
-    <record id="hr_payroll_fica_emp_m" model="hr.salary.rule.category">
-        <field name="name">EE: US FICA Medicare</field>
-        <field name="code">EE_US_FICA_M</field>
-        <field name="parent_id" ref="hr_payroll.DED"/>
-    </record>
-    <record id="hr_payroll_fica_emp_m_add" model="hr.salary.rule.category">
-        <field name="name">EE: US FICA Medicare Additional</field>
-        <field name="code">EE_US_FICA_M_ADD</field>
-        <field name="parent_id" ref="hr_payroll.DED"/>
-    </record>
-    <record id="hr_payroll_fed_income_withhold" model="hr.salary.rule.category">
-        <field name="name">EE: US Federal Income Tax Withholding</field>
-        <field name="code">EE_US_FED_INC_WITHHOLD</field>
-        <field name="parent_id" ref="hr_payroll.DED"/>
-    </record>
-
-    <record id="hr_payroll_fica_comp_ss" model="hr.salary.rule.category">
-        <field name="name">ER: US FICA Social Security</field>
-        <field name="code">ER_US_FICA_SS</field>
+    <record id="hr_payroll_category_er_us_suta" model="hr.salary.rule.category">
+        <field name="name">ER: State Unemployment SUTA</field>
+        <field name="code">ER_US_SUTA</field>
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
-    <record id="hr_payroll_fica_comp_m" model="hr.salary.rule.category">
-        <field name="name">ER: US FICA Medicare</field>
-        <field name="code">ER_US_FICA_M</field>
-        <field name="parent_id" ref="hr_payroll.COMP"/>
+
+    <!-- State Income Tax -->
+    <record id="hr_payroll_category_ee_us_sit" model="hr.salary.rule.category">
+        <field name="name">EE: State Income Tax Withholding</field>
+        <field name="code">EE_US_SIT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
-    <record id="hr_payroll_futa" model="hr.salary.rule.category">
-        <field name="name">ER: US FUTA Federal Unemployment</field>
-        <field name="code">ER_US_FUTA</field>
-        <field name="parent_id" ref="hr_payroll.COMP"/>
-    </record>
-        
-    </data>
+
 </odoo>
