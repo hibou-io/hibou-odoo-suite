@@ -66,6 +66,13 @@
                         <group name="state_tx_texas" string="TX Texas" attrs="{'invisible':[('state_id', '!=', %(base.state_us_44)s)]}">
                             <p colspan="2"><h3>No additional fields.</h3></p>
                         </group>
+                        <group name="state_va_virginia" string="VA Virginia" attrs="{'invisible':[('state_id', '!=', %(base.state_us_47)s)]}">
+                            <p colspan="2"><h3>Form VA-4/VA-4P - State Income Tax</h3></p>
+                            <field name="va_va4_sit_exemptions" string="Personal Exemptions (Line 1(a))"/>
+                            <field name="va_va4_sit_other_exemptions" string="Age &amp; Blindness Exemptions (Line 1(b))"/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding (Line 2)"/>
+                            <field name="state_income_tax_exempt" string="Exempt (Line 3 or 4)"/>
+                        </group>
                         <group name="state_wa_washington" string="WA Washington" attrs="{'invisible':[('state_id', '!=', %(base.state_us_48)s)]}">
                             <p colspan="2"><h3>No additional fields.</h3></p>
                             <p colspan="2">Ensure that your Employee and Employer workers' comp code fields are filled in for WA LNI withholding.</p>
