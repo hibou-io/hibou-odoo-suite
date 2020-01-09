@@ -9,6 +9,11 @@ FIELDS_CONTRACT_TO_US_PAYROLL_FORMS_2020 = {
     'fica_exempt': 'fed_941_fica_exempt',
     'futa_type': 'fed_940_type',
     # State
+    'ga_g4_filing_status': 'ga_g4_sit_filing_status',
+    'ga_g4_dependent_allowances': 'ga_g4_sit_dependent_allowances',
+    'ga_g4_additional_allowances': 'ga_g4_sit_additional_allowances',
+    'ga_g4_additional_wh': 'state_income_tax_additional_withholding',
+
     'mt_mw4_additional_withholding': 'state_income_tax_additional_withholding',
     'mt_mw4_exemptions': 'mt_mw4_sit_exemptions',
     'mt_mw4_exempt': 'mt_mw4_sit_exempt',
@@ -42,6 +47,11 @@ XMLIDS_TO_REMOVE_2020 = [
     'l10n_us_fl_hr_payroll.hr_payroll_fl_unemp_wages',
     'l10n_us_fl_hr_payroll.hr_payroll_fl_unemp',
     'l10n_us_fl_hr_payroll.hr_payroll_rules_fl_unemp_wages_2018',
+
+    'l10n_us_ga_hr_payroll.hr_payroll_ga_unemp_wages',
+    'l10n_us_ga_hr_payroll.hr_payroll_ga_unemp',
+    'l10n_us_ga_hr_payroll.hr_payroll_ga_income_withhold',
+    'l10n_us_ga_hr_payroll.hr_payroll_rules_ga_unemp_wages',
 
     'l10n_us_mt_hr_payroll.hr_payroll_mt_unemp_wages',
     'l10n_us_mt_hr_payroll.hr_payroll_mt_unemp',
@@ -99,6 +109,13 @@ XMLIDS_TO_RENAME_2020 = {
     'l10n_us_fl_hr_payroll.hr_payroll_rules_fl_unemp_2018': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_fl_suta',
     'l10n_us_fl_hr_payroll.res_partner_fldor': 'l10n_us_hr_payroll.res_partner_us_fl_dor',
     'l10n_us_fl_hr_payroll.contrib_register_fldor': 'l10n_us_hr_payroll.contrib_register_us_fl_dor',
+
+    'l10n_us_ga_hr_payroll.res_partner_ga_dol_unemp': 'l10n_us_hr_payroll.res_partner_us_ga_dor',
+    'l10n_us_ga_hr_payroll.res_partner_ga_dor_withhold': 'l10n_us_hr_payroll.res_partner_us_ga_dor_sit',
+    'l10n_us_ga_hr_payroll.contrib_register_ga_dol_unemp': 'l10n_us_hr_payroll.contrib_register_us_ga_dor',
+    'l10n_us_ga_hr_payroll.contrib_register_ga_dor_withhold': 'l10n_us_hr_payroll.contrib_register_us_ga_dor_sit',
+    'l10n_us_ga_hr_payroll.hr_payroll_rules_ga_unemp': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_ga_suta',
+    'l10n_us_ga_hr_payroll.hr_payroll_rules_ga_inc_withhold': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_ga_sit',
 
     'l10n_us_mt_hr_payroll.res_partner_mtdor_unemp': 'l10n_us_hr_payroll.res_partner_us_mt_dor',
     'l10n_us_mt_hr_payroll.res_partner_mtdor_withhold': 'l10n_us_hr_payroll.res_partner_us_mt_dor_sit',

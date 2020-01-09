@@ -51,6 +51,19 @@ class HRContractUSPayrollConfig(models.Model):
     fed_941_fit_w4_additional_withholding = fields.Float(string='Federal W4 Additional Withholding [4(c)]',
                                                          help='Form W4 (2020+) 4(c)')
 
+    ga_g4_sit_filing_status = fields.Selection([
+        ('exempt', 'Exempt'),
+        ('single', 'Single'),
+        ('married filing joint, both spouses working', 'Married Filing Joint, both spouses working'),
+        ('married filing joint, one spouse working', 'Married Filing Joint, one spouse working'),
+        ('married filing separate', 'Married Filing Separate'),
+        ('head of household', 'Head of Household'),
+    ], string='Georgia G-4 Filing Status', help='G-4 3.')
+    ga_g4_sit_dependent_allowances = fields.Integer(string='Georgia G-4 Dependent Allowances',
+                                                    help='G-4 4.')
+    ga_g4_sit_additional_allowances = fields.Integer(string='Georgia G-4 Additional Allowances',
+                                                     help='G-4 5.')
+
     mt_mw4_sit_exemptions = fields.Integer(string='Montana MW-4 Exemptions',
                                            help='MW-4 Box G')
     # Don't use the main state_income_tax_exempt because of special meaning and reporting

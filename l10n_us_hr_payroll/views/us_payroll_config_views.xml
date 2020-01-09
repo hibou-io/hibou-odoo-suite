@@ -47,6 +47,14 @@
                         <group name="state_fl_florida" string="FL Florida" attrs="{'invisible':[('state_id', '!=', %(base.state_us_10)s)]}">
                             <p colspan="2"><h3>No additional fields.</h3></p>
                         </group>
+                        <group name="state_ga_georgia" string="GA Georgia" attrs="{'invisible':[('state_id', '!=', %(base.state_us_11)s)]}">
+                            <p colspan="2"><h3>Form G-4 - State Income Tax</h3></p>
+                            <field name="ga_g4_sit_filing_status" string="Marital Status 3."/>
+                            <field name="ga_g4_sit_dependent_allowances" string="Dependent Allowances 4."/>
+                            <field name="ga_g4_sit_additional_allowances" string="Additional Allowances 5."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 6."/>
+                            <field name="state_income_tax_exempt" string="Exempt 8."/>
+                        </group>
                         <group name="state_mt_montana" string="MT Montana" attrs="{'invisible':[('state_id', '!=', %(base.state_us_21)s)]}">
                             <p colspan="2"><h3>Form MT-4 - State Income Tax</h3></p>
                             <field name="mt_mw4_sit_exempt" string="Exempt"/>
