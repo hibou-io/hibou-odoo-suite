@@ -69,7 +69,7 @@ class TestUsWAPayslip(TestUsPayslip):
 
         self.assertPayrollEqual(cats['ER_US_SUTA'], salary * wa_unemp)
         self.assertPayrollEqual(rules['EE_US_WA_LNI'], -(self.test_ee_lni * hours_in_period))
-        self.assertPayrollEqual(rules['ER_US_WA_LNI'], -(self.test_er_lni * hours_in_period) - rules['EE_US_WA_LNI'])
+        self.assertPayrollEqual(rules['ER_US_WA_LNI'], -(self.test_er_lni * hours_in_period))
         # Both of these are known to be within 1 penny
         self.assertPayrollAlmostEqual(rules['EE_US_WA_FML'], -(salary * (self.WA_FML_RATE / 100.0) * (self.WA_FML_RATE_EE / 100.0)))
         self.assertPayrollAlmostEqual(rules['ER_US_WA_FML'], -(salary * (self.WA_FML_RATE / 100.0) * (self.WA_FML_RATE_ER / 100.0)))
