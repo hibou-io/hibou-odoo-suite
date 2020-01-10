@@ -27,6 +27,7 @@
                             <field name="name"/>
                             <field name="code"/>
                             <field name="rate"/>
+                            <field name="parameter_value"/>
                         </group>
                         <group>
                             <field name="date_from"/>

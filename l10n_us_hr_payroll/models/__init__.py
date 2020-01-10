@@ -1,1 +1,6 @@
-from . import l10n_us_hr_payroll
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
+from . import hr_contract
+from . import hr_payslip
+from . import hr_salary_rule
+from . import us_payroll_config
