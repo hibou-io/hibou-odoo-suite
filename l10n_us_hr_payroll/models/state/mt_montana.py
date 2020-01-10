@@ -6,7 +6,7 @@ from .general import _state_applies
 def mt_montana_state_income_withholding(payslip, categories, worked_days, inputs):
     """
     Returns SIT eligible wage and rate.
-    WAGE = GROSS - WAGE_US_941_FIT_EXEMPT
+    WAGE = GROSS + DED_FIT_EXEMPT
 
     :return: result, result_rate (wage, percent)
     """
@@ -18,7 +18,7 @@ def mt_montana_state_income_withholding(payslip, categories, worked_days, inputs
         return 0.0, 0.0
 
     # Determine Wage
-    wage = categories.GROSS - categories.WAGE_US_941_FIT_EXEMPT
+    wage = categories.GROSS + categories.DED_FIT_EXEMPT
     schedule_pay = payslip.dict.contract_id.schedule_pay
     additional = payslip.dict.contract_id.us_payroll_config_value('state_income_tax_additional_withholding')
     exemptions = payslip.dict.contract_id.us_payroll_config_value('mt_mw4_sit_exemptions')
