@@ -41,22 +41,22 @@
 
     <!-- Deductions that reduce the wage for Federal Income Tax (e.g. 401k) -->
     <record id="hr_payroll_category_ded_fit_exempt" model="hr.salary.rule.category">
-        <field name="name">Deduction: Federal Income Tax Exempt</field>
-        <field name="code">DED_US_FIT_EXEMPT</field>
-
+        <field name="name">Deduction: US Federal Income Tax Exempt</field>
+        <field name="code">DED_FIT_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
 
     <!-- Generally speaking, deductions to FICA and FUTA should probably reduce GROSS itself, there may be special or rare cases -->
     <!-- Deductions that reduce the wage for FICA -->
     <record id="hr_payroll_category_ded_fica_exempt" model="hr.salary.rule.category">
-        <field name="name">Deduction: FICA Exempt</field>
+        <field name="name">Deduction: US FICA Exempt</field>
         <field name="code">DED_FICA_EXEMPT</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
 
     <!-- Deductions that reduce the wage for Unemployment Insurance/Tax -->
     <record id="hr_payroll_category_ded_futa_exempt" model="hr.salary.rule.category">
-        <field name="name">Deduction: FUTA Exempt</field>
+        <field name="name">Deduction: US FUTA Exempt</field>
         <field name="code">DED_FUTA_EXEMPT</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
