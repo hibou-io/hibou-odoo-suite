@@ -17,12 +17,6 @@
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
 
-    <!-- Category to increase when reducing wage for FICA -->
-    <record id="hr_payroll_category_wage_fed_941_fica_exempt" model="hr.salary.rule.category">
-        <field name="name">WAGE: Federal 941 FICA Exempt</field>
-        <field name="code">WAGE_US_941_FICA_EXEMPT</field>
-    </record>
-
 
     <!-- Social Security -->
     <record id="hr_payroll_rule_ee_fed_941_ss" model="hr.salary.rule">

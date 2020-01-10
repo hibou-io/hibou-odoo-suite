@@ -3,7 +3,7 @@
 def er_us_940_futa(payslip, categories, worked_days, inputs):
     """
     Returns FUTA eligible wage and rate.
-    WAGE = GROSS - WAGE_US_940_FUTA_EXEMPT
+    WAGE = GROSS + DED_FUTA_EXEMPT
     :return: result, result_rate (wage, percent)
     """
 
@@ -19,13 +19,13 @@ def er_us_940_futa(payslip, categories, worked_days, inputs):
     # Determine Wage
     year = payslip.dict.get_year()
     ytd_wage = payslip.sum_category('GROSS', str(year) + '-01-01', str(year+1) + '-01-01')
-    ytd_wage -= payslip.sum_category('WAGE_US_940_FUTA_EXEMPT', str(year) + '-01-01', str(year+1) + '-01-01')
+    ytd_wage += payslip.sum_category('DED_FUTA_EXEMPT', str(year) + '-01-01', str(year+1) + '-01-01')
     ytd_wage += payslip.contract_id.external_wages
 
     wage_base = payslip.rule_parameter('fed_940_futa_wage_base')
     remaining = wage_base - ytd_wage
 
-    wage = categories.GROSS - categories.WAGE_US_940_FUTA_EXEMPT
+    wage = categories.GROSS + categories.DED_FUTA_EXEMPT
 
     if remaining < 0.0:
         result = 0.0
