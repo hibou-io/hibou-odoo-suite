@@ -6,7 +6,7 @@ from .general import _state_applies
 def ms_mississippi_state_income_withholding(payslip, categories, worked_days, inputs):
     """
     Returns SIT eligible wage and rate.
-    WAGE = GROSS - WAGE_US_941_FIT_EXEMPT
+    WAGE = GROSS + DED_FIT_EXEMPT
 
     :return: result, result_rate (wage, percent)
     """
@@ -19,7 +19,7 @@ def ms_mississippi_state_income_withholding(payslip, categories, worked_days, in
         return 0.0, 0.0
 
     # Determine Wage
-    wage = categories.GROSS - categories.WAGE_US_941_FIT_EXEMPT
+    wage = categories.GROSS + categories.DED_FIT_EXEMPT
     if wage == 0.0:
         return 0.0, 0.0
 

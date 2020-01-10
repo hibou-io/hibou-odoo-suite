@@ -11,12 +11,6 @@
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
 
-    <!-- Category to increase when reducing wage for Unemployment Insurance/Tax -->
-    <record id="hr_payroll_category_wage_fed_940_futa_exempt" model="hr.salary.rule.category">
-        <field name="name">WAGE: Federal 940 FUTA Exempt</field>
-        <field name="code">WAGE_US_940_FUTA_EXEMPT</field>
-    </record>
-
     <record id="hr_payroll_rule_er_fed_940" model="hr.salary.rule">
         <field name="sequence" eval="440"/>
         <field name="struct_id" ref="hr_payroll_structure"/>
