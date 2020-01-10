@@ -25,5 +25,5 @@ USA::New York Payroll Rules.
         'data/rules_2018.xml',
         'data/final.xml',
     ],
-    'installable': True
+    'installable': False
 }

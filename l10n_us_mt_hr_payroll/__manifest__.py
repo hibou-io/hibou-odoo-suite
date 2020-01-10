@@ -24,5 +24,5 @@ USA::Montana Payroll Rules.
         'data/rules.xml',
         'data/final.xml',
     ],
-    'installable': True
+    'installable': False
 }
