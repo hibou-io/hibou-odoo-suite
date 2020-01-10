@@ -41,6 +41,7 @@ def migrate(cr, installed_version):
 
     # We will assume all contracts without a struct (because we deleted it), or with one like US_xx_EMP, need config
     contracts = env['hr.contract'].search([
+        ('employee_id', '!=', False),
         '|',
         ('struct_id', '=', False),
         ('struct_id.code', '=like', 'US_%'),
@@ -48,6 +49,9 @@ def migrate(cr, installed_version):
     _logger.warn('Migrating Contracts: ' + str(contracts))
     for contract in contracts:
         _logger.warn('Migrating contract: ' + str(contract) + ' for employee: ' + str(contract.employee_id))
+        if not contract.employee_id.id:
+            _logger.warn('  unable to migrate for missing employee id')
+            continue
         # Could we somehow detect the state off of the current/orphaned salary structure?
         state_code = False
         old_struct_code = contract.struct_id.code
@@ -72,14 +76,18 @@ def migrate(cr, installed_version):
 
     # Some added rules should have the same accounting side effects of other migrated rules
     # To ease the transition, we will copy the accounting fields from one to the other.
-    for source, destinations in XMLIDS_COPY_ACCOUNTING_2020.items():
-        source_rule = env.ref(source, raise_if_not_found=False)
-        if source_rule:
-            for destination in destinations:
-                destination_rule = env.ref(destination, raise_if_not_found=False)
-                if destination_rule:
-                    _logger.warn('Mirgrating accounting from rule: ' + source + ' to rule: ' + destination)
-                    destination_rule.write({
-                        'account_debit': source_rule.account_debit.id,
-                        'account_credit': source_rule.account_credit.id,
-                    })
+    rule_model = env['hr.salary.rule']
+    if hasattr(rule_model, 'account_debit'):
+        for source, destinations in XMLIDS_COPY_ACCOUNTING_2020.items():
+            source_rule = env.ref(source, raise_if_not_found=False)
+            if source_rule:
+                for destination in destinations:
+                    destination_rule = env.ref(destination, raise_if_not_found=False)
+                    if destination_rule:
+                        _logger.warn('Mirgrating accounting from rule: ' + source + ' to rule: ' + destination)
+                        destination_rule.write({
+                            'account_debit': source_rule.account_debit.id,
+                            'account_credit': source_rule.account_credit.id,
+                            'account_tax_id': source_rule.account_tax_id.id,
+                            'analytic_account_id': source_rule.analytic_account_id.id,
+                        })
