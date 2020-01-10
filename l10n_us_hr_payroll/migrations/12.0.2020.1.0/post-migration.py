@@ -41,6 +41,7 @@ def migrate(cr, installed_version):
 
     # We will assume all contracts without a struct (because we deleted it), or with one like US_xx_EMP, need config
     contracts = env['hr.contract'].search([
+        ('employee_id', '!=', False),
         '|',
         ('struct_id', '=', False),
         ('struct_id.code', '=like', 'US_%'),
@@ -48,6 +49,9 @@ def migrate(cr, installed_version):
     _logger.warn('Migrating Contracts: ' + str(contracts))
     for contract in contracts:
         _logger.warn('Migrating contract: ' + str(contract) + ' for employee: ' + str(contract.employee_id))
+        if not contract.employee_id.id:
+            _logger.warn('  unable to migrate for missing employee id')
+            continue
         # Could we somehow detect the state off of the current/orphaned salary structure?
         state_code = False
         old_struct_code = contract.struct_id.code
