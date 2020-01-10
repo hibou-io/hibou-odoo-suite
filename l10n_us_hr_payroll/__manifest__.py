@@ -2,10 +2,9 @@
 {
     'name': 'USA - Payroll',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'license': 'AGPL-3',
     'category': 'Localization',
     'depends': ['hr_payroll', 'hr_payroll_rate'],
-    'version': '11.0.2018.1.0',
+    'version': '11.0.2020.1.0',
     'description': """
 USA Payroll Rules.
 ==================
@@ -21,11 +20,28 @@ USA Payroll Rules.
     'auto_install': False,
     'website': 'https://hibou.io/',
     'data': [
-        'views/l10n_us_hr_payroll_view.xml',
+        'security/ir.model.access.csv',
         'data/base.xml',
-        'data/rates.xml',
-        'data/rules.xml',
+        'data/integration_rules.xml',
+        'data/federal/fed_940_futa_parameters.xml',
+        'data/federal/fed_940_futa_rules.xml',
+        'data/federal/fed_941_fica_parameters.xml',
+        'data/federal/fed_941_fica_rules.xml',
+        'data/federal/fed_941_fit_parameters.xml',
+        'data/federal/fed_941_fit_rules.xml',
+        'data/state/fl_florida.xml',
+        'data/state/ga_georgia.xml',
+        'data/state/ms_mississippi.xml',
+        'data/state/mt_montana.xml',
+        'data/state/oh_ohio.xml',
+        'data/state/pa_pennsylvania.xml',
+        'data/state/tx_texas.xml',
+        'data/state/va_virginia.xml',
+        'data/state/wa_washington.xml',
         'data/final.xml',
+        'views/hr_contract_views.xml',
+        'views/us_payroll_config_views.xml',
     ],
-    'installable': True
+    'installable': True,
+    'license': 'OPL-1',
 }
