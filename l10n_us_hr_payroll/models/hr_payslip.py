@@ -13,6 +13,7 @@ from .state.general import general_state_unemployment, \
                            general_state_income_withholding, \
                            is_us_state
 from .state.ga_georgia import ga_georgia_state_income_withholding
+from .state.mo_missouri import mo_missouri_state_income_withholding
 from .state.ms_mississippi import ms_mississippi_state_income_withholding
 from .state.mt_montana import mt_montana_state_income_withholding
 from .state.oh_ohio import oh_ohio_state_income_withholding
@@ -51,6 +52,7 @@ class HRPayslip(models.Model):
             'general_state_income_withholding': general_state_income_withholding,
             'is_us_state': is_us_state,
             'ga_georgia_state_income_withholding': ga_georgia_state_income_withholding,
+            'mo_missouri_state_income_withholding': mo_missouri_state_income_withholding,
             'ms_mississippi_state_income_withholding': ms_mississippi_state_income_withholding,
             'mt_montana_state_income_withholding': mt_montana_state_income_withholding,
             'oh_ohio_state_income_withholding': oh_ohio_state_income_withholding,
