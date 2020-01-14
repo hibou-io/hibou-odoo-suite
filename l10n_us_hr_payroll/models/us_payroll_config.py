@@ -64,6 +64,14 @@ class HRContractUSPayrollConfig(models.Model):
     ga_g4_sit_additional_allowances = fields.Integer(string='Georgia G-4 Additional Allowances',
                                                      help='G-4 5.')
 
+    mo_mow4_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
+        ('single', 'Single or Married Spouse Works or Married Filing Separate'),
+        ('married', 'Married (Spouse does not work)'),
+        ('head_of_household', 'Head of Household'),
+    ], string='Missouri W-4 Filing Status', help='MO W-4 1.')
+    mo_mow4_sit_withholding = fields.Integer(string='Missouri MO W-4 Reduced Withholding', help='MO W-4 3.')
+
     ms_89_350_sit_filing_status = fields.Selection([
         ('', 'Exempt'),
         ('single', 'Single'),
@@ -93,4 +101,4 @@ class HRContractUSPayrollConfig(models.Model):
     va_va4_sit_exemptions = fields.Integer(string='Virginia VA-4(P) Personal Exemptions',
                                            help='VA-4(P) 1(a)')
     va_va4_sit_other_exemptions = fields.Integer(string='Virginia VA-4(P) Age & Blindness Exemptions',
-                                           help='VA-4(P) 1(b)')
+                                                 help='VA-4(P) 1(b)')
