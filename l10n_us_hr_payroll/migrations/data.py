@@ -25,6 +25,11 @@ FIELDS_CONTRACT_TO_US_PAYROLL_FORMS_2020 = {
     'mt_mw4_exemptions': 'mt_mw4_sit_exemptions',
     'mt_mw4_exempt': 'mt_mw4_sit_exempt',
 
+    'nj_njw4_filing_status': 'nj_njw4_sit_filing_status',
+    'nj_njw4_allowances': 'nj_njw4_sit_allowances',
+    'nj_njw4_rate_table': 'nj_njw4_sit_rate_table',
+    'nj_additional_withholding': 'state_income_tax_additional_withholding',
+
     'oh_additional_withholding': 'state_income_tax_additional_withholding',
     'oh_income_allowances': 'oh_it4_sit_exemptions',
 
@@ -74,6 +79,33 @@ XMLIDS_TO_REMOVE_2020 = [
     'l10n_us_mt_hr_payroll.hr_payroll_mt_unemp',
     'l10n_us_mt_hr_payroll.hr_payroll_mt_income_withhold',
     'l10n_us_mt_hr_payroll.hr_payroll_rules_mt_unemp_wages',
+
+    'l10n_us_nj_hr_payroll.res_partner_njdor_unemp_company',
+    'l10n_us_nj_hr_payroll.res_partner_njdor_sdi_employee',
+    'l10n_us_nj_hr_payroll.res_partner_njdor_sdi_company',
+    'l10n_us_nj_hr_payroll.res_partner_njdor_fli',
+    'l10n_us_nj_hr_payroll.res_partner_njdor_wf',
+    'l10n_us_nj_hr_payroll.contrib_register_njdor_unemp_company',
+    'l10n_us_nj_hr_payroll.contrib_register_njdor_sdi_employee',
+    'l10n_us_nj_hr_payroll.contrib_register_njdor_sdi_company',
+    'l10n_us_nj_hr_payroll.contrib_register_njdor_fli',
+    'l10n_us_nj_hr_payroll.contrib_register_njdor_wf',
+    'l10n_us_nj_hr_payroll.hr_payroll_nj_unemp_wages',
+    'l10n_us_nj_hr_payroll.hr_payroll_nj_sdi_wages',
+    'l10n_us_nj_hr_payroll.hr_payroll_nj_fli_wages',
+    'l10n_us_nj_hr_payroll.hr_payroll_nj_wf_wages',
+    'l10n_us_nj_hr_payroll.hr_payroll_nj_unemp_employee',
+    'l10n_us_nj_hr_payroll.hr_payroll_nj_unemp_company',
+    'l10n_us_nj_hr_payroll.hr_payroll_nj_sdi_company',
+    'l10n_us_nj_hr_payroll.hr_payroll_nj_sdi_employee',
+    'l10n_us_nj_hr_payroll.hr_payroll_nj_fli',
+    'l10n_us_nj_hr_payroll.hr_payroll_nj_wf',
+    'l10n_us_nj_hr_payroll.hr_payroll_nj_wf_company',
+    'l10n_us_nj_hr_payroll.hr_payroll_nj_income_withhold',
+    'l10n_us_nj_hr_payroll.hr_payroll_rules_nj_unemp_wages_2018',
+    'l10n_us_nj_hr_payroll.hr_payroll_rules_nj_sdi_wages_2018',
+    'l10n_us_nj_hr_payroll.hr_payroll_rules_nj_fli_wages_2018',
+    'l10n_us_nj_hr_payroll.hr_payroll_rules_nj_wf_wages_2018',
 
     'l10n_us_oh_hr_payroll.hr_payroll_oh_unemp_wages',
     'l10n_us_oh_hr_payroll.hr_payroll_oh_unemp',
@@ -155,6 +187,19 @@ XMLIDS_TO_RENAME_2020 = {
     'l10n_us_mt_hr_payroll.hr_payroll_rules_mt_unemp': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_mt_suta',
     'l10n_us_mt_hr_payroll.hr_payroll_rules_mt_inc_withhold': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_mt_sit',
 
+    'l10n_us_nj_hr_payroll.res_partner_njdor_unemp_employee': 'l10n_us_hr_payroll.res_partner_us_nj_dor',
+    'l10n_us_nj_hr_payroll.res_partner_njdor_withhold': 'l10n_us_hr_payroll.res_partner_us_nj_dor_sit',
+    'l10n_us_nj_hr_payroll.contrib_register_njdor_unemp_employee': 'l10n_us_hr_payroll.contrib_register_us_nj_dor',
+    'l10n_us_nj_hr_payroll.contrib_register_njdor_withhold': 'l10n_us_hr_payroll.contrib_register_us_nj_dor_sit',
+    'l10n_us_nj_hr_payroll.hr_payroll_rules_nj_unemp_employee_2018': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_nj_suta',
+    'l10n_us_nj_hr_payroll.hr_payroll_rules_nj_unemp_company_2018': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_nj_suta',
+    'l10n_us_nj_hr_payroll.hr_payroll_rules_nj_sdi_employee_2018': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_nj_sdi',
+    'l10n_us_nj_hr_payroll.hr_payroll_rules_nj_sdi_company_2018': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_nj_sdi',
+    'l10n_us_nj_hr_payroll.hr_payroll_rules_nj_fli_2018': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_nj_fli',
+    'l10n_us_nj_hr_payroll.hr_payroll_rules_nj_wf_2018': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_nj_wf',
+    'l10n_us_nj_hr_payroll.hr_payroll_rules_nj_wf_er': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_nj_wf',
+    'l10n_us_nj_hr_payroll.hr_payroll_rules_nj_inc_withhold_2018': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_nj_sit',
+
     'l10n_us_oh_hr_payroll.res_partner_ohdor_unemp': 'l10n_us_hr_payroll.res_partner_us_oh_dor',
     'l10n_us_oh_hr_payroll.res_partner_ohdor_withhold': 'l10n_us_hr_payroll.res_partner_us_oh_dor_sit',
     'l10n_us_oh_hr_payroll.res_partner_ohdor_unemp': 'l10n_us_hr_payroll.res_partner_us_oh_dor',
@@ -196,6 +241,9 @@ XMLIDS_TO_RENAME_2020 = {
 XMLIDS_COPY_ACCOUNTING_2020 = {
     'l10n_us_hr_payroll.hr_payroll_rule_er_us_mt_suta': [
         'l10n_us_hr_payroll.hr_payroll_rule_er_us_mt_suta_aft',
+    ],
+    'l10n_us_hr_payroll.hr_payroll_rule_er_us_nj_wf': [
+        'l10n_us_hr_payroll.hr_payroll_rule_er_us_nj_fli',
     ],
     'l10n_us_hr_payroll.hr_payroll_rule_er_us_wa_lni': [
         'l10n_us_hr_payroll.hr_payroll_rule_er_us_wa_fml',
