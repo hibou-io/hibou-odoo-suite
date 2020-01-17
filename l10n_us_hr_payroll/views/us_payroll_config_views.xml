@@ -73,6 +73,13 @@
                             <field name="mt_mw4_sit_exemptions" string="Exemptions"/>
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding (Box H)"/>
                         </group>
+                        <group name="state_nj_newjersey" string="NJ New Jersey" attrs="{'invisible':[('state_id', '!=', %(base.state_us_25)s)]}">
+                            <p colspan="2"><h3>Form NJ-W4 - State Income Tax</h3></p>
+                            <field name="nj_njw4_sit_filing_status" string="Filing Status 2."/>
+                            <field name="nj_njw4_sit_rate_table" string="Rate Table 3."/>
+                            <field name="nj_njw4_sit_allowances" string="Allowances 4."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 5."/>
+                        </group>
                         <group name="state_oh_ohio" string="OH Ohio" attrs="{'invisible':[('state_id', '!=', %(base.state_us_30)s)]}">
                             <p colspan="2"><h3>Form IT-4 - State Income Tax</h3></p>
                             <field name="state_income_tax_exempt"/>
