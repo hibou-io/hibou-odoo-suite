@@ -94,6 +94,23 @@ class HRContractUSPayrollConfig(models.Model):
         ('montana_for_marriage', 'Montana for Marriage'),
     ], string='Montana MW-4 Exempt from Withholding', help='MW-4 Section 2')
 
+    nj_njw4_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
+        ('single', 'Single'),
+        ('married_separate', 'Married/Civil Union partner Separate'),
+        ('married_joint', 'Married/Civil Union Couple Joint'),
+        ('widower', 'Widower/Surviving Civil Union Partner'),
+        ('head_household', 'Head of Household')
+    ], string='New Jersey NJ-W4 Filing Status', help='NJ-W4 2.')
+    nj_njw4_sit_allowances = fields.Integer(string='New Jersey NJ-W4 Allowances', help='NJ-W4 4.')
+    nj_njw4_sit_rate_table = fields.Selection([
+        ('A', 'A'),
+        ('B', 'B'),
+        ('C', 'C'),
+        ('D', 'D'),
+        ('E', 'E')
+    ], string='New Jersey Wage Chart Letter', help='NJ-W4. 3.')
+
     # Ohio will use generic SIT exempt and additional fields
     oh_it4_sit_exemptions = fields.Integer(string='Ohio IT-4 Exemptions',
                                            help='Line 4')
