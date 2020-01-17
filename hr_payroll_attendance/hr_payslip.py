@@ -8,8 +8,28 @@ class HrPayslip(models.Model):
 
     @api.model
     def get_worked_day_lines(self, contracts, date_from, date_to):
-        def create_empty_worked_lines(employee, contract, date_from, date_to):
-            attn = {
+        work = []
+        for contract in contracts.filtered(lambda c: c.paid_hourly_attendance):
+            attendance_line_data = self._attendance_create_lines(contract.employee_id, contract, date_from, date_to)
+            attendance_breakdown = self._attendance_hour_break_down(contract.employee_id, contract, date_from, date_to)
+            self._attendance_fill_lines(attendance_line_data, attendance_breakdown)
+            for code, attn in attendance_line_data.items():
+                work.append(attn)
+        res = super(HrPayslip, self).get_worked_day_lines(contracts.filtered(lambda c: not c.paid_hourly_attendance), date_from, date_to)
+        res.extend(work)
+        return res
+
+    def _attendance_fill_lines(self, lines, attendance_break_down):
+        # Override to change comutation (e.g. grouping by week for overtime)
+        # probably want to override _attendance_create_lines
+        for isoday, worked_hours in attendance_break_down.items():
+            lines['ATTN']['number_of_days'] += 1
+            lines['ATTN']['number_of_hours'] += worked_hours
+
+    def _attendance_create_lines(self, employee, contract, date_from, date_to):
+        # Override to return more keys like this (e.g. OT Overtime)
+        return {
+            'ATTN': {
                 'name': 'Attendance',
                 'sequence': 10,
                 'code': 'ATTN',
@@ -17,39 +37,31 @@ class HrPayslip(models.Model):
                 'number_of_hours': 0.0,
                 'contract_id': contract.id,
             }
+        }
 
-            valid_attn = [
-                ('employee_id', '=', employee.id),
-                ('check_in', '>=', date_from),
-                ('check_in', '<=', date_to),
-            ]
-            return attn, valid_attn
+    def _attendance_domain(self, employee, contract, date_from, date_to):
+        # Override if you need to limit by contract or similar.
+        return [
+            ('employee_id', '=', employee.id),
+            ('check_in', '>=', date_from),
+            ('check_in', '<=', date_to),
+        ]
 
-        work = []
-        for contract in contracts.filtered(lambda c: c.paid_hourly_attendance):
-            worked_attn, valid_attn = create_empty_worked_lines(
-                contract.employee_id,
-                contract,
-                date_from,
-                date_to
-            )
-            days = set()
-            for attn in self.env['hr.attendance'].search(valid_attn):
-                if not attn.check_out:
-                    raise ValidationError('This pay period must not have any open attendances.')
-                if attn.worked_hours:
-                    # Avoid in/outs
-                    attn_iso = attn.check_in.isocalendar()
-                    if not attn_iso in days:
-                        worked_attn['number_of_days'] += 1
-                        days.add(attn_iso)
-                    worked_attn['number_of_hours'] += attn.worked_hours
-            worked_attn['number_of_hours'] = round(worked_attn['number_of_hours'], 2)
-            work.append(worked_attn)
+    def _attendance_get(self, employee, contract, date_from, date_to):
+        # Override if you need to limit by contract or similar.
+        return self.env['hr.attendance'].search(self._attendance_domain(employee, contract, date_from, date_to))
 
-        res = super(HrPayslip, self).get_worked_day_lines(contracts.filtered(lambda c: not c.paid_hourly_attendance), date_from, date_to)
-        res.extend(work)
-        return res
+    def _attendance_hour_break_down(self, employee, contract, date_from, date_to):
+        attns = self._attendance_get(employee, contract, date_from, date_to)
+        day_values = defaultdict(float)
+        for attn in attns:
+            if not attn.check_out:
+                raise ValidationError('This pay period must not have any open attendances.')
+            if attn.worked_hours:
+                # Avoid in/outs
+                attn_iso = attn.check_in.isocalendar()
+                day_values[attn_iso] += attn.worked_hours
+        return day_values
 
     @api.multi
     def hour_break_down(self, code):
@@ -59,20 +71,7 @@ class HrPayslip(models.Model):
         """
         self.ensure_one()
         if code == 'ATTN':
-            attns = self.env['hr.attendance'].search([
-                ('employee_id', '=', self.employee_id.id),
-                ('check_in', '>=', self.date_from),
-                ('check_in', '<=', self.date_to),
-            ])
-            day_values = defaultdict(float)
-            for attn in attns:
-                if not attn.check_out:
-                    raise ValidationError('This pay period must not have any open attendances.')
-                if attn.worked_hours:
-                    # Avoid in/outs
-                    attn_iso = attn.check_in.isocalendar()
-                    day_values[attn_iso] += attn.worked_hours
-            return day_values
+            return self._attendance_hour_break_down(self.employee_id, self.contract_id, self.date_from, self.date_to)
         elif hasattr(super(HrPayslip, self), 'hour_break_down'):
             return super(HrPayslip, self).hour_break_down(code)
 
