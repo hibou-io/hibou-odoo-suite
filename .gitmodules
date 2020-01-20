@@ -1,0 +1,9 @@
+[submodule "external/hibou-oca/server-tools"]
+	path = external/hibou-oca/server-tools
+	url = https://github.com/hibou-io/oca-server-tools.git
+[submodule "external/hibou-oca/sale-workflow"]
+	path = external/hibou-oca/sale-workflow
+	url = https://github.com/hibou-io/oca-sale-workflow.git
+[submodule "external/hibou-oca/bank-payment"]
+	path = external/hibou-oca/bank-payment
+	url = https://github.com/hibou-io/oca-bank-payment.git
