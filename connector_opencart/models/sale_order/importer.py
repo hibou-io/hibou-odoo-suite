@@ -53,14 +53,10 @@ class SaleOrderImportMapper(Component):
 
     direct = [('order_id', 'external_id'),
               ('store_id', 'store_id'),
-              # ('customerOrderId', 'customer_order_id'),
               ]
 
     children = [('products', 'opencart_order_line_ids', 'opencart.sale.order.line'),
                 ]
-
-    # def _map_child(self, map_record, from_attr, to_attr, model_name):
-    #     return super(SaleOrderImportMapper, self)._map_child(map_record, from_attr, to_attr, model_name)
 
     def _add_shipping_line(self, map_record, values):
         record = map_record.source
@@ -351,7 +347,7 @@ class SaleOrderLineImportMapper(Component):
 
     @mapping
     def name(self, record):
-        return unescape(record['name'])
+        return {'name': unescape(record['name'])}
 
     @mapping
     def product_id(self, record):
