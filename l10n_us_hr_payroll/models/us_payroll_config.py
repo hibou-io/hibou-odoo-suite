@@ -94,6 +94,15 @@ class HRContractUSPayrollConfig(models.Model):
         ('montana_for_marriage', 'Montana for Marriage'),
     ], string='Montana MW-4 Exempt from Withholding', help='MW-4 Section 2')
 
+    nc_nc4_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('surviving_spouse', 'Surviving Spouse'),
+        ('head_household', 'Head of Household')
+    ], string='North Carolina NC-4 Filing Status', help='NC-4')
+    nc_nc4_sit_allowances = fields.Integer(string='North Carolina NC-4 Allowances', help='NC-4 1.')
+
     nj_njw4_sit_filing_status = fields.Selection([
         ('', 'Exempt'),
         ('single', 'Single'),

@@ -19,6 +19,9 @@ from . import test_us_ms_mississippi_payslip_2020
 from . import test_us_mt_montana_payslip_2019
 from . import test_us_mt_montana_payslip_2020
 
+from . import test_us_nc_northcarolina_payslip_2019
+from . import test_us_nc_northcarolina_payslip_2020
+
 from . import test_us_nj_newjersey_payslip_2019
 from . import test_us_nj_newjersey_payslip_2020
 
