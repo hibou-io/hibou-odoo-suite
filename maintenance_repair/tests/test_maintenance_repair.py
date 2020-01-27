@@ -20,7 +20,7 @@ class TestMaintenanceRepair(common.TransactionCase):
         })
         self.assertEqual(request.repair_status, 'no')
 
-        product_to_repair = self.env.ref('product.product_product_24_product_template')
+        product_to_repair = self.env.ref('product.product_product_24_product_template').product_variant_id
         line = self.env['maintenance.request.repair.line'].create({
             'request_id': request.id,
             'product_id': product_to_repair.id,
