@@ -33,3 +33,6 @@
 [submodule "external/hibou-oca/stock-logistics-warehouse"]
 	path = external/hibou-oca/stock-logistics-warehouse
 	url = https://github.com/hibou-io/oca-stock-logistics-warehouse.git
+[submodule "external/hibou-oca/account-analytic"]
+	path = external/hibou-oca/account-analytic
+	url = https://github.com/hibou-io/oca-account-analytic
