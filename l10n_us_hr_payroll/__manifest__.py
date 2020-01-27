@@ -33,6 +33,7 @@ USA Payroll Rules.
         'data/state/mo_missouri.xml',
         'data/state/ms_mississippi.xml',
         'data/state/mt_montana.xml',
+        'data/state/nc_northcarolina.xml',
         'data/state/nj_newjersey.xml',
         'data/state/oh_ohio.xml',
         'data/state/pa_pennsylvania.xml',
