@@ -25,6 +25,10 @@ FIELDS_CONTRACT_TO_US_PAYROLL_FORMS_2020 = {
     'mt_mw4_exemptions': 'mt_mw4_sit_exemptions',
     'mt_mw4_exempt': 'mt_mw4_sit_exempt',
 
+    'nc_nc4_filing_status': 'nc_nc4_sit_filing_status',
+    'nc_nc4_allowances': 'nc_nc4_sit_allowances',
+    'nc_nc4_additional_wh': 'state_income_tax_additional_withholding',
+
     'nj_njw4_filing_status': 'nj_njw4_sit_filing_status',
     'nj_njw4_allowances': 'nj_njw4_sit_allowances',
     'nj_njw4_rate_table': 'nj_njw4_sit_rate_table',
@@ -79,6 +83,11 @@ XMLIDS_TO_REMOVE_2020 = [
     'l10n_us_mt_hr_payroll.hr_payroll_mt_unemp',
     'l10n_us_mt_hr_payroll.hr_payroll_mt_income_withhold',
     'l10n_us_mt_hr_payroll.hr_payroll_rules_mt_unemp_wages',
+
+    'l10n_us_nc_hr_payroll.hr_payroll_nc_unemp_wages',
+    'l10n_us_nc_hr_payroll.hr_payroll_nc_unemp',
+    'l10n_us_nc_hr_payroll.hr_payroll_nc_income_withhold',
+    'l10n_us_nc_hr_payroll.hr_payroll_rules_nc_unemp_wages_2018',
 
     'l10n_us_nj_hr_payroll.res_partner_njdor_unemp_company',
     'l10n_us_nj_hr_payroll.res_partner_njdor_sdi_employee',
@@ -186,6 +195,13 @@ XMLIDS_TO_RENAME_2020 = {
     'l10n_us_mt_hr_payroll.contrib_register_mtdor_withhold': 'l10n_us_hr_payroll.contrib_register_us_mt_dor_sit',
     'l10n_us_mt_hr_payroll.hr_payroll_rules_mt_unemp': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_mt_suta',
     'l10n_us_mt_hr_payroll.hr_payroll_rules_mt_inc_withhold': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_mt_sit',
+
+    'l10n_us_nc_hr_payroll.res_partner_ncdor_unemp':'l10n_us_hr_payroll.res_partner_us_nc_dor',
+    'l10n_us_nc_hr_payroll.res_partner_ncdor_withhold': 'l10n_us_hr_payroll.res_partner_us_nc_dor_sit',
+    'l10n_us_nc_hr_payroll.contrib_register_ncdor_unemp': 'l10n_us_hr_payroll.contrib_register_us_nc_dor',
+    'l10n_us_nc_hr_payroll.contrib_register_ncdor_withhold': 'l10n_us_hr_payroll.contrib_register_us_nc_dor_sit',
+    'l10n_us_nc_hr_payroll.hr_payroll_rules_nc_unemp_2018': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_nc_suta',
+    'l10n_us_nc_hr_payroll.hr_payroll_rules_nc_inc_withhold_2018': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_nc_sit',
 
     'l10n_us_nj_hr_payroll.res_partner_njdor_unemp_employee': 'l10n_us_hr_payroll.res_partner_us_nj_dor',
     'l10n_us_nj_hr_payroll.res_partner_njdor_withhold': 'l10n_us_hr_payroll.res_partner_us_nj_dor_sit',
