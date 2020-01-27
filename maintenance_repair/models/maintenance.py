@@ -102,28 +102,27 @@ class MaintenanceRequestRepairLine(models.Model):
             else:
                 line.cost = 0.0
 
+    def _repair_complete_stock_move_values(self):
+        values = {
+            'name': self.request_id.name,
+            'product_id': self.product_id.id,
+            'product_uom_qty': self.product_uom_qty,
+            'product_uom': self.product_uom_id.id,
+            'location_id': self.request_id.repair_location_id.id,
+            'location_dest_id': self.request_id.repair_location_dest_id.id,
+            'maintenance_request_id': self.request_id.id,
+            'origin': self.request_id.name,
+        }
+        # Optional modules for linking maintenance requests to projects, and stock moves to analytic accounts
+        if hasattr(self.request_id, 'project_id') and hasattr(self.env['stock.move'], 'analytic_account_id'):
+            values['analytic_account_id'] = self.request_id.project_id.analytic_account_id.id
+        return values
+
     def action_complete(self):
         # Create stock movements. - Inspired by mrp_repair
-        MoveObj = self.env['stock.move']
+        stock_move_model = self.env['stock.move']
         for line in self.filtered(lambda l: not l.state == 'done'):
-            request = line.request_id
-
-            # Optional hooks to `maintenance_timesheet` and `stock_analytic`
-            analytic_account_id = False
-            if getattr(request, 'project_id', False):
-                analytic_account_id = request.project_id.analytic_account_id.id
-
-            move = MoveObj.create({
-                'name': request.name,
-                'product_id': line.product_id.id,
-                'product_uom_qty': line.product_uom_qty,
-                'product_uom': line.product_uom_id.id,
-                'location_id': request.repair_location_id.id,
-                'location_dest_id': request.repair_location_dest_id.id,
-                'maintenance_request_id': request.id,
-                'origin': request.name,
-                'analytic_account_id': analytic_account_id,
-            })
+            move = stock_move_model.create(self._repair_complete_stock_move_values())
             move = move.sudo()
             move._action_confirm()
             move._action_assign()
