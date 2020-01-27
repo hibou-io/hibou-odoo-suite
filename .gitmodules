@@ -7,3 +7,6 @@
 [submodule "external/hibou-oca/bank-payment"]
 	path = external/hibou-oca/bank-payment
 	url = https://github.com/hibou-io/oca-bank-payment.git
+[submodule "external/hibou-oca/account-analytic"]
+	path = external/hibou-oca/account-analytic
+	url = https://github.com/hibou-io/oca-account-analytic
