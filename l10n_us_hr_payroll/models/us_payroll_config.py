@@ -64,6 +64,8 @@ class HRContractUSPayrollConfig(models.Model):
     ga_g4_sit_additional_allowances = fields.Integer(string='Georgia G-4 Additional Allowances',
                                                      help='G-4 5.')
 
+    mi_w4_sit_exemptions = fields.Integer(string='Michigan MI W-4 Exemptions', help='MI-W4 6.')
+
     mo_mow4_sit_filing_status = fields.Selection([
         ('', 'Exempt'),
         ('single', 'Single or Married Spouse Works or Married Filing Separate'),
