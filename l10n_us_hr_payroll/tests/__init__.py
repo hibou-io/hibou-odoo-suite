@@ -10,6 +10,9 @@ from . import test_us_fl_florida_payslip_2020
 from . import test_us_ga_georgia_payslip_2019
 from . import test_us_ga_georgia_payslip_2020
 
+from . import test_us_mi_michigan_payslip_2019
+from . import test_us_mi_michigan_payslip_2020
+
 from . import test_us_mo_missouri_payslip_2019
 from . import test_us_mo_missouri_payslip_2020
 

@@ -55,6 +55,12 @@
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding 6."/>
                             <field name="state_income_tax_exempt" string="Exempt 8."/>
                         </group>
+                        <group name="state_mi_michigan" string="MI Michigan" attrs="{'invisible':[('state_id', '!=', %(base.state_us_35)s)]}">
+                            <p colspan="2"><h3>Form MI-W4 - State Income Tax</h3></p>
+                            <field name="mi_w4_sit_exemptions" string="Exemptions 6."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 7."/>
+                            <field name="state_income_tax_exempt" string="Exempt 8."/>
+                        </group>
                         <group name="state_mo_missouri" string="MO Missouri" attrs="{'invisible':[('state_id', '!=', %(base.state_us_38)s)]}">
                             <p colspan="2"><h3>Form MO W-4 - State Income Tax</h3></p>
                             <field name="mo_mow4_sit_filing_status" string="Filing Status 1."/>
