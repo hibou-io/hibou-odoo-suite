@@ -66,6 +66,13 @@ class HRContractUSPayrollConfig(models.Model):
 
     mi_w4_sit_exemptions = fields.Integer(string='Michigan MI W-4 Exemptions', help='MI-W4 6.')
 
+    mn_w4mn_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
+        ('single', 'Single'),
+        ('married', 'Married'),
+    ], string='Minnesota W-4MN Marital Status', help='W-4MN')
+    mn_w4mn_sit_allowances = fields.Integer(string='Minnesota Allowances', help='W-4MN 1.')
+
     mo_mow4_sit_filing_status = fields.Selection([
         ('', 'Exempt'),
         ('single', 'Single or Married Spouse Works or Married Filing Separate'),
