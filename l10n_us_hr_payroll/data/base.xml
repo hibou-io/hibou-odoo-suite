@@ -20,25 +20,89 @@
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
 
-
+    <!-- Tax Exempt Benefits/Wage -->
+    <!-- IRS Publication 15-B Lists several categories of benefits, limits and classifications -->
+    <!-- If your rule is intended to add to gross wages or be pre-gross, use the ALW_ Categories -->
+    <record id="hr_payroll_category_alw_fit_exempt" model="hr.salary.rule.category">
+        <field name="name">Wage: US FIT Exempt</field>
+        <field name="code">ALW_FIT_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+    
+    <record id="hr_payroll_category_alw_fit_fica_exempt" model="hr.salary.rule.category">
+        <field name="name">Wage: US FIT &amp; FICA Exempt</field>
+        <field name="code">ALW_FIT_FICA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+    
+    <record id="hr_payroll_category_alw_fit_futa_exempt" model="hr.salary.rule.category">
+        <field name="name">Wage: US FIT &amp; FUTA Exempt</field>
+        <field name="code">ALW_FIT_FUTA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+    
+    <record id="hr_payroll_category_alw_fit_fica_futa_exempt" model="hr.salary.rule.category">
+        <field name="name">Wage: US FIT &amp; FICA &amp; FUTA Exempt</field>
+        <field name="code">ALW_FIT_FICA_FUTA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+    
+    <record id="hr_payroll_category_alw_fica_exempt" model="hr.salary.rule.category">
+        <field name="name">Wage: US FICA Exempt</field>
+        <field name="code">ALW_FICA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+    
+    <record id="hr_payroll_category_alw_fica_futa_exempt" model="hr.salary.rule.category">
+        <field name="name">Wage: US FICA &amp; FUTA Exempt</field>
+        <field name="code">ALW_FICA_FUTA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+    
+    <record id="hr_payroll_category_alw_futa_exempt" model="hr.salary.rule.category">
+        <field name="name">Wage: US FUTA Exempt</field>
+        <field name="code">ALW_FUTA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+    
     <!-- Tax Exempt Deductions -->
-
-    <!-- Deductions that reduce the wage for Federal Income Tax (e.g. 401k) -->
+    <!-- If your rule is intended to withhold from gross, use the DED_ Categories -->
     <record id="hr_payroll_category_ded_fit_exempt" model="hr.salary.rule.category">
-        <field name="name">Deduction: US Federal Income Tax Exempt</field>
+        <field name="name">Deduction: US FIT Exempt</field>
         <field name="code">DED_FIT_EXEMPT</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
-
-    <!-- Generally speaking, deductions to FICA and FUTA should probably reduce GROSS itself, there may be special or rare cases -->
-    <!-- Deductions that reduce the wage for FICA -->
+    
+    <record id="hr_payroll_category_ded_fit_fica_exempt" model="hr.salary.rule.category">
+        <field name="name">Deduction: US FIT &amp; FICA Exempt</field>
+        <field name="code">DED_FIT_FICA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    
+    <record id="hr_payroll_category_ded_fit_futa_exempt" model="hr.salary.rule.category">
+        <field name="name">Deduction: US FIT &amp; FUTA Exempt</field>
+        <field name="code">DED_FIT_FUTA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    
+    <record id="hr_payroll_category_ded_fit_fica_futa_exempt" model="hr.salary.rule.category">
+        <field name="name">Deduction: US FIT &amp; FICA &amp; FUTA Exempt</field>
+        <field name="code">DED_FIT_FICA_FUTA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    
     <record id="hr_payroll_category_ded_fica_exempt" model="hr.salary.rule.category">
         <field name="name">Deduction: US FICA Exempt</field>
         <field name="code">DED_FICA_EXEMPT</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
-
-    <!-- Deductions that reduce the wage for Unemployment Insurance/Tax -->
+    
+    <record id="hr_payroll_category_ded_fica_futa_exempt" model="hr.salary.rule.category">
+        <field name="name">Deduction: US FICA &amp; FUTA Exempt</field>
+        <field name="code">DED_FICA_FUTA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    
     <record id="hr_payroll_category_ded_futa_exempt" model="hr.salary.rule.category">
         <field name="name">Deduction: US FUTA Exempt</field>
         <field name="code">DED_FUTA_EXEMPT</field>
