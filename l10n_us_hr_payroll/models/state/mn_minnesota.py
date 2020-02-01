@@ -1,6 +1,6 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from .general import _state_applies
+from .general import _state_applies, sit_wage
 
 
 def mn_minnesota_state_income_withholding(payslip, categories, worked_days, inputs):
@@ -19,14 +19,15 @@ def mn_minnesota_state_income_withholding(payslip, categories, worked_days, inpu
         return 0.0, 0.0
 
     # Determine Wage
-    wage = categories.GROSS + categories.DED_FIT_EXEMPT
+    wage = sit_wage(payslip, categories)
+    if not wage:
+        return 0.0, 0.0
+
     pay_periods = payslip.dict.get_pay_periods_in_year()
     additional = payslip.contract_id.us_payroll_config_value('state_income_tax_additional_withholding')
     sit_tax_rate = payslip.rule_parameter('us_mn_sit_tax_rate')[filing_status]
     allowances_rate = payslip.rule_parameter('us_mn_sit_allowances_rate')
     allowances = payslip.contract_id.us_payroll_config_value('mn_w4mn_sit_allowances')
-    if wage == 0.0:
-        return 0.0, 0.0
 
     taxable_income = (wage * pay_periods) - (allowances * allowances_rate)
     withholding = 0.0

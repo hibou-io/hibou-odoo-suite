@@ -1,6 +1,6 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from .general import _state_applies
+from .general import _state_applies, sit_wage
 
 
 def nj_newjersey_state_income_withholding(payslip, categories, worked_days, inputs):
@@ -19,7 +19,9 @@ def nj_newjersey_state_income_withholding(payslip, categories, worked_days, inpu
         return 0.0, 0.0
 
     # Determine Wage
-    wage = categories.GROSS + categories.DED_FIT_EXEMPT
+    wage = sit_wage(payslip, categories)
+    if not wage:
+        return 0.0, 0.0
 
     allowances = payslip.contract_id.us_payroll_config_value('nj_njw4_sit_allowances')
     sit_rate_table_key = payslip.contract_id.us_payroll_config_value('nj_njw4_sit_rate_table')
@@ -32,9 +34,6 @@ def nj_newjersey_state_income_withholding(payslip, categories, worked_days, inpu
     sit_table = payslip.rule_parameter('us_nj_sit_rate')[sit_rate_table_key].get(schedule_pay)
     allowance_value = payslip.rule_parameter('us_nj_sit_allowance_rate')[schedule_pay]
     if not allowances:
-        return 0.0, 0.0
-
-    if wage == 0.0:
         return 0.0, 0.0
 
     gross_taxable_income = wage - (allowance_value * allowances)

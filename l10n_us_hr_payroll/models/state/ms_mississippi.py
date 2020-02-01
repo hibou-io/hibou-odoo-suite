@@ -1,6 +1,6 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from .general import _state_applies
+from .general import _state_applies, sit_wage
 
 
 def ms_mississippi_state_income_withholding(payslip, categories, worked_days, inputs):
@@ -19,8 +19,8 @@ def ms_mississippi_state_income_withholding(payslip, categories, worked_days, in
         return 0.0, 0.0
 
     # Determine Wage
-    wage = categories.GROSS + categories.DED_FIT_EXEMPT
-    if wage == 0.0:
+    wage = sit_wage(payslip, categories)
+    if not wage:
         return 0.0, 0.0
 
     pay_periods = payslip.dict.get_pay_periods_in_year()
