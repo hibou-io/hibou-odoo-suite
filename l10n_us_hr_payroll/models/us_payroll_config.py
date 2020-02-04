@@ -51,6 +51,8 @@ class HRContractUSPayrollConfig(models.Model):
     fed_941_fit_w4_additional_withholding = fields.Float(string='Federal W4 Additional Withholding [4(c)]',
                                                          help='Form W4 (2020+) 4(c)')
 
+    ar_ar4ec_sit_allowances = fields.Integer(string='Arkansas AR4EC allowances', help='AR4EC 3.')
+
     ga_g4_sit_filing_status = fields.Selection([
         ('exempt', 'Exempt'),
         ('single', 'Single'),
