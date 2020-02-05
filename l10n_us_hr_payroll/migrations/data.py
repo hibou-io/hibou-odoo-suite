@@ -9,6 +9,10 @@ FIELDS_CONTRACT_TO_US_PAYROLL_FORMS_2020 = {
     'fica_exempt': 'fed_941_fica_exempt',
     'futa_type': 'fed_940_type',
     # State
+    'ar_w4_allowances': 'ar_ar4ec_sit_allowances',
+    'ar_w4_tax_exempt': 'state_income_tax_exempt',
+    'ar_w4_additional_wh': 'state_income_tax_additional_withholding',
+
     'ga_g4_filing_status': 'ga_g4_sit_filing_status',
     'ga_g4_dependent_allowances': 'ga_g4_sit_dependent_allowances',
     'ga_g4_additional_allowances': 'ga_g4_sit_additional_allowances',
@@ -68,6 +72,11 @@ XMLIDS_TO_REMOVE_2020 = [
     'l10n_us_hr_payroll.hr_payroll_rules_futa_wages_2018',
     'l10n_us_hr_payroll.hr_payroll_rules_fed_inc_withhold_2018_married',
     # State
+    'l10n_us_ar_hr_payroll.hr_payroll_ar_unemp_wages',
+    'l10n_us_ar_hr_payroll.hr_payroll_ar_unemp',
+    'l10n_us_ar_hr_payroll.hr_payroll_ar_income_withhold',
+    'l10n_us_ar_hr_payroll.hr_payroll_rules_ar_unemp_wages',
+
     'l10n_us_fl_hr_payroll.hr_payroll_fl_unemp_wages',
     'l10n_us_fl_hr_payroll.hr_payroll_fl_unemp',
     'l10n_us_fl_hr_payroll.hr_payroll_rules_fl_unemp_wages_2018',
@@ -182,6 +191,14 @@ XMLIDS_TO_RENAME_2020 = {
     'l10n_us_hr_payroll.hr_payroll_rules_fica_comp_m': 'l10n_us_hr_payroll.hr_payroll_rule_er_fed_941_m',
     'l10n_us_hr_payroll.hr_payroll_rules_fed_inc_withhold_2018_single': 'l10n_us_hr_payroll.hr_payroll_rule_ee_fed_941_fit',
     # State
+    'l10n_us_ar_hr_payroll.res_partner_ar_dws_unemp': 'l10n_us_hr_payroll.res_partner_us_ar_dor',
+    'l10n_us_ar_hr_payroll.res_partner_ar_dfa_withhold': 'l10n_us_hr_payroll.res_partner_us_ar_dor_sit',
+    'l10n_us_ar_hr_payroll.contrib_register_ar_dws_unemp': 'l10n_us_hr_payroll.contrib_register_us_ar_dor',
+    'l10n_us_ar_hr_payroll.contrib_register_ar_dfa_withhold': 'l10n_us_hr_payroll.contrib_register_us_ar_dor_sit',
+    'l10n_us_ar_hr_payroll.hr_payroll_rules_ar_unemp': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_ar_suta',
+    'l10n_us_ar_hr_payroll.hr_payroll_rules_ar_inc_withhold': 'l10n_us_hr_payroll',
+    'l10n_us_ar_hr_payroll.': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_ar_sit',
+
     'l10n_us_fl_hr_payroll.hr_payroll_rules_fl_unemp_2018': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_fl_suta',
     'l10n_us_fl_hr_payroll.res_partner_fldor': 'l10n_us_hr_payroll.res_partner_us_fl_dor',
     'l10n_us_fl_hr_payroll.contrib_register_fldor': 'l10n_us_hr_payroll.contrib_register_us_fl_dor',

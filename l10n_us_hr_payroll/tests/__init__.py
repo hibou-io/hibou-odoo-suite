@@ -4,6 +4,9 @@ from . import common
 from . import test_us_payslip_2019
 from . import test_us_payslip_2020
 
+from . import test_us_ar_arkansas_payslip_2019
+from . import test_us_ar_arkansas_payslip_2020
+
 from . import test_us_fl_florida_payslip_2019
 from . import test_us_fl_florida_payslip_2020
 
