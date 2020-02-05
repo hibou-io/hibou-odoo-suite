@@ -68,8 +68,9 @@ class AccountChartTemplate(models.Model):
                     'company_id': company.id,
                     'default_credit_account_id': accounts[SALARY_EXPENSES].id,
                     'default_debit_account_id': accounts[SALARY_EXPENSES].id,
-                    'payroll_entry_type': 'grouped',
                 })
+                if hasattr(journal, 'payroll_entry_type'):
+                    journal.payroll_entry_type = 'grouped'
 
                 self.env['ir.property'].create([{
                     'name': 'structure_journal_id',
