@@ -44,6 +44,12 @@
                             <field name="workers_comp_er_code"/>
                         </group>
 
+                        <group name="state_ar_arkansas" string="AR Arkansas" attrs="{'invisible':[('state_id', '!=', %(base.state_us_4)s)]}">
+                            <p colspan="2"><h3>Form AR4EC - State Income Tax</h3></p>
+                            <field name="ar_ar4ec_sit_allowances" string="Allowances 3."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 4."/>
+                            <field name="state_income_tax_exempt" string="Exempt 1. 2."/>
+                        </group>
                         <group name="state_fl_florida" string="FL Florida" attrs="{'invisible':[('state_id', '!=', %(base.state_us_10)s)]}">
                             <p colspan="2"><h3>No additional fields.</h3></p>
                         </group>
