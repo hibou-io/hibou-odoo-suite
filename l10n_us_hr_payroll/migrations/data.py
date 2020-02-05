@@ -196,7 +196,7 @@ XMLIDS_TO_RENAME_2020 = {
     'l10n_us_ar_hr_payroll.contrib_register_ar_dws_unemp': 'l10n_us_hr_payroll.contrib_register_us_ar_dor',
     'l10n_us_ar_hr_payroll.contrib_register_ar_dfa_withhold': 'l10n_us_hr_payroll.contrib_register_us_ar_dor_sit',
     'l10n_us_ar_hr_payroll.hr_payroll_rules_ar_unemp': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_ar_suta',
-    'l10n_us_ar_hr_payroll.hr_payroll_rules_ar_inc_withhold': 'l10n_us_hr_payroll',
+    'l10n_us_ar_hr_payroll.hr_payroll_rules_ar_inc_withhold': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_ar_sit',
     'l10n_us_ar_hr_payroll.': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_ar_sit',
 
     'l10n_us_fl_hr_payroll.hr_payroll_rules_fl_unemp_2018': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_fl_suta',
