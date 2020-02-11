@@ -28,6 +28,7 @@ United States of America - Payroll Rules.
         'data/state/ar_arkansas.xml',
         'data/state/fl_florida.xml',
         'data/state/ga_georgia.xml',
+        'data/state/il_illinois.xml',
         'data/state/mi_michigan.xml',
         'data/state/mn_minnesota.xml',
         'data/state/mo_missouri.xml',
