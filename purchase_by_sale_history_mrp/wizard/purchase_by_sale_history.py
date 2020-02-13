@@ -50,7 +50,7 @@ class PurchaseBySaleHistory(models.TransientModel):
         def bom_parent_product_ids_line(line):
             product_ids = set()
             if line.bom_id.product_id:
-                product_ids.add((line.bom_id.product_id, line.product_qty))
+                product_ids.add((line.bom_id.product_id.id, line.product_qty))
             else:
                 for p in line.bom_id.product_tmpl_id.product_variant_ids:
                     product_ids.add((p.id, line.product_qty))
