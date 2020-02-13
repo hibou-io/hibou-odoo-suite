@@ -29,6 +29,7 @@ USA Payroll Rules.
         'data/federal/fed_941_fit_parameters.xml',
         'data/federal/fed_941_fit_rules.xml',
         'data/state/ar_arkansas.xml',
+        'data/state/az_arizona.xml',
         'data/state/fl_florida.xml',
         'data/state/ga_georgia.xml',
         'data/state/il_illinois.xml',
