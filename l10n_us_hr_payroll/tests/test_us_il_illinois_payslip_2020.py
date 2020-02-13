@@ -6,8 +6,8 @@ from .common import TestUsPayslip
 
 class TestUsILPayslip(TestUsPayslip):
     # Taxes and Rates
-    MI_UNEMP_MAX_WAGE = 12740.0
-    MI_UNEMP = 3.130
+    IL_UNEMP_MAX_WAGE = 12740.0
+    IL_UNEMP = 3.125
 
     def _test_sit(self, wage, additional_withholding, basic_allowances, additional_allowances, schedule_pay, date_start, expected_withholding):
 
@@ -27,7 +27,7 @@ class TestUsILPayslip(TestUsPayslip):
         self.assertPayrollEqual(cats.get('EE_US_SIT', 0.0), -expected_withholding)
 
     def test_2020_taxes_example(self):
-        self._test_er_suta('IL', self.MI_UNEMP, date(2020, 1, 1), wage_base=self.MI_UNEMP_MAX_WAGE)
+        self._test_er_suta('IL', self.IL_UNEMP, date(2020, 1, 1), wage_base=self.IL_UNEMP_MAX_WAGE)
         self._test_sit(800.0, 0.0, 2, 2, 'weekly', date(2020, 1, 1), 33.27)
         self._test_sit(800.0, 10.0, 2, 2, 'weekly', date(2020, 1, 1), 43.27)
         self._test_sit(2500.0, 0.0, 1, 1, 'monthly', date(2020, 1, 1), 110.04)
