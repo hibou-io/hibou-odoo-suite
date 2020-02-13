@@ -46,6 +46,7 @@ class MTestPurchaseBySaleHistoryMRP(test_purchase_by_sale_history.TestPurchaseBy
 
         product11_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': product11.product_tmpl_id.id,
+            # 'product_id': product11.id,  # To test specific product
             'product_qty': 1.0,
             'product_uom_id': product11.uom_id.id,
             'bom_line_ids': [(0, 0, {
