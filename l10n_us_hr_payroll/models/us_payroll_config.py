@@ -53,6 +53,10 @@ class HRContractUSPayrollConfig(models.Model):
 
     ar_ar4ec_sit_allowances = fields.Integer(string='Arkansas AR4EC allowances', help='AR4EC 3.')
 
+    az_a4_sit_withholding_percentage = fields.Float(
+        string='Arizona A-4 Withholding Percentage',
+        help='A-4 1. (0.8 or 1.3 or 1.8 or 2.7 or 3.6 or 4.2 or 5.1 or 0 for exempt.')
+
     ga_g4_sit_filing_status = fields.Selection([
         ('exempt', 'Exempt'),
         ('single', 'Single'),
