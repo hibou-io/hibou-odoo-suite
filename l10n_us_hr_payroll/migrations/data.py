@@ -79,6 +79,11 @@ XMLIDS_TO_REMOVE_2020 = [
     'l10n_us_hr_payroll.hr_payroll_rules_futa_wages_2018',
     'l10n_us_hr_payroll.hr_payroll_rules_fed_inc_withhold_2018_married',
     # State
+    'l10n_us_ak_hr_payroll.hr_payroll_ak_unemp_wages',
+    'l10n_us_ak_hr_payroll.hr_payroll_ak_unemp',
+    'l10n_us_ak_hr_payroll.hr_payroll_ak_unemp_ee',
+    'l10n_us_ak_hr_payroll.hr_payroll_rules_ak_unemp_wages',
+
     'l10n_us_ar_hr_payroll.hr_payroll_ar_unemp_wages',
     'l10n_us_ar_hr_payroll.hr_payroll_ar_unemp',
     'l10n_us_ar_hr_payroll.hr_payroll_ar_income_withhold',
@@ -208,6 +213,11 @@ XMLIDS_TO_RENAME_2020 = {
     'l10n_us_hr_payroll.hr_payroll_rules_fica_comp_m': 'l10n_us_hr_payroll.hr_payroll_rule_er_fed_941_m',
     'l10n_us_hr_payroll.hr_payroll_rules_fed_inc_withhold_2018_single': 'l10n_us_hr_payroll.hr_payroll_rule_ee_fed_941_fit',
     # State
+    'l10n_us_ak_hr_payroll.res_partner_ak_dlwd_unemp': 'l10n_us_hr_payroll.res_partner_us_ak_dor',
+    'l10n_us_ak_hr_payroll.contrib_register_ak_dlwd_unemp': 'l10n_us_hr_payroll.contrib_register_us_ak_dor',
+    'l10n_us_ak_hr_payroll.hr_payroll_rules_ak_unemp': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_ak_suta',
+    'l10n_us_ak_hr_payroll.hr_payroll_rules_ak_unemp_ee': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_ak_sit',
+
     'l10n_us_ar_hr_payroll.res_partner_ar_dws_unemp': 'l10n_us_hr_payroll.res_partner_us_ar_dor',
     'l10n_us_ar_hr_payroll.res_partner_ar_dfa_withhold': 'l10n_us_hr_payroll.res_partner_us_ar_dor_sit',
     'l10n_us_ar_hr_payroll.contrib_register_ar_dws_unemp': 'l10n_us_hr_payroll.contrib_register_us_ar_dor',
