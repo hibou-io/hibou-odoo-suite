@@ -44,6 +44,17 @@
                             <field name="workers_comp_er_code"/>
                         </group>
 
+                        <group name="state_ar_arkansas" string="AR Arkansas" attrs="{'invisible':[('state_id', '!=', %(base.state_us_4)s)]}">
+                            <p colspan="2"><h3>Form AR4EC - State Income Tax</h3></p>
+                            <field name="ar_ar4ec_sit_allowances" string="Allowances 3."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 4."/>
+                            <field name="state_income_tax_exempt" string="Exempt 1. 2."/>
+                        </group>
+                        <group name="state_az_arizona" string="AZ Arizona" attrs="{'invisible':[('state_id', '!=', %(base.state_us_3)s)]}">
+                            <p colspan="2"><h3>Form A-4 - State Income Tax</h3></p>
+                            <field name="az_a4_sit_withholding_percentage" string="Withholding Percentage 1."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                        </group>
                         <group name="state_fl_florida" string="FL Florida" attrs="{'invisible':[('state_id', '!=', %(base.state_us_10)s)]}">
                             <p colspan="2"><h3>No additional fields.</h3></p>
                         </group>
@@ -54,6 +65,30 @@
                             <field name="ga_g4_sit_additional_allowances" string="Additional Allowances 5."/>
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding 6."/>
                             <field name="state_income_tax_exempt" string="Exempt 8."/>
+                        </group>
+                        <group name="state_il_illinois" string="IL Illinois" attrs="{'invisible':[('state_id', '!=', %(base.state_us_14)s)]}">
+                            <p colspan="2"><h3>Form IL-W-4 - State Income Tax</h3></p>
+                            <field name="il_w4_sit_basic_allowances" string="Basic Allowances Step 1."/>
+                            <field name="il_w4_sit_additional_allowances" string="Additional Allowances Step 2."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding"/>
+                        </group>
+                        <group name="state_mi_michigan" string="MI Michigan" attrs="{'invisible':[('state_id', '!=', %(base.state_us_35)s)]}">
+                            <p colspan="2"><h3>Form MI-W4 - State Income Tax</h3></p>
+                            <field name="mi_w4_sit_exemptions" string="Exemptions 6."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 7."/>
+                            <field name="state_income_tax_exempt" string="Exempt 8."/>
+                        </group>
+                        <group name="state_mn_minnesota" string="MN Minnesota" attrs="{'invisible':[('state_id', '!=', %(base.state_us_36)s)]}">
+                            <p colspan="2"><h3>Form W-4MN - State Income Tax</h3></p>
+                            <field name="mn_w4mn_sit_filing_status" string="Marital Status"/>
+                            <field name="mn_w4mn_sit_allowances" string="Allowances 1."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                        </group>
+                        <group name="state_mo_missouri" string="MO Missouri" attrs="{'invisible':[('state_id', '!=', %(base.state_us_38)s)]}">
+                            <p colspan="2"><h3>Form MO W-4 - State Income Tax</h3></p>
+                            <field name="mo_mow4_sit_filing_status" string="Filing Status 1."/>
+                            <field name="mo_mow4_sit_withholding" string="Reduce Withholding 3."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
                         </group>
                         <group name="state_ms_mississippi" string="MS Mississippi" attrs="{'invisible':[('state_id', '!=', %(base.state_us_37)s)]}">
                             <p colspan="2"><h3>Form 89-350 - State Income Tax</h3></p>
@@ -66,6 +101,19 @@
                             <field name="mt_mw4_sit_exempt" string="Exempt"/>
                             <field name="mt_mw4_sit_exemptions" string="Exemptions"/>
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding (Box H)"/>
+                        </group>
+                        <group name="state_nc_northcarolina" string="NC North Carolina" attrs="{'invisible':[('state_id', '!=', %(base.state_us_28)s)]}">
+                            <p colspan="2"><h3>Form NC-4 - State Income Tax</h3></p>
+                            <field name="nc_nc4_sit_filing_status" string="Filing Status"/>
+                            <field name="nc_nc4_sit_allowances" string="Allowances 1."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                        </group>
+                        <group name="state_nj_newjersey" string="NJ New Jersey" attrs="{'invisible':[('state_id', '!=', %(base.state_us_25)s)]}">
+                            <p colspan="2"><h3>Form NJ-W4 - State Income Tax</h3></p>
+                            <field name="nj_njw4_sit_filing_status" string="Filing Status 2."/>
+                            <field name="nj_njw4_sit_rate_table" string="Rate Table 3."/>
+                            <field name="nj_njw4_sit_allowances" string="Allowances 4."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 5."/>
                         </group>
                         <group name="state_oh_ohio" string="OH Ohio" attrs="{'invisible':[('state_id', '!=', %(base.state_us_30)s)]}">
                             <p colspan="2"><h3>Form IT-4 - State Income Tax</h3></p>

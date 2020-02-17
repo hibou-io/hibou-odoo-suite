@@ -51,6 +51,12 @@ class HRContractUSPayrollConfig(models.Model):
     fed_941_fit_w4_additional_withholding = fields.Float(string='Federal W4 Additional Withholding [4(c)]',
                                                          help='Form W4 (2020+) 4(c)')
 
+    ar_ar4ec_sit_allowances = fields.Integer(string='Arkansas AR4EC allowances', help='AR4EC 3.')
+
+    az_a4_sit_withholding_percentage = fields.Float(
+        string='Arizona A-4 Withholding Percentage',
+        help='A-4 1. (0.8 or 1.3 or 1.8 or 2.7 or 3.6 or 4.2 or 5.1 or 0 for exempt.')
+
     ga_g4_sit_filing_status = fields.Selection([
         ('exempt', 'Exempt'),
         ('single', 'Single'),
@@ -63,6 +69,26 @@ class HRContractUSPayrollConfig(models.Model):
                                                     help='G-4 4.')
     ga_g4_sit_additional_allowances = fields.Integer(string='Georgia G-4 Additional Allowances',
                                                      help='G-4 5.')
+
+    il_w4_sit_basic_allowances = fields.Integer(string='Illinois IL-W-4 Number of Basic Allowances', help='IL-W-4 Step 1.')
+    il_w4_sit_additional_allowances = fields.Integer(string='Illinois IL-W-4 Number of Additional Allowances', help='IL-W-4 Step 2.')
+
+    mi_w4_sit_exemptions = fields.Integer(string='Michigan MI W-4 Exemptions', help='MI-W4 6.')
+
+    mn_w4mn_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
+        ('single', 'Single'),
+        ('married', 'Married'),
+    ], string='Minnesota W-4MN Marital Status', help='W-4MN')
+    mn_w4mn_sit_allowances = fields.Integer(string='Minnesota Allowances', help='W-4MN 1.')
+
+    mo_mow4_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
+        ('single', 'Single or Married Spouse Works or Married Filing Separate'),
+        ('married', 'Married (Spouse does not work)'),
+        ('head_of_household', 'Head of Household'),
+    ], string='Missouri W-4 Filing Status', help='MO W-4 1.')
+    mo_mow4_sit_withholding = fields.Integer(string='Missouri MO W-4 Reduced Withholding', help='MO W-4 3.')
 
     ms_89_350_sit_filing_status = fields.Selection([
         ('', 'Exempt'),
@@ -86,6 +112,32 @@ class HRContractUSPayrollConfig(models.Model):
         ('montana_for_marriage', 'Montana for Marriage'),
     ], string='Montana MW-4 Exempt from Withholding', help='MW-4 Section 2')
 
+    nc_nc4_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('surviving_spouse', 'Surviving Spouse'),
+        ('head_household', 'Head of Household')
+    ], string='North Carolina NC-4 Filing Status', help='NC-4')
+    nc_nc4_sit_allowances = fields.Integer(string='North Carolina NC-4 Allowances', help='NC-4 1.')
+
+    nj_njw4_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
+        ('single', 'Single'),
+        ('married_separate', 'Married/Civil Union partner Separate'),
+        ('married_joint', 'Married/Civil Union Couple Joint'),
+        ('widower', 'Widower/Surviving Civil Union Partner'),
+        ('head_household', 'Head of Household')
+    ], string='New Jersey NJ-W4 Filing Status', help='NJ-W4 2.')
+    nj_njw4_sit_allowances = fields.Integer(string='New Jersey NJ-W4 Allowances', help='NJ-W4 4.')
+    nj_njw4_sit_rate_table = fields.Selection([
+        ('A', 'A'),
+        ('B', 'B'),
+        ('C', 'C'),
+        ('D', 'D'),
+        ('E', 'E')
+    ], string='New Jersey Wage Chart Letter', help='NJ-W4. 3.')
+
     # Ohio will use generic SIT exempt and additional fields
     oh_it4_sit_exemptions = fields.Integer(string='Ohio IT-4 Exemptions',
                                            help='Line 4')
@@ -93,4 +145,4 @@ class HRContractUSPayrollConfig(models.Model):
     va_va4_sit_exemptions = fields.Integer(string='Virginia VA-4(P) Personal Exemptions',
                                            help='VA-4(P) 1(a)')
     va_va4_sit_other_exemptions = fields.Integer(string='Virginia VA-4(P) Age & Blindness Exemptions',
-                                           help='VA-4(P) 1(b)')
+                                                 help='VA-4(P) 1(b)')
