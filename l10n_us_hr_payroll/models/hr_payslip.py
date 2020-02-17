@@ -14,6 +14,7 @@ from .federal.fed_941 import ee_us_941_fica_ss, \
 from .state.general import general_state_unemployment, \
                            general_state_income_withholding, \
                            is_us_state
+from .state.al_alabama import al_alabama_state_income_withholding
 from .state.ar_arkansas import ar_arkansas_state_income_withholding
 from .state.az_arizona import az_arizona_state_income_withholding
 from .state.ga_georgia import ga_georgia_state_income_withholding
@@ -61,6 +62,7 @@ class HRPayslip(models.Model):
             'general_state_unemployment': general_state_unemployment,
             'general_state_income_withholding': general_state_income_withholding,
             'is_us_state': is_us_state,
+            'al_alabama_state_income_withholding': al_alabama_state_income_withholding,
             'ar_arkansas_state_income_withholding': ar_arkansas_state_income_withholding,
             'az_arizona_state_income_withholding': az_arizona_state_income_withholding,
             'ga_georgia_state_income_withholding': ga_georgia_state_income_withholding,

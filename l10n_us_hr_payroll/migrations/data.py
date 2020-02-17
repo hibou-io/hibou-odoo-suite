@@ -9,6 +9,11 @@ FIELDS_CONTRACT_TO_US_PAYROLL_FORMS_2020 = {
     'fica_exempt': 'fed_941_fica_exempt',
     'futa_type': 'fed_940_type',
     # State
+    'al_a4_filing_status': 'al_a4_sit_exemptions',
+    'al_a4_dependents': 'al_a4_sit_dependents',
+    'al_a4_personal_exemption': 'state_income_tax_exempt',
+    'al_a4_additional_wh': 'state_income_tax_additional_withholding',
+    
     'ar_w4_allowances': 'ar_ar4ec_sit_allowances',
     'ar_w4_tax_exempt': 'state_income_tax_exempt',
     'ar_w4_additional_wh': 'state_income_tax_additional_withholding',
@@ -83,6 +88,11 @@ XMLIDS_TO_REMOVE_2020 = [
     'l10n_us_ak_hr_payroll.hr_payroll_ak_unemp',
     'l10n_us_ak_hr_payroll.hr_payroll_ak_unemp_ee',
     'l10n_us_ak_hr_payroll.hr_payroll_rules_ak_unemp_wages',
+
+    'l10n_us_al_hr_payroll.hr_payroll_al_unemp_wages',
+    'l10n_us_al_hr_payroll.hr_payroll_al_unemp',
+    'l10n_us_al_hr_payroll.hr_payroll_al_income_withhold',
+    'l10n_us_al_hr_payroll.hr_payroll_rules_al_unemp_wages',
 
     'l10n_us_ar_hr_payroll.hr_payroll_ar_unemp_wages',
     'l10n_us_ar_hr_payroll.hr_payroll_ar_unemp',
@@ -217,6 +227,13 @@ XMLIDS_TO_RENAME_2020 = {
     'l10n_us_ak_hr_payroll.contrib_register_ak_dlwd_unemp': 'l10n_us_hr_payroll.contrib_register_us_ak_dor',
     'l10n_us_ak_hr_payroll.hr_payroll_rules_ak_unemp': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_ak_suta',
     'l10n_us_ak_hr_payroll.hr_payroll_rules_ak_unemp_ee': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_ak_sit',
+
+    'l10n_us_al_hr_payroll.res_partner_al_dol_unemp': 'l10n_us_hr_payroll.res_partner_us_al_dor',
+    'l10n_us_al_hr_payroll.res_partner_al_dor_withhold': 'l10n_us_hr_payroll.res_partner_us_al_dor_sit',
+    'l10n_us_al_hr_payroll.contrib_register_al_dol_unemp': 'l10n_us_hr_payroll.contrib_register_us_al_dor',
+    'l10n_us_al_hr_payroll.contrib_register_al_dor_withhold': 'l10n_us_hr_payroll.contrib_register_us_al_dor_sit',
+    'l10n_us_al_hr_payroll.hr_payroll_rules_al_unemp': 'l10n_us_hr_payroll.hr_payroll_rules_az_unemp',
+    'l10n_us_al_hr_payroll.hr_payroll_rules_al_inc_withhold': 'l10n_us_hr_payroll.hr_payroll_rules_az_inc_withhold',
 
     'l10n_us_ar_hr_payroll.res_partner_ar_dws_unemp': 'l10n_us_hr_payroll.res_partner_us_ar_dor',
     'l10n_us_ar_hr_payroll.res_partner_ar_dfa_withhold': 'l10n_us_hr_payroll.res_partner_us_ar_dor_sit',

@@ -51,6 +51,15 @@ class HRContractUSPayrollConfig(models.Model):
     fed_941_fit_w4_additional_withholding = fields.Float(string='Federal W4 Additional Withholding [4(c)]',
                                                          help='Form W4 (2020+) 4(c)')
 
+    al_a4_sit_exemptions = fields.Selection([
+        ('0', '0'),
+        ('S', 'S'),
+        ('MS', 'MS'),
+        ('M', 'M'),
+        ('H', 'H'),
+    ], string='Alabama A4 Withholding Exemptions', help='A4 1. 2. 3.')
+    al_a4_sit_dependents = fields.Integer(string='Alabama A4 Dependents', help='A4 4.')
+
     ar_ar4ec_sit_allowances = fields.Integer(string='Arkansas AR4EC allowances', help='AR4EC 3.')
 
     az_a4_sit_withholding_percentage = fields.Float(
