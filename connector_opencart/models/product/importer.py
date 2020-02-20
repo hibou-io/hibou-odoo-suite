@@ -1,0 +1,78 @@
+from html import unescape
+from odoo.addons.component.core import Component
+from odoo.addons.connector.components.mapper import mapping, only_create
+
+
+class ProductImportMapper(Component):
+    _name = 'opencart.product.template.import.mapper'
+    _inherit = 'opencart.import.mapper'
+    _apply_on = ['opencart.product.template']
+
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def name(self, record):
+        name = record.get('product_description', [{}])[0].get('name', record.get('id'))
+        return {'name': unescape(name)}
+
+    # TODO more fields like pricing....
+
+    @mapping
+    def product_type(self, record):
+        return {'type': 'product' if record.get('shipping') else 'service'}
+
+    @only_create
+    @mapping
+    def existing_product(self, record):
+        product_template = self.env['product.template']
+        template = product_template.browse()
+
+        if record.get('sku'):
+            template = product_template.search([('default_code', '=', record.get('sku'))], limit=1)
+        if not template and record.get('model'):
+            template = product_template.search([('default_code', '=', record.get('model'))], limit=1)
+        if not template and record.get('name'):
+            name = record.get('product_description', [{}])[0].get('name')
+            if name:
+                template = product_template.search([('name', '=', unescape(name))], limit=1)
+        return {'odoo_id': template.id}
+
+
+class ProductImporter(Component):
+    _name = 'opencart.product.template.importer'
+    _inherit = 'opencart.importer'
+    _apply_on = ['opencart.product.template']
+
+    def _create(self, data):
+        binding = super(ProductImporter, self)._create(data)
+        self.backend_record.add_checkpoint(binding)
+        return binding
+
+    def _after_import(self, binding):
+        self._sync_options(binding)
+
+    def _sync_options(self, binding):
+        existing_option_values = binding.opencart_attribute_value_ids
+        mapped_option_values = binding.opencart_attribute_value_ids.browse()
+        record = self.opencart_record
+        backend = self.backend_record
+        for option in record.get('options', []):
+            for record_option_value in option.get('option_value', []):
+                option_value = existing_option_values.filtered(lambda v: v.external_id == record_option_value['product_option_value_id'])
+                name = unescape(record_option_value.get('name', ''))
+                if not option_value:
+                    option_value = existing_option_values.create({
+                        'backend_id': backend.id,
+                        'external_id': record_option_value['product_option_value_id'],
+                        'opencart_name': name,
+                        'opencart_product_tmpl_id': binding.id,
+                    })
+                # Keep options consistent with Opencart by renaming them
+                if option_value.opencart_name != name:
+                    option_value.opencart_name = name
+                mapped_option_values += option_value
+
+        to_unlink = existing_option_values - mapped_option_values
+        to_unlink.unlink()

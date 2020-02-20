@@ -316,7 +316,11 @@ class SaleOrderImporter(Component):
         return binding
 
     def _import_dependencies(self):
+        record = self.opencart_record
         self._import_addresses()
+        for product in record.get('products', []):
+            if 'product_id' in product and product['product_id']:
+                self._import_dependency(product['product_id'], 'opencart.product.template')
 
 
 class SaleOrderLineImportMapper(Component):
@@ -330,33 +334,18 @@ class SaleOrderLineImportMapper(Component):
               ('order_product_id', 'external_id'),
               ]
 
-    def _finalize_product_values(self, record, values):
-        # This would be a good place to create a vendor or add a route...
-        return values
-
-    def _product_values(self, record):
-        reference = record['model']
-        values = {
-            'default_code': reference,
-            'name': unescape(record.get('name', reference)),  # unknown if other fields, but have observed &quot; in product names
-            'type': 'product',
-            'list_price': record.get('price', 0.0),
-            'categ_id': self.backend_record.product_categ_id.id,
-        }
-        return self._finalize_product_values(record, values)
-
     @mapping
     def name(self, record):
         return {'name': unescape(record['name'])}
 
     @mapping
     def product_id(self, record):
-        reference = record['model']
-        product = self.env['product.product'].search([
-            ('default_code', '=', reference)
-        ], limit=1)
-
-        if not product:
-            # we could use a record like (0, 0, values)
-            product = self.env['product.product'].create(self._product_values(record))
+        product_id = record['product_id']
+        binder = self.binder_for('opencart.product.template')
+        # do not unwrap, because it would be a product.template, but I need a specific variant
+        opencart_product_template = binder.to_internal(product_id, unwrap=False)
+        if record.get('option'):
+            product = opencart_product_template.opencart_sale_get_combination(record.get('option'))
+        else:
+            product = opencart_product_template.odoo_id.product_variant_id
         return {'product_id': product.id, 'product_uom': product.uom_id.id}

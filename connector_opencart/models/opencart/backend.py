@@ -2,12 +2,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from datetime import datetime, timedelta
 from logging import getLogger
 from contextlib import contextmanager
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons.connector.models.checkpoint import add_checkpoint
 from ...components.api.opencart import Opencart
 
 _logger = getLogger(__name__)
@@ -79,6 +79,13 @@ class OpencartBackend(models.Model):
         _super = super(OpencartBackend, self)
         with _super.work_on(model_name, opencart_api=opencart_api, **kwargs) as work:
             yield work
+
+    @api.multi
+    def add_checkpoint(self, record):
+        self.ensure_one()
+        record.ensure_one()
+        return add_checkpoint(self.env, record._name, record.id,
+                              self._name, self.id)
 
     @api.multi
     def synchronize_metadata(self):
