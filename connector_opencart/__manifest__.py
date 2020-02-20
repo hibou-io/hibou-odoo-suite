@@ -21,6 +21,7 @@
         'security/ir.model.access.csv',
         'views/delivery_views.xml',
         'views/opencart_backend_views.xml',
+        'views/opencart_product_views.xml',
     ],
     'installable': True,
     'application': False,
