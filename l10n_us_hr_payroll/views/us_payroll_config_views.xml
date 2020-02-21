@@ -62,6 +62,11 @@
                             <field name="az_a4_sit_withholding_percentage" string="Withholding Percentage 1."/>
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
                         </group>
+                        <group name="state_ct_connecticut" string="CT Connecticut" attrs="{'invisible':[('state_id', '!=', %(base.state_us_7)s)]}">
+                            <p colspan="2"><h3>Form CT-W4 - State Income Tax</h3></p>
+                            <field name="ct_w4na_sit_code" string="Withholding Code 1."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                        </group>
                         <group name="state_fl_florida" string="FL Florida" attrs="{'invisible':[('state_id', '!=', %(base.state_us_10)s)]}">
                             <p colspan="2"><h3>No additional fields.</h3></p>
                         </group>
