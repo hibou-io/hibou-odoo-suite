@@ -15,6 +15,7 @@ from .state.general import general_state_unemployment, \
 from .state.al_alabama import al_alabama_state_income_withholding
 from .state.ar_arkansas import ar_arkansas_state_income_withholding
 from .state.az_arizona import az_arizona_state_income_withholding
+from .state.ct_connecticut import ct_connecticut_state_income_withholding
 from .state.ga_georgia import ga_georgia_state_income_withholding
 from .state.il_illinois import il_illinois_state_income_withholding
 from .state.mi_michigan import mi_michigan_state_income_withholding
@@ -62,6 +63,7 @@ class HRPayslip(models.Model):
             'al_alabama_state_income_withholding': al_alabama_state_income_withholding,
             'ar_arkansas_state_income_withholding': ar_arkansas_state_income_withholding,
             'az_arizona_state_income_withholding': az_arizona_state_income_withholding,
+            'ct_connecticut_state_income_withholding': ct_connecticut_state_income_withholding,
             'ga_georgia_state_income_withholding': ga_georgia_state_income_withholding,
             'il_illinois_state_income_withholding': il_illinois_state_income_withholding,
             'mi_michigan_state_income_withholding': mi_michigan_state_income_withholding,

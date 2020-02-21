@@ -66,6 +66,14 @@ class HRContractUSPayrollConfig(models.Model):
         string='Arizona A-4 Withholding Percentage',
         help='A-4 1. (0.8 or 1.3 or 1.8 or 2.7 or 3.6 or 4.2 or 5.1 or 0 for exempt.')
 
+    ct_w4na_sit_code = fields.Selection([
+        ('a', 'A'),
+        ('b', 'B'),
+        ('c', 'C'),
+        ('d', 'D'),
+        ('f', 'F'),
+    ], string='Connecticut CT-W4 Withholding Code', help='CT-W4 1.')
+
     ga_g4_sit_filing_status = fields.Selection([
         ('exempt', 'Exempt'),
         ('single', 'Single'),
