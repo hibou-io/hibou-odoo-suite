@@ -32,6 +32,7 @@ USA Payroll Rules.
         'data/state/al_alabama.xml',
         'data/state/ar_arkansas.xml',
         'data/state/az_arizona.xml',
+        'data/state/ct_connecticut.xml',
         'data/state/fl_florida.xml',
         'data/state/ga_georgia.xml',
         'data/state/il_illinois.xml',
