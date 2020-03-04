@@ -44,6 +44,13 @@
                             <field name="workers_comp_er_code"/>
                         </group>
 
+                        <group name="state_al_alabama" string="AL Alabama" attrs="{'invisible':[('state_id', '!=', %(base.state_us_1)s)]}">
+                            <p colspan="2"><h3>Form A4 - State Income Tax</h3></p>
+                            <field name="al_a4_sit_exemptions" string="Withholding Exemptions 1. 2. 3."/>
+                            <field name="al_a4_sit_dependents" string="Dependents 4."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 5."/>
+                            <field name="state_income_tax_exempt" string="Exempt 6."/>
+                        </group>
                         <group name="state_ar_arkansas" string="AR Arkansas" attrs="{'invisible':[('state_id', '!=', %(base.state_us_4)s)]}">
                             <p colspan="2"><h3>Form AR4EC - State Income Tax</h3></p>
                             <field name="ar_ar4ec_sit_allowances" string="Allowances 3."/>
@@ -53,6 +60,18 @@
                         <group name="state_az_arizona" string="AZ Arizona" attrs="{'invisible':[('state_id', '!=', %(base.state_us_3)s)]}">
                             <p colspan="2"><h3>Form A-4 - State Income Tax</h3></p>
                             <field name="az_a4_sit_withholding_percentage" string="Withholding Percentage 1."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                        </group>
+                        <group name="state_ca_california" string="CA California" attrs="{'invisible':[('state_id', '!=', %(base.state_us_5)s)]}">
+                            <p colspan="2"><h3>Form W-4 - State Income Tax</h3></p>
+                            <field name="ca_de4_sit_filing_status" string="Filing Status 1(c)."/>
+                            <field name="ca_de4_sit_allowances" string="Allowances 3."/>
+                            <field name="ca_de4_sit_additional_allowances" string="Additional Allowances 4(c)."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                        </group>
+                        <group name="state_ct_connecticut" string="CT Connecticut" attrs="{'invisible':[('state_id', '!=', %(base.state_us_7)s)]}">
+                            <p colspan="2"><h3>Form CT-W4 - State Income Tax</h3></p>
+                            <field name="ct_w4na_sit_code" string="Withholding Code 1."/>
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
                         </group>
                         <group name="state_fl_florida" string="FL Florida" attrs="{'invisible':[('state_id', '!=', %(base.state_us_10)s)]}">

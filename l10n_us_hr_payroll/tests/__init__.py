@@ -7,11 +7,20 @@ from . import test_us_payslip_2020
 from . import test_us_ak_alaska_payslip_2019
 from . import test_us_ak_alaska_payslip_2020
 
+from . import test_us_al_alabama_payslip_2019
+from . import test_us_al_alabama_payslip_2020
+
 from . import test_us_ar_arkansas_payslip_2019
 from . import test_us_ar_arkansas_payslip_2020
 
 from . import test_us_az_arizona_payslip_2019
 from . import test_us_az_arizona_payslip_2020
+
+from . import test_us_ca_california_payslip_2019
+from . import test_us_ca_california_payslip_2020
+
+from . import test_us_ct_connecticut_payslip_2019
+from . import test_us_ct_connecticut_payslip_2020
 
 from . import test_us_fl_florida_payslip_2019
 from . import test_us_fl_florida_payslip_2020

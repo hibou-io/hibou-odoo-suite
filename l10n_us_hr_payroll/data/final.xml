@@ -19,11 +19,22 @@
             ref('hr_payroll_rule_er_us_ak_suta'),
             ref('hr_payroll_rule_ee_us_ak_suta'),
 
+            ref('hr_payroll_rule_er_us_al_suta'),
+            ref('hr_payroll_rule_ee_us_al_sit'),
+
             ref('hr_payroll_rule_er_us_ar_suta'),
             ref('hr_payroll_rule_ee_us_ar_sit'),
 
             ref('hr_payroll_rule_er_us_az_suta'),
             ref('hr_payroll_rule_ee_us_az_sit'),
+
+            ref('hr_payroll_rule_er_us_ca_suta'),
+            ref('hr_payroll_rule_er_us_ca_suta_ett'),
+            ref('hr_payroll_rule_ee_us_ca_suta_sdi'),
+            ref('hr_payroll_rule_ee_us_ca_sit'),
+
+            ref('hr_payroll_rule_er_us_ct_suta'),
+            ref('hr_payroll_rule_ee_us_ct_sit'),
 
             ref('hr_payroll_rule_er_us_fl_suta'),
 
