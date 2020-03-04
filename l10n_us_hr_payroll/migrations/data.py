@@ -21,6 +21,10 @@ FIELDS_CONTRACT_TO_US_PAYROLL_FORMS_2020 = {
     'az_a4_withholding_percentage': 'az_a4_sit_withholding_percentage',
     'az_a4_additional_withholding': 'state_income_tax_additional_withholding',
 
+    'ca_de4_allowances': 'ca_de4_sit_allowances',
+    'ca_additional_allowances': 'ca_sit_additional_allowances',
+    'ca_de4_filing_status': 'ca_de4_sit_filing_status',
+
     'ct_w4na_code': 'ct_w4na_sit_code',
     'ct_w4na_wh_amount': 'state_income_tax_additional_withholding',
 
@@ -106,6 +110,19 @@ XMLIDS_TO_REMOVE_2020 = [
     'l10n_us_az_hr_payroll.hr_payroll_az_unemp',
     'l10n_us_az_hr_payroll.hr_payroll_az_income_withhold',
     'l10n_us_az_hr_payroll.hr_payroll_rules_az_unemp_wages',
+
+    'l10n_us_ca_hr_payroll.res_partner_cador_ett',
+    'l10n_us_ca_hr_payroll.res_partner_cador_sdi',
+    'l10n_us_ca_hr_payroll.hr_payroll_ca_uit_wages',
+    'l10n_us_ca_hr_payroll.hr_payroll_ca_uit',
+    'l10n_us_ca_hr_payroll.hr_payroll_ca_ett_wages',
+    'l10n_us_ca_hr_payroll.hr_payroll_ca_ett',
+    'l10n_us_ca_hr_payroll.hr_payroll_ca_sdi_wages',
+    'l10n_us_ca_hr_payroll.hr_payroll_ca_sdi',
+    'l10n_us_ca_hr_payroll.hr_payroll_ca_income_withhold',
+    'l10n_us_ca_hr_payroll.hr_payroll_rules_ca_uit_wages_2018',
+    'l10n_us_ca_hr_payroll.hr_payroll_rules_ca_ett_wages_2018',
+    'l10n_us_ca_hr_payroll.hr_payroll_rules_ca_sdi_wages_2018',
 
     'l10n_us_ct_hr_payroll.hr_payroll_ct_unemp_wages',
     'l10n_us_ct_hr_payroll.hr_payroll_ct_unemp',
@@ -256,6 +273,15 @@ XMLIDS_TO_RENAME_2020 = {
     'l10n_us_az_hr_payroll.contrib_register_az_dor_withhold': 'l10n_us_hr_payroll.contrib_register_us_az_dor_sit',
     'l10n_us_az_hr_payroll.hr_payroll_az_unemp': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_az_suta',
     'l10n_us_az_hr_payroll.hr_payroll_az_income_withhold': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_az_sit',
+
+    'l10n_us_ca_hr_payroll.res_partner_cador_uit': 'l10n_us_hr_payroll.res_partner_us_ca_dor',
+    'l10n_us_ca_hr_payroll.res_partner_cador_withhold': 'l10n_us_hr_payroll.res_partner_us_ca_dor_sit',
+    'l10n_us_ca_hr_payroll.contrib_register_cador_uit': 'l10n_us_hr_payroll.contrib_register_us_ca_dor',
+    'l10n_us_ca_hr_payroll.contrib_register_cador_withhold': 'l10n_us_hr_payroll.contrib_register_us_ca_dor_sit',
+    'l10n_us_ca_hr_payroll.hr_payroll_rules_ca_uit_2018': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_ca_suta',
+    'l10n_us_ca_hr_payroll.hr_payroll_rules_ca_ett_2018': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_ca_ett_suta',
+    'l10n_us_ca_hr_payroll.hr_payroll_rules_ca_sdi_2018': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_ca_sdi_sit',
+    'l10n_us_ca_hr_payroll.hr_payroll_rules_ca_inc_withhold_2018': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_ca_sit',
 
     'l10n_us_ct_hr_payroll.res_partner_ct_dol_unemp': 'l10n_us_hr_payroll.res_partner_us_ct_dor',
     'l10n_us_ct_hr_payroll.res_partner_ct_drs_withhold': 'l10n_us_hr_payroll.res_partner_us_ct_dor_sit',
