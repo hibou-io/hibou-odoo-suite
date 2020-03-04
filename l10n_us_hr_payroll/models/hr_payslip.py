@@ -18,6 +18,7 @@ from .state.az_arizona import az_arizona_state_income_withholding
 from .state.ca_california import ca_california_state_income_withholding
 from .state.ct_connecticut import ct_connecticut_state_income_withholding
 from .state.ga_georgia import ga_georgia_state_income_withholding
+from .state.id_idaho import id_idaho_state_income_withholding
 from .state.il_illinois import il_illinois_state_income_withholding
 from .state.mi_michigan import mi_michigan_state_income_withholding
 from .state.mn_minnesota import mn_minnesota_state_income_withholding
@@ -67,6 +68,7 @@ class HRPayslip(models.Model):
             'ca_california_state_income_withholding': ca_california_state_income_withholding,
             'ct_connecticut_state_income_withholding': ct_connecticut_state_income_withholding,
             'ga_georgia_state_income_withholding': ga_georgia_state_income_withholding,
+            'id_idaho_state_income_withholding': id_idaho_state_income_withholding,
             'il_illinois_state_income_withholding': il_illinois_state_income_withholding,
             'mi_michigan_state_income_withholding': mi_michigan_state_income_withholding,
             'mn_minnesota_state_income_withholding': mn_minnesota_state_income_withholding,
