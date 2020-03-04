@@ -66,6 +66,17 @@ class HRContractUSPayrollConfig(models.Model):
         string='Arizona A-4 Withholding Percentage',
         help='A-4 1. (0.8 or 1.3 or 1.8 or 2.7 or 3.6 or 4.2 or 5.1 or 0 for exempt.')
 
+    ca_de4_sit_allowances = fields.Integer(string='California W-4 Allowances',
+                                           help='CA W-4 3.')
+    ca_de4_sit_additional_allowances = fields.Integer(string='California W-4 Additional Allowances',
+                                                      help='CA W-4 4(c).')
+    ca_de4_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
+        ('single', 'Single or Married filing separately'),
+        ('married', 'Married filing jointly'),
+        ('head_household', 'Head of Household')
+    ], string='California W-4 Filing Status', help='CA W-4 1(c).')
+
     ct_w4na_sit_code = fields.Selection([
         ('a', 'A'),
         ('b', 'B'),
