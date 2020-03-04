@@ -98,6 +98,13 @@ class HRContractUSPayrollConfig(models.Model):
     ga_g4_sit_additional_allowances = fields.Integer(string='Georgia G-4 Additional Allowances',
                                                      help='G-4 5.')
 
+    id_w4_sit_filing_status = fields.Selection([
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('head of household', 'Head of Household'),
+    ], string='Idaho ID W-4 Withholding Status', help='ID W-4 A.B.C.')
+    id_w4_sit_allowances = fields.Integer(string='Idaho ID W-4 Allowances', help='ID W-4 1.')
+
     il_w4_sit_basic_allowances = fields.Integer(string='Illinois IL-W-4 Number of Basic Allowances', help='IL-W-4 Step 1.')
     il_w4_sit_additional_allowances = fields.Integer(string='Illinois IL-W-4 Number of Additional Allowances', help='IL-W-4 Step 2.')
 

@@ -85,6 +85,11 @@
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding 6."/>
                             <field name="state_income_tax_exempt" string="Exempt 8."/>
                         </group>
+                        <group name="state_id_idaho" string="ID Idaho" attrs="{'invisible':[('state_id', '!=', %(base.state_us_13)s)]}">
+                            <p colspan="2"><h3>Form ID W-4 - State Income Tax</h3></p>
+                            <field name="id_w4_sit_filing_status" string="Withholding Status A.B.C."/>
+                            <field name="id_w4_sit_allowances" string="Allowances 1."/>
+                        </group>
                         <group name="state_il_illinois" string="IL Illinois" attrs="{'invisible':[('state_id', '!=', %(base.state_us_14)s)]}">
                             <p colspan="2"><h3>Form IL-W-4 - State Income Tax</h3></p>
                             <field name="il_w4_sit_basic_allowances" string="Basic Allowances Step 1."/>
