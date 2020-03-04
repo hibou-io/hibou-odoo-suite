@@ -134,12 +134,10 @@
     <!-- Partners and Contribution Registers -->
     <record id="res_partner_us_id_dor" model="res.partner">
         <field name="name">US Idaho - Department of Labor (IDOL) - Unemployment Tax</field>
-        <field name="supplier">1</field>
     </record>
 
     <record id="res_partner_us_id_dor_sit" model="res.partner">
         <field name="name">US Idaho - State Tax Commission (ISTC) - Income Tax</field>
-        <field name="supplier">1</field>
     </record>
 
     <!-- Categories -->
