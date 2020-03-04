@@ -203,6 +203,8 @@ def ee_us_941_fit(payslip, categories, worked_days, inputs):
 
     schedule_pay = payslip.contract_id.schedule_pay
     wage = fit_wage(payslip, categories)
+    if not wage:
+        return 0.0, 0.0
 
     #_logger.warn('initial gross wage: ' + str(wage))
     year = payslip.dict.get_year()
