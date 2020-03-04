@@ -41,6 +41,9 @@
             ref('hr_payroll_rule_er_us_ga_suta'),
             ref('hr_payroll_rule_ee_us_ga_sit'),
 
+            ref('hr_payroll_rule_er_us_id_suta'),
+            ref('hr_payroll_rule_ee_us_id_sit'),
+
             ref('hr_payroll_rule_er_us_il_suta'),
             ref('hr_payroll_rule_ee_us_il_sit'),
 
