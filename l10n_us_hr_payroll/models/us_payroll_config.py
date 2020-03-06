@@ -98,6 +98,14 @@ class HRContractUSPayrollConfig(models.Model):
     ga_g4_sit_additional_allowances = fields.Integer(string='Georgia G-4 Additional Allowances',
                                                      help='G-4 5.')
 
+    hi_hw4_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('head_of_household', 'Head of Household'),
+    ], string='Hawaii HW-4 Marital Status', help='HI HW-4 3.')
+    hi_hw4_sit_allowances = fields.Integer(string='Hawaii HW-4 Allowances', help='HI HW-4 4.')
+
     id_w4_sit_filing_status = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),
