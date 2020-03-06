@@ -22,6 +22,7 @@
         'views/delivery_views.xml',
         'views/opencart_backend_views.xml',
         'views/opencart_product_views.xml',
+        'views/product_views.xml',
     ],
     'installable': True,
     'application': False,

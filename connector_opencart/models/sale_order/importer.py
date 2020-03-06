@@ -9,6 +9,9 @@ from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 from odoo.exceptions import ValidationError
 
+import logging
+_logger = logging.getLogger(__name__)
+
 
 class SaleOrderBatchImporter(Component):
     _name = 'opencart.sale.order.batch.importer'
@@ -184,14 +187,21 @@ class SaleOrderImporter(Component):
         return self.env['res.partner'].create(values)
 
     def _partner_matches(self, partner, values):
+        _logger.warn('_partner_matches partner: ' + str(partner) + ' values: ' + str(values))
         for key, value in values.items():
+            if key in ('active', 'parent_id'):
+                continue
+
             if key == 'state_id':
                 if value != partner.state_id.id:
+                    _logger.warn('  return false for state_id value: ' + str(value) + ' partner.state_id.id: ' + str(partner.state_id.id))
                     return False
             elif key == 'country_id':
                 if value != partner.country_id.id:
+                    _logger.warn('  return false for country_id value: ' + str(value) + ' partner.country_id.id: ' + str(partner.country_id.id))
                     return False
             elif bool(value) and value != getattr(partner, key):
+                _logger.warn('  return false for ' + str(key) + ' : ' + str(value) + ' partner value: ' + str(getattr(partner, key)))
                 return False
         return True
 
@@ -232,13 +242,13 @@ class SaleOrderImporter(Component):
         ], limit=1)
 
         return {
-            'email': email,
-            'name': name,
-            'phone': phone,
-            'street': street,
-            'street2': street2,
-            'zip': zip_,
-            'city': city,
+            'email': email.strip(),
+            'name': name.strip(),
+            'phone': phone.strip(),
+            'street': street.strip(),
+            'street2': street2.strip(),
+            'zip': zip_.strip(),
+            'city': city.strip(),
             'state_id': state.id,
             'country_id': country.id,
         }
@@ -247,9 +257,18 @@ class SaleOrderImporter(Component):
         record = self.opencart_record
 
         partner_values = self._get_partner_values()
-        partner = self.env['res.partner'].search([
+        partners = self.env['res.partner'].search([
             ('email', '=', partner_values['email']),
-        ], limit=1)
+        ])
+
+        partner = None
+        for possible in partners:
+            if self._partner_matches(possible, partner_values):
+                _logger.warn('matched partner: ' + str(possible))
+                partner = possible
+                break
+        if not partner and partners:
+            partner = partners[0]
 
         if not partner:
             # create partner.
@@ -260,18 +279,28 @@ class SaleOrderImporter(Component):
             partner_values['active'] = False
             shipping_partner = self._create_partner(copy(partner_values))
         else:
+            _logger.warn('same shipping partner')
             shipping_partner = partner
 
         invoice_values = self._get_partner_values(info_string='payment_')
 
         if (not self._partner_matches(partner, invoice_values)
                 and not self._partner_matches(shipping_partner, invoice_values)):
-            partner_values['parent_id'] = partner.id
-            partner_values['active'] = False
-            invoice_partner = self._create_partner(copy(invoice_values))
+            # Try to find existing invoice address....
+            for possible in partners:
+                if self._partner_matches(possible, invoice_values):
+                    _logger.warn('matched invoice partner: ' + str(possible))
+                    invoice_partner = possible
+                    break
+            else:
+                partner_values['parent_id'] = partner.id
+                partner_values['active'] = False
+                invoice_partner = self._create_partner(copy(invoice_values))
         elif self._partner_matches(partner, invoice_values):
+            _logger.warn('same invoice partner')
             invoice_partner = partner
         elif self._partner_matches(shipping_partner, invoice_values):
+            _logger.warn('same invoice shipping partner')
             invoice_partner = shipping_partner
 
         self.partner = partner

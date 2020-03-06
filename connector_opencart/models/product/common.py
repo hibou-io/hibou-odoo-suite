@@ -12,7 +12,7 @@ class OpencartProductTemplate(models.Model):
     odoo_id = fields.Many2one('product.template',
                               string='Product',
                               required=True,
-                              ondelete='restrict')
+                              ondelete='cascade')  # cascade so that you can delete an Odoo product that was created by connector
     opencart_attribute_value_ids = fields.One2many('opencart.product.template.attribute.value',
                                                    'opencart_product_tmpl_id',
                                                    string='Opencart Product Attribute Values')
@@ -34,7 +34,7 @@ class OpencartProductTemplate(models.Model):
                     if reentry:
                         raise RetryableJobError('Product imported, but selected option is not available.')
             if not opencart_attribute_value.odoo_id:
-                raise RetryableJobError('Order Product has option (%s) "%s" that is not mapped to an Odoo Attribute Value.' % (opencart_attribute_value.external_id, opencart_attribute_value.opencart_name))
+                raise RetryableJobError('Order Product (%s) has option (%s) "%s" that is not mapped to an Odoo Attribute Value.' % (self, opencart_attribute_value.external_id, opencart_attribute_value.opencart_name))
             selected_attribute_values += opencart_attribute_value.odoo_id
         # Now that we know what options are selected, we can load a variant with those options
         return self.odoo_id._create_product_variant(selected_attribute_values)
@@ -43,6 +43,7 @@ class OpencartProductTemplate(models.Model):
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
+    opencart_sku = fields.Char('Opencart SKU')
     opencart_bind_ids = fields.One2many('opencart.product.template', 'odoo_id', string='Opencart Bindings')
 
 
