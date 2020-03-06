@@ -85,6 +85,12 @@
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding 6."/>
                             <field name="state_income_tax_exempt" string="Exempt 8."/>
                         </group>
+                        <group name="state_hi_hawaii" string="HI Hawaii" attrs="{'invisible':[('state_id', '!=', %(base.state_us_12)s)]}">
+                            <p colspan="2"><h3>Form HI HW-4 - State Income Tax</h3></p>
+                            <field name="hi_hw4_sit_filing_status" string="Marital Status 3."/>
+                            <field name="hi_hw4_sit_allowances" string="Allowances 4."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 5."/>
+                        </group>
                         <group name="state_id_idaho" string="ID Idaho" attrs="{'invisible':[('state_id', '!=', %(base.state_us_13)s)]}">
                             <p colspan="2"><h3>Form ID W-4 - State Income Tax</h3></p>
                             <field name="id_w4_sit_filing_status" string="Withholding Status A.B.C."/>
