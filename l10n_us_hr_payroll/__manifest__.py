@@ -33,6 +33,7 @@ United States of America - Payroll Rules.
         'data/state/ct_connecticut.xml',
         'data/state/fl_florida.xml',
         'data/state/ga_georgia.xml',
+        'data/state/hi_hawaii.xml',
         'data/state/id_idaho.xml',
         'data/state/il_illinois.xml',
         'data/state/mi_michigan.xml',
