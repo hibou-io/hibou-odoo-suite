@@ -23,6 +23,10 @@ class ProductImportMapper(Component):
     def product_type(self, record):
         return {'type': 'product' if record.get('shipping') else 'service'}
 
+    @mapping
+    def opencart_sku(self, record):
+        return {'opencart_sku': (record.get('sku') or '').strip()}
+
     @only_create
     @mapping
     def existing_product(self, record):
@@ -30,7 +34,12 @@ class ProductImportMapper(Component):
         template = product_template.browse()
 
         if record.get('sku'):
-            template = product_template.search([('default_code', '=', record.get('sku'))], limit=1)
+            sku = (record.get('sku') or '').strip()
+            # Try to match our own field
+            template = product_template.search([('opencart_sku', '=', sku)], limit=1)
+            if not template:
+                # Try to match the default_code
+                template = product_template.search([('default_code', '=', record.get('sku'))], limit=1)
         if not template and record.get('model'):
             template = product_template.search([('default_code', '=', record.get('model'))], limit=1)
         if not template and record.get('name'):
