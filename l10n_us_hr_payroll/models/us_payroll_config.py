@@ -85,6 +85,12 @@ class HRContractUSPayrollConfig(models.Model):
         ('f', 'F'),
     ], string='Connecticut CT-W4 Withholding Code', help='CT-W4 1.')
 
+    de_w4_sit_filing_status = fields.Selection([
+        ('single', 'Single or Married filing separately'),
+        ('married', 'Married filing jointly'),
+    ], string='Delaware W-4 Marital Status', help='DE W-4 3.')
+    de_w4_sit_dependent = fields.Integer(string='Delaware W-4 Dependents', help='DE W-4 4.')
+
     ga_g4_sit_filing_status = fields.Selection([
         ('exempt', 'Exempt'),
         ('single', 'Single'),

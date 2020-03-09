@@ -69,6 +69,12 @@
                             <field name="ca_de4_sit_additional_allowances" string="Additional Allowances 4(c)."/>
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
                         </group>
+                        <group name="state_de_delaware" string="DE Delaware" attrs="{'invisible':[('state_id', '!=', %(base.state_us_8)s)]}">
+                            <p colspan="2"><h3>Form DE W-4 - State Income Tax</h3></p>
+                            <field name="de_w4_sit_filing_status" string="Marital Status 3."/>
+                            <field name="de_w4_sit_dependent" string="Dependents Allowances 4."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 5."/>
+                        </group>
                         <group name="state_ct_connecticut" string="CT Connecticut" attrs="{'invisible':[('state_id', '!=', %(base.state_us_7)s)]}">
                             <p colspan="2"><h3>Form CT-W4 - State Income Tax</h3></p>
                             <field name="ct_w4na_sit_code" string="Withholding Code 1."/>
