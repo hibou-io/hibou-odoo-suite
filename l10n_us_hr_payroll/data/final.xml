@@ -36,6 +36,9 @@
             ref('hr_payroll_rule_er_us_ct_suta'),
             ref('hr_payroll_rule_ee_us_ct_sit'),
 
+            ref('hr_payroll_rule_er_us_de_suta'),
+            ref('hr_payroll_rule_ee_us_de_sit'),
+
             ref('hr_payroll_rule_er_us_fl_suta'),
 
             ref('hr_payroll_rule_er_us_ga_suta'),
