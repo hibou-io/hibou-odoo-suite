@@ -33,6 +33,7 @@ USA Payroll Rules.
         'data/state/ar_arkansas.xml',
         'data/state/az_arizona.xml',
         'data/state/ca_california.xml',
+        'data/state/co_colorado.xml',
         'data/state/ct_connecticut.xml',
         'data/state/de_delaware.xml',
         'data/state/fl_florida.xml',
