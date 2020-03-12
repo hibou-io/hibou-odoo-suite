@@ -69,6 +69,11 @@
                             <field name="ca_de4_sit_additional_allowances" string="Additional Allowances 4(c)."/>
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
                         </group>
+                        <group name="state_co_colorado" string="CO Colorado" attrs="{'invisible':[('state_id', '!=', %(base.state_us_6)s)]}">
+                            <p colspan="2"><h3>Form W-4 - State Income Tax</h3></p>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 1."/>
+                            <field name="state_income_tax_exempt" string="State Exempt"/>
+                        </group>
                         <group name="state_de_delaware" string="DE Delaware" attrs="{'invisible':[('state_id', '!=', %(base.state_us_8)s)]}">
                             <p colspan="2"><h3>Form DE W-4 - State Income Tax</h3></p>
                             <field name="de_w4_sit_filing_status" string="Marital Status 3."/>
