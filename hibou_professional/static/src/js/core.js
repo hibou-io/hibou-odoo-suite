@@ -30,7 +30,10 @@ var HibouProfessionalSystrayWidget = Widget.extend({
     },
 
     get_subjects: function(type) {
-        return this.message_subjects[type] || [];
+        if (this.message_subjects && this.message_subjects[type]) {
+            return this.message_subjects[type]
+        }
+        return [];
     },
 
     update_message_type: function(el) {
