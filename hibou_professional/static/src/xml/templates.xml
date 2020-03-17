@@ -82,7 +82,7 @@
                         </div>
                     </div>
                     <t t-if="widget.expiration_reason == 'trial' || (! widget.expiration_reason) || widget.expired || widget.expiring">
-                        <a t-attf-href="https://hibou12.jared-dev.hibou.me/hibouapi/v1/professional/quote/#{widget.dbuuid}" target="_blank">
+                        <a t-attf-href="https://odoo-hibou-test12.hibou-test-odoo.us-w-p1.hibou.me/hibouapi/v1/professional/quote/#{widget.dbuuid}" target="_blank">
 <!--                        <a t-attf-href="https://hibou.io/hibouapi/v1/professional/quote/#{widget.dbuuid}" target="_blank">-->
                             <div class="o_mail_preview">
                                 <div class="o_preview_info">
