@@ -37,6 +37,7 @@
                         </group>
                         <group name="product_configuration" string="Product Defaults">
                             <field name="product_categ_id"/>
+                            <field name="coupon_product_id"/>
                         </group>
                     </group>
                     <notebook name="import_config">
@@ -131,6 +132,7 @@
                             <field name="fiscal_position_id"/>
                             <field name="team_id"/>
                             <field name="sale_prefix"/>
+                            <field name="coupon_product_id"/>
                         </group>
                     </group>
                 </sheet>

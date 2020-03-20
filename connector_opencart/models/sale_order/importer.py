@@ -61,6 +61,34 @@ class SaleOrderImportMapper(Component):
     children = [('products', 'opencart_order_line_ids', 'opencart.sale.order.line'),
                 ]
 
+    def _add_coupon_lines(self, map_record, values):
+        # Data from API
+        # 'coupons': [{'amount': '7.68', 'code': '1111'}],
+        record = map_record.source
+
+        coupons = record.get('coupons')
+        if not coupons:
+            return values
+
+        coupon_product = self.options.store.coupon_product_id or self.backend_record.coupon_product_id
+        if not coupon_product:
+            coupon_product = self.env.ref('connector_ecommerce.product_product_discount', raise_if_not_found=False)
+
+        if not coupon_product:
+            raise ValueError('Coupon %s on order requires coupon product in configuration.' % (coupons, ))
+        for coupon in coupons:
+            line_builder = self.component(usage='order.line.builder')
+            line_builder.price_unit = -float(coupon.get('amount', 0.0))
+            line_builder.product = coupon_product
+            # `order.line.builder` does not allow naming.
+            values = line_builder.get_line()
+            code = coupon.get('code')
+            if code:
+                values['name'] = '%s Code: %s' % (coupon_product.name, code)
+            line = (0, 0, values)
+            values['order_line'].append(line)
+        return values
+
     def _add_shipping_line(self, map_record, values):
         record = map_record.source
 
@@ -77,6 +105,7 @@ class SaleOrderImportMapper(Component):
 
     def finalize(self, map_record, values):
         values.setdefault('order_line', [])
+        self._add_coupon_lines(map_record, values)
         self._add_shipping_line(map_record, values)
         values.update({
             'partner_id': self.options.partner_id,
