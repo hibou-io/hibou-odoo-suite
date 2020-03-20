@@ -62,6 +62,8 @@ class OpencartBackend(models.Model):
              "in Odoo.",
     )
     # payment_mode_id = fields.Many2one(comodel_name='account.payment.mode', string="Payment Mode")
+    coupon_product_id = fields.Many2one(comodel_name='product.product', string='Coupon Product',
+                                        help='Product to represent coupon discounts.')
 
     # New Product fields.
     product_categ_id = fields.Many2one(comodel_name='product.category', string='Product Category',
