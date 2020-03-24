@@ -112,6 +112,8 @@ class HRContractUSPayrollConfig(models.Model):
     ], string='Hawaii HW-4 Marital Status', help='HI HW-4 3.')
     hi_hw4_sit_allowances = fields.Integer(string='Hawaii HW-4 Allowances', help='HI HW-4 4.')
 
+    ia_w4_sit_allowances = fields.Integer(string='Iowa W-4 allowances', help='IA W-4 6.')
+
     id_w4_sit_filing_status = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),
