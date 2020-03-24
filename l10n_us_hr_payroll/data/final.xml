@@ -50,6 +50,9 @@
             ref('hr_payroll_rule_er_us_hi_suta'),
             ref('hr_payroll_rule_ee_us_hi_sit'),
 
+            ref('hr_payroll_rule_er_us_ia_suta'),
+            ref('hr_payroll_rule_ee_us_ia_sit'),
+
             ref('hr_payroll_rule_er_us_id_suta'),
             ref('hr_payroll_rule_ee_us_id_sit'),
 

@@ -35,6 +35,9 @@ from . import test_us_ga_georgia_payslip_2020
 from . import test_us_hi_hawaii_payslip_2019
 from . import test_us_hi_hawaii_payslip_2020
 
+from . import test_us_ia_iowa_payslip_2019
+from . import test_us_ia_iowa_payslip_2020
+
 from . import test_us_id_idaho_payslip_2019
 from . import test_us_id_idaho_payslip_2020
 
