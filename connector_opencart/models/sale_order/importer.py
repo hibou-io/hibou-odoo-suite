@@ -81,12 +81,11 @@ class SaleOrderImportMapper(Component):
             line_builder.price_unit = -float(coupon.get('amount', 0.0))
             line_builder.product = coupon_product
             # `order.line.builder` does not allow naming.
-            values = line_builder.get_line()
+            line_values = line_builder.get_line()
             code = coupon.get('code')
             if code:
-                values['name'] = '%s Code: %s' % (coupon_product.name, code)
-            line = (0, 0, values)
-            values['order_line'].append(line)
+                line_values['name'] = '%s Code: %s' % (coupon_product.name, code)
+            values['order_line'].append((0, 0, line_values))
         return values
 
     def _add_shipping_line(self, map_record, values):
