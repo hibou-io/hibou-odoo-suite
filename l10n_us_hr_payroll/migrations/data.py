@@ -33,6 +33,10 @@ FIELDS_CONTRACT_TO_US_PAYROLL_FORMS_2020 = {
     'ga_g4_additional_allowances': 'ga_g4_sit_additional_allowances',
     'ga_g4_additional_wh': 'state_income_tax_additional_withholding',
 
+    'ia_w4_allowances': 'ia_w4_sit_allowances',
+    'ia_w4_additional_wh': 'state_income_tax_additional_withholding',
+    'ia_w4_tax_exempt': 'state_income_tax_exempt',
+
     'id_w4_filing_status': 'id_w4_sit_filing_status',
     'id_w4_allowances': 'id_w4_sit_allowances',
 
@@ -140,6 +144,11 @@ XMLIDS_TO_REMOVE_2020 = [
     'l10n_us_ga_hr_payroll.hr_payroll_ga_unemp',
     'l10n_us_ga_hr_payroll.hr_payroll_ga_income_withhold',
     'l10n_us_ga_hr_payroll.hr_payroll_rules_ga_unemp_wages',
+
+    'l10n_us_ia_hr_payroll.hr_payroll_ia_unemp_wages',
+    'l10n_us_ia_hr_payroll.hr_payroll_ia_unemp',
+    'l10n_us_ia_hr_payroll.hr_payroll_ia_income_withhold',
+    'l10n_us_ia_hr_payroll.hr_payroll_rules_ia_unemp_wages',
 
     'l10n_us_id_hr_payroll.hr_payroll_id_unemp_wages',
     'l10n_us_id_hr_payroll.hr_payroll_id_unemp',
@@ -308,6 +317,13 @@ XMLIDS_TO_RENAME_2020 = {
     'l10n_us_ga_hr_payroll.contrib_register_ga_dor_withhold': 'l10n_us_hr_payroll.contrib_register_us_ga_dor_sit',
     'l10n_us_ga_hr_payroll.hr_payroll_rules_ga_unemp': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_ga_suta',
     'l10n_us_ga_hr_payroll.hr_payroll_rules_ga_inc_withhold': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_ga_sit',
+
+    'l10n_us_ia_hr_payroll.res_partner_ia_wd_unemp': 'l10n_us_hr_payroll.res_partner_us_ia_dor',
+    'l10n_us_ia_hr_payroll.res_partner_ia_dor_withhold': 'l10n_us_hr_payroll.res_partner_us_ia_dor_sit',
+    'l10n_us_ia_hr_payroll.contrib_register_ia_wd_unemp': 'l10n_us_hr_payroll.contrib_register_us_ia_dor',
+    'l10n_us_ia_hr_payroll.contrib_register_ia_dor_withhold': 'l10n_us_hr_payroll.contrib_register_us_ia_dor_sit',
+    'l10n_us_ia_hr_payroll.hr_payroll_rules_ia_unemp': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_ia_suta',
+    'l10n_us_ia_hr_payroll.hr_payroll_rules_ia_inc_withhold': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_ia_sit',
 
     'l10n_us_id_hr_payroll.res_partner_id_dol_unemp':'l10n_us_hr_payroll.res_partner_us_id_dor',
     'l10n_us_id_hr_payroll.res_partner_id_stc_withhold': 'l10n_us_hr_payroll.res_partner_us_id_dor_sit',
