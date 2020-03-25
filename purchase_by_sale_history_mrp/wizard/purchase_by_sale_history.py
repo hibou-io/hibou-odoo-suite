@@ -31,7 +31,8 @@ class PurchaseBySaleHistory(models.TransientModel):
             product_ids_dict = {}
             for pid, ratio in product_ids:
                 if pid in product_ids_dict:
-                    raise UserError('You cannot have two identical finished goods being created from different ratios.')
+                    raise UserError('You cannot have two identical finished goods being created '
+                                    'from different ratios/BoMs. Finished Product ID: %s' % (pid, ))
                 product_ids_dict[pid] = {'ratio': ratio}
 
             history = self._sale_history(product_ids_dict.keys())
