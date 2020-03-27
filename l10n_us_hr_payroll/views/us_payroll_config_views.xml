@@ -162,6 +162,10 @@
                             <field name="nj_njw4_sit_allowances" string="Allowances 4."/>
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding 5."/>
                         </group>
+                        <group name="state_nm_new_mexico" string="NM New Mexico" attrs="{'invisible':[('state_id', '!=', %(base.state_us_26)s)]}">
+                            <p colspan="2"><h3>Form NM W-4 - State Income Tax</h3></p>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 7."/>
+                        </group>
                         <group name="state_oh_ohio" string="OH Ohio" attrs="{'invisible':[('state_id', '!=', %(base.state_us_30)s)]}">
                             <p colspan="2"><h3>Form IT-4 - State Income Tax</h3></p>
                             <field name="state_income_tax_exempt"/>
