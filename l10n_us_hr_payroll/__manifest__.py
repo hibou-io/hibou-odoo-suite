@@ -49,6 +49,7 @@ USA Payroll Rules.
         'data/state/mt_montana.xml',
         'data/state/nc_northcarolina.xml',
         'data/state/nj_newjersey.xml',
+        'data/state/nm_new_mexico.xml',
         'data/state/oh_ohio.xml',
         'data/state/pa_pennsylvania.xml',
         'data/state/tx_texas.xml',
