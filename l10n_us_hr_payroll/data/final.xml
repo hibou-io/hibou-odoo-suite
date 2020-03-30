@@ -78,6 +78,8 @@
             ref('hr_payroll_rule_er_us_nc_suta'),
             ref('hr_payroll_rule_ee_us_nc_sit'),
 
+            ref('hr_payroll_rule_er_us_nh_suta'),
+
             ref('hr_payroll_rule_er_us_nj_suta'),
             ref('hr_payroll_rule_ee_us_nj_suta'),
             ref('hr_payroll_rule_er_us_nj_sdi'),
