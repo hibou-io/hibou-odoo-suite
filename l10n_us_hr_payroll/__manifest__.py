@@ -52,6 +52,7 @@ United States of America - Payroll Rules.
         'data/state/nm_new_mexico.xml',
         'data/state/oh_ohio.xml',
         'data/state/pa_pennsylvania.xml',
+        'data/state/sc_south_carolina.xml',
         'data/state/tx_texas.xml',
         'data/state/va_virginia.xml',
         'data/state/wa_washington.xml',
