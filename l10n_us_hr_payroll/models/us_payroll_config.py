@@ -124,6 +124,8 @@ class HRContractUSPayrollConfig(models.Model):
     il_w4_sit_basic_allowances = fields.Integer(string='Illinois IL-W-4 Number of Basic Allowances', help='IL-W-4 Step 1.')
     il_w4_sit_additional_allowances = fields.Integer(string='Illinois IL-W-4 Number of Additional Allowances', help='IL-W-4 Step 2.')
 
+    in_w4_sit_personal_exemption = fields.Integer(string='Indiana In-W-4 Number of Personal Exemption', help='IN-W-4 5.')
+    in_w4_sit_dependent_exemption = fields.Integer(string='Indiana In-W-4 Number of Dependent Exemption', help='IN-W-4 6.')
     mi_w4_sit_exemptions = fields.Integer(string='Michigan MI W-4 Exemptions', help='MI-W4 6.')
 
     mn_w4mn_sit_filing_status = fields.Selection([

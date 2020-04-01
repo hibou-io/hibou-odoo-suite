@@ -44,6 +44,8 @@ from . import test_us_id_idaho_payslip_2020
 from . import test_us_il_illinois_payslip_2019
 from . import test_us_il_illinois_payslip_2020
 
+from . import test_us_in_indiana_payslip_2020
+
 from . import test_us_mi_michigan_payslip_2019
 from . import test_us_mi_michigan_payslip_2020
 

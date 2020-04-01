@@ -39,6 +39,7 @@ United States of America - Payroll Rules.
         'data/state/ia_iowa.xml',
         'data/state/id_idaho.xml',
         'data/state/il_illinois.xml',
+        'data/state/in_indiana.xml',
         'data/state/mi_michigan.xml',
         'data/state/mn_minnesota.xml',
         'data/state/mo_missouri.xml',
