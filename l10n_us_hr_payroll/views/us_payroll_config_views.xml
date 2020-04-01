@@ -125,6 +125,12 @@
                             <field name="in_w4_sit_dependent_exemption" string="Dependent Exemption 6."/>
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding 7."/>
                         </group>
+                        <group name="state_la_louisiana" string="LA Louisiana" attrs="{'invisible':[('state_id', '!=', %(base.state_us_19)s)]}">
+                            <p colspan="2"><h3>Form LA L-4 - State Income Tax</h3></p>
+                            <field name="la_l4_sit_filing_status" string="Filing Status 3."/>
+                            <field name="la_l4_sit_exemptions" string="Personal Exemption 6."/>
+                            <field name="la_l4_sit_dependents" string="Dependent Exemption 7."/>
+                        </group>
                         <group name="state_mi_michigan" string="MI Michigan" attrs="{'invisible':[('state_id', '!=', %(base.state_us_35)s)]}">
                             <p colspan="2"><h3>Form MI-W4 - State Income Tax</h3></p>
                             <field name="mi_w4_sit_exemptions" string="Exemptions 6."/>

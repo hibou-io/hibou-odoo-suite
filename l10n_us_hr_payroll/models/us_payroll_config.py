@@ -126,6 +126,14 @@ class HRContractUSPayrollConfig(models.Model):
 
     in_w4_sit_personal_exemption = fields.Integer(string='Indiana In-W-4 Number of Personal Exemption', help='IN-W-4 5.')
     in_w4_sit_dependent_exemption = fields.Integer(string='Indiana In-W-4 Number of Dependent Exemption', help='IN-W-4 6.')
+
+    la_l4_sit_filing_status = fields.Selection([
+        ('single', 'Single'),
+        ('married', 'Married'),
+    ], string='Louisiana LA L-4 Filing Status', help='LA L-4 3.')
+    la_l4_sit_exemptions = fields.Integer(string='Louisiana LA L-4 Number of Exemptions', help='LA L-4 6.')
+    la_l4_sit_dependents = fields.Integer(string='Louisiana LA L-4 Number of Dependents', help='LA L-4 7.')
+
     mi_w4_sit_exemptions = fields.Integer(string='Michigan MI W-4 Exemptions', help='MI-W4 6.')
 
     mn_w4mn_sit_filing_status = fields.Selection([
