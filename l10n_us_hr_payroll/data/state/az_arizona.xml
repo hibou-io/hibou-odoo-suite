@@ -45,7 +45,7 @@
         <field name="name">US Arizona - Department of Revenue (ADOR) - Income Tax</field>
     </record>
     <record id="contrib_register_us_az_dor_sit" model="hr.contribution.register">
-        <field name="name">US Arizona - Department of Revenue (ADOR) - Unemployment Tax</field>
+        <field name="name">US Arizona - Department of Revenue (ADOR) - Income Tax</field>
         <field name="partner_id" ref="res_partner_us_az_dor_sit"/>
     </record>
 
