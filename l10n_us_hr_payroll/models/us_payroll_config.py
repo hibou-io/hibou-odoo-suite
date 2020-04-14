@@ -182,6 +182,12 @@ class HRContractUSPayrollConfig(models.Model):
     ], string='North Carolina NC-4 Filing Status', help='NC-4')
     nc_nc4_sit_allowances = fields.Integer(string='North Carolina NC-4 Allowances', help='NC-4 1.')
 
+    ne_w4n_sit_filing_status = fields.Selection([
+        ('single', 'Single'),
+        ('married', 'Married'),
+    ], string='Nebraska NE W-4N Filing Status', help='NE W-4N')
+    ne_w4n_sit_allowances = fields.Integer(string='Nebraska NE W-4N Allowances', help='NE W-4N 1.')
+
     nj_njw4_sit_filing_status = fields.Selection([
         ('', 'Exempt'),
         ('single', 'Single'),
