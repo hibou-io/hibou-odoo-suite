@@ -58,8 +58,13 @@ USA Payroll Rules.
         'data/state/wa_washington.xml',
         'data/final.xml',
         'views/hr_contract_views.xml',
+        'views/res_config_settings_views.xml',
         'views/us_payroll_config_views.xml',
     ],
     'installable': True,
+    'demo': [
+    ],
+    'auto_install': False,
+    'post_init_hook': '_post_install_hook',
     'license': 'OPL-1',
 }
