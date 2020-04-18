@@ -51,11 +51,45 @@ class HRContractUSPayrollConfig(models.Model):
     fed_941_fit_w4_additional_withholding = fields.Float(string='Federal W4 Additional Withholding [4(c)]',
                                                          help='Form W4 (2020+) 4(c)')
 
+    al_a4_sit_exemptions = fields.Selection([
+        ('0', '0'),
+        ('S', 'S'),
+        ('MS', 'MS'),
+        ('M', 'M'),
+        ('H', 'H'),
+    ], string='Alabama A4 Withholding Exemptions', help='A4 1. 2. 3.')
+    al_a4_sit_dependents = fields.Integer(string='Alabama A4 Dependents', help='A4 4.')
+
     ar_ar4ec_sit_allowances = fields.Integer(string='Arkansas AR4EC allowances', help='AR4EC 3.')
 
     az_a4_sit_withholding_percentage = fields.Float(
         string='Arizona A-4 Withholding Percentage',
         help='A-4 1. (0.8 or 1.3 or 1.8 or 2.7 or 3.6 or 4.2 or 5.1 or 0 for exempt.')
+
+    ca_de4_sit_allowances = fields.Integer(string='California W-4 Allowances',
+                                           help='CA W-4 3.')
+    ca_de4_sit_additional_allowances = fields.Integer(string='California W-4 Additional Allowances',
+                                                      help='CA W-4 4(c).')
+    ca_de4_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
+        ('single', 'Single or Married filing separately'),
+        ('married', 'Married filing jointly'),
+        ('head_household', 'Head of Household')
+    ], string='California W-4 Filing Status', help='CA W-4 1(c).')
+
+    ct_w4na_sit_code = fields.Selection([
+        ('a', 'A'),
+        ('b', 'B'),
+        ('c', 'C'),
+        ('d', 'D'),
+        ('f', 'F'),
+    ], string='Connecticut CT-W4 Withholding Code', help='CT-W4 1.')
+
+    de_w4_sit_filing_status = fields.Selection([
+        ('single', 'Single or Married filing separately'),
+        ('married', 'Married filing jointly'),
+    ], string='Delaware W-4 Marital Status', help='DE W-4 3.')
+    de_w4_sit_dependent = fields.Integer(string='Delaware W-4 Dependents', help='DE W-4 4.')
 
     ga_g4_sit_filing_status = fields.Selection([
         ('exempt', 'Exempt'),
@@ -69,6 +103,23 @@ class HRContractUSPayrollConfig(models.Model):
                                                     help='G-4 4.')
     ga_g4_sit_additional_allowances = fields.Integer(string='Georgia G-4 Additional Allowances',
                                                      help='G-4 5.')
+
+    hi_hw4_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('head_of_household', 'Head of Household'),
+    ], string='Hawaii HW-4 Marital Status', help='HI HW-4 3.')
+    hi_hw4_sit_allowances = fields.Integer(string='Hawaii HW-4 Allowances', help='HI HW-4 4.')
+
+    ia_w4_sit_allowances = fields.Integer(string='Iowa W-4 allowances', help='IA W-4 6.')
+
+    id_w4_sit_filing_status = fields.Selection([
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('head of household', 'Head of Household'),
+    ], string='Idaho ID W-4 Withholding Status', help='ID W-4 A.B.C.')
+    id_w4_sit_allowances = fields.Integer(string='Idaho ID W-4 Allowances', help='ID W-4 1.')
 
     il_w4_sit_basic_allowances = fields.Integer(string='Illinois IL-W-4 Number of Basic Allowances', help='IL-W-4 Step 1.')
     il_w4_sit_additional_allowances = fields.Integer(string='Illinois IL-W-4 Number of Additional Allowances', help='IL-W-4 Step 2.')

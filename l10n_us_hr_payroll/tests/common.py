@@ -22,6 +22,10 @@ class TestUsPayslip(common.TransactionCase):
     debug = False
     _logger = getLogger(__name__)
 
+    def setUp(self):
+        super(TestUsPayslip, self).setUp()
+        self.env['ir.config_parameter'].set_param('hr_payroll.payslip.sum_behavior', 'date_to')
+
     float_info = sys_float_info
 
     def float_round(self, value, digits):
@@ -153,15 +157,6 @@ class TestUsPayslip(common.TransactionCase):
 
     def assertPayrollAlmostEqual(self, first, second):
         self.assertAlmostEqual(first, second, self.payroll_digits-1)
-
-    def test_semi_monthly(self):
-        salary = 80000.0
-        employee = self._createEmployee()
-        # so the schedule_pay is now on the Structure...
-        contract = self._createContract(employee, wage=salary, schedule_pay='semi-monthly')
-        payslip = self._createPayslip(employee, '2019-01-01', '2019-01-14')
-
-        payslip.compute_sheet()
 
     def get_us_state(self, code, cache={}):
         country_key = 'US_COUNTRY'

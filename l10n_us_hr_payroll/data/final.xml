@@ -16,16 +16,45 @@
 
             ref('hr_payroll_rule_ee_fed_941_fit'),
 
+            ref('hr_payroll_rule_er_us_ak_suta'),
+            ref('hr_payroll_rule_ee_us_ak_suta'),
+
+            ref('hr_payroll_rule_er_us_al_suta'),
+            ref('hr_payroll_rule_ee_us_al_sit'),
+
             ref('hr_payroll_rule_er_us_ar_suta'),
             ref('hr_payroll_rule_ee_us_ar_sit'),
 
             ref('hr_payroll_rule_er_us_az_suta'),
             ref('hr_payroll_rule_ee_us_az_sit'),
 
+            ref('hr_payroll_rule_er_us_ca_suta'),
+            ref('hr_payroll_rule_er_us_ca_suta_ett'),
+            ref('hr_payroll_rule_ee_us_ca_suta_sdi'),
+            ref('hr_payroll_rule_ee_us_ca_sit'),
+
+            ref('hr_payroll_rule_er_us_co_suta'),
+            ref('hr_payroll_rule_ee_us_co_sit'),
+
+            ref('hr_payroll_rule_er_us_ct_suta'),
+            ref('hr_payroll_rule_ee_us_ct_sit'),
+
+            ref('hr_payroll_rule_er_us_de_suta'),
+            ref('hr_payroll_rule_ee_us_de_sit'),
+
             ref('hr_payroll_rule_er_us_fl_suta'),
 
             ref('hr_payroll_rule_er_us_ga_suta'),
             ref('hr_payroll_rule_ee_us_ga_sit'),
+
+            ref('hr_payroll_rule_er_us_hi_suta'),
+            ref('hr_payroll_rule_ee_us_hi_sit'),
+
+            ref('hr_payroll_rule_er_us_ia_suta'),
+            ref('hr_payroll_rule_ee_us_ia_sit'),
+
+            ref('hr_payroll_rule_er_us_id_suta'),
+            ref('hr_payroll_rule_ee_us_id_sit'),
 
             ref('hr_payroll_rule_er_us_il_suta'),
             ref('hr_payroll_rule_ee_us_il_sit'),
@@ -49,6 +78,8 @@
             ref('hr_payroll_rule_er_us_nc_suta'),
             ref('hr_payroll_rule_ee_us_nc_sit'),
 
+            ref('hr_payroll_rule_er_us_nh_suta'),
+
             ref('hr_payroll_rule_er_us_nj_suta'),
             ref('hr_payroll_rule_ee_us_nj_suta'),
             ref('hr_payroll_rule_er_us_nj_sdi'),
@@ -58,6 +89,9 @@
             ref('hr_payroll_rule_er_us_nj_fli'),
             ref('hr_payroll_rule_ee_us_nj_fli'),
             ref('hr_payroll_rule_ee_us_nj_sit'),
+
+            ref('hr_payroll_rule_er_us_nm_suta'),
+            ref('hr_payroll_rule_ee_us_nm_sit'),
 
             ref('hr_payroll_rule_er_us_oh_suta'),
             ref('hr_payroll_rule_ee_us_oh_sit'),
