@@ -26,6 +26,7 @@ from .state.id_idaho import id_idaho_state_income_withholding
 from .state.il_illinois import il_illinois_state_income_withholding
 from .state.in_indiana import in_indiana_state_income_withholding
 from .state.la_louisiana import la_louisiana_state_income_withholding
+from .state.me_maine import me_maine_state_income_withholding
 from .state.mi_michigan import mi_michigan_state_income_withholding
 from .state.mn_minnesota import mn_minnesota_state_income_withholding
 from .state.mo_missouri import mo_missouri_state_income_withholding
@@ -87,6 +88,7 @@ class HRPayslip(models.Model):
             'il_illinois_state_income_withholding': il_illinois_state_income_withholding,
             'in_indiana_state_income_withholding': in_indiana_state_income_withholding,
             'la_louisiana_state_income_withholding': la_louisiana_state_income_withholding,
+            'me_maine_state_income_withholding': me_maine_state_income_withholding,
             'mi_michigan_state_income_withholding': mi_michigan_state_income_withholding,
             'mn_minnesota_state_income_withholding': mn_minnesota_state_income_withholding,
             'mo_missouri_state_income_withholding': mo_missouri_state_income_withholding,

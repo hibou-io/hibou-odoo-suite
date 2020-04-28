@@ -49,6 +49,8 @@ from . import test_us_in_indiana_payslip_2020
 from . import test_us_la_louisiana_payslip_2019
 from . import test_us_la_louisiana_payslip_2020
 
+from . import test_us_me_maine_payslip_2020
+
 from . import test_us_mi_michigan_payslip_2019
 from . import test_us_mi_michigan_payslip_2020
 

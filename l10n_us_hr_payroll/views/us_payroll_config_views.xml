@@ -131,6 +131,13 @@
                             <field name="la_l4_sit_exemptions" string="Personal Exemption 6."/>
                             <field name="la_l4_sit_dependents" string="Dependent Exemption 7."/>
                         </group>
+                        <group name="state_me_maine" string="ME Maine" attrs="{'invisible':[('state_id', '!=', %(base.state_us_20)s)]}">
+                            <p colspan="2"><h3>Form W-4ME - State Income Tax</h3></p>
+                            <field name="me_w4me_sit_filing_status" string="Filing Status 3."/>
+                            <field name="me_w4me_sit_allowances" string="Allowances 4."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 5."/>
+                            <field name="state_income_tax_exempt" string="Exempt 6."/>
+                        </group>
                         <group name="state_mi_michigan" string="MI Michigan" attrs="{'invisible':[('state_id', '!=', %(base.state_us_35)s)]}">
                             <p colspan="2"><h3>Form MI-W4 - State Income Tax</h3></p>
                             <field name="mi_w4_sit_exemptions" string="Exemptions 6."/>
