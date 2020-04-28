@@ -32,6 +32,7 @@ from .state.mo_missouri import mo_missouri_state_income_withholding
 from .state.ms_mississippi import ms_mississippi_state_income_withholding
 from .state.mt_montana import mt_montana_state_income_withholding
 from .state.nc_northcarolina import nc_northcarolina_state_income_withholding
+from .state.nd_north_dakota import nd_north_dakota_state_income_withholding
 from .state.ne_nebraska import ne_nebraska_state_income_withholding
 from .state.nj_newjersey import nj_newjersey_state_income_withholding
 from .state.nm_new_mexico import nm_new_mexico_state_income_withholding
@@ -92,6 +93,7 @@ class HRPayslip(models.Model):
             'ms_mississippi_state_income_withholding': ms_mississippi_state_income_withholding,
             'mt_montana_state_income_withholding': mt_montana_state_income_withholding,
             'nc_northcarolina_state_income_withholding': nc_northcarolina_state_income_withholding,
+            'nd_north_dakota_state_income_withholding': nd_north_dakota_state_income_withholding,
             'ne_nebraska_state_income_withholding': ne_nebraska_state_income_withholding,
             'nj_newjersey_state_income_withholding': nj_newjersey_state_income_withholding,
             'nm_new_mexico_state_income_withholding': nm_new_mexico_state_income_withholding,

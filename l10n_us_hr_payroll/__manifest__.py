@@ -47,6 +47,7 @@ United States of America - Payroll Rules.
         'data/state/ms_mississippi.xml',
         'data/state/mt_montana.xml',
         'data/state/nc_northcarolina.xml',
+        'data/state/nd_north_dakota.xml',
         'data/state/ne_nebraska.xml',
         'data/state/nh_new_hampshire.xml',
         'data/state/nj_newjersey.xml',

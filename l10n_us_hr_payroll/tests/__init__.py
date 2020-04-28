@@ -67,6 +67,8 @@ from . import test_us_mt_montana_payslip_2020
 from . import test_us_nc_northcarolina_payslip_2019
 from . import test_us_nc_northcarolina_payslip_2020
 
+from . import test_us_nd_north_dakota_payslip_2020
+
 from . import test_us_ne_nebraska_payslip_2020
 
 from . import test_us_nh_new_hampshire_payslip_2020

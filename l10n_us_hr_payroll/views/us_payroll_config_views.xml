@@ -167,6 +167,11 @@
                             <field name="nc_nc4_sit_allowances" string="Allowances 1."/>
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
                         </group>
+                        <group name="state_nd_north_dakota" string="ND North Dakota" attrs="{'invisible':[('state_id', '!=', %(base.state_us_29)s)]}">
+                            <p colspan="2"><h3>Form ND W-4 - State Income Tax</h3></p>
+                            <field name="nd_w4_sit_filing_status" string="Filing Status"/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                        </group>
                         <group name="state_ne_nebraska" string="NE Nebraska" attrs="{'invisible':[('state_id', '!=', %(base.state_us_22)s)]}">
                             <p colspan="2"><h3>Form NC-4 - State Income Tax</h3></p>
                             <field name="ne_w4n_sit_filing_status" string="Filing Status"/>
