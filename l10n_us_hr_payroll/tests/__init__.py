@@ -80,6 +80,8 @@ from . import test_us_nj_newjersey_payslip_2020
 
 from . import test_us_nm_new_mexico_payslip_2020
 
+from . import test_us_nv_nevada_payslip_2020
+
 from . import test_us_ny_new_york_payslip_2019
 from . import test_us_ny_new_york_payslip_2020
 
