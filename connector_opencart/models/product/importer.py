@@ -73,7 +73,7 @@ class ProductImporter(Component):
         backend = self.backend_record
         for option in record.get('options', []):
             for record_option_value in option.get('option_value', []):
-                option_value = existing_option_values.filtered(lambda v: v.external_id == record_option_value['product_option_value_id'])
+                option_value = existing_option_values.filtered(lambda v: v.external_id == str(record_option_value['product_option_value_id']))
                 name = unescape(record_option_value.get('name', ''))
                 if not option_value:
                     option_value = existing_option_values.create({
