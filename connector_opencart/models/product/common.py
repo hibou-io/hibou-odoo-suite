@@ -37,7 +37,10 @@ class OpencartProductTemplate(models.Model):
                 raise RetryableJobError('Order Product (%s) has option (%s) "%s" that is not mapped to an Odoo Attribute Value.' % (self, opencart_attribute_value.external_id, opencart_attribute_value.opencart_name))
             selected_attribute_values += opencart_attribute_value.odoo_id
         # Now that we know what options are selected, we can load a variant with those options
-        return self.odoo_id._create_product_variant(selected_attribute_values)
+        product = self.odoo_id._create_product_variant(selected_attribute_values, log_warning=True)
+        if not product:
+            raise Exception('No product can be created for selected attribute values, check logs. ' + str(selected_attribute_values))
+        return product
 
 
 class ProductTemplate(models.Model):
