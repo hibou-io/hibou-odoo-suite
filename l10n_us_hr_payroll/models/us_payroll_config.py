@@ -127,6 +127,13 @@ class HRContractUSPayrollConfig(models.Model):
     in_w4_sit_personal_exemption = fields.Integer(string='Indiana In-W-4 Number of Personal Exemption', help='IN-W-4 5.')
     in_w4_sit_dependent_exemption = fields.Integer(string='Indiana In-W-4 Number of Dependent Exemption', help='IN-W-4 6.')
 
+    ks_k4_sit_filing_status = fields.Selection([
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('head of household', 'Head of Household'),
+    ], string='Kansas K-4 Filing Status', help='KS K-4 3.')
+    ks_k4_sit_allowances = fields.Integer(string='Kansas KS K-4 Number of Allowances', help='KS K-4 Step 4.')
+
     la_l4_sit_filing_status = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),
