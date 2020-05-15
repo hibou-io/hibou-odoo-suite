@@ -2,7 +2,7 @@
 <odoo>
     <!-- Wage Base -->
     <record id="rule_parameter_us_ks_suta_wage_base" model="hr.rule.parameter">
-        <field name="name">US KS Kasas SUTA Wage Base</field>
+        <field name="name">US KS Kansas SUTA Wage Base</field>
         <field name="code">us_ks_suta_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
@@ -16,7 +16,7 @@
 
     <!-- Rate -->
     <record id="rule_parameter_us_ks_suta_rate" model="hr.rule.parameter">
-        <field name="name">US KS Kasas SUTA Rate</field>
+        <field name="name">US KS Kansas SUTA Rate</field>
         <field name="code">us_ks_suta_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
@@ -50,7 +50,7 @@
     </data>
 
     <record id="rule_parameter_us_ks_sit_tax_rate" model="hr.rule.parameter">
-        <field name="name">US KS Kasas SIT Tax Rate</field>
+        <field name="name">US KS Kansas SIT Tax Rate</field>
         <field name="code">us_ks_sit_tax_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
@@ -106,7 +106,7 @@
         <field name="sequence" eval="450"/>
         <field name="struct_id" ref="hr_payroll_structure"/>
         <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
-        <field name="name">ER: US KS Kasas State Unemployment</field>
+        <field name="name">ER: US KS Kansas State Unemployment</field>
         <field name="code">ER_US_KS_SUTA</field>
         <field name="condition_select">python</field>
         <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ks_suta_wage_base', rate='us_ks_suta_rate', state_code='KS')</field>
@@ -120,7 +120,7 @@
         <field name="sequence" eval="195"/>
         <field name="struct_id" ref="hr_payroll_structure"/>
         <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
-        <field name="name">EE: US KS Kasas State Income Tax Withholding</field>
+        <field name="name">EE: US KS Kansas State Income Tax Withholding</field>
         <field name="code">EE_US_KS_SIT</field>
         <field name="condition_select">python</field>
         <field name="condition_python">result, _ = ks_kansas_state_income_withholding(payslip, categories, worked_days, inputs)</field>
