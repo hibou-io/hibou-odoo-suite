@@ -132,6 +132,10 @@
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding 5."/>
                             <field name="state_income_tax_exempt" string="Exempt 6."/>
                         </group>
+                        <group name="state_ky_kentucky" string="KY Kentucky" attrs="{'invisible':[('state_id', '!=', %(base.state_us_18)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 4."/>
+                        </group>
                         <group name="state_la_louisiana" string="LA Louisiana" attrs="{'invisible':[('state_id', '!=', %(base.state_us_19)s)]}">
                             <p colspan="2"><h3>Form LA L-4 - State Income Tax</h3></p>
                             <field name="la_l4_sit_filing_status" string="Filing Status 3."/>
