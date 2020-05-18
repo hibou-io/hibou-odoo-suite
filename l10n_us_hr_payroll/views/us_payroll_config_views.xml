@@ -256,6 +256,9 @@
                             <p colspan="2"><h3>No additional fields.</h3></p>
                             <p colspan="2">Ensure that your Employee and Employer workers' comp code fields are filled in for WA LNI withholding.</p>
                         </group>
+                        <group name="state_wy_wyoming" string="WY Wyoming" attrs="{'invisible':[('state_id', '!=', %(base.state_us_51)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                        </group>
                     </group>
                 </sheet>
             </form>
