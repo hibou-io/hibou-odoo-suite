@@ -92,6 +92,8 @@ from . import test_us_ny_new_york_payslip_2020
 from . import test_us_oh_ohio_payslip_2019
 from . import test_us_oh_ohio_payslip_2020
 
+from . import test_us_ok_oklahoma_payslip_2020
+
 from . import test_us_pa_pennsylvania_payslip_2019
 from . import test_us_pa_pennsylvania_payslip_2020
 

@@ -41,6 +41,7 @@ from .state.nj_newjersey import nj_newjersey_state_income_withholding
 from .state.nm_new_mexico import nm_new_mexico_state_income_withholding
 from .state.ny_new_york import ny_new_york_state_income_withholding
 from .state.oh_ohio import oh_ohio_state_income_withholding
+from .state.ok_oklahoma import ok_oklahoma_state_income_withholding
 from .state.sc_south_carolina import sc_south_carolina_state_income_withholding
 from .state.va_virginia import va_virginia_state_income_withholding
 from .state.wa_washington import wa_washington_fml_er, \
@@ -105,6 +106,7 @@ class HRPayslip(models.Model):
             'nm_new_mexico_state_income_withholding': nm_new_mexico_state_income_withholding,
             'ny_new_york_state_income_withholding': ny_new_york_state_income_withholding,
             'oh_ohio_state_income_withholding': oh_ohio_state_income_withholding,
+            'ok_oklahoma_state_income_withholding': ok_oklahoma_state_income_withholding,
             'sc_south_carolina_state_income_withholding': sc_south_carolina_state_income_withholding,
             'va_virginia_state_income_withholding': va_virginia_state_income_withholding,
             'wa_washington_fml_er': wa_washington_fml_er,
