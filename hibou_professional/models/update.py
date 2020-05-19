@@ -13,6 +13,8 @@ class PublisherWarrantyContract(models.AbstractModel):
     CONFIG_HIBOU_URL = 'https://odoo-hibou-test12.hibou-test-odoo.us-w-p1.hibou.me/hibouapi/v1/professional'
     # CONFIG_HIBOU_MESSAGE_URL = 'https://hibou.io/hibouapi/v1/professional/message'
     CONFIG_HIBOU_MESSAGE_URL = 'https://odoo-hibou-test12.hibou-test-odoo.us-w-p1.hibou.me/hibouapi/v1/professional/message'
+    # CONFIG_HIBOU_QUOTE_URL = 'https://hibou.io/hibouapi/v1/professional/quote'
+    CONFIG_HIBOU_QUOTE_URL = 'https://odoo-hibou-test12.hibou-test-odoo.us-w-p1.hibou.me/hibouapi/v1/professional/quote'
     DAYS_ENDING_SOON = 7
 
     @api.model
@@ -71,10 +73,24 @@ class PublisherWarrantyContract(models.AbstractModel):
                 raise UserError('You are not allowed to send messages at this time.')
 
     @api.model
+    def hibou_professional_quote(self):
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        try:
+            self._hibou_install()
+        except:
+            pass
+        dbuuid = get_param('database.uuid')
+        dbtoken = get_param('database.hibou_token')
+        if dbuuid and dbtoken:
+            return {'url': self.CONFIG_HIBOU_QUOTE_URL + '/%s/%s' % (dbuuid, dbtoken)}
+        return {}
+
+    @api.model
     def hibou_professional_send_message(self, type, priority, subject, body, user_url, res_id):
         self._check_message_allow()
         get_param = self.env['ir.config_parameter'].sudo().get_param
         dbuuid = get_param('database.uuid')
+        dbtoken = get_param('database.hibou_token')
         user_name = self.env.user.name
         user_email = self.env.user.email or self.env.user.login
         company_name = self.env.user.company_id.name
@@ -94,20 +110,29 @@ class PublisherWarrantyContract(models.AbstractModel):
                 'res_id': res_id,
             },
         }
-        r = requests.post(self.CONFIG_HIBOU_MESSAGE_URL + '/new', json=data, timeout=30)
-        r.raise_for_status()
-        wrapper = r.json()
-        return wrapper.get('result', {})
+        if dbtoken:
+            data['params']['dbtoken'] = dbtoken
+        try:
+            r = requests.post(self.CONFIG_HIBOU_MESSAGE_URL + '/new', json=data, timeout=30)
+            r.raise_for_status()
+            wrapper = r.json()
+            return wrapper.get('result', {})
+        except:
+            return {'error': 'Error sending message.'}
 
     @api.model
     def hibou_professional_get_messages(self):
         self._check_message_allow()
         get_param = self.env['ir.config_parameter'].sudo().get_param
         dbuuid = get_param('database.uuid')
-        r = requests.get(self.CONFIG_HIBOU_MESSAGE_URL + '/get/%s' % (dbuuid, ), timeout=30)
-        r.raise_for_status()
-        # not jsonrpc
-        return r.json()
+        dbtoken = get_param('database.hibou_token')
+        try:
+            r = requests.get(self.CONFIG_HIBOU_MESSAGE_URL + '/get/%s/%s' % (dbuuid, dbtoken), timeout=30)
+            r.raise_for_status()
+            # not jsonrpc
+            return r.json()
+        except:
+            return {'error': 'Error retrieving messages, maybe the token is wrong.'}
 
     @api.model
     def hibou_professional_update(self, professional_code):
@@ -128,8 +153,9 @@ class PublisherWarrantyContract(models.AbstractModel):
         IrParamSudo = self.env['ir.config_parameter'].sudo()
 
         dbuuid = IrParamSudo.get_param('database.uuid')
+        dbtoken = IrParamSudo.get_param('database.hibou_token')
         db_create_date = IrParamSudo.get_param('database.create_date')
-        user = self.env.user
+        user = self.env.user.sudo()
         professional_code = IrParamSudo.get_param('database.hibou_professional_code')
 
         module_dictionary = self._get_hibou_modules()
@@ -148,9 +174,9 @@ class PublisherWarrantyContract(models.AbstractModel):
             "modules": '\n'.join(modules),
             "professional_code": professional_code,
         }
-        if user.partner_id.company_id:
-            company_id = user.partner_id.company_id
-            msg.update(company_id.read(["name", "email", "phone"])[0])
+        if dbtoken:
+            msg['dbtoken'] = dbtoken
+        msg.update({'company_' + key: value for key, value in user.company_id.read(["name", "email", "phone"])[0].items() if key != 'id'})
         return msg
 
     def _process_hibou_message(self, result):
@@ -158,7 +184,10 @@ class PublisherWarrantyContract(models.AbstractModel):
             set_param = self.env['ir.config_parameter'].sudo().set_param
             set_param('database.hibou_professional_expiration_date', result['professional_info'].get('expiration_date'))
             set_param('database.hibou_professional_expiration_reason', result['professional_info'].get('expiration_reason', 'trial'))
-            set_param('database.hibou_professional_code', result['professional_info'].get('professional_code'))
+            if result['professional_info'].get('professional_code'):
+                set_param('database.hibou_professional_code', result['professional_info'].get('professional_code'))
+            if result['professional_info'].get('dbtoken'):
+                set_param('database.hibou_token', result['professional_info'].get('dbtoken'))
 
     def _hibou_install(self):
         data = self._get_hibou_message()
