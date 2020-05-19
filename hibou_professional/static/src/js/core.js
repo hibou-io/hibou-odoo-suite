@@ -17,6 +17,7 @@ var HibouProfessionalSystrayWidget = Widget.extend({
         self.expiring = false;
         self.expired = false;
         self.dbuuid = false;
+        self.quote_url = false;
         self.is_admin = false;
         self.allow_admin_message = false;
         self.allow_message = false;
@@ -34,6 +35,10 @@ var HibouProfessionalSystrayWidget = Widget.extend({
             return this.message_subjects[type]
         }
         return [];
+    },
+
+    set_error: function(error) {
+        this.$('.hibou_professional_error').text(error);
     },
 
     update_message_type: function(el) {
@@ -105,6 +110,24 @@ var HibouProfessionalSystrayWidget = Widget.extend({
         });
     },
 
+    button_quote: function() {
+        var self = this;
+        var message_p = self.$('.button-quote-link p');
+        message_p.text('Retrieving URL...');
+        self._rpc({
+            model: 'publisher_warranty.contract',
+            method: 'hibou_professional_quote',
+        }).then(function (result) {
+            if (result && result['url']) {
+                self.quote_url = result.url
+                self.$('.button-quote-link').attr('href', self.quote_url);
+                message_p.text('Quote URL ready. Click again!');
+            } else {
+                message_p.text('Error with quote url.  Maybe the database token is incorrect.');
+            }
+        });
+    },
+
     button_send_message: function() {
         var self = this;
         var message_type = self.$('select.hibou_message_type').val();
@@ -155,8 +178,14 @@ var HibouProfessionalSystrayWidget = Widget.extend({
             args: [],
         }).then(function (result) {
             $button.prop('disabled', false);
-            self.update_message_subjects(result.message_subjects);
-            setTimeout(function (){self.$('.dropdown-toggle').click();}, 100);
+            if (result['message_subjects']) {
+                self.update_message_subjects(result.message_subjects);
+                setTimeout(function () {
+                    self.$('.dropdown-toggle').click();
+                }, 100);
+            } else if (result['error']) {
+                self.set_error(result['error']);
+            }
         });
     },
 
@@ -185,6 +214,16 @@ var HibouProfessionalSystrayWidget = Widget.extend({
             e.preventDefault();
             e.stopPropagation();
             self.button_get_messages();
+        });
+
+        // Retrieve quote URL
+        this.$('.button-quote-link').on('click', function(e){
+            if (self.quote_url) {
+                return;  // allow default url click event
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            self.button_quote();
         });
 
         // Update Message Preferences Button
