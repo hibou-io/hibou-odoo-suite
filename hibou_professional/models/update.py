@@ -155,7 +155,7 @@ class PublisherWarrantyContract(models.AbstractModel):
         dbuuid = IrParamSudo.get_param('database.uuid')
         dbtoken = IrParamSudo.get_param('database.hibou_token')
         db_create_date = IrParamSudo.get_param('database.create_date')
-        user = self.env.user
+        user = self.env.user.sudo()
         professional_code = IrParamSudo.get_param('database.hibou_professional_code')
 
         module_dictionary = self._get_hibou_modules()
@@ -176,9 +176,7 @@ class PublisherWarrantyContract(models.AbstractModel):
         }
         if dbtoken:
             msg['dbtoken'] = dbtoken
-        if user.partner_id.company_id:
-            company_id = user.partner_id.company_id
-            msg.update(company_id.read(["name", "email", "phone"])[0])
+        msg.update({'company_' + key: value for key, value in user.company_id.read(["name", "email", "phone"])[0].items() if key != 'id'})
         return msg
 
     def _process_hibou_message(self, result):
