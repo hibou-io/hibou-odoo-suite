@@ -103,6 +103,8 @@ from . import test_us_sc_south_carolina_payslip_2020
 from . import test_us_tx_texas_payslip_2019
 from . import test_us_tx_texas_payslip_2020
 
+from . import test_us_vt_vermont_payslip_2020
+
 from . import test_us_va_virginia_payslip_2019
 from . import test_us_va_virginia_payslip_2020
 

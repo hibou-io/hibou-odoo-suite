@@ -244,6 +244,13 @@ class HRContractUSPayrollConfig(models.Model):
     ok_w4_sit_allowances = fields.Integer(string='Oklahoma OK-W-4 Allowances', help='OK-W-4 1.2.3.')
     sc_w4_sit_allowances = fields.Integer(string='South Carolina SC W-4 Allowances', help='SC W-4 5.')
 
+    vt_w4vt_sit_filing_status = fields.Selection([
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('head_household', 'Head of Household')
+    ], string='Vermont VT W-4VT Filing Status', help='VT W-4VT')
+    vt_w4vt_sit_allowances = fields.Integer(string='Vermont VT W-4VT Allowances', help='VT W-4VT 1.')
+
     va_va4_sit_exemptions = fields.Integer(string='Virginia VA-4(P) Personal Exemptions',
                                            help='VA-4(P) 1(a)')
     va_va4_sit_other_exemptions = fields.Integer(string='Virginia VA-4(P) Age & Blindness Exemptions',
