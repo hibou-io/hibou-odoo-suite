@@ -100,6 +100,8 @@ from . import test_us_pa_pennsylvania_payslip_2020
 from . import test_us_sc_south_carolina_payslip_2019
 from . import test_us_sc_south_carolina_payslip_2020
 
+from . import test_us_sd_south_dakota_payslip_2020
+
 from . import test_us_tn_tennessee_payslip_2020
 
 from . import test_us_tx_texas_payslip_2019
