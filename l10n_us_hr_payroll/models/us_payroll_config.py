@@ -244,6 +244,12 @@ class HRContractUSPayrollConfig(models.Model):
     ok_w4_sit_allowances = fields.Integer(string='Oklahoma OK-W-4 Allowances', help='OK-W-4 1.2.3.')
     sc_w4_sit_allowances = fields.Integer(string='South Carolina SC W-4 Allowances', help='SC W-4 5.')
 
+    ut_w4_sit_filing_status = fields.Selection([
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('head_household', 'Head of Household')
+    ], string='Utah UT W-4 Filing Status', help='UT W-4 C.')
+
     vt_w4vt_sit_filing_status = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),
