@@ -242,6 +242,9 @@
                             <field name="sc_w4_sit_allowances" string="Allowances 5."/>
                             <field name="state_income_tax_exempt" string="Exempt 7."/>
                         </group>
+                        <group name="state_tn_tennessee" string="TN Tennessee" attrs="{'invisible':[('state_id', '!=', %(base.state_us_43)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                        </group>
                         <group name="state_tx_texas" string="TX Texas" attrs="{'invisible':[('state_id', '!=', %(base.state_us_44)s)]}">
                             <p colspan="2"><h3>No additional fields.</h3></p>
                         </group>
