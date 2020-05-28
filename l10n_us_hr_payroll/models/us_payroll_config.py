@@ -261,3 +261,9 @@ class HRContractUSPayrollConfig(models.Model):
                                            help='VA-4(P) 1(a)')
     va_va4_sit_other_exemptions = fields.Integer(string='Virginia VA-4(P) Age & Blindness Exemptions',
                                                  help='VA-4(P) 1(b)')
+
+    wi_wt4_sit_filing_status = fields.Selection([
+        ('single', 'Single'),
+        ('married', 'Married'),
+    ], string='Wisconsin WT-4 Filing Status', help='WI WT-4')
+    wi_wt4_sit_exemptions = fields.Integer(string='Wisconsin Exemptions', help='WI WT-4 1.(d)')

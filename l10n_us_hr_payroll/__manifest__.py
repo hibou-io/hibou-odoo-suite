@@ -68,6 +68,7 @@ United States of America - Payroll Rules.
         'data/state/vt_vermont.xml',
         'data/state/va_virginia.xml',
         'data/state/wa_washington.xml',
+        'data/state/wi_wisconsin.xml',
         'data/state/wy_wyoming.xml',
         'views/hr_contract_views.xml',
         'views/us_payroll_config_views.xml',

@@ -48,6 +48,7 @@ from .state.vt_vermont import vt_vermont_state_income_withholding
 from .state.va_virginia import va_virginia_state_income_withholding
 from .state.wa_washington import wa_washington_fml_er, \
                                  wa_washington_fml_ee
+from .state.wi_wisconsin import wi_wisconsin_state_income_withholding
 
 
 class HRPayslip(models.Model):
@@ -115,6 +116,7 @@ class HRPayslip(models.Model):
             'va_virginia_state_income_withholding': va_virginia_state_income_withholding,
             'wa_washington_fml_er': wa_washington_fml_er,
             'wa_washington_fml_ee': wa_washington_fml_ee,
+            'wi_wisconsin_state_income_withholding': wi_wisconsin_state_income_withholding,
         })
         return res
 
