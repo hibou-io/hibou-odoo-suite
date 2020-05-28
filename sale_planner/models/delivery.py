@@ -50,8 +50,12 @@ class DeliveryCarrier(models.Model):
             elif rate.get('transit_days'):
                 rate['date_delivered'] = self.calculate_date_delivered(date_planned, rate.get('transit_days'))
         elif rate:
-            if rate.get('date_delivered'):
-                rate.pop('date_delivered')
+            date_delivered = rate.get('date_delivered')
+            if date_delivered and not rate.get('transit_days'):
+                # we could have a date delivered based on shipping it "now"
+                # so we can still calculate the transit days
+                rate['transit_days'] = self.calculate_transit_days(fields.Datetime.now(), date_delivered)
+                rate.pop('date_delivered')  # because we don't have a date_planned, we cannot have a guarenteed delivery
 
         return rate
 
