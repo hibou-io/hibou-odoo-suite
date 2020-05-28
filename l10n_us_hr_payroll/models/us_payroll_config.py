@@ -267,3 +267,10 @@ class HRContractUSPayrollConfig(models.Model):
         ('married', 'Married'),
     ], string='Wisconsin WT-4 Filing Status', help='WI WT-4')
     wi_wt4_sit_exemptions = fields.Integer(string='Wisconsin Exemptions', help='WI WT-4 1.(d)')
+
+    wv_it104_sit_filing_status = fields.Selection([
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('head_household', 'Head of Household')
+    ], string='West Virginia WV/IT-104 Filing Status', help='WV WV/IT-104')
+    wv_it104_sit_exemptions = fields.Integer(string='West Virginia Exemptions', help='WV WV/IT-104 4.')

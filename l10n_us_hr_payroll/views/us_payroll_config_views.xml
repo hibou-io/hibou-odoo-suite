@@ -274,6 +274,12 @@
                             <p colspan="2"><h3>No additional fields.</h3></p>
                             <p colspan="2">Ensure that your Employee and Employer workers' comp code fields are filled in for WA LNI withholding.</p>
                         </group>
+                        <group name="state_wv_west_virginia" string="WV West Virginia" attrs="{'invisible':[('state_id', '!=', %(base.state_us_49)s)]}">
+                            <p colspan="2"><h3>Form WV/IT-104 - State Income Tax</h3></p>
+                            <field name="wv_it104_sit_filing_status" string="Filing Status"/>
+                            <field name="wv_it104_sit_exemptions" string="Exemptions 4."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 6."/>
+                        </group>
                         <group name="state_wi_wisconsin" string="WI Wisconsin" attrs="{'invisible':[('state_id', '!=', %(base.state_us_50)s)]}">
                             <p colspan="2"><h3>Form WT-4 - State Income Tax</h3></p>
                             <field name="wi_wt4_sit_filing_status" string="Filing Status"/>
