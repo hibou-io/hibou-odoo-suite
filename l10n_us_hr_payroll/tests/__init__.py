@@ -97,6 +97,8 @@ from . import test_us_ok_oklahoma_payslip_2020
 from . import test_us_pa_pennsylvania_payslip_2019
 from . import test_us_pa_pennsylvania_payslip_2020
 
+from . import test_us_ri_rhode_island_payslip_2020
+
 from . import test_us_sc_south_carolina_payslip_2019
 from . import test_us_sc_south_carolina_payslip_2020
 

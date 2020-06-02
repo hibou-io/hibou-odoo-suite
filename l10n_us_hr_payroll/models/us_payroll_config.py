@@ -242,6 +242,9 @@ class HRContractUSPayrollConfig(models.Model):
         ('head_household', 'Head of Household')
     ], string='Oklahoma OK-W-4 Filing Status', help='OK-W-4')
     ok_w4_sit_allowances = fields.Integer(string='Oklahoma OK-W-4 Allowances', help='OK-W-4 1.2.3.')
+
+    ri_w4_sit_allowances = fields.Integer(string='Rhode Island RI W-4 Allowances', help='RI W-4 1.')
+
     sc_w4_sit_allowances = fields.Integer(string='South Carolina SC W-4 Allowances', help='SC W-4 5.')
 
     ut_w4_sit_filing_status = fields.Selection([
