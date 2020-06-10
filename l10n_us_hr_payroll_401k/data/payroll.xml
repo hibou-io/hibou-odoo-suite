@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_ira_provider" model="res.partner">
+        <field name="name">IRA Provider</field>
+        <field name="supplier_rank">1</field>
+    </record>
+
+    <!-- Rule Parameters -->
+    <record id="rule_parameter_ee_401k_contribution_limit" model="hr.rule.parameter">
+        <field name="name">Employee 401K Contribution Limit</field>
+        <field name="code">ee_401k_contribution_limit</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_ee_401k_contribution_limit_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">19500.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ee_401k_contribution_limit"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ee_401k_catchup" model="hr.rule.parameter">
+        <field name="name">Employee 401K Catch-up</field>
+        <field name="code">ee_401k_catchup</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_ee_401k_catchup_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">6500.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ee_401k_catchup"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_er_401k_contribution_limit" model="hr.rule.parameter">
+        <field name="name">Employer 401K Contribution Limit</field>
+        <field name="code">er_401k_contribution_limit</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_er_401k_contribution_limit_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">37500.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_er_401k_contribution_limit"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_er_401k_match_percent" model="hr.rule.parameter">
+        <field name="name">Employer 401K Match (%)</field>
+        <field name="code">er_401k_match_percent</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_er_401k_match_percent_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_er_401k_match_percent"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Categories -->
+    <record id="category_ee_401k_traditional" model="hr.salary.rule.category">
+        <field name="name">EE: 401K Traditional</field>
+        <field name="code">EE_IRA</field>
+        <field name="parent_id" ref="l10n_us_hr_payroll.hr_payroll_category_ded_fit_fica_futa_exempt"/>
+    </record>
+    <record id="category_ee_401k_roth" model="hr.salary.rule.category">
+        <field name="name">EE: 401K Roth</field>
+        <field name="code">EE_IRA_ROTH</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    <!-- It is impossible for only match to meet the limits, but the category exists
+    and the limits are checked against this category. -->
+    <record id="category_er_401k" model="hr.salary.rule.category">
+        <field name="name">ER: 401K Contribution</field>
+        <field name="code">ER_IRA</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <!-- Rules -->
+    <record id="rule_ee_ira" model="hr.salary.rule">
+        <field name="sequence" eval="110"/>
+        <field name="struct_id" ref="l10n_us_hr_payroll.hr_payroll_structure"/>
+        <field name="category_id" ref="category_ee_401k_traditional"/>
+        <field name="name">EE: 401K</field>
+        <field name="code">EE_IRA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = ee_401k(contract.ira_amount, contract.ira_rate, payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = ee_401k(contract.ira_amount, contract.ira_rate, payslip, categories, worked_days, inputs)</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="res_partner_ira_provider"/>
+    </record>
+
+    <record id="rule_ee_ira_roth" model="hr.salary.rule">
+        <field name="sequence" eval="196"/>
+        <field name="struct_id" ref="l10n_us_hr_payroll.hr_payroll_structure"/>
+        <field name="category_id" ref="category_ee_401k_roth"/>
+        <field name="name">EE: 401K Roth</field>
+        <field name="code">EE_IRA_ROTH</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = ee_401k(contract.ira_roth_amount, contract.ira_roth_rate, payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = ee_401k(contract.ira_roth_amount, contract.ira_roth_rate, payslip, categories, worked_days, inputs)</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="res_partner_ira_provider"/>
+    </record>
+
+    <record id="rule_er_ira" model="hr.salary.rule">
+        <field name="sequence" eval="445"/>
+        <field name="struct_id" ref="l10n_us_hr_payroll.hr_payroll_structure"/>
+        <field name="category_id" ref="category_er_401k"/>
+        <field name="name">ER: 401K Match</field>
+        <field name="code">ER_IRA_MATCH</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = er_401k_match(categories.BASIC, payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = er_401k_match(categories.BASIC, payslip, categories, worked_days, inputs)</field>
+        <!-- Normally company contributions are not on Payslip, but this is an additional amount -->
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="res_partner_ira_provider"/>
+    </record>
+
+</odoo>
