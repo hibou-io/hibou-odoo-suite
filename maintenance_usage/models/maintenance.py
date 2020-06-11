@@ -56,7 +56,9 @@ class MaintenanceEquipment(models.Model):
         result = super(MaintenanceEquipment, self).write(values)
         return result
 
-    def _log_usage(self, values={}):
+    def _log_usage(self, values=None):
+        if not values:
+            values = {}
         values['equipment_id'] = self.id
         values['date'] = fields.Datetime.now()
         self.env['maintenance.usage.log'].create(values)
