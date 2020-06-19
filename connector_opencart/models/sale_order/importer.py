@@ -213,7 +213,7 @@ class SaleOrderImporter(Component):
 
     def _partner_matches(self, partner, values):
         for key, value in values.items():
-            if key in ('active', 'parent_id'):
+            if key in ('active', 'parent_id', 'type'):
                 continue
 
             if key == 'state_id':
@@ -227,7 +227,7 @@ class SaleOrderImporter(Component):
         return True
 
     def _make_partner_name(self, firstname, lastname):
-        name = (str(firstname) + ' ' + str(lastname)).strip()
+        name = (str(firstname or '').strip() + ' ' + str(lastname or '').strip()).strip()
         if not name:
             return 'Undefined'
         return name
@@ -295,12 +295,14 @@ class SaleOrderImporter(Component):
 
         if not self._partner_matches(partner, partner_values):
             partner_values['parent_id'] = partner.id
-            partner_values['active'] = False
-            shipping_partner = self._create_partner(copy(partner_values))
+            shipping_values = copy(partner_values)
+            shipping_values['type'] = 'delivery'
+            shipping_partner = self._create_partner(shipping_values)
         else:
             shipping_partner = partner
 
         invoice_values = self._get_partner_values(info_string='payment_')
+        invoice_values['type'] = 'invoice'
 
         if (not self._partner_matches(partner, invoice_values)
                 and not self._partner_matches(shipping_partner, invoice_values)):
@@ -310,8 +312,7 @@ class SaleOrderImporter(Component):
                     invoice_partner = possible
                     break
             else:
-                partner_values['parent_id'] = partner.id
-                partner_values['active'] = False
+                invoice_values['parent_id'] = partner.id
                 invoice_partner = self._create_partner(copy(invoice_values))
         elif self._partner_matches(partner, invoice_values):
             invoice_partner = partner
