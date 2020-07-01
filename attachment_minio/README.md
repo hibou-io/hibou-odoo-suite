@@ -50,3 +50,11 @@ env.cr.commit()
 
 If `attachment_minio` is not already installed, you can then install it and the migration 
 should be noted in the logs.  **Ensure that the timeouts are long enough that the migration can finish.**
+
+### Base Setup
+
+This module utilizes `base_attachment_object_storage`
+
+The System Parameter `ir_attachment.storage.force.database` can be customized to 
+force storage of files in the database. See the documentation of the module 
+`base_attachment_object_storage`.
