@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_task_form2_inherit" model="ir.ui.view">
+        <field name="name">project.task.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='subtask_count']" position="replace">
+                <div class="o_field_widget o_stat_info">
+                    <span class="o_stat_value"><field name="subtask_count_done" widget="statinfo" nolabel="1"/> / <field name="subtask_count" widget="statinfo" nolabel="1"/></span>
+                    <span class="o_stat_text">Sub-Tasks</span>
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='description_page']" position="after">
+                <page name="task_lines" string="Todo List">
+                    <field name="line_ids" widget="one2many_list" context="{'default_task_id': id}">
+                        <tree>
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                            <field name="kanban_state" widget="state_selection" string="Status"/>
+                            <field name="user_id" string="Completed by" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
