@@ -37,14 +37,20 @@ class TestDeliveryHibou(common.TransactionCase):
             'partner_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
-            'carrier_id': self.carrier.id,
             'shipping_account_id': self.shipping_account.id,
             'order_line': [(0, 0, {
                 'product_id': self.product.id,
             })]
         })
-        sale_order.get_delivery_price()
-        sale_order.set_delivery_line()
+        self.assertFalse(sale_order.carrier_id)
+        action = sale_order.action_open_delivery_wizard()
+        form = common.Form(self.env[action['res_model']].with_context(**action.get('context', {})))
+        form.carrier_id = self.carrier
+        wizard = form.save()
+        wizard.button_confirm()
+
+        #sale_order.set_delivery_line()
+        self.assertEqual(sale_order.carrier_id, self.carrier)
         sale_order.action_confirm()
         # Make sure 3rd party Shipping Account is set.
         self.assertEqual(sale_order.shipping_account_id, self.shipping_account)
@@ -140,22 +146,3 @@ class TestDeliveryHibou(common.TransactionCase):
                          picking_in.partner_id)
         self.assertEqual(picking_in.carrier_id.get_recipient(picking=picking_in),
                          picking_in.picking_type_id.warehouse_id.partner_id)
-
-
-
-
-
-
-
-
-
-
-
-        
-
-
-
-
-
-
-
