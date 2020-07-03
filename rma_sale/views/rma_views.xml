@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- RMA Template -->
+    <record id="view_rma_template_form_sale" model="ir.ui.view">
+        <field name="name">rma.template.form.sale</field>
+        <field name="model">rma.template</field>
+        <field name="inherit_id" ref="rma.view_rma_template_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='usage']" position="after">
+                <field name="so_decrement_order_qty" string="Decrement Ordered Qty" attrs="{'invisible': [('usage', '!=', 'sale_order')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- RMA -->
+    <record id="view_rma_rma_form_sale" model="ir.ui.view">
+        <field name="name">rma.rma.form.sale</field>
+        <field name="model">rma.rma</field>
+        <field name="inherit_id" ref="rma.view_rma_rma_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="open_sale_order_rmas" icon="fa-cubes"
+                        type="object" attrs="{'invisible': ['|', ('sale_order_id', '=', False), ('sale_order_rma_count', '&lt;=', 1)]}">
+                    <field name="sale_order_rma_count" string="SO RMAs" widget="statinfo" />
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='template_id']" position="after">
+                <field name="sale_order_id" options="{'no_create': True}" attrs="{'invisible': [('template_usage', '!=', 'sale_order')], 'required': [('template_usage', '=', 'sale_order')], 'readonly': [('state', 'in', ('confirmed', 'done', 'cancel'))]}"/>
+                <br/>
+                <button string="Add lines" type="object" name="action_add_so_lines" attrs="{'invisible': ['|', ('sale_order_id', '=', False), ('state', '!=', 'draft')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_rma_rma_tree_sale" model="ir.ui.view">
+        <field name="name">rma.rma.tree.sale</field>
+        <field name="model">rma.rma</field>
+        <field name="inherit_id" ref="rma.view_rma_rma_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='template_id']" position="after">
+                <field name="sale_order_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_rma_rma_search_sale" model="ir.ui.view">
+        <field name="name">rma.rma.tree.sale</field>
+        <field name="model">rma.rma</field>
+        <field name="inherit_id" ref="rma.view_rma_rma_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='template_id']" position="after">
+                <field name="sale_order_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem
+        action="rma.action_rma_rma"
+        id="menu_action_sales_rma_form"
+        parent="sale.sale_order_menu"
+        sequence="12"
+        />
+
+    <menuitem
+        action="rma.action_rma_template_form"
+        id="menu_action_sales_rma_template_form"
+        parent="sale.menu_sale_config"
+        sequence="12"
+        />
+    <menuitem
+        action="rma.action_rma_tag_form"
+        id="menu_action_sales_rma_tag_form"
+        parent="sale.menu_sale_config"
+        sequence="12"
+        />
+</odoo>
