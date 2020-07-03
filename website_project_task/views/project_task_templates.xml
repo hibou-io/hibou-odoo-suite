@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_task_form2_inherit" model="ir.ui.view">
+        <field name="name">project.task.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="preview_task" type="object" class="oe_stat_button" icon="fa-globe icon">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Task</span>
+                        <span class="o_stat_text">Preview</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+
+    <template id="my_tasks" inherit_id='project.portal_my_tasks' name="Stage Colors etc.">
+        <xpath expr="//td/span[hasclass('badge-info')]" position="attributes">
+            <attribute name="t-attf-class">badge badge-pill badge-info stage stage-{{ task.stage_id.name }}</attribute>
+        </xpath>
+    </template>
+
+
+    <template id="task_tag_grid" inherit_id='project.portal_my_tasks' customize_show="True" name="Task Tags on table">
+        <xpath expr="//t/t/t/t/thead/tr/th[1]" position="attributes">
+            <attribute name="class">col-md-8</attribute>
+        </xpath>
+        <xpath expr="//t/t/t/t/thead/tr/th[2]" position="after">
+            <th>Tags</th>
+        </xpath>
+        <!-- Strange number of columns -->
+        <xpath expr="//tbody/t/tr/td[1]" position="after">
+            <td>
+                <t t-foreach="task.tag_ids" t-as="tag">
+                    <span t-attf-class="label tag tag-color-{{ tag.color }} tag-{{ tag.name }}"><t t-esc="tag.name"/></span>
+                </t>
+            </td>
+        </xpath>
+    </template>
+
+    <template id="my_task" inherit_id='project.portal_my_task' name="Stage Colors etc.">
+        <xpath expr="//span[hasclass('badge-info')]" position="attributes">
+            <attribute name="t-attf-class">badge badge-pill badge-info stage stage-{{ task.stage_id.name }}</attribute>
+        </xpath>
+        <xpath expr="//h4" position="after">
+            <p t-if="task.tag_ids">
+                <span t-foreach="task.tag_ids" t-as="tag" t-attf-class="label tag tag-color-{{ tag.color }} tag-{{ tag.name }}" t-field="tag.name" />
+            </p>
+        </xpath>
+    </template>
+
+    <template id="my_task_todo" inherit_id='project.portal_my_task' name="Todo List (requires project_task_line)" customize_show="True" active="False">
+        <xpath expr="//div[@t-if='task.description']" position="before">
+            <t t-if="task.sudo().line_ids">
+                <div class="col-md-12">
+                    <strong>Todo List</strong>
+                    <ul class="list-unstyled">
+                        <li t-foreach="task.sudo().line_ids" t-as="line">
+                            <span t-if="line.kanban_state == 'normal'" class="text-muted"><i class="fa fa-circle"></i></span>
+                            <span t-if="line.kanban_state == 'done'" class="text-success"><i class="fa fa-check-circle"></i></span>
+                            <span t-if="line.kanban_state == 'blocked'" class="text-danger"><i class="fa fa-times-circle"></i></span>
+                            <span t-field="line.name"/>
+                        </li>
+                    </ul>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>
