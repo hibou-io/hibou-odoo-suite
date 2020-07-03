@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- New -->
+    <template id="portal_new" name="New Product Core RMA">
+        <t t-call="portal.portal_layout">
+            <div id="optional_placeholder"></div>
+            <div class="container">
+                <t t-call="rma.portal_rma_error"/>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h4>
+                                    <span t-esc="rma_template.name"/>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p t-if="not rma_product_core_lines">No product cores in your purchase history.</p>
+                        <form t-if="rma_product_core_lines" method="post" t-attf-action="/my/rma/new/#{rma_template.id}/res/1">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="row">
+                                <div class="col-lg-5">
+                                    <strong>Product</strong>
+                                </div>
+                                <div class="col-lg-2 text-right">
+                                    <strong>Qty. Ordered</strong>
+                                </div>
+                                <div class="col-lg-2 text-right">
+                                    <strong>Qty. Invoiced</strong>
+                                </div>
+                                <div class="col-lg-2 text-right">
+                                    <strong>Qty. Delivered</strong>
+                                </div>
+                                <div class="col-lg-1 text-right">
+                                    <strong>Qty. to Return</strong>
+                                </div>
+                            </div>
+                            <t t-foreach="rma_product_core_lines" t-as="product">
+                                <t t-set="core_lines" t-value="rma_product_core_lines[product]"/>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-lg-1 text-center">
+                                        <img t-attf-src="/web/image/product.product/#{product.id}/image_64"
+                                             width="64" alt="Product image"></img>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <span t-esc="product.name"/>
+                                        <button class="btn btn-secondary btn-sm float-right" type="button" data-toggle="collapse" t-attf-data-target="#product_detail_#{product.id}" aria-expanded="false" aria-controls="collapseExample">
+                                            <span class="fa fa-info-circle"/>
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-2 text-right">
+                                        <span t-esc="core_lines['qty_ordered']"/>
+                                    </div>
+                                    <div class="col-lg-2 text-right">
+                                        <span t-esc="core_lines['qty_invoiced']"/>
+                                    </div>
+                                    <div class="col-lg-2 text-right">
+                                        <span t-esc="core_lines['qty_delivered']"/>
+                                    </div>
+                                    <div class="col-lg-1 text-right">
+                                        <input type="text"  t-attf-name="product_#{product.id}" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="collapse text-muted" t-attf-id="product_detail_#{product.id}">
+                                    <div class="row" t-foreach="core_lines['lines']" t-as="l">
+                                        <t t-set="validity" t-value="float(l.core_line_id.product_id.product_core_validity)"/>
+                                        <t t-set="partition_date" t-value="current_date - relativedelta(days=validity)"/>
+                                        <div class="col-lg-3">
+                                            <span t-field="l.order_id"/>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <span t-field="l.order_id.date_order"
+                                                  t-attf-class="#{'text-danger' if l.order_id.date_order &lt; partition_date else 'text-success'}"
+                                                  t-options='{"widget": "date"}'/>
+                                        </div>
+                                        <div class="col-lg-2 text-right">
+                                            <span t-esc="l.product_uom_qty"/>
+                                        </div>
+                                        <div class="col-lg-2 text-right">
+                                            <span t-esc="l.qty_invoiced"/>
+                                        </div>
+                                        <div class="col-lg-2 text-right">
+                                            <span t-esc="l.qty_delivered"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                            <input type="submit" class="btn btn-primary mt16 float-right" name="submit"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure mb32"/>
+        </t>
+    </template>
+</odoo>
