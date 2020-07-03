@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_rma_rma_inherit" inherit_id="rma.portal_my_rma_rma">
+        <xpath expr="//div[hasclass('rma-details')]" position="inside">
+            <div t-if="rma.sale_order_id" class="mb8">
+                <strong>Sale Order:</strong>
+                <span t-esc="rma.sale_order_id.name"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- New -->
+    <template id="portal_new_sale_order" name="New Sale Order RMA">
+        <t t-call="portal.portal_layout">
+            <div id="optional_placeholder"></div>
+            <div class="container">
+                <t t-call="rma.portal_rma_error"/>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h4>
+                                    <span t-esc="rma_template.name"/>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul t-if="rma_sale_orders" class="list-group">
+                            <li class="list-group-item" t-foreach="rma_sale_orders" t-as="s">
+                                <a t-attf-href="/my/rma/new/#{rma_template.id}/res/#{s.id}">
+                                    <span t-esc="s.name"/> - Order Date: <span t-field="s.date_order"/>
+                                </a>
+                            </li>
+                        </ul>
+                        <p t-if="not rma_sale_orders and not rma_sale_order">No Sale Orders to choose from.</p>
+                        <form t-if="rma_sale_order" method="post" t-attf-action="/my/rma/new/#{rma_template.id}/res/#{rma_sale_order.id}">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <strong>Product</strong>
+                                </div>
+                                <div class="col-lg-3">
+                                    <strong>Description</strong>
+                                </div>
+                                <div class="col-lg-2 text-right">
+                                    <strong>Qty. Ordered</strong>
+                                </div>
+                                <div class="col-lg-2 text-right">
+                                    <strong>Qty. Delivered</strong>
+                                </div>
+                                <div class="col-lg-1 text-right">
+                                    <strong>Qty. to Return</strong>
+                                </div>
+                            </div>
+                            <t t-foreach="rma_sale_order.order_line" t-as="line">
+                                <t t-set="validity" t-value="rma_template._rma_sale_line_validity(line)"/>
+                                <div class="row" t-attf-class="row #{'' if validity == 'valid' else 'text-muted'}">
+                                    <div class="col-lg-1 text-center">
+                                        <img t-attf-src="/web/image/product.product/#{line.product_id.id}/image_64"
+                                             width="64" alt="Product image"></img>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <span t-esc="line.product_id.name"/>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <span t-esc="line.name"/>
+                                    </div>
+                                    <div class="col-lg-2 text-right">
+                                        <span t-esc="line.product_uom_qty"/>
+                                    </div>
+                                    <div class="col-lg-2 text-right">
+                                        <span t-esc="line.qty_delivered"/>
+                                    </div>
+                                    <div class="col-lg-1 text-right" t-if="validity == 'valid'">
+                                        <input type="text"  t-attf-name="line_#{line.id}" class="form-control"/>
+                                    </div>
+                                    <div class="col-lg-1 text-left" t-else="">
+                                        <span t-if="validity == 'expired'">Expired</span>
+                                        <span t-else="">Not Eligible</span>
+                                    </div>
+                                </div>
+                            </t>
+                            <input type="submit" class="btn btn-primary mt16 float-right" name="submit"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure mb32"/>
+        </t>
+    </template>
+
+
+</odoo>
