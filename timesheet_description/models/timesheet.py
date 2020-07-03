@@ -11,7 +11,6 @@ class AnalyticLine(models.Model):
 
     name_markdown = fields.Html(compute='_compute_name_markdown')
 
-    @api.multi
     def _compute_name_markdown(self):
         if not markdown:
             for line in self:
