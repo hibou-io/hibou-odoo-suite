@@ -2,10 +2,10 @@
 
 {
     'name': 'Hibou RMAs for Sale Orders',
-    'version': '12.0.1.1.0',
+    'version': '13.0.1.1.0',
     'category': 'Sale',
-    'author': "Hibou Corp.",
-    'license': 'AGPL-3',
+    'author': 'Hibou Corp.',
+    'license': 'OPL-1',
     'website': 'https://hibou.io/',
     'depends': [
         'rma',
