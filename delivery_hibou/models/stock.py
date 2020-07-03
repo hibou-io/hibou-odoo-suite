@@ -12,7 +12,6 @@ class StockPicking(models.Model):
         ], string='Require Insurance', default='auto',
         help='If your carrier supports it, auto should be calculated off of the "Automatic Insurance Value" field.')
 
-    @api.one
     @api.depends('move_lines.priority', 'carrier_id')
     def _compute_priority(self):
         if self.carrier_id.procurement_priority:
@@ -38,7 +37,6 @@ class StockPicking(models.Model):
             # Assume Full Value
             cost = sum([(l.product_id.standard_price * l.product_uom_qty) for l in self.move_lines] or [0.0])
         return cost
-
 
 
 class StockMove(models.Model):
