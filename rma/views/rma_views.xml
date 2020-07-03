@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rma_rma_form" model="ir.ui.view">
+        <field name="name">rma.rma.form</field>
+        <field name="model">rma.rma</field>
+        <field name="arch" type="xml">
+            <form string="RMA" class="oe_form_nomargin">
+                <header>
+                    <button name="action_confirm" string="Confirm" class="btn-primary" type="object" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_done" string="Done" class="btn-primary" type="object" attrs="{'invisible': [('state', '!=', 'confirmed')]}"/>
+                    <button name="action_draft" string="Set Draft" class="btn-default" type="object" attrs="{'invisible': [('state', 'not in', ('cancel', 'expired'))]}"/>
+                    <button name="action_cancel" string="Cancel" class="btn-default" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'done'))]}"/>
+                    <field name="state" widget="statusbar" on_change="1" modifiers="{'readonly': true}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="open_stock_picking_rmas" icon="fa-cubes"
+                                type="object" attrs="{'invisible': ['|', ('stock_picking_id', '=', False), ('stock_picking_rma_count', '&lt;=', 1)]}">
+                            <field name="stock_picking_rma_count" string="Pick RMAs" widget="statinfo" />
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" modifiers="{'readonly': true, 'required': true}"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="template_usage" invisible="1"/>
+                            <field name="template_create_in_picking" invisible="1"/>
+                            <field name="template_create_out_picking" invisible="1"/>
+                            <field name="template_id" options="{'no_create': True}" attrs="{'readonly': [('state', 'in', ('confirmed', 'done', 'cancel'))]}"/>
+                            <field name="stock_picking_id" options="{'no_create': True}" attrs="{'invisible': [('template_usage', '!=', 'stock_picking')], 'required': [('template_usage', '=', 'stock_picking')], 'readonly': [('state', 'in', ('confirmed', 'done', 'cancel'))]}"/>
+                            <br/>
+                            <button string="Add lines" type="object" name="action_add_picking_lines" attrs="{'invisible': ['|', ('stock_picking_id', '=', False), ('state', '!=', 'draft')]}"/>
+                        </group>
+                        <group>
+                            <field name="validity_date"/>
+                            <field name="tag_ids" widget="many2many_tags" placeholder="Tags" options="{'no_create': True}"/>
+                            <field name="partner_id" options="{'no_create_edit': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="partner_shipping_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="initial_in_picking_carrier_id" attrs="{'invisible': [('template_create_in_picking', '=', False)]}"/>
+                            <field name="initial_out_picking_carrier_id" attrs="{'invisible': [('template_create_out_picking', '=', False)]}"/>
+                            <field name="company_id" options="{'no_create': True}"/>
+                        </group>
+                        <group name="invoices" string="Invoices" colspan="4" attrs="{'invisible': [('invoice_ids', '=', False), ('state', '!=', 'done')]}">
+                            <field name="invoice_ids" nolabel="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Internal Instructions">
+                            <field name="description" readonly="1"/>
+                        </page>
+                        <page string="Customer Instructions">
+                            <field name="customer_description" readonly="1"/>
+                        </page>
+                    </notebook>
+                    <notebook>
+                        <page string="RMA Lines">
+                            <field name="lines" attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                <tree editable="bottom">
+                                    <field name="rma_template_usage" invisible="1"/>
+                                    <field name="product_id" attrs="{'readonly': [('rma_template_usage', '!=', False)]}"/>
+                                    <field name="product_uom_qty" attrs="{'readonly': [('rma_template_usage', '!=', False)]}"/>
+                                    <field name="product_uom_id" attrs="{'readonly': [('rma_template_usage', '!=', False)]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <sheet attrs="{'invisible': [('in_picking_id', '=', False)]}">
+                    <header>
+                        <field name="in_picking_state" widget="statusbar" on_change="1" modifiers="{'readonly': true}"/>
+                    </header>
+                    <div class="oe_title">
+                        <h2>Inbound Picking:</h2>
+                        <h1>
+                            <field name="in_picking_id" readonly="1" modifiers="{'readonly': true}"/>
+                        </h1>
+                        <p>
+                            <field name="in_label_url" attrs="{'invisible': [('in_label_url', '=', False)]}"/>
+                        </p>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="in_picking_carrier_id" string="Carrier"/>
+                            <field name="in_carrier_tracking_ref" string="Tracking"/>
+                            <button string="Generate Label" type="object" name="action_in_picking_send_to_shipper" attrs="{'invisible': ['|', ('in_carrier_tracking_ref', '!=', False), ('in_picking_carrier_id', '=', False)]}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <sheet attrs="{'invisible': [('out_picking_id', '=', False)]}">
+                    <header>
+                        <field name="out_picking_state" widget="statusbar" on_change="1" modifiers="{'readonly': true}"/>
+                    </header>
+                    <div class="oe_title">
+                        <h2>Outbound Picking:</h2>
+                        <h1>
+                            <field name="out_picking_id" readonly="1" modifiers="{'readonly': true}"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="out_picking_carrier_id" string="Carrier"/>
+                            <field name="out_carrier_tracking_ref" string="Tracking"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rma_rma_tree" model="ir.ui.view">
+        <field name="name">rma.rma.tree</field>
+        <field name="model">rma.rma</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'" decoration-muted="state in ('cancel', 'done')" decoration-warning="validity_date and validity_date &lt; current_date">
+                <field name="name"/>
+                <field name="template_id"/>
+                <field name="stock_picking_id"/>
+                <field name="partner_id"/>
+                <field name="create_date"/>
+                <field name="validity_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_rma_rma_search" model="ir.ui.view">
+        <field name="name">rma.rma.search</field>
+        <field name="model">rma.rma</field>
+        <field name="arch" type="xml">
+            <search string="Search RMA">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="template_id"/>
+                <field name="stock_picking_id"/>
+                <separator/>
+                <filter string="New" name="new" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Expired" name="expired" domain="[('validity_date', '!=', False),('validity_date', '&lt;', datetime.datetime.now())]"/>
+                <group expand="0" name="group_by" string="Group By">
+                    <filter name="group_state" string="State" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter name="group_template" string="Template" domain="[]" context="{'group_by': 'template_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_rma_template_form" model="ir.ui.view">
+        <field name="name">rma.template.form</field>
+        <field name="model">rma.template</field>
+        <field name="arch" type="xml">
+            <form string="RMA Template" class="oe_form_nomargin">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+
+                    </div>
+                    <group>
+                        <group>
+                            <field name="usage"/>
+                            <field name="valid_days"/>
+                            <field name="automatic_expire"/>
+                            <field name="company_id" options="{'no_create': True}"/>
+                            <field name="portal_ok"/>
+                            <field name="invoice_done" help="This feature is implemented in specific RMA types automatically when enabled."/>
+                        </group>
+                        <group>
+                            <field name="responsible_user_ids" domain="[('share', '=', False)]" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="create_in_picking"/>
+                            <field name="in_type_id" attrs="{'invisible': [('create_in_picking', '=', False)]}"/>
+                            <field name="in_location_id" attrs="{'invisible': [('create_in_picking', '=', False)]}"/>
+                            <field name="in_location_dest_id" attrs="{'invisible': [('create_in_picking', '=', False)]}"/>
+                            <field name="in_carrier_id" attrs="{'invisible': [('create_in_picking', '=', False)]}"/>
+                            <field name="in_require_return" attrs="{'invisible': [('create_in_picking', '=', False)]}"/>
+                            <field name="in_procure_method" attrs="{'invisible': [('create_in_picking', '=', False)]}"/>
+                            <field name="in_to_refund" attrs="{'invisible': [('create_in_picking', '=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="create_out_picking"/>
+                            <field name="out_type_id" attrs="{'invisible': [('create_out_picking', '=', False)]}"/>
+                            <field name="out_location_id" attrs="{'invisible': [('create_out_picking', '=', False)]}"/>
+                            <field name="out_location_dest_id" attrs="{'invisible': [('create_out_picking', '=', False)]}"/>
+                            <field name="out_carrier_id" attrs="{'invisible': [('create_out_picking', '=', False)]}"/>
+                            <field name="out_require_return" attrs="{'invisible': [('create_out_picking', '=', False)]}"/>
+                            <field name="out_procure_method" attrs="{'invisible': [('create_out_picking', '=', False)]}"/>
+                            <field name="out_to_refund" attrs="{'invisible': [('create_out_picking', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Internal Instructions">
+                            <field name="description"/>
+                        </page>
+                        <page string="Customer Instructions">
+                            <field name="customer_description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rma_template_tree" model="ir.ui.view">
+        <field name="name">rma.template.tree</field>
+        <field name="model">rma.template</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="usage"/>
+                <field name="create_in_picking"/>
+                <field name="create_out_picking"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="action_rma_rma" model="ir.actions.act_window">
+        <field name="name">RMA</field>
+        <field name="res_model">rma.rma</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        action="action_rma_rma"
+        name="RMA"
+        id="menu_rma"
+        web_icon="fa fa-cubes,#FFFFFF,#EB5A46"
+        sequence="10"
+        />
+    <menuitem
+        action="action_rma_rma"
+        id="menu_rma_rmas"
+        parent="menu_rma"
+        sequence="10"
+        />
+    <menuitem
+        id="menu_rma_configuration"
+        name="Configuration"
+        parent="menu_rma"
+        sequence="100"
+        />
+
+
+    <record id="action_rma_tag_form" model="ir.actions.act_window">
+        <field name="name">RMA Tag</field>
+        <field name="res_model">rma.tag</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_rma_template_form" model="ir.actions.act_window">
+        <field name="name">RMA Templates</field>
+        <field name="res_model">rma.template</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="menu_rma_configuation_rma_template_form"
+        name="Templates"
+        action="action_rma_template_form"
+        parent="menu_rma_configuration"
+        sequence="21"
+        />
+    <menuitem
+        id="menu_rma_configuation_rma_tag_form"
+        name="Tags"
+        action="action_rma_tag_form"
+        parent="menu_rma_configuration"
+        sequence="25"
+        />
+
+
+
+
+</odoo>

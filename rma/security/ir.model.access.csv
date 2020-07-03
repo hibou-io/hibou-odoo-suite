@@ -1,0 +1,10 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"manage_rma stock","manage rma","model_rma_rma","stock.group_stock_user",1,1,1,1
+"manage_rma_line stock","manage rma line","model_rma_line","stock.group_stock_user",1,1,1,1
+"manage_rma_template stock","manage rma template","model_rma_template","stock.group_stock_manager",1,1,1,1
+"manage_rma_tag stock","manage rma tag","model_rma_tag","stock.group_stock_manager",1,1,1,1
+"access_rma_template stock","access rma template","model_rma_template","stock.group_stock_user",1,1,0,0
+"access_rma_tag stock","access rma tag","model_rma_tag","stock.group_stock_user",1,0,0,0
+access_rma_portal,rma.rma.portal,rma.model_rma_rma,base.group_portal,1,0,0,0
+access_rma_line_portal,rma.line.portal,rma.model_rma_line,base.group_portal,1,0,0,0
+access_rma_template_portal,rma.template.portal,rma.model_rma_template,base.group_portal,1,0,0,0
