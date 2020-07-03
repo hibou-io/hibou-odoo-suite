@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="portal_my_task_markdown" inherit_id='project.portal_my_task' customize_show="True" name="Timesheet Use Markdown">
+        <xpath expr="//t[@t-esc='timesheet.name']" position="replace">
+            <div t-if="timesheet.name_markdown" t-field="timesheet.name_markdown" />
+            <t t-else="" t-esc="timesheet.name" />
+        </xpath>
+    </template>
+</odoo>
