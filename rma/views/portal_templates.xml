@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_home_menu_rma" name="Portal layout : RMA menu entries"
+              inherit_id="portal.portal_breadcrumbs" priority="20">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'rma' or rma or rma_template" t-attf-class="breadcrumb-item #{'active ' if not rma else ''}">
+                <a t-if="rma" t-attf-href="/my/rma?{{ keep_query() }}">RMA</a>
+                <t t-else="">RMA</t>
+            </li>
+            <li t-if="rma" class="breadcrumb-item active">
+                <t t-esc="rma.name"/>
+            </li>
+            <li t-if="rma_template" class="breadcrumb-item active">
+               <a t-attf-href="/my/rma/new/#{rma_template.id}">
+                    New "<t t-esc="rma_template.name"/>"
+               </a>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_rma" name="Portal My Home : RMA entry" inherit_id="portal.portal_my_home"
+              priority="20">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">RMA</t>
+                <t t-set="url" t-value="'/my/rma'"/>
+                <t t-set="count" t-value="rma_count"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_rma" name="Portal: My RMAs">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">RMA</t>
+            </t>
+            <t t-if="rma_list" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>RMA #</th>
+                        <th>Submitted Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="rma_list" t-as="rma">
+                        <tr>
+                            <td>
+                                <a t-attf-href="/my/rma/#{rma.id}?#{keep_query()}">
+                                    <t t-esc="rma.name"/>
+                                </a>
+                            </td>
+                            <td>
+                                <span t-field="rma.create_date"/>
+                            </td>
+                            <td>
+                                <span t-field="rma.state"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+            <div t-if="rma_templates" class="row">
+                <div class="col-12">
+                    <button class="create-rma btn btn-primary mt8" data-toggle="modal" data-target="#create-rma">Create New RMA</button>
+                </div>
+            </div>
+
+            <div t-if="rma_templates" role="dialog" class="modal fade" id="create-rma">
+                <div class="modal-dialog">
+                    <form id="create" class="modal-content">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <header class="modal-header">
+                            <h4 class="modal-title">Create RMA</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                        </header>
+                        <main class="modal-body">
+                            <ul class="list-group">
+                                <li class="list-group-item" t-foreach="rma_templates" t-as="template">
+                                    <a t-attf-href="/my/rma/new/#{template.id}">
+                                        <span t-esc="template.name"/>
+                                    </a>
+                                </li>
+                            </ul>
+                        </main>
+                        <footer class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        </footer>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_my_rma_rma" name="Portal: My RMA">
+        <t t-call="portal.portal_layout">
+            <div id="optional_placeholder"></div>
+            <div class="container">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h4>
+                                    <t t-if="rma.state == 'draft'">
+                                        Submitted -
+                                    </t>
+                                    <span t-esc="rma.name"/> - <span t-field="rma.state"/>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="rma-details">
+                            <div class="mb8">
+                                <strong>Submitted Date:</strong>
+                                <span t-field="rma.create_date" t-options='{"widget": "date"}'/>
+                            </div>
+                            <div t-if="rma.validity_date" class="mb8">
+                                <strong>Validity Date:</strong>
+                                <span t-attf-class="#{'text-danger' if rma.validity_date &lt; current_date else 'text-warning'}"
+                                      t-field="rma.validity_date" t-options='{"widget": "date"}'/>
+                            </div>
+                            <div t-if="rma.stock_picking_id" class="mb8">
+                                <strong>Transfer:</strong>
+                                <span t-esc="rma.stock_picking_id.name"/>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <strong>Product</strong>
+                            </div>
+                            <div class="col-lg-2 text-right">
+                                <strong>Quantity</strong>
+                            </div>
+                        </div>
+                        <t t-foreach="rma.lines" t-as="line">
+                            <div class="row purchases_vertical_align">
+                                <div class="col-lg-3 text-center">
+                                    <img t-attf-src="/web/image/product.product/#{line.product_id.id}/image_64"
+                                         width="64" alt="Product image"></img>
+                                </div>
+                                <div class="col-lg-7">
+                                    <span t-esc="line.product_id.name"/>
+                                </div>
+                                <div class="col-lg-2 text-right">
+                                    <span t-esc="line.product_uom_qty"/>
+                                </div>
+                            </div>
+                        </t>
+
+                        <!-- Return Label -->
+                        <t t-if="rma.in_label_url">
+                            <hr/>
+                            <a t-attf-href="#{rma.in_label_url}">Download Your Return Label</a>
+                        </t>
+
+                        <!-- Customer Instructions -->
+                        <t t-if="rma.customer_description">
+                            <hr/>
+                            <div class="row">
+                                <div class="col-12">
+                                    <h3>Customer Instructions</h3>
+                                    <div t-raw="rma.customer_description"/>
+                                </div>
+                            </div>
+                        </t>
+
+                        <hr/>
+                        <!-- chatter -->
+                        <div id="rma_communication" class="mt-4">
+                            <h2>Communication</h2>
+                            <t t-call="portal.message_thread">
+                                <t t-set="object" t-value="rma"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure mb32"/>
+        </t>
+    </template>
+
+    <template id="portal_rma_error" name="RMA Error">
+        <t t-if="error">
+            <div class="alert alert-danger text-left mt16" role="alert">
+                <t t-esc="error"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- New -->
+    <template id="portal_new_stock_picking" name="New Transfer RMA">
+        <t t-call="portal.portal_layout">
+            <div id="optional_placeholder"></div>
+            <div class="container">
+                <t t-call="rma.portal_rma_error"/>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h4>
+                                    <span t-esc="rma_template.name"/>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul t-if="pickings" class="list-group">
+                            <li class="list-group-item" t-foreach="pickings" t-as="p">
+                                <a t-attf-href="/my/rma/new/#{rma_template.id}/res/#{p.id}">
+                                    <span t-esc="p.name"/>
+                                </a>
+                            </li>
+                        </ul>
+                        <p t-if="not pickings and not picking">No Transfers to choose from.</p>
+                        <form t-if="picking" method="post" t-attf-action="/my/rma/new/#{rma_template.id}/res/#{picking.id}">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <strong>Product</strong>
+                                </div>
+                                <div class="col-lg-4">
+                                    <strong>Description</strong>
+                                </div>
+                                <div class="col-lg-2 text-right">
+                                    <strong>Quantity Ordered</strong>
+                                </div>
+                                <div class="col-lg-2 text-right">
+                                    <strong>Quantity Delivered</strong>
+                                </div>
+                                <div class="col-lg-2 text-right">
+                                    <strong>Quantity to Return</strong>
+                                </div>
+                            </div>
+                            <t t-foreach="picking.move_lines" t-as="line">
+                                <div class="row purchases_vertical_align">
+                                    <div class="col-lg-2 text-center">
+                                        <img t-attf-src="/web/image/product.product/#{line.product_id.id}/image_64"
+                                             width="64" alt="Product image"></img>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <span t-esc="line.product_id.name"/>
+                                    </div>
+                                    <div class="col-lg-2 text-right">
+                                        <span t-esc="line.product_uom_qty"/>
+                                    </div>
+                                    <div class="col-lg-2 text-right">
+                                        <span t-esc="line.product_qty"/>
+                                    </div>
+                                    <div class="col-lg-2 text-right">
+                                        <input type="text"  t-attf-name="move_#{line.id}" class="form-control"/>
+                                    </div>
+                                </div>
+                            </t>
+                            <input type="submit" class="btn btn-primary mt16 float-right" name="submit"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure mb32"/>
+        </t>
+    </template>
+
+
+</odoo>
