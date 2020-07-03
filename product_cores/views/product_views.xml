@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="product_template_only_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.template.product.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <div>
+                    <field name="core_ok"/>
+                    <label for="core_ok"/>
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='inventory']" position="inside">
+                <group name="cores" string="Cores" attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}">
+                    <field name="product_core_service_id" domain="[('product_tmpl_id.core_ok', '=', True)]" context="{'default_core_ok': True}"/>
+                    <field name="product_core_id" domain="[('product_tmpl_id.core_ok', '=', True)]" context="{'default_core_ok': True}"/>
+                    <field name="product_core_validity"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_normal_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.product.form.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <div>
+                    <field name="core_ok"/>
+                    <label for="core_ok"/>
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='inventory']" position="inside">
+                <group name="cores" string="Cores">
+                    <field name="product_core_service_id" domain="[('product_tmpl_id.core_ok', '=', True)]" context="{'default_core_ok': True}"/>
+                    <field name="product_core_id" domain="[('product_tmpl_id.core_ok', '=', True)]" context="{'default_core_ok': True}"/>
+                    <field name="product_core_validity"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- product.supplierinfo -->
+    <record id="product_supplierinfo_tree_view_inherit" model="ir.ui.view">
+        <field name="name">product.supplierinfo.tree.view.inherit</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="product_core_service_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_supplierinfo_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.supplierinfo.form.view.inherit</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="product_core_service_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
