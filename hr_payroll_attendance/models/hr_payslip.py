@@ -50,10 +50,10 @@ class HrPayslip(models.Model):
         work_data = self._pre_aggregate_attendance_data()
         processed_data = self.aggregate_overtime(work_data)
 
-        # TODO is it appropriate to remove all lines? Ideally we would only remove the old type.
         lines_to_keep = self.worked_days_line_ids.filtered(lambda x: x.work_entry_type_id not in types_to_remove)
-        work_lines_vals = [(5, 0, 0)] + [(4, line.id, False) for line in lines_to_keep]
-        # work_lines_vals = [(5, 0, 0)]
+        # Note that [(5, 0, 0)] + [(4, 999, 0)], will not work
+        work_lines_vals = [(3, line.id, False) for line in (self.worked_days_line_ids - lines_to_keep)]
+        work_lines_vals += [(4, line.id, False) for line in lines_to_keep]
         work_lines_vals += [(0, 0, {
             'number_of_days': data[0],
             'number_of_hours': data[1],
