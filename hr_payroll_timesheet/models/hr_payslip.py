@@ -1,95 +1,88 @@
 from collections import defaultdict
-from odoo import api, models
+from odoo import api, fields, models, _
 
 
 class HrPayslip(models.Model):
     _inherit = 'hr.payslip'
 
-    @api.model
-    def get_worked_day_lines(self, contracts, date_from, date_to):
-        work = []
-        for contract in contracts.filtered(lambda c: c.paid_hourly_timesheet):
-            # Only run on 'paid hourly timesheet' contracts.
-            res = self._get_worked_day_lines_hourly_timesheet(contract, date_from, date_to)
-            if res:
-                work.append(res)
+    timesheet_ids = fields.One2many('account.analytic.line', 'payslip_id', string='Timesheets',
+                                     help='Timesheets represented by payslip.',
+                                     states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
+    timesheet_count = fields.Integer(compute='_compute_timesheet_count')
 
-        res = super(HrPayslip, self).get_worked_day_lines(contracts.filtered(lambda c: not c.paid_hourly_timesheet), date_from, date_to)
-        res.extend(work)
+    @api.depends('timesheet_ids', 'timesheet_ids.payslip_id')
+    def _compute_timesheet_count(self):
+        for payslip in self:
+            payslip.timesheet_count = len(payslip.timesheet_ids)
+
+    @api.onchange('worked_days_line_ids')
+    def _onchange_worked_days_line_ids(self):
+        # super()._onchange_worked_days_line_ids()
+        timesheet_type = self.env.ref('hr_payroll_timesheet.work_input_timesheet', raise_if_not_found=False)
+        if not self.worked_days_line_ids.filtered(lambda line: line.work_entry_type_id == timesheet_type):
+            self.timesheet_ids.write({'payslip_id': False})
+
+    @api.onchange('employee_id', 'struct_id', 'contract_id', 'date_from', 'date_to')
+    def _onchange_employee(self):
+        res = super()._onchange_employee()
+        if self.state == 'draft' and self.contract_id.paid_hourly_timesheet:
+            self.timesheet_ids = self.env['account.analytic.line'].search([
+                ('employee_id', '=', self.employee_id.id),
+                ('date', '<=', self.date_to),
+                '|', ('payslip_id', '=', False),
+                     ('payslip_id', '=', self.id),
+            ])
+            self._onchange_timesheet_ids()
         return res
 
-    def _get_worked_day_lines_hourly_timesheet(self, contract, date_from, date_to):
-        """
-        This would be a common hook to extend or break out more functionality, like pay rate based on project.
-        Note that you will likely need to aggregate similarly in hour_break_down() and hour_break_down_week()
-        :param contract: `hr.contract`
-        :param date_from: str
-        :param date_to: str
-        :return: dict of values for `hr.payslip.worked_days`
-        """
-        values = {
-            'name': 'Timesheet',
-            'sequence': 15,
-            'code': 'TS',
-            'number_of_days': 0.0,
-            'number_of_hours': 0.0,
-            'contract_id': contract.id,
-        }
+    @api.onchange('timesheet_ids')
+    def _onchange_timesheet_ids(self):
+        timesheet_type = self.env.ref('hr_payroll_timesheet.work_input_timesheet', raise_if_not_found=False)
+        if not timesheet_type:
+            return
 
-        valid_ts = [
-            # ('is_timesheet', '=', True),
-            # 'is_timesheet' is computed if there is a project_id associated with the entry
-            ('project_id', '!=', False),
-            ('employee_id', '=', contract.employee_id.id),
-            ('date', '>=', date_from),
-            ('date', '<=', date_to),
-        ]
+        original_work_type = self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
+        if original_work_type:
+            types_to_remove = original_work_type + timesheet_type
+        else:
+            types_to_remove = timesheet_type
 
-        days = set()
-        for ts in self.env['account.analytic.line'].search(valid_ts):
+        work_data = self._pre_aggregate_timesheet_data()
+        processed_data = self.aggregate_overtime(work_data)
+
+        lines_to_keep = self.worked_days_line_ids.filtered(lambda x: x.work_entry_type_id not in types_to_remove)
+        # Note that [(5, 0, 0)] + [(4, 999, 0)], will not work
+        work_lines_vals = [(3, line.id, False) for line in (self.worked_days_line_ids - lines_to_keep)]
+        work_lines_vals += [(4, line.id, False) for line in lines_to_keep]
+        work_lines_vals += [(0, 0, {
+            'number_of_days': data[0],
+            'number_of_hours': data[1],
+            'amount': data[1] * data[2] * self._wage_for_work_type(work_type),
+            'contract_id': self.contract_id.id,
+            'work_entry_type_id': work_type.id,
+        }) for work_type, data in processed_data.items()]
+        self.update({'worked_days_line_ids': work_lines_vals})
+
+    def _wage_for_work_type(self, work_type):
+        # Override if you pay differently for different work types
+        return self.contract_id.wage
+
+    def _pre_aggregate_timesheet_data(self):
+        timesheet_type = self.env.ref('hr_payroll_timesheet.work_input_timesheet', raise_if_not_found=False)
+        worked_ts = defaultdict(list)
+        for ts in self.timesheet_ids.sorted('id'):
             if ts.unit_amount:
                 ts_iso = ts.date.isocalendar()
-                if ts_iso not in days:
-                    values['number_of_days'] += 1
-                    days.add(ts_iso)
-                values['number_of_hours'] += ts.unit_amount
+                worked_ts[ts_iso].append((timesheet_type, ts.unit_amount, ts))
+        res = [(k, worked_ts[k]) for k in sorted(worked_ts.keys())]
+        return res
 
-        values['number_of_hours'] = round(values['number_of_hours'], 2)
-        return values
-
-    @api.multi
-    def hour_break_down(self, code):
-        """
-        :param code: what kind of worked days you need aggregated
-        :return: dict: keys are isocalendar tuples, values are hours.
-        """
+    def action_open_timesheets(self):
         self.ensure_one()
-        if code == 'TS':
-            timesheets = self.env['account.analytic.line'].search([
-                # ('is_timesheet', '=', True),
-                # 'is_timesheet' is computed if there is a project_id associated with the entry
-                ('project_id', '!=', False),
-                ('employee_id', '=', self.employee_id.id),
-                ('date', '>=', self.date_from),
-                ('date', '<=', self.date_to),
-            ])
-            day_values = defaultdict(float)
-            for ts in timesheets:
-                if ts.unit_amount:
-                    ts_iso = ts.date.isocalendar()
-                    day_values[ts_iso] += ts.unit_amount
-            return day_values
-        elif hasattr(super(HrPayslip, self), 'hour_break_down'):
-            return super(HrPayslip, self).hour_break_down(code)
-
-    @api.multi
-    def hours_break_down_week(self, code):
-        """
-        :param code: hat kind of worked days you need aggregated
-        :return: dict: keys are isocalendar weeks, values are hours.
-        """
-        days = self.hour_break_down(code)
-        weeks = defaultdict(float)
-        for isoday, hours in days.items():
-            weeks[isoday[1]] += hours
-        return weeks
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Paid Timesheets'),
+            'res_model': 'account.analytic.line',
+            'view_mode': 'tree,form',
+            'domain': [('id', 'in', self.timesheet_ids.ids)],
+        }

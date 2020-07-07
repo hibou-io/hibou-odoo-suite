@@ -1,29 +1,33 @@
 from odoo.tests import common
-from odoo import fields
 
 
 class TestPayslipTimesheet(common.TransactionCase):
 
     def setUp(self):
         super(TestPayslipTimesheet, self).setUp()
-        self.employee = self.env['hr.employee'].create({
-            'birthday': '1985-03-14',
-            'country_id': self.ref('base.us'),
-            'department_id': self.ref('hr.dep_rd'),
-            'gender': 'male',
-            'name': 'Jared'
-        })
+        self.test_hourly_wage = 21.5
+        self.employee = self.env.ref('hr.employee_hne')
         self.contract = self.env['hr.contract'].create({
-            'name': 'test',
+            'name': 'Test',
             'employee_id': self.employee.id,
-            'type_id': self.ref('hr_contract.hr_contract_type_emp'),
-            'struct_id': self.ref('hr_payroll.structure_base'),
-            'resource_calendar_id': self.ref('resource.resource_calendar_std'),
-            'wage': 21.50,
+            'structure_type_id': self.env.ref('hr_payroll.structure_type_employee').id,
             'date_start': '2018-01-01',
-            'state': 'open',
+            'resource_calendar_id': self.employee.resource_calendar_id.id,
+            'wage': self.test_hourly_wage,
             'paid_hourly_timesheet': True,
-            'schedule_pay': 'monthly',
+            'state': 'open',
+        })
+        self.payslip_dummy = self.env['hr.payslip'].create({
+            'name': 'test slip dummy',
+            'employee_id': self.employee.id,
+            'date_from': '2017-01-01',
+            'date_to': '2017-01-31',
+        })
+        self.payslip = self.env['hr.payslip'].create({
+            'name': 'test slip',
+            'employee_id': self.employee.id,
+            'date_from': '2018-01-01',
+            'date_to': '2018-01-31',
         })
         self.project = self.env['project.project'].create({
             'name': 'Timesheets',
@@ -31,8 +35,6 @@ class TestPayslipTimesheet(common.TransactionCase):
 
     def test_payslip_timesheet(self):
         self.assertTrue(self.contract.paid_hourly_timesheet)
-        from_date = '2018-01-01'
-        to_date = '2018-01-31'
 
         # Day 1
         self.env['account.analytic.line'].create({
@@ -55,7 +57,7 @@ class TestPayslipTimesheet(common.TransactionCase):
             'employee_id': self.employee.id,
             'project_id': self.project.id,
             'date': '2018-01-02',
-            'unit_amount': 1.0,
+            'unit_amount': 10.0,
             'name': 'test',
         })
 
@@ -66,26 +68,60 @@ class TestPayslipTimesheet(common.TransactionCase):
             'date': '2017-01-01',
             'unit_amount': 5.0,
             'name': 'test',
+            'payslip_id': self.payslip_dummy.id,
         })
 
-        # Create slip like a batch run.
-        slip_data = self.env['hr.payslip'].onchange_employee_id(from_date, to_date, self.employee.id, contract_id=False)
-        res = {
-            'employee_id': self.employee.id,
-            'name': slip_data['value'].get('name'),
-            'struct_id': slip_data['value'].get('struct_id'),
-            'contract_id': slip_data['value'].get('contract_id'),
-            'input_line_ids': [(0, 0, x) for x in slip_data['value'].get('input_line_ids')],
-            'worked_days_line_ids': [(0, 0, x) for x in slip_data['value'].get('worked_days_line_ids')],
-            'date_from': from_date,
-            'date_to': to_date,
-            'company_id': self.employee.company_id.id,
-        }
-        payslip = self.env['hr.payslip'].create(res)
-        payslip.compute_sheet()
-        self.assertTrue(payslip.worked_days_line_ids)
+        self.payslip._onchange_employee()
+        self.assertTrue(self.payslip.contract_id, 'No auto-discovered contract!')
+        wage = self.test_hourly_wage
+        self.payslip.compute_sheet()
+        self.assertTrue(self.payslip.worked_days_line_ids)
 
-        timesheet_line = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'TS')
+        timesheet_line = self.payslip.worked_days_line_ids.filtered(lambda l: l.code == 'TS')
         self.assertTrue(timesheet_line)
         self.assertEqual(timesheet_line.number_of_days, 2.0)
-        self.assertEqual(timesheet_line.number_of_hours, 9.0)
+        self.assertEqual(timesheet_line.number_of_hours, 18.0)
+
+        # Day 3
+        self.env['account.analytic.line'].create({
+            'employee_id': self.employee.id,
+            'project_id': self.project.id,
+            'date': '2018-01-03',
+            'unit_amount': 10.0,
+            'name': 'test',
+        })
+        # Day 4
+        self.env['account.analytic.line'].create({
+            'employee_id': self.employee.id,
+            'project_id': self.project.id,
+            'date': '2018-01-04',
+            'unit_amount': 10.0,
+            'name': 'test',
+        })
+        # Day 5
+        self.env['account.analytic.line'].create({
+            'employee_id': self.employee.id,
+            'project_id': self.project.id,
+            'date': '2018-01-05',
+            'unit_amount': 10.0,
+            'name': 'test',
+        })
+        # Day 6
+        self.env['account.analytic.line'].create({
+            'employee_id': self.employee.id,
+            'project_id': self.project.id,
+            'date': '2018-01-06',
+            'unit_amount': 4.0,
+            'name': 'test',
+        })
+
+        self.payslip.state = 'draft'
+        self.payslip._onchange_employee()
+        timesheet_line = self.payslip.worked_days_line_ids.filtered(lambda l: l.code == 'TS')
+        timesheet_overtime_line = self.payslip.worked_days_line_ids.filtered(lambda l: l.code == 'TS_OT')
+        self.assertTrue(timesheet_line)
+        self.assertEqual(timesheet_line.number_of_days, 5.0)
+        self.assertEqual(timesheet_line.number_of_hours, 40.0)
+        self.assertTrue(timesheet_overtime_line)
+        self.assertEqual(timesheet_overtime_line.number_of_days, 1.0)
+        self.assertEqual(timesheet_overtime_line.number_of_hours, 12.0)
