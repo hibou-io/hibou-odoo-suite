@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="work_entry_overtime_type" model="hr.work.entry.overtime.type">
+            <field name="name">Default Rules</field>
+            <field name="hours_per_week">40.0</field>
+            <field name="multiplier">1.5</field>
+        </record>
+    </data>
+
+</odoo>
