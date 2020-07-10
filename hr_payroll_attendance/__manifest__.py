@@ -8,6 +8,7 @@
     'category': 'Human Resources',
     'data': [
         'data/hr_payroll_attendance_data.xml',
+        'views/hr_attendance_views.xml',
         'views/hr_contract_views.xml',
         'views/hr_payslip_views.xml',
     ],
