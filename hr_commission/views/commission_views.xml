@@ -118,20 +118,6 @@
 
     <menuitem
         action="action_hr_commission"
-        id="menu_action_sales_commission_form"
-        parent="sale.sale_menu_root"
-        sequence="5"
-        />
-
-    <menuitem
-        action="action_hr_commission"
-        id="menu_action_sales_commission_form2"
-        parent="menu_action_sales_commission_form"
-        sequence="5"
-        />
-
-    <menuitem
-        action="action_hr_commission"
         id="menu_action_account_commission_form"
         parent="account.menu_finance_entries"
         sequence="90"
@@ -220,13 +206,6 @@ action = records.action_mark_paid()
         <field name="res_model">hr.commission.payment</field>
         <field name="view_mode">tree,form</field>
     </record>
-
-    <menuitem
-        action="action_hr_commission_payment"
-        id="menu_action_sales_commission_payment_form"
-        parent="menu_action_sales_commission_form"
-        sequence="10"
-        />
 
     <menuitem
         action="action_hr_commission_payment"
