@@ -2,6 +2,10 @@
 
 from odoo.tests import common
 
+# TODO Tests won't pass without `sale`
+#   Tests should be refactored to not build sale orders
+#   to invoice, just create invoices directly.
+
 
 class TestCommission(common.TransactionCase):
 
