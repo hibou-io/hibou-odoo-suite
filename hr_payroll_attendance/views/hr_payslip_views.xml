@@ -12,7 +12,7 @@
                 </button>
             </xpath>
             <xpath expr="//field[@name='number']" position="after">
-                <field name="attendance_ids" invisible="1"/>
+                <field name="attendance_ids" invisible="1" widget="many2many"/>
             </xpath>
         </field>
     </record>
