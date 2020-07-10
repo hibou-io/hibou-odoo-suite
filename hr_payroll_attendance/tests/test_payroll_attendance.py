@@ -120,3 +120,20 @@ class TestUsPayslip(common.TransactionCase):
         # (80 * 21.50) + (47.37 * 21.50 * 1.5) = 3247.6825
         cats = self._getCategories()
         self.assertAlmostEqual(cats['BASIC'], 3247.68, 2)
+
+        # ensure unlink behavior.
+        self.payslip.attendance_ids = self.env['hr.attendance'].browse()
+        self.payslip.state = 'draft'
+        self.payslip.flush()
+        self.payslip._onchange_employee()
+        self.payslip.compute_sheet()
+        cats = self._getCategories()
+        self.assertAlmostEqual(cats['BASIC'], 3247.68, 2)
+
+        self.payslip.write({'attendance_ids': [(5, 0, 0)]})
+        self.payslip.state = 'draft'
+        self.payslip.flush()
+        self.payslip._onchange_employee()
+        self.payslip.compute_sheet()
+        cats = self._getCategories()
+        self.assertAlmostEqual(cats['BASIC'], 3247.68, 2)
