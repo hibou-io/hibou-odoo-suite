@@ -6,7 +6,7 @@ class HrPayslip(models.Model):
     _inherit = 'hr.payslip'
 
     timesheet_ids = fields.One2many('account.analytic.line', 'payslip_id', string='Timesheets',
-                                     help='Timesheets represented by payslip.',
+                                     help='Timesheets represented by payslip.', readonly=True,
                                      states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     timesheet_count = fields.Integer(compute='_compute_timesheet_count')
 
@@ -15,53 +15,53 @@ class HrPayslip(models.Model):
         for payslip in self:
             payslip.timesheet_count = len(payslip.timesheet_ids)
 
-    @api.onchange('worked_days_line_ids')
-    def _onchange_worked_days_line_ids(self):
-        # super()._onchange_worked_days_line_ids()
-        timesheet_type = self.env.ref('hr_payroll_timesheet.work_input_timesheet', raise_if_not_found=False)
-        if not self.worked_days_line_ids.filtered(lambda line: line.work_entry_type_id == timesheet_type):
-            self.timesheet_ids.write({'payslip_id': False})
+    def _get_worked_day_lines(self):
+        # Called at the end of _onchange_employee()
+        worked_day_lines = super()._get_worked_day_lines()
+        return self._timesheet_get_worked_day_lines(worked_day_lines)
 
-    @api.onchange('employee_id', 'struct_id', 'contract_id', 'date_from', 'date_to')
-    def _onchange_employee(self):
-        res = super()._onchange_employee()
-        if self.state == 'draft' and self.contract_id.paid_hourly_timesheet:
-            self.timesheet_ids = self.env['account.analytic.line'].search([
-                ('employee_id', '=', self.employee_id.id),
-                ('date', '<=', self.date_to),
-                '|', ('payslip_id', '=', False),
-                     ('payslip_id', '=', self.id),
-            ])
-            self._onchange_timesheet_ids()
-        return res
+    def _timesheet_get_worked_day_lines(self, worked_day_lines):
+        """
+        Filters out basic "Attendance"/"Work Calendar" entries as they would add to salary.
+        Note that this is during an onchange (probably).
+        :returns: a list of dict containing the worked days values that should be applied for the given payslip
+        """
+        if not self.contract_id.paid_hourly_timesheet:
+            return worked_day_lines
+        if not self.state == 'draft':
+            return worked_day_lines
 
-    @api.onchange('timesheet_ids')
-    def _onchange_timesheet_ids(self):
+        timesheet_to_keep = self.timesheet_ids.filtered(lambda ts: ts.employee_id == self.employee_id
+                                                        and ts.date <= self.date_to)
+        timesheet_to_keep += self.env['account.analytic.line'].search([
+            ('employee_id', '=', self.employee_id.id),
+            ('date', '<=', self.date_to),
+            ('payslip_id', '=', False),
+        ])
+        self.update({'timesheet_ids': [(6, 0, timesheet_to_keep.ids)]})
+
         timesheet_type = self.env.ref('hr_payroll_timesheet.work_input_timesheet', raise_if_not_found=False)
         if not timesheet_type:
-            return
+            # return early, include the "work calendar lines"
+            return worked_day_lines
 
         original_work_type = self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
         if original_work_type:
-            types_to_remove = original_work_type + timesheet_type
-        else:
-            types_to_remove = timesheet_type
+            # filter out "work calendar lines"
+            worked_day_lines = [w for w in worked_day_lines if w['work_entry_type_id'] != original_work_type.id]
 
         work_data = self._pre_aggregate_timesheet_data()
         processed_data = self.aggregate_overtime(work_data)
 
-        lines_to_keep = self.worked_days_line_ids.filtered(lambda x: x.work_entry_type_id not in types_to_remove)
-        # Note that [(5, 0, 0)] + [(4, 999, 0)], will not work
-        work_lines_vals = [(3, line.id, False) for line in (self.worked_days_line_ids - lines_to_keep)]
-        work_lines_vals += [(4, line.id, False) for line in lines_to_keep]
-        work_lines_vals += [(0, 0, {
-            'number_of_days': data[0],
-            'number_of_hours': data[1],
-            'amount': data[1] * data[2] * self._wage_for_work_type(work_type),
-            'contract_id': self.contract_id.id,
-            'work_entry_type_id': work_type.id,
-        }) for work_type, data in processed_data.items()]
-        self.update({'worked_days_line_ids': work_lines_vals})
+        worked_day_lines += [{
+                'number_of_days': data[0],
+                'number_of_hours': data[1],
+                'amount': data[1] * data[2] * self._wage_for_work_type(work_type),
+                'contract_id': self.contract_id.id,
+                'work_entry_type_id': work_type.id,
+            } for work_type, data in processed_data.items()]
+
+        return worked_day_lines
 
     def _wage_for_work_type(self, work_type):
         # Override if you pay differently for different work types
