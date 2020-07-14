@@ -7,7 +7,6 @@
             This sale order, or the customer has an outstanding balance that, exceeds their credit limit.</field>
         <field name="sequence">50</field>
         <field name="model">sale.order</field>
-        <field name="rule_group">sale</field>
         <field name="code">
 partner = sale.partner_invoice_id.commercial_partner_id
 partner_balance = partner.credit + sale.amount_total
@@ -15,7 +14,6 @@ if partner.credit_limit and partner.credit_limit &lt;= partner_balance:
     failed = True
         </field>
         <field name="active" eval="True" />
-        <field name="rule_group">sale</field>
     </record>
 
 </odoo>

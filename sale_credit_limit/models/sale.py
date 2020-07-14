@@ -1,5 +1,4 @@
-from odoo import api, models
-from odoo.addons.mail.models.mail_template import format_amount
+from odoo import api, models, tools
 
 
 class SaleOrder(models.Model):
@@ -11,8 +10,8 @@ class SaleOrder(models.Model):
             partner = so.partner_invoice_id.commercial_partner_id
             if partner.credit_limit and partner.credit_limit <= partner.credit:
                 m = 'Partner outstanding receivables %s is above their credit limit of %s' \
-                                           % (format_amount(self.env, partner.credit, so.currency_id),
-                                              format_amount(self.env, partner.credit_limit, so.currency_id))
+                                           % (tools.format_amount(self.env, partner.credit, so.currency_id),
+                                              tools.format_amount(self.env, partner.credit_limit, so.currency_id))
                 return {
                     'warning': {'title': 'Sale Credit Limit',
                                 'message': m}
