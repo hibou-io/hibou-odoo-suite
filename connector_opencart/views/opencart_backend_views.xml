@@ -38,6 +38,7 @@
                         <group name="product_configuration" string="Product Defaults">
                             <field name="product_categ_id"/>
                             <field name="coupon_product_id"/>
+                            <field name="so_require_product_setup"/>
                         </group>
                     </group>
                     <notebook name="import_config">
