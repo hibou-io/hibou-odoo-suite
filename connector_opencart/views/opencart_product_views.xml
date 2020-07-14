@@ -9,7 +9,7 @@
                 <header/>
                 <sheet>
                     <group>
-                        <field name="odoo_id" readonly="1"/>
+                        <field name="odoo_id"/>
                         <field name="opencart_attribute_value_ids" options="{'no_create': True}">
                             <tree editable="top" decoration-warning="not odoo_id">
                                 <field name="external_id" readonly="1"/>

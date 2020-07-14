@@ -8,6 +8,7 @@ from odoo import fields, _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 from odoo.exceptions import ValidationError
+from odoo.addons.queue_job.exception import RetryableJobError
 
 
 class SaleOrderBatchImporter(Component):
@@ -363,9 +364,16 @@ class SaleOrderImporter(Component):
     def _import_dependencies(self):
         record = self.opencart_record
         self._import_addresses()
+        products_need_setup = []
         for product in record.get('products', []):
             if 'product_id' in product and product['product_id']:
-                self._import_dependency(product['product_id'], 'opencart.product.template')
+                needs_product_setup = self._import_dependency(product['product_id'], 'opencart.product.template')
+                if needs_product_setup:
+                    products_need_setup.append(product['product_id'])
+
+        if products_need_setup and self.backend_record.so_require_product_setup:
+            # There are products that were either just imported, or
+            raise RetryableJobError('Products need setup. OpenCart Product IDs:' + str(products_need_setup), seconds=3600)
 
 
 class SaleOrderLineImportMapper(Component):

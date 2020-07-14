@@ -73,6 +73,9 @@ class OpencartBackend(models.Model):
         string='Import sale orders after id',
     )
 
+    so_require_product_setup = fields.Boolean(string='SO Require Product Setup',
+                                              help='Prevents SO from being confirmed (failed queue job), if one or more products has an open checkpoint.')
+
     @contextmanager
     @api.multi
     def work_on(self, model_name, **kwargs):
@@ -88,6 +91,20 @@ class OpencartBackend(models.Model):
         record.ensure_one()
         return add_checkpoint(self.env, record._name, record.id,
                               self._name, self.id)
+
+    @api.multi
+    def find_checkpoint(self, record):
+        self.ensure_one()
+        record.ensure_one()
+        checkpoint_model = self.env['connector.checkpoint']
+        model_model = self.env['ir.model']
+        model = model_model.search([('model', '=', record._name)], limit=1)
+        return checkpoint_model.search([
+            ('backend_id', '=', '%s,%s' % (self._name, self.id)),
+            ('model_id', '=', model.id),
+            ('record_id', '=', record.id),
+            ('state', '=', 'need_review'),
+        ], limit=1)
 
     @api.multi
     def synchronize_metadata(self):
