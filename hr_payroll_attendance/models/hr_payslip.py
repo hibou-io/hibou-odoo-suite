@@ -33,7 +33,7 @@ class HrPayslip(models.Model):
 
         attendance_to_keep = self.attendance_ids.filtered(lambda a: a.employee_id == self.employee_id
                                                           and a.check_out.date() <= self.date_to)
-        attendance_to_keep += self.env['hr.attendance'].search([
+        attendance_to_keep |= self.env['hr.attendance'].search([
             ('employee_id', '=', self.employee_id.id),
             ('check_out', '<=', self.date_to),
             ('payslip_id', '=', False),
