@@ -33,7 +33,7 @@ class HrPayslip(models.Model):
 
         timesheet_to_keep = self.timesheet_ids.filtered(lambda ts: ts.employee_id == self.employee_id
                                                         and ts.date <= self.date_to)
-        timesheet_to_keep += self.env['account.analytic.line'].search([
+        timesheet_to_keep |= self.env['account.analytic.line'].search([
             ('employee_id', '=', self.employee_id.id),
             ('date', '<=', self.date_to),
             ('payslip_id', '=', False),
