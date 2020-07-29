@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_nd_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US ND North Dakota SUTA Wage Base</field>
+        <field name="code">us_nd_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nd_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">37900.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nd_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_nd_suta_rate" model="hr.rule.parameter">
+        <field name="name">US ND North Dakota SUTA Rate</field>
+        <field name="code">us_nd_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nd_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.02</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nd_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_nd_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US ND North Dakota SIT Tax Rate</field>
+        <field name="code">us_nd_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nd_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': (
+                    (   6200,    0.00, 0.00),
+                    (  46325,    0.00, 1.10),
+                    ( 103350,  441.38, 2.04),
+                    ( 208850, 1604.69, 2.27),
+                    ( 446800, 3999.54, 2.64),
+                    (  'inf',10281.42, 2.90),
+                ),
+                'married': (
+                    (  12400,    0.00, 0.00),
+                    (  45925,    0.00, 1.10),
+                    (  93375,  368.78, 2.04),
+                    ( 135750, 1336.76, 2.27),
+                    ( 232700, 2298.67, 2.64),
+                    ( 'inf',  4858.15, 2.90),
+                ),
+                'head_household': (
+                    (   9325,    0.00, 0.00),
+                    (  63075,    0.00, 1.10),
+                    ( 148125,  591.25, 2.04),
+                    ( 234025, 2326.27, 2.27),
+                    ( 449925, 4276.20, 2.64),
+                    (  'inf', 9975.96, 2.90),
+                ),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nd_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_nd_dor" model="res.partner">
+        <field name="name">US North Dakota - Office of State Tax Commissioner - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_nd_dor_sit" model="res.partner">
+        <field name="name">US North Dakota - Taxpayer Access Point - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_nd_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US ND North Dakota State Unemployment</field>
+        <field name="code">ER_US_ND_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nd_suta_wage_base', rate='us_nd_suta_rate', state_code='ND')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nd_suta_wage_base', rate='us_nd_suta_rate', state_code='ND')</field>
+        <field name="partner_id" ref="res_partner_us_nd_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_nd_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US ND North Dakota State Income Tax Withholding</field>
+        <field name="code">EE_US_ND_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = nd_north_dakota_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = nd_north_dakota_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_nd_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>
