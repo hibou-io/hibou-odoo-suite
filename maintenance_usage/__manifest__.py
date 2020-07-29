@@ -16,6 +16,7 @@ Create preventative maintenance requests based on usage.
     'website': 'https://hibou.io/',
     'depends': [
         'hr_maintenance',
+        'product',
     ],
     'data': [
         'security/ir.model.access.csv',
