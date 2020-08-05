@@ -60,6 +60,11 @@ def migrate(cr, installed_version):
         temp_values = temp_field_values(cr, 'hr_contract', contract.id, fields_to_move)
         # Resolve mapping to the new field names.
         values = {FIELDS_CONTRACT_TO_US_PAYROLL_FORMS_2020[k]: v for k, v in temp_values.items()}
+
+        # Edge cases
+        if 'ca_de4_sit_filing_status' in values and values['ca_de4_sit_filing_status'] == 'exempt':
+            values['ca_de4_sit_filing_status'] = ''
+
         values.update({
             'name': 'MIG: ' + str(contract.name),
             'employee_id': contract.employee_id.id,
