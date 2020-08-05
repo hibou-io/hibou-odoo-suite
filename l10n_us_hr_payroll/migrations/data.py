@@ -22,7 +22,7 @@ FIELDS_CONTRACT_TO_US_PAYROLL_FORMS_2020 = {
     'az_a4_additional_withholding': 'state_income_tax_additional_withholding',
 
     'ca_de4_allowances': 'ca_de4_sit_allowances',
-    'ca_additional_allowances': 'ca_sit_additional_allowances',
+    'ca_additional_allowances': 'ca_de4_sit_additional_allowances',
     'ca_de4_filing_status': 'ca_de4_sit_filing_status',
 
     'ct_w4na_code': 'ct_w4na_sit_code',
