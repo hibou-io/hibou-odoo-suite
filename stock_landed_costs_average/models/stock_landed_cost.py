@@ -88,7 +88,8 @@ class LandedCost(models.Model):
                          ('id', 'in', quant_loc_ids)])
                     qty_available = line.product_id.with_context(location=locations.ids).qty_available
                     total_cost = (qty_available * line.product_id.standard_price) + cost_to_add
-                    line.product_id.write({'standard_price': total_cost / qty_available})
+                    if qty_available > 0:
+                        line.product_id.write({'standard_price': total_cost / qty_available})
 
             move = move.create(move_vals)
             cost.write({'state': 'done', 'account_move_id': move.id})
