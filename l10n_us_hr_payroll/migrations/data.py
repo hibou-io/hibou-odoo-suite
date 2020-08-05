@@ -9,6 +9,25 @@ FIELDS_CONTRACT_TO_US_PAYROLL_FORMS_2020 = {
     'fica_exempt': 'fed_941_fica_exempt',
     'futa_type': 'fed_940_type',
     # State
+    'al_a4_filing_status': 'al_a4_sit_exemptions',
+    'al_a4_dependents': 'al_a4_sit_dependents',
+    'al_a4_personal_exemption': 'state_income_tax_exempt',
+    'al_a4_additional_wh': 'state_income_tax_additional_withholding',
+    
+    'ar_w4_allowances': 'ar_ar4ec_sit_allowances',
+    'ar_w4_tax_exempt': 'state_income_tax_exempt',
+    'ar_w4_additional_wh': 'state_income_tax_additional_withholding',
+
+    'az_a4_withholding_percentage': 'az_a4_sit_withholding_percentage',
+    'az_a4_additional_withholding': 'state_income_tax_additional_withholding',
+
+    'ca_de4_allowances': 'ca_de4_sit_allowances',
+    'ca_additional_allowances': 'ca_de4_sit_additional_allowances',
+    'ca_de4_filing_status': 'ca_de4_sit_filing_status',
+
+    'ct_w4na_code': 'ct_w4na_sit_code',
+    'ct_w4na_wh_amount': 'state_income_tax_additional_withholding',
+
     'ga_g4_filing_status': 'ga_g4_sit_filing_status',
     'ga_g4_dependent_allowances': 'ga_g4_sit_dependent_allowances',
     'ga_g4_additional_allowances': 'ga_g4_sit_additional_allowances',
