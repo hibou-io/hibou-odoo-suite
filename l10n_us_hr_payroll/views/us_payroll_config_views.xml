@@ -173,7 +173,7 @@
                             <p colspan="2"><h3>Form NY IT-2104 - State Income Tax</h3></p>
                             <field name="ny_it2104_sit_filing_status" string="Filing Status"/>
                             <field name="ny_it2104_sit_allowances" string="Allowances 1.2."/>
-                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 7."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding" help="NY IT-2104 3. 4. 5."/>
                         </group>
                         <group name="state_oh_ohio" string="OH Ohio" attrs="{'invisible':[('state_id', '!=', %(base.state_us_30)s)]}">
                             <p colspan="2"><h3>Form IT-4 - State Income Tax</h3></p>
