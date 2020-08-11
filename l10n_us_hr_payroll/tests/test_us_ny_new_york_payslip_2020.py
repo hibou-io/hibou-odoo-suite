@@ -8,8 +8,8 @@ class TestUsNYPayslip(TestUsPayslip):
     ###
     #   2020 Taxes and Rates
     ###
-    NY_UNEMP_MAX_WAGE = 14000.0
-    NY_UNEMP = 3.295
+    NY_UNEMP_MAX_WAGE = 11600.0
+    NY_UNEMP = 2.5
     NY_RSF = 0.075
     NY_MCTMT = 0.0
 
