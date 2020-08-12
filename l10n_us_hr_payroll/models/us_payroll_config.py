@@ -190,6 +190,7 @@ class HRContractUSPayrollConfig(models.Model):
     ], string='New Jersey Wage Chart Letter', help='NJ-W4. 3.')
 
     ny_it2104_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
         ('single', 'Single'),
         ('married', 'Married'),
     ], string='New York NY IT-2104 Filing Status', help='NY IT-2104')

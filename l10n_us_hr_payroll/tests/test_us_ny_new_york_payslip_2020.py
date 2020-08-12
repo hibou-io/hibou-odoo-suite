@@ -36,3 +36,4 @@ class TestUsNYPayslip(TestUsPayslip):
         self._test_sit(50000.0, 'single', 0.0, 3, 'monthly', date(2020, 1, 1), 3575.63)
         self._test_sit(50000.0, 'married', 0.0, 3, 'monthly', date(2020, 1, 1), 3619.82)
         self._test_sit(50000.0, 'married', 10.0, 3, 'monthly', date(2020, 1, 1), 3629.83)
+        self._test_sit(50000.0, '', 0.0, 0, 'monthly', date(2020, 1, 1), 0.00)
