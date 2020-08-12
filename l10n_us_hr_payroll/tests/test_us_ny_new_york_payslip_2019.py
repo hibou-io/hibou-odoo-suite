@@ -104,3 +104,30 @@ class TestUsNYPayslip(TestUsPayslip):
 
         self.assertPayrollEqual(cats['EE_US_SIT'], wh)
 
+    def test_exempt_example3(self):
+        salary = 50000
+        schedule_pay = 'monthly'
+        allowances = 3
+        additional = 0
+        filing_status = ''
+        wh = 0.0
+
+        employee = self._createEmployee()
+
+        contract = self._createContract(employee,
+                                        wage=salary,
+                                        state_id=self.get_us_state('NY'),
+                                        ny_it2104_sit_filing_status=filing_status,
+                                        state_income_tax_additional_withholding=additional,
+                                        ny_it2104_sit_allowances=allowances,
+                                        schedule_pay=schedule_pay)
+
+        self._log('2019 New York tax first payslip:')
+        payslip = self._createPayslip(employee, '2019-01-01', '2019-01-31')
+
+        payslip.compute_sheet()
+
+        cats = self._getCategories(payslip)
+
+        self.assertPayrollEqual(cats['EE_US_SIT'], wh)
+
