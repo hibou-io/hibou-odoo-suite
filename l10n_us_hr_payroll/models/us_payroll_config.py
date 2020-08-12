@@ -189,6 +189,13 @@ class HRContractUSPayrollConfig(models.Model):
         ('E', 'E')
     ], string='New Jersey Wage Chart Letter', help='NJ-W4. 3.')
 
+    ny_it2104_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
+        ('single', 'Single'),
+        ('married', 'Married'),
+    ], string='New York NY IT-2104 Filing Status', help='NY IT-2104')
+    ny_it2104_sit_allowances = fields.Integer(string="New York IT-2104 Allowances", help="NY IT-2104 1. 2.")
+
     # Ohio will use generic SIT exempt and additional fields
     oh_it4_sit_exemptions = fields.Integer(string='Ohio IT-4 Exemptions',
                                            help='Line 4')

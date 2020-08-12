@@ -93,6 +93,11 @@
             ref('hr_payroll_rule_er_us_nm_suta'),
             ref('hr_payroll_rule_ee_us_nm_sit'),
 
+            ref('hr_payroll_rule_er_us_ny_suta'),
+            ref('hr_payroll_rule_er_us_ny_suta_rsf'),
+            ref('hr_payroll_rule_er_us_ny_suta_mctmt'),
+            ref('hr_payroll_rule_ee_us_ny_sit'),
+
             ref('hr_payroll_rule_er_us_oh_suta'),
             ref('hr_payroll_rule_ee_us_oh_sit'),
 
