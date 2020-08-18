@@ -120,10 +120,10 @@
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding"/>
                         </group>
                         <group name="state_in_indiana" string="IN Indiana" attrs="{'invisible':[('state_id', '!=', %(base.state_us_15)s)]}">
-                            <p colspan="2"><h3>Form IN W-4 - State Income Tax</h3></p>
+                            <p colspan="2"><h3>Form IN WH-4 - State Income Tax</h3></p>
                             <field name="in_w4_sit_personal_exemption" string="Personal Exemption 5."/>
                             <field name="in_w4_sit_dependent_exemption" string="Dependent Exemption 6."/>
-                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 7."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional State &amp; County Witholding 7. 8."/>
                         </group>
                         <group name="state_ks_kansas" string="KS Kansas" attrs="{'invisible':[('state_id', '!=', %(base.state_us_17)s)]}">
                             <p colspan="2"><h3>Form KS K-4 - State Income Tax</h3></p>
