@@ -143,7 +143,7 @@ class HRContractUSPayrollConfig(models.Model):
 
     me_w4me_sit_filing_status = fields.Selection([
         ('', 'Exempt'),
-        ('single', 'Single'),
+        ('single', 'Single or Head of Household'),
         ('married', 'Married'),
     ], string='Maine W-4ME Filing Status', help='ME W-4ME 3.')
     me_w4me_sit_allowances = fields.Integer(string='Maine Allowances', help='W-4ME 4.')

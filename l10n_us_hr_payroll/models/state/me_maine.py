@@ -47,7 +47,6 @@ def me_maine_state_income_withholding(payslip, categories, worked_days, inputs):
             standard_deduction_amt = last * (amt - taxable_income) / flat_amt
             break
         last = flat_amt
-
     annual_income = taxable_income - (exemption_amt + standard_deduction_amt)
     withholding = 0.0
     for row in tax_rate:
@@ -57,8 +56,7 @@ def me_maine_state_income_withholding(payslip, categories, worked_days, inputs):
             break
         last = amt
 
-    if withholding < 0.0:
-        withholding = 0.0
+    withholding = max(withholding, 0.0)
     withholding = round(withholding / pay_periods)
     withholding += additional
     return wage, -((withholding / wage) * 100.0)
