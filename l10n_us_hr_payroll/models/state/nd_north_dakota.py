@@ -23,11 +23,13 @@ def nd_north_dakota_state_income_withholding(payslip, categories, worked_days, i
     if not filing_status:
         return 0.0, 0.0
 
-    pay_periods = payslip.dict.get_pay_periods_in_year()
+    schedule_pay = payslip.contract_id.schedule_pay
     additional = payslip.contract_id.us_payroll_config_value('state_income_tax_additional_withholding')
-    tax_rate = payslip.rule_parameter('us_nd_sit_tax_rate')[filing_status]
+    allowance = payslip.contract_id.us_payroll_config_value('nd_w4_sit_allowances')
+    allowance_rate = payslip.rule_parameter('us_nd_sit_allowances_rate')[schedule_pay]
+    tax_rate = payslip.rule_parameter('us_nd_sit_tax_rate')[filing_status].get(schedule_pay)
 
-    taxable_income = wage * pay_periods
+    taxable_income = wage - (allowance * allowance_rate)
     withholding = 0.0
     last = 0.0
     for row in tax_rate:
@@ -37,7 +39,7 @@ def nd_north_dakota_state_income_withholding(payslip, categories, worked_days, i
             break
         last = amt
 
-    withholding = round(withholding / pay_periods)
+    withholding = round(withholding)
     withholding = max(withholding, 0.0)
     withholding += additional
     return wage, -((withholding / wage) * 100.0)
