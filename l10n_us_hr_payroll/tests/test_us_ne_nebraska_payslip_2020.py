@@ -26,7 +26,7 @@ class TestUsNEPayslip(TestUsPayslip):
         cats = self._getCategories(payslip)
 
         self._log('Computed period tax: ' + str(expected_withholding))
-        self.assertPayrollEqual(cats.get('EE_US_SIT', 0.0), -expected_withholding)
+        self.assertPayrollAlmostEqual(cats.get('EE_US_SIT', 0.0), -expected_withholding)
 
     def test_2020_taxes_example(self):
         self._test_er_suta('NE', self.NE_UNEMP, date(2020, 1, 1), wage_base=self.NE_UNEMP_MAX_WAGE)
@@ -35,3 +35,4 @@ class TestUsNEPayslip(TestUsPayslip):
         self._test_sit(10500.0, 'married', False, 0.0, 1, 'bi-weekly', date(2020, 1, 1), 659.85)
         self._test_sit(9500.0, 'single', True, 0.0, 1, 'bi-weekly', date(2020, 1, 1), 0.0)
         self._test_sit(10500.0, 'single', False, 10.0, 2, 'monthly', date(2020, 1, 1), 625.2)
+        self._test_sit(4000.0, 'single', False, 0.0, 1, 'monthly', date(2020, 1, 1), 179.44)
