@@ -7,7 +7,7 @@ class TestUsLAPayslip(TestUsPayslip):
 
     # TAXES AND RATES
     LA_UNEMP_MAX_WAGE = 7700.00
-    LA_UNEMP = -(6.20 / 100.0)
+    LA_UNEMP = -(1.14 / 100.0)
 
     def test_taxes_single_weekly(self):
         salary = 700.00
@@ -15,6 +15,7 @@ class TestUsLAPayslip(TestUsPayslip):
         filing_status = 'single'
         exemptions = 1
         dependents = 2
+        additional_withholding = 0
         # SEE http://revenue.louisiana.gov/TaxForms/1306(1_12)TF.pdf for example calculations
         # wh_to test is 19.42
         # Our algorithm correctly rounds whereas theirs does it prematurely.
@@ -24,6 +25,7 @@ class TestUsLAPayslip(TestUsPayslip):
                                         wage=salary,
                                         state_id=self.get_us_state('LA'),
                                         la_l4_sit_filing_status=filing_status,
+                                        state_income_tax_additional_withholding=additional_withholding,
                                         la_l4_sit_exemptions=exemptions,
                                         la_l4_sit_dependents=dependents,
                                         schedule_pay=schedule_pay)
@@ -54,6 +56,7 @@ class TestUsLAPayslip(TestUsPayslip):
         filing_status = 'married'
         exemptions = 2
         dependents = 3
+        additional_withholding = 0
         # SEE http://revenue.louisiana.gov/TaxForms/1306(1_12)TF.pdf for example calculations
         # wh_to test is 157.12
         wh_to_check = -157.12
@@ -62,6 +65,7 @@ class TestUsLAPayslip(TestUsPayslip):
                                         wage=salary,
                                         state_id=self.get_us_state('LA'),
                                         la_l4_sit_filing_status=filing_status,
+                                        state_income_tax_additional_withholding=additional_withholding,
                                         la_l4_sit_exemptions=exemptions,
                                         la_l4_sit_dependents=dependents,
                                         schedule_pay=schedule_pay)
