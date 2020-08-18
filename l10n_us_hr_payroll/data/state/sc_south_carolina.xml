@@ -31,8 +31,9 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_sc_suta_rate"/>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- Tax rate from https://taxnews.ey.com/news/2019-2183-south-carolina-2020-sui-tax-rates-to-decrease-due-to-elimination-of-the-variable-solvency-surcharge-wage-base-unchanged -->
         <record id="rule_parameter_us_sc_suta_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">1.09</field>
+            <field name="parameter_value">0.55</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_sc_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
@@ -56,6 +57,7 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_sc_sit_tax_rate"/>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- Substraction Method table from https://dor.sc.gov/forms-site/Forms/WH1603F_2020.pdf-->
         <record id="rule_parameter_us_sc_sit_tax_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">[
                 ( 2620, 0.8,    0.0),

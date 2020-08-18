@@ -247,6 +247,7 @@
                         <group name="state_sc_south_carolina" string="SC South Carolina" attrs="{'invisible':[('state_id', '!=', %(base.state_us_41)s)]}">
                             <p colspan="2"><h3>Form SC W-4 - State Income Tax</h3></p>
                             <field name="sc_w4_sit_allowances" string="Allowances 5."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 6."/>
                             <field name="state_income_tax_exempt" string="Exempt 7."/>
                         </group>
                         <group name="state_sd_south_dakota" string="SD South Dakota" attrs="{'invisible':[('state_id', '!=', %(base.state_us_42)s)]}">
