@@ -37,7 +37,7 @@
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
-
+    <!-- Table page no 10 based https://www.tax.virginia.gov/sites/default/files/inline-files/Employer%20Withholding%20Instructions.pdf -->
     <record id="rule_parameter_us_va_sit_rate" model="hr.rule.parameter">
         <field name="name">US VA Virginia SIT Rate Table</field>
         <field name="code">us_va_sit_rate</field>
