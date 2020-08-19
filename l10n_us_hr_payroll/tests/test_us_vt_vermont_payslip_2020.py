@@ -8,7 +8,7 @@ class TestUsVTPayslip(TestUsPayslip):
     ###
     #   2020 Taxes and Rates
     ###
-    VT_UNEMP_MAX_WAGE = 16000.0
+    VT_UNEMP_MAX_WAGE = 16100.0
     VT_UNEMP = 1.0
     # Calculation based on example https://tax.vermont.gov/sites/tax/files/documents/WithholdingInstructions.pdf
 

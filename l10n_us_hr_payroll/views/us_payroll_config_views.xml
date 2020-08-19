@@ -268,7 +268,7 @@
                         <group name="state_vt_vermont" string="VT Vermont" attrs="{'invisible':[('state_id', '!=', %(base.state_us_46)s)]}">
                             <p colspan="2"><h3>Form VT W-4VT - State Income Tax</h3></p>
                             <field name="vt_w4vt_sit_filing_status" string="Filing Status"/>
-                            <field name="vt_w4vt_sit_allowances" string="Allowances 1."/>
+                            <field name="vt_w4vt_sit_allowances" string="Allowances 5."/>
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding 6."/>
                             <field name="state_income_tax_exempt" string="Exempt"/>
                         </group>

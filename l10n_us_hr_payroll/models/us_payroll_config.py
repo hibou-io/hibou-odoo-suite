@@ -257,9 +257,8 @@ class HRContractUSPayrollConfig(models.Model):
     vt_w4vt_sit_filing_status = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),
-        ('head_household', 'Head of Household')
     ], string='Vermont VT W-4VT Filing Status', help='VT W-4VT')
-    vt_w4vt_sit_allowances = fields.Integer(string='Vermont VT W-4VT Allowances', help='VT W-4VT 1.')
+    vt_w4vt_sit_allowances = fields.Integer(string='Vermont VT W-4VT Allowances', help='VT W-4VT 5.')
 
     va_va4_sit_exemptions = fields.Integer(string='Virginia VA-4(P) Personal Exemptions',
                                            help='VA-4(P) 1(a)')
