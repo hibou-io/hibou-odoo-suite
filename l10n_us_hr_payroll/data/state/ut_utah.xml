@@ -22,7 +22,7 @@
     </record>
     <data noupdate="1">
         <record id="rule_parameter_us_ut_suta_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">1.5</field>
+            <field name="parameter_value">0.1</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_ut_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
@@ -40,7 +40,7 @@
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
-
+    <!-- Table based on https://tax.utah.gov/forms/pubs/pub-14.pdf -->
     <record id="rule_parameter_us_ut_sit_allowances_rate" model="hr.rule.parameter">
         <field name="name">US UT Utah Allowances Rate</field>
         <field name="code">us_ut_sit_allowances_rate</field>
@@ -67,12 +67,21 @@
                     'semi-annual':   360,
                     'annually':      720,
                 },
+                'head_household': {
+                    'weekly' :        7,
+                    'bi-weekly' :     14,
+                    'semi-monthly':   15,
+                    'monthly' :       30,
+                    'quarterly' :     90,
+                    'semi-annual':   180,
+                    'annually':      360,
+                },
             }</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_ut_sit_allowances_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
-
+    <!-- Table based on https://tax.utah.gov/forms/pubs/pub-14.pdf -->
     <record id="rule_parameter_us_ut_sit_tax_rate" model="hr.rule.parameter">
         <field name="name">US UT Utah SIT Tax Rate</field>
         <field name="code">us_ut_sit_tax_rate</field>

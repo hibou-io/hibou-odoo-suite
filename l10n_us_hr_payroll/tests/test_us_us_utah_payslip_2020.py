@@ -9,8 +9,8 @@ class TestUsUTPayslip(TestUsPayslip):
     #   2020 Taxes and Rates
     ###
     UT_UNEMP_MAX_WAGE = 36600.0
-    UT_UNEMP = 1.5
-    # Calculation based on example https://src.bna.com/MSO
+    UT_UNEMP = 0.1
+    # Calculation based on example https://tax.utah.gov/forms/pubs/pub-14.pdf
 
     def _test_sit(self, wage, filing_status, additional_withholding, schedule_pay,  date_start, expected_withholding):
         employee = self._createEmployee()
@@ -25,7 +25,7 @@ class TestUsUTPayslip(TestUsPayslip):
         cats = self._getCategories(payslip)
 
         self._log('Computed period tax: ' + str(expected_withholding))
-        self.assertPayrollEqual(cats.get('EE_US_SIT', 0.0), -expected_withholding)
+        self.assertPayrollAlmostEqual(cats.get('EE_US_SIT', 0.0), -expected_withholding)
 
     def test_2020_taxes_example(self):
         self._test_er_suta('UT', self.UT_UNEMP, date(2020, 1, 1), wage_base=self.UT_UNEMP_MAX_WAGE)
@@ -33,5 +33,4 @@ class TestUsUTPayslip(TestUsPayslip):
         self._test_sit(1000, 'single', 0, 'bi-weekly', date(2020, 1, 1), 45.00)
         self._test_sit(855, 'married', 0, 'semi-monthly', date(2020, 1, 1), 16.00)
         self._test_sit(2500, 'married', 0, 'monthly', date(2020, 1, 1), 81.00)
-        self._test_sit(8000, 'single', 0, 'quarterly', date(2020, 1, 1), 387.00)
-        self._test_sit(8000, 'single', 10, 'quarterly', date(2020, 1, 1), 397.00)
+        self._test_sit(8000, 'head_household', 10, 'quarterly', date(2020, 1, 1), 397.00)
