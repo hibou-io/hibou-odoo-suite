@@ -241,9 +241,9 @@ class HRContractUSPayrollConfig(models.Model):
     ok_w4_sit_filing_status = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),
-        ('head_household', 'Head of Household')
+        ('head_household', 'Married, but withhold at higher Single rate')
     ], string='Oklahoma OK-W-4 Filing Status', help='OK-W-4')
-    ok_w4_sit_allowances = fields.Integer(string='Oklahoma OK-W-4 Allowances', help='OK-W-4 1.2.3.')
+    ok_w4_sit_allowances = fields.Integer(string='Oklahoma OK-W-4 Allowances', help='OK-W-4 5.')
 
     ri_w4_sit_allowances = fields.Integer(string='Rhode Island RI W-4 Allowances', help='RI W-4 1.')
 

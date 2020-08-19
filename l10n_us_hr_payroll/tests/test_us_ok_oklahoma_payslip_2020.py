@@ -35,3 +35,4 @@ class TestUsOKPayslip(TestUsPayslip):
         self._test_sit(1825, 'married', 2, 0, True, 'monthly', date(2020, 1, 1), 0.00)
         self._test_sit(1000, 'single', 1, 0, False, 'weekly', date(2020, 1, 1), 39.00)
         self._test_sit(1000, 'single', 1, 10, False, 'weekly', date(2020, 1, 1), 49.00)
+        self._test_sit(5000, 'head_household', 2, 10, False, 'monthly', date(2020, 1, 1), 210.00)
