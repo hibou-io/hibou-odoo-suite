@@ -26,10 +26,11 @@ class TestUsKSPayslip(TestUsPayslip):
         cats = self._getCategories(payslip)
 
         self._log('Computed period tax: ' + str(expected_withholding))
-        self.assertPayrollEqual(cats.get('EE_US_SIT', 0.0), -expected_withholding)
+        self.assertPayrollAlmostEqual(cats.get('EE_US_SIT', 0.0), -expected_withholding)
 
     def test_2020_taxes_example(self):
         self._test_er_suta('KS', self.KS_UNEMP, date(2020, 1, 1), wage_base=self.KS_UNEMP_MAX_WAGE)
-        self._test_sit(625, 'married', 2, 0, 'semi-monthly', date(2020, 1, 1), 4.00)
-        # self._test_sit(1500, 'single', 0, 0, 'bi-weekly', date(2020, 1, 1), 69.90)
-        # self._test_sit(1500, 'single', 0, 0,  'bi-weekly', date(2020, 1, 1), 79.90)
+        self._test_sit(6250, 'married', 2, 0, 'semi-monthly', date(2020, 1, 1), 290.00)
+        self._test_sit(5000, 'single', 1, 0, 'monthly', date(2020, 1, 1), 222.00)
+        self._test_sit(1500, 'married', 0, 0,  'bi-weekly', date(2020, 1, 1), 39.00)
+        self._test_sit(750, 'single', 2, 10,  'weekly', date(2020, 1, 1), 36.00)

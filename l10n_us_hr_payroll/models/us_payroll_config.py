@@ -129,8 +129,7 @@ class HRContractUSPayrollConfig(models.Model):
 
     ks_k4_sit_filing_status = fields.Selection([
         ('single', 'Single'),
-        ('married', 'Married'),
-        ('head of household', 'Head of Household'),
+        ('married', 'Joint'),
     ], string='Kansas K-4 Filing Status', help='KS K-4 3.')
     ks_k4_sit_allowances = fields.Integer(string='Kansas KS K-4 Number of Allowances', help='KS K-4 Step 4.')
 

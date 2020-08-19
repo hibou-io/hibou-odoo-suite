@@ -127,7 +127,7 @@
                         </group>
                         <group name="state_ks_kansas" string="KS Kansas" attrs="{'invisible':[('state_id', '!=', %(base.state_us_17)s)]}">
                             <p colspan="2"><h3>Form KS K-4 - State Income Tax</h3></p>
-                            <field name="ks_k4_sit_filing_status" string="Filing Status 3."/>
+                            <field name="ks_k4_sit_filing_status" string="Allowance Rate 3."/>
                             <field name="ks_k4_sit_allowances" string="Allowances 4."/>
                             <field name="state_income_tax_additional_withholding" string="Additional Withholding 5."/>
                             <field name="state_income_tax_exempt" string="Exempt 6."/>
