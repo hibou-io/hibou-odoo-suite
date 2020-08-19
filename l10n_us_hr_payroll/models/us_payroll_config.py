@@ -190,7 +190,6 @@ class HRContractUSPayrollConfig(models.Model):
         ('', 'Exempt'),
         ('single', 'Single'),
         ('married', 'Married'),
-        ('surviving_spouse', 'Surviving Spouse'),
         ('head_household', 'Head of Household')
     ], string='North Carolina NC-4 Filing Status', help='NC-4')
     nc_nc4_sit_allowances = fields.Integer(string='North Carolina NC-4 Allowances', help='NC-4 1.')
