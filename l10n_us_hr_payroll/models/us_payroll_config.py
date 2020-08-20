@@ -52,7 +52,7 @@ class HRContractUSPayrollConfig(models.Model):
                                                          help='Form W4 (2020+) 4(c)')
 
     al_a4_sit_exemptions = fields.Selection([
-        ('0', '0'),
+        ('', '0'),
         ('S', 'S'),
         ('MS', 'MS'),
         ('M', 'M'),
