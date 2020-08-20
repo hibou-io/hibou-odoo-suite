@@ -92,7 +92,7 @@ class HRContractUSPayrollConfig(models.Model):
     de_w4_sit_dependent = fields.Integer(string='Delaware W-4 Dependents', help='DE W-4 4.')
 
     ga_g4_sit_filing_status = fields.Selection([
-        ('exempt', 'Exempt'),
+        ('', 'Exempt'),
         ('single', 'Single'),
         ('married filing joint, both spouses working', 'Married Filing Joint, both spouses working'),
         ('married filing joint, one spouse working', 'Married Filing Joint, one spouse working'),
