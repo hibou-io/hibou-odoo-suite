@@ -31,3 +31,5 @@ class TestUsKYPayslip(TestUsPayslip):
         self._test_sit(3020, 0.0, 'monthly', date(2020, 1, 1), 139.96)
         self._test_sit(1500, 0.0, 'bi-weekly', date(2020, 1, 1), 69.90)
         self._test_sit(1500, 10.0, 'bi-weekly', date(2020, 1, 1), 79.90)
+        self._test_sit(750, 00.0, 'weekly', date(2020, 1, 1), 34.95)
+        self._test_sit(7000, 0.0, 'semi-monthly', date(2020, 1, 1), 344.48)
