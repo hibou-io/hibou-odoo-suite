@@ -13,6 +13,9 @@ def ia_iowa_state_income_withholding(payslip, categories, worked_days, inputs):
     if not _state_applies(payslip, state_code):
         return 0.0, 0.0
 
+    if payslip.contract_id.us_payroll_config_value('state_income_tax_exempt'):
+        return 0.0, 0.0
+
     # Determine Wage
     wage = sit_wage(payslip, categories)
     if not wage:
@@ -27,7 +30,8 @@ def ia_iowa_state_income_withholding(payslip, categories, worked_days, inputs):
     deduction_per_allowance = payslip.rule_parameter('us_ia_sit_deduction_allowance_rate')[schedule_pay]
 
     t1 = wage + fed_withholding
-    t2 = t1 - standard_deduction[0] if allowances < 2 else standard_deduction[1]
+    standard_deduction_amt = standard_deduction[0] if allowances < 2 else standard_deduction[1]
+    t2 = t1 - standard_deduction_amt
     t3 = 0.0
     last = 0.0
     for row in tax_table:

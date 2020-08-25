@@ -27,7 +27,7 @@
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
-
+    <!-- table based on https://www.maine.gov/revenue/forms/with/2020/20_WH_Tab&Instructions.pdf step 6.-->
     <record id="rule_parameter_us_me_sit_tax_rate" model="hr.rule.parameter">
         <field name="name">US ME Maine SIT Tax Rate</field>
         <field name="code">us_me_sit_tax_rate</field>
@@ -37,14 +37,14 @@
         <record id="rule_parameter_us_me_sit_tax_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'single': (
-                    (  22200,      0, 5.80),
-                    (  52600,   1288, 6.75),
-                    (  'inf',   3340, 7.15),
+                    (  22200,     0,  5.80),
+                    (  52600,  1288,  6.75),
+                    (  'inf',  3340,  7.15),
                 ),
                 'married': (
-                    (  44450,       0, 0.00),
-                    ( 105200,    2578, 6.75),
-                    ( 'inf',     6679, 7.15),
+                    (  44450,     0,  5.80),
+                    ( 105200,  2578,  6.75),
+                    ( 'inf',   6679,  7.15),
                 ),
             }</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_me_sit_tax_rate"/>
@@ -60,8 +60,14 @@
     <data noupdate="1">
         <record id="rule_parameter_us_me_sit_standard_deduction_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
-                'single':   (( 82900,  9550), (157900,  75000)),
-                'married':  ((165800, 21950), (315800, 150000)),
+                'single':   {
+                    ( 82900,   9550),
+                    (157900,  75000),
+                },
+                'married':  {
+                    (165800,  21950),
+                    (315800, 150000),
+                },
             }</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_me_sit_standard_deduction_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>

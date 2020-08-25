@@ -9,7 +9,7 @@ class TestUsRIPayslip(TestUsPayslip):
     #   2020 Taxes and Rates
     ###
     RI_UNEMP_MAX_WAGE = 24000.0
-    RI_UNEMP = 1.3
+    RI_UNEMP = 1.06
     # Calculation based on example http://www.tax.ri.gov/forms/2020/Withholding/2020%20Withhholding%20Tax%20Booklet.pdf
 
     def _test_sit(self, wage, allowances, additional_withholding, exempt, schedule_pay,  date_start, expected_withholding):

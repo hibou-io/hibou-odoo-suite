@@ -11,7 +11,7 @@ class TestUsNCPayslip(TestUsPayslip):
     NC_UNEMP_MAX_WAGE = 25200.0
     NC_UNEMP = 1.0
     NC_INC_TAX = 0.0535
-
+    # Example based on https://files.nc.gov/ncdor/documents/files/NC-30_book_Web_1-16-19_v4_Final.pdf 
     def _test_sit(self, wage, filing_status, allowances, additional_withholding, schedule_pay, date_start, expected_withholding):
 
         employee = self._createEmployee()
@@ -34,3 +34,4 @@ class TestUsNCPayslip(TestUsPayslip):
         self._test_sit(20000.0, 'single', 1, 100.0, 'weekly', date(2020, 1, 1), 1156.0)
         self._test_sit(5000.0, 'married', 1, 0.0, 'weekly', date(2020, 1, 1), 254.0)
         self._test_sit(4000.0, 'head_household', 1, 5.0, 'semi-monthly', date(2020, 1, 1), 177.0)
+        self._test_sit(7000.0, '', 1, 5.0, 'monthly', date(2020, 1, 1), 0.0)

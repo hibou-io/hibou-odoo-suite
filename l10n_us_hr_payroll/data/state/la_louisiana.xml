@@ -27,17 +27,17 @@
     </record>
     <data noupdate="1">
         <record id="rule_parameter_us_la_suta_rate_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">6.20</field>
+            <field name="parameter_value">1.14</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_la_suta_rate"/>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
         <record id="rule_parameter_us_la_suta_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">6.20</field>
+            <field name="parameter_value">1.14</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_la_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
-
+    <!-- table data from http://www.revenue.louisiana.gov/taxforms/1306(7_09)W.pdf page 9. -->
     <record id="rule_parameter_us_la_sit_tax_rate" model="hr.rule.parameter">
         <field name="name">US LA Louisiana SIT Tax Rate</field>
         <field name="code">us_la_sit_tax_rate</field>
@@ -46,16 +46,32 @@
     <data noupdate="1">
         <record id="rule_parameter_us_la_sit_tax_rate_2019" model="hr.rule.parameter.value">
             <field name="parameter_value">{
-                 'single': ((12500.00, 2.10), (50000.00, 1.60), ('inf', 1.35)),
-                 'married': ((25000.00, 2.10), (100000.00, 1.65), ('inf', 1.35)),
+                 'single': (
+                    (12500.00, 2.10),
+                    (50000.00, 1.60),
+                    (   'inf', 1.35),
+                 ),
+                 'married': (
+                    ( 25000.00, 2.10),
+                    (100000.00, 1.65),
+                    (    'inf', 1.35),
+                 ),
             }</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_la_sit_tax_rate"/>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
         <record id="rule_parameter_us_la_sit_tax_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
-                 'single': ((12500.00, 2.10), (50000.00, 1.60), ('inf', 1.35)),
-                 'married': ((25000.00, 2.10), (100000.00, 1.65), ('inf', 1.35)),
+                 'single': (
+                    (12500.00, 2.10),
+                    (50000.00, 1.60),
+                    (   'inf', 1.35)
+                 ),
+                 'married': (
+                    ( 25000.00,  2.10),
+                    (100000.00,  1.65),
+                    (   'inf',   1.35)
+                 ),
             }</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_la_sit_tax_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>

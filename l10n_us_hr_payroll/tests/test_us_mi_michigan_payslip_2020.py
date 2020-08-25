@@ -27,9 +27,9 @@ class TestUsMIPayslip(TestUsPayslip):
 
     def test_2020_taxes_example(self):
         self._test_er_suta('MI', self.MI_UNEMP, date(2020, 1, 1), wage_base=self.MI_UNEMP_MAX_WAGE)
-        self._test_sit(5000.0, 1, 100.0, 'weekly', date(2020, 1, 1), 308.62)
-        self._test_sit(5000.0, 1, 0.0, 'weekly', date(2020, 1, 1), 208.62)
+        self._test_sit(750.0, 1, 100.0, 'weekly', date(2020, 1, 1), 127.99)
+        self._test_sit(1750.0, 1, 0.0, 'bi-weekly', date(2020, 1, 1), 66.61)
         self._test_sit(5000.0, 1, 5.0, 'semi-monthly', date(2020, 1, 1), 209.09)
-        self._test_sit(5000.0, 1, 5.0, 'monthly', date(2020, 1, 1), 200.68)
-        self._test_sit(5000.0, 200, 0.0, 'monthly', date(2020, 1, 1), 0.0)
+        self._test_sit(8000.0, 1, 5.0, 'monthly', date(2020, 1, 1), 328.18)
+        self._test_sit(5000.0, 2, 0.0, 'monthly', date(2020, 1, 1), 178.86)
 
