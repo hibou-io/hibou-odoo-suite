@@ -31,3 +31,4 @@ class TestUsAZPayslip(TestUsPayslip):
         self._test_sit(1000.0, 10.0, 2.70, 'monthly', date(2020, 1, 1), 37.0)
         self._test_sit(15000.0, 0.0, 3.60, 'weekly', date(2020, 1, 1), 540.0)
         self._test_sit(8000.0, 0.0, 4.20, 'semi-monthly', date(2020, 1, 1), 336.0)
+        self._test_sit(8000.0, 0.0, 0.00, 'semi-monthly', date(2020, 1, 1), 0.0)

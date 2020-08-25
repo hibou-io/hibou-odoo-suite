@@ -50,6 +50,7 @@
     <!-- Partners and Contribution Registers -->
     <record id="res_partner_us_ak_dor" model="res.partner">
         <field name="name">US Alaska - Department of Labor and Workforce Development (ADLWD) - Unemployment Tax</field>
+        <field name="supplier">1</field>
     </record>
     <record id="contrib_register_us_ak_dor" model="hr.contribution.register">
         <field name="name">US Alaska - Department of Labor and Workforce Development (ADLWD) - Unemployment Tax</field>

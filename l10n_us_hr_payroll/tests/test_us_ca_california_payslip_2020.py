@@ -40,3 +40,4 @@ class TestUsCAPayslip(TestUsPayslip):
         self._test_sit(1800.0, 'married', 4, 0, 0, 'semi-monthly', date(2020, 1, 1), 0.84)
         self._test_sit(45000.0, 'married', 4, 0, 0, 'annually', date(2020, 1, 1), 59.78)
         self._test_sit(45000.0, 'married', 4, 0, 20.0, 'annually', date(2020, 1, 1), 79.78)
+        self._test_sit(6000.0, '', 4, 0, 20.0, 'annually', date(2020, 1, 1), 0.00)
