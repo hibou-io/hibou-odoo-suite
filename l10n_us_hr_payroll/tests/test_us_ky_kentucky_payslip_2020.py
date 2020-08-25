@@ -9,7 +9,7 @@ class TestUsKYPayslip(TestUsPayslip):
     #   2020 Taxes and Rates
     ###
     KY_UNEMP_MAX_WAGE = 10800.0
-    KY_UNEMP = 2.4
+    KY_UNEMP = 2.7
     # Calculation based on example https://revenue.ky.gov/Forms/42A003(T)%20(12-2019)%202020%20Tax%20Tables.pdf
 
     def _test_sit(self, wage, additional_withholding, schedule_pay,  date_start, expected_withholding):
@@ -31,3 +31,5 @@ class TestUsKYPayslip(TestUsPayslip):
         self._test_sit(3020, 0.0, 'monthly', date(2020, 1, 1), 139.96)
         self._test_sit(1500, 0.0, 'bi-weekly', date(2020, 1, 1), 69.90)
         self._test_sit(1500, 10.0, 'bi-weekly', date(2020, 1, 1), 79.90)
+        self._test_sit(750, 00.0, 'weekly', date(2020, 1, 1), 34.95)
+        self._test_sit(7000, 0.0, 'semi-monthly', date(2020, 1, 1), 344.48)

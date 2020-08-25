@@ -24,6 +24,7 @@ def sc_south_carolina_state_income_withholding(payslip, categories, worked_days,
         return 0.0, 0.0
 
     pay_periods = payslip.dict.get_pay_periods_in_year()
+    additional = payslip.contract_id.us_payroll_config_value('state_income_tax_additional_withholding')
     allowances = payslip.contract_id.us_payroll_config_value('sc_w4_sit_allowances')
     tax_rate = payslip.rule_parameter('us_sc_sit_tax_rate')
     personal_exemption = payslip.rule_parameter('us_sc_sit_personal_exemption_rate')
@@ -45,4 +46,5 @@ def sc_south_carolina_state_income_withholding(payslip, categories, worked_days,
             withholding = (taxable_income * (rate / 100.0) - flat_amt)
             break
     withholding /= pay_periods
+    withholding += additional
     return wage, -((withholding / wage) * 100.0)

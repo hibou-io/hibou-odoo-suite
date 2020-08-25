@@ -52,7 +52,7 @@ class HRContractUSPayrollConfig(models.Model):
                                                          help='Form W4 (2020+) 4(c)')
 
     al_a4_sit_exemptions = fields.Selection([
-        ('0', '0'),
+        ('', '0'),
         ('S', 'S'),
         ('MS', 'MS'),
         ('M', 'M'),
@@ -92,7 +92,7 @@ class HRContractUSPayrollConfig(models.Model):
     de_w4_sit_dependent = fields.Integer(string='Delaware W-4 Dependents', help='DE W-4 4.')
 
     ga_g4_sit_filing_status = fields.Selection([
-        ('exempt', 'Exempt'),
+        ('', 'Exempt'),
         ('single', 'Single'),
         ('married filing joint, both spouses working', 'Married Filing Joint, both spouses working'),
         ('married filing joint, one spouse working', 'Married Filing Joint, one spouse working'),
@@ -129,8 +129,7 @@ class HRContractUSPayrollConfig(models.Model):
 
     ks_k4_sit_filing_status = fields.Selection([
         ('single', 'Single'),
-        ('married', 'Married'),
-        ('head of household', 'Head of Household'),
+        ('married', 'Joint'),
     ], string='Kansas K-4 Filing Status', help='KS K-4 3.')
     ks_k4_sit_allowances = fields.Integer(string='Kansas KS K-4 Number of Allowances', help='KS K-4 Step 4.')
 
@@ -143,7 +142,7 @@ class HRContractUSPayrollConfig(models.Model):
 
     me_w4me_sit_filing_status = fields.Selection([
         ('', 'Exempt'),
-        ('single', 'Single'),
+        ('single', 'Single or Head of Household'),
         ('married', 'Married'),
     ], string='Maine W-4ME Filing Status', help='ME W-4ME 3.')
     me_w4me_sit_allowances = fields.Integer(string='Maine Allowances', help='W-4ME 4.')
@@ -191,16 +190,17 @@ class HRContractUSPayrollConfig(models.Model):
         ('', 'Exempt'),
         ('single', 'Single'),
         ('married', 'Married'),
-        ('surviving_spouse', 'Surviving Spouse'),
         ('head_household', 'Head of Household')
     ], string='North Carolina NC-4 Filing Status', help='NC-4')
     nc_nc4_sit_allowances = fields.Integer(string='North Carolina NC-4 Allowances', help='NC-4 1.')
 
     nd_w4_sit_filing_status = fields.Selection([
+        ('', 'Exempt'),
         ('single', 'Single'),
         ('married', 'Married'),
         ('head_household', 'Head of Household')
     ], string='North Dakota ND W-4 Filing Status', help='ND W-4')
+    nd_w4_sit_allowances = fields.Integer(string='North Dakota ND W-4')
 
     ne_w4n_sit_filing_status = fields.Selection([
         ('single', 'Single'),
@@ -239,9 +239,9 @@ class HRContractUSPayrollConfig(models.Model):
     ok_w4_sit_filing_status = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),
-        ('head_household', 'Head of Household')
+        ('head_household', 'Married, but withhold at higher Single rate')
     ], string='Oklahoma OK-W-4 Filing Status', help='OK-W-4')
-    ok_w4_sit_allowances = fields.Integer(string='Oklahoma OK-W-4 Allowances', help='OK-W-4 1.2.3.')
+    ok_w4_sit_allowances = fields.Integer(string='Oklahoma OK-W-4 Allowances', help='OK-W-4 5.')
 
     ri_w4_sit_allowances = fields.Integer(string='Rhode Island RI W-4 Allowances', help='RI W-4 1.')
 
@@ -256,9 +256,8 @@ class HRContractUSPayrollConfig(models.Model):
     vt_w4vt_sit_filing_status = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),
-        ('head_household', 'Head of Household')
     ], string='Vermont VT W-4VT Filing Status', help='VT W-4VT')
-    vt_w4vt_sit_allowances = fields.Integer(string='Vermont VT W-4VT Allowances', help='VT W-4VT 1.')
+    vt_w4vt_sit_allowances = fields.Integer(string='Vermont VT W-4VT Allowances', help='VT W-4VT 5.')
 
     va_va4_sit_exemptions = fields.Integer(string='Virginia VA-4(P) Personal Exemptions',
                                            help='VA-4(P) 1(a)')

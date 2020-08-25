@@ -18,6 +18,10 @@ def al_alabama_state_income_withholding(payslip, categories, worked_days, inputs
     if not wage:
         return 0.0, 0.0
 
+    exemptions = payslip.contract_id.us_payroll_config_value('al_a4_sit_exemptions')
+    if not exemptions:
+        return 0.0, 0.0
+
     personal_exempt = payslip.contract_id.us_payroll_config_value('state_income_tax_exempt')
     if personal_exempt:
         return 0.0, 0.0
@@ -25,7 +29,6 @@ def al_alabama_state_income_withholding(payslip, categories, worked_days, inputs
     pay_periods = payslip.dict.get_pay_periods_in_year()
     additional = payslip.contract_id.us_payroll_config_value('state_income_tax_additional_withholding')
     tax_table = payslip.rule_parameter('us_al_sit_tax_rate')
-    exemptions = payslip.contract_id.us_payroll_config_value('al_a4_sit_exemptions')
     dependent_rate = payslip.rule_parameter('us_al_sit_dependent_rate')
     standard_deduction = payslip.rule_parameter('us_al_sit_standard_deduction_rate').get(exemptions, 0.0)
     personal_exemption = payslip.rule_parameter('us_al_sit_personal_exemption_rate').get(exemptions, 0.0)

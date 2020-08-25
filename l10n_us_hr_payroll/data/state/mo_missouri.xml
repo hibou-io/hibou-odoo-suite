@@ -44,6 +44,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- https://dor.mo.gov/forms/4282_2019.pdf -->
         <record id="rule_parameter_us_mo_sit_rate_2019" model="hr.rule.parameter.value">
             <field name="parameter_value">[
                 (1053.0, 1.5),
@@ -59,6 +60,8 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_mo_sit_rate"/>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- https://dor.mo.gov/forms/4282_2020.pdf -->
+        <!-- Income Tax Withholding Percentage Table-->
         <record id="rule_parameter_us_mo_sit_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">[
                 (1073.0, 1.5),
@@ -82,6 +85,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- https://dor.mo.gov/forms/4282_2019.pdf -->
         <record id="rule_parameter_us_mo_sit_deduction_2019" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'single':             12400.0,
@@ -91,6 +95,8 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_mo_sit_deduction"/>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- https://dor.mo.gov/forms/4282_2020.pdf -->
+        <!-- 2020 Missouri Withholding Tax Formula Page.12 -->
         <record id="rule_parameter_us_mo_sit_deduction_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'single':             12400.0,

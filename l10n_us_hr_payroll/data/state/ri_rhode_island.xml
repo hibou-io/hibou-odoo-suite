@@ -22,12 +22,12 @@
     </record>
     <data noupdate="1">
         <record id="rule_parameter_us_ri_suta_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">1.3</field>
+            <field name="parameter_value">1.06</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_ri_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
-
+    <!-- Withhooding tax exemption based on two table on page 7. from http://www.tax.ri.gov/forms/2020/Withholding/2020%20Withhholding%20Tax%20Booklet.pdf -->
     <record id="rule_parameter_us_ri_sit_exemption_rate" model="hr.rule.parameter">
         <field name="name">US RI Rhode Island Exemption Rate</field>
         <field name="code">us_ri_sit_exemption_rate</field>
@@ -57,13 +57,41 @@
     <data noupdate="1">
         <record id="rule_parameter_us_ri_sit_tax_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
-                'weekly': ((1255, 0.00, 3.75), (2853, 47.06, 4.75), ('inf', 122.97, 5.99)),
-                'bi-weekly': ((2510, 0.00, 3.75), (5706, 94.13, 4.75), ('inf', 245.94, 5.99)),
-                'semi-monthly': ((2719, 0.00, 3.75), (6181, 101.96, 4.75), ('inf', 266.41, 5.99)),
-                'monthly': ((5438, 0.00, 3.75), (12363, 203.93, 4.75), ('inf', 532.87, 5.99)),
-                'quarterly': ((16313, 0.00, 3.75), (37088, 611.74, 4.75), ('inf', 1598.55, 5.99)),
-                'semi-annually': ((32625, 0.00, 3.75), (74175, 1223.44, 4.75), ('inf', 3197.07, 5.99)),
-                'annually': ((65250, 0.00, 3.75), (148350, 2446.88, 4.75), ('inf', 6394.13, 5.99)),
+                'weekly': (
+                    ( 1255,   0.00, 3.75),
+                    ( 2853,  47.06, 4.75),
+                    ('inf', 122.97, 5.99),
+                ),
+                'bi-weekly': (
+                    ( 2510,   0.00, 3.75),
+                    ( 5706,  94.13, 4.75),
+                    ('inf', 245.94, 5.99),
+                ),
+                'semi-monthly': (
+                    ( 2719,   0.00, 3.75),
+                    ( 6181, 101.96, 4.75),
+                    ('inf', 266.41, 5.99),
+                ),
+                'monthly': (
+                    ( 5438,   0.00, 3.75),
+                    (12363, 203.93, 4.75),
+                    ('inf', 532.87, 5.99),
+                ),
+                'quarterly': (
+                    (16313,    0.00, 3.75),
+                    (37088,  611.74, 4.75),
+                    ('inf', 1598.55, 5.99),
+                ),
+                'semi-annually': (
+                    (32625,    0.00, 3.75),
+                    (74175, 1223.44, 4.75),
+                    ('inf', 3197.07, 5.99),
+                ),
+                'annually': (
+                    ( 65250,    0.00, 3.75),
+                    (148350, 2446.88, 4.75),
+                    ( 'inf', 6394.13, 5.99),
+                ),
             }</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_ri_sit_tax_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>

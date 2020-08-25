@@ -27,12 +27,13 @@ class TestUsMEPayslip(TestUsPayslip):
         cats = self._getCategories(payslip)
 
         self._log('Computed period tax: ' + str(expected_withholding))
-        self.assertPayrollEqual(cats.get('EE_US_SIT', 0.0), -expected_withholding)
+        self.assertPayrollAlmostEqual(cats.get('EE_US_SIT', 0.0), -expected_withholding)
 
     def test_2020_taxes_example(self):
         self._test_er_suta('ME', self.ME_UNEMP, date(2020, 1, 1), wage_base=self.ME_UNEMP_MAX_WAGE)
         self._test_sit(300.0, 'single', 0.0, False, 2, 'weekly', date(2020, 1, 1), 0.0)
-        self._test_sit(800.0, 'single', 0.0, False, 2, 'weekly', date(2020, 1, 1), 26.00)
-        self._test_sit(4500.0, 'married', 0.0, False, 2, 'weekly', date(2020, 1, 1), 277.00)
-        self._test_sit(4500.0, 'married', 0.0, True, 2, 'weekly', date(2020, 1, 1), 0.00)
+        self._test_sit(800.0, 'single', 0.0, False, 2, 'bi-weekly', date(2020, 1, 1), 6.00)
+        self._test_sit(4500.0, 'married', 0.0, True, 0, 'weekly', date(2020, 1, 1), 0.00)
+        self._test_sit(4500.0, 'married', 0.0, False, 2, 'monthly', date(2020, 1, 1), 113.00)
         self._test_sit(4500.0, 'married', 10.0, False, 2, 'weekly', date(2020, 1, 1), 287.00)
+        self._test_sit(7000.0, '', 10.0, False, 2, 'weekly', date(2020, 1, 1), 0.00)

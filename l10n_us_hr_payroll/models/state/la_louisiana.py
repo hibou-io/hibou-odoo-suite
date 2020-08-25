@@ -24,6 +24,7 @@ def la_louisiana_state_income_withholding(payslip, categories, worked_days, inpu
 
     pay_periods = payslip.dict.get_pay_periods_in_year()
     personal_exemptions = payslip.contract_id.us_payroll_config_value('la_l4_sit_exemptions')
+    additional = payslip.contract_id.us_payroll_config_value('state_income_tax_additional_withholding')
     dependent_exemptions = payslip.contract_id.us_payroll_config_value('la_l4_sit_dependents')
     tax_table = payslip.rule_parameter('us_la_sit_tax_rate')[filing_status]
     exemption_rate = payslip.rule_parameter('us_la_sit_personal_exemption_rate')
@@ -57,4 +58,5 @@ def la_louisiana_state_income_withholding(payslip, categories, worked_days, inpu
 
     withholding = withholding - (after_credits_under + after_credits_over)
     withholding = round(withholding, 2)
+    withholding += additional
     return wage, -((withholding / wage) * 100.0)

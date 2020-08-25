@@ -13,7 +13,7 @@ def ga_georgia_state_income_withholding(payslip, categories, worked_days, inputs
     if not _state_applies(payslip, state_code):
         return 0.0, 0.0
     ga_filing_status = payslip.contract_id.us_payroll_config_value('ga_g4_sit_filing_status')
-    if not ga_filing_status or ga_filing_status == 'exempt':
+    if not ga_filing_status:
         return 0.0, 0.0
 
     # Determine Wage
