@@ -334,6 +334,7 @@
             <field name="name">US CA California SIT Tax Rate</field>
             <field name="code">us_ca_sit_tax_rate</field>
             <field name="parameter_value">{
+                'head_household': {
                     'weekly': (
                         (  339, 0.0110,    0.00),
                         (  803, 0.0220,    3.73),
