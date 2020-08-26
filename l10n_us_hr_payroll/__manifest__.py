@@ -3,7 +3,7 @@
     'author': 'Hibou Corp. <hello@hibou.io>',
     'category': 'Localization',
     'depends': ['hr_payroll', 'hr_payroll_rate'],
-    'version': '12.0.2020.1.0',
+    'version': '12.0.2020.2.0',
     'description': """
 USA Payroll Rules.
 ==================

@@ -94,7 +94,7 @@
                         (5000.00,  95.00, 5.00),
                         (  'inf', 170.00, 5.75),
                     ),
-                 },},
+                 },
                 'married filing joint, one spouse working': {
                     'weekly': (
                         ( 19.00, 0.00, 1.00),
