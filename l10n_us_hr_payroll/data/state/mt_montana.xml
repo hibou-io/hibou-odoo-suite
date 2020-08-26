@@ -52,38 +52,77 @@
             <field name="name">US MT Montana SIT Rate Table</field>
             <field name="code">us_mt_sit_rate</field>
             <field name="parameter_value">{
-                'weekly': [
+                'weekly': (
                     (    135.00,       0.0,  1.80),
                     (    288.00,       2.0,  4.40),
                     (   2308.00,       9.0,  6.00),
                     (     'inf',     130.0,  6.60),
-                ],
-                'bi-weekly': [
+                ),
+                'bi-weekly': (
                     (    269.00,       0.0,  1.80),
                     (    577.00,       5.0,  4.40),
                     (   4615.00,      18.0,  6.00),
                     (     'inf',     261.0,  6.60),
-                ],
-                'semi-monthly': [
+                ),
+                'semi-monthly': (
                     (    292.00,       0.0,  1.80),
                     (    625.00,       5.0,  4.40),
                     (   5000.00,      20.0,  6.00),
                     (     'inf',     282.0,  6.60),
-                ],
-                'monthly': [
+                ),
+                'monthly': (
                     (    583.00,       0.0,  1.80),
                     (   1250.00,      11.0,  4.40),
                     (  10000.00,      40.0,  6.00),
                     (     'inf',     565.0,  6.60),
-                ],
-                'annually': [
+                ),
+                'annually': (
                     (   7000.00,       0.0,  1.80),
                     (  15000.00,     126.0,  4.40),
                     ( 120000.00,     478.0,  6.00),
                     (     'inf',    6778.0,  6.60),
-                ],
+                ),
             }</field>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://app.mt.gov/myrevenue/Endpoint/DownloadPdf?yearId=705 -->
+        <!-- Table Montana Withholding Tax Formula for Computerized Payroll Systems -->
+        <record id="rule_parameter_us_mt_sit_rate_2020" model="hr.payroll.rate">
+            <field name="name">US MT Montana SIT Rate Table</field>
+            <field name="code">us_mt_sit_rate</field>
+            <field name="parameter_value">{
+                'weekly': (
+                    (    135.00,       0.0,  1.80),
+                    (    288.00,       2.0,  4.40),
+                    (   2308.00,       9.0,  6.00),
+                    (     'inf',     130.0,  6.60),
+                ),
+                'bi-weekly': (
+                    (    269.00,       0.0,  1.80),
+                    (    577.00,       5.0,  4.40),
+                    (   4615.00,      18.0,  6.00),
+                    (     'inf',     261.0,  6.60),
+                ),
+                'semi-monthly': (
+                    (    292.00,       0.0,  1.80),
+                    (    625.00,       5.0,  4.40),
+                    (   5000.00,      20.0,  6.00),
+                    (     'inf',     282.0,  6.60),
+                ),
+                'monthly': (
+                    (    583.00,       0.0,  1.80),
+                    (   1250.00,      11.0,  4.40),
+                    (  10000.00,      40.0,  6.00),
+                    (     'inf',     565.0,  6.60),
+                ),
+                'annually': (
+                    (   7000.00,       0.0,  1.80),
+                    (  15000.00,     126.0,  4.40),
+                    ( 120000.00,     478.0,  6.00),
+                    (     'inf',    6778.0,  6.60),
+                ),
+            }</field>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
 
@@ -99,6 +138,20 @@
                 'annually':     1900.0,
             }</field>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://app.mt.gov/myrevenue/Endpoint/DownloadPdf?yearId=705 -->
+        <!-- Table Montana Withholding Tax Formula for Computerized Payroll Systems -->
+        <record id="rule_parameter_us_mt_sit_exemption_rate_2020" model="hr.payroll.rate">
+            <field name="name">US MT Montana SIT Exemption Rate Table</field>
+            <field name="code">us_mt_sit_exemption_rate</field>
+            <field name="parameter_value">{
+                'weekly':         37.0,
+                'bi-weekly':      73.0,
+                'semi-monthly':   79.0,
+                'monthly':       158.0,
+                'annually':     1900.0,
+            }</field>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
 

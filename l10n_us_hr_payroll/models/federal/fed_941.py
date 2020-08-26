@@ -4,10 +4,53 @@
 # _logger = logging.getLogger(__name__)
 
 
+def fica_wage(payslip, categories):
+    """
+    Returns FICA eligible wage for current Payslip (no wage_base, just by categories)
+    WAGE = GROSS - ALW_FICA_EXEMPT + DED_FICA_EXEMPT
+    :return: wage
+    """
+    wage = categories.GROSS
+
+    wage -= categories.ALW_FICA_EXEMPT + \
+            categories.ALW_FIT_FICA_EXEMPT + \
+            categories.ALW_FIT_FICA_FUTA_EXEMPT + \
+            categories.ALW_FICA_FUTA_EXEMPT
+
+    wage += categories.DED_FICA_EXEMPT + \
+            categories.DED_FIT_FICA_EXEMPT + \
+            categories.DED_FIT_FICA_FUTA_EXEMPT + \
+            categories.DED_FICA_FUTA_EXEMPT
+
+    return wage
+
+
+def fica_wage_ytd(payslip, categories):
+    """
+    Returns Year to Date FICA eligible wages
+    WAGE = GROSS - ALW_FICA_EXEMPT + DED_FICA_EXEMPT
+    :return: wage
+    """
+    year = payslip.dict.get_year()
+    ytd_wage = payslip.sum_category('GROSS',                     str(year) + '-01-01', str(year+1) + '-01-01')
+
+    ytd_wage -= payslip.sum_category('ALW_FICA_EXEMPT',          str(year) + '-01-01', str(year+1) + '-01-01') + \
+                payslip.sum_category('ALW_FIT_FICA_EXEMPT',      str(year) + '-01-01', str(year+1) + '-01-01') + \
+                payslip.sum_category('ALW_FIT_FICA_FUTA_EXEMPT', str(year) + '-01-01', str(year+1) + '-01-01') + \
+                payslip.sum_category('ALW_FICA_FUTA_EXEMPT',     str(year) + '-01-01', str(year+1) + '-01-01')
+
+    ytd_wage += payslip.sum_category('DED_FICA_EXEMPT',          str(year) + '-01-01', str(year+1) + '-01-01') + \
+                payslip.sum_category('DED_FIT_FICA_EXEMPT',      str(year) + '-01-01', str(year+1) + '-01-01') + \
+                payslip.sum_category('DED_FIT_FICA_FUTA_EXEMPT', str(year) + '-01-01', str(year+1) + '-01-01') + \
+                payslip.sum_category('DED_FICA_FUTA_EXEMPT',     str(year) + '-01-01', str(year+1) + '-01-01')
+
+    ytd_wage += payslip.dict.contract_id.external_wages
+    return ytd_wage
+
+
 def ee_us_941_fica_ss(payslip, categories, worked_days, inputs):
     """
     Returns FICA Social Security eligible wage and rate.
-    WAGE = GROSS + DED_FICA_EXEMPT
     :return: result, result_rate (wage, percent)
     """
     exempt = payslip.dict.contract_id.us_payroll_config_value('fed_941_fica_exempt')
@@ -18,15 +61,13 @@ def ee_us_941_fica_ss(payslip, categories, worked_days, inputs):
     result_rate = -payslip.dict.rule_parameter('fed_941_fica_ss_rate')
 
     # Determine Wage
-    year = payslip.dict.get_year()
-    ytd_wage = payslip.sum_category('GROSS', str(year) + '-01-01', str(year+1) + '-01-01')
-    ytd_wage += payslip.sum_category('DED_FICA_EXEMPT', str(year) + '-01-01', str(year+1) + '-01-01')
-    ytd_wage += payslip.dict.contract_id.external_wages
+    wage = fica_wage(payslip, categories)
+    if not wage:
+        return 0.0, 0.0
 
+    ytd_wage = fica_wage_ytd(payslip, categories)
     wage_base = payslip.dict.rule_parameter('fed_941_fica_ss_wage_base')
     remaining = wage_base - ytd_wage
-
-    wage = categories.GROSS + categories.DED_FICA_EXEMPT
 
     if remaining < 0.0:
         result = 0.0
@@ -44,7 +85,6 @@ er_us_941_fica_ss = ee_us_941_fica_ss
 def ee_us_941_fica_m(payslip, categories, worked_days, inputs):
     """
     Returns FICA Medicare eligible wage and rate.
-    WAGE = GROSS + DED_FICA_EXEMPT
     :return: result, result_rate (wage, percent)
     """
     exempt = payslip.dict.contract_id.us_payroll_config_value('fed_941_fica_exempt')
@@ -55,15 +95,13 @@ def ee_us_941_fica_m(payslip, categories, worked_days, inputs):
     result_rate = -payslip.dict.rule_parameter('fed_941_fica_m_rate')
 
     # Determine Wage
-    year = payslip.dict.get_year()
-    ytd_wage = payslip.sum_category('GROSS', str(year) + '-01-01', str(year+1) + '-01-01')
-    ytd_wage += payslip.sum_category('DED_FICA_EXEMPT', str(year) + '-01-01', str(year+1) + '-01-01')
-    ytd_wage += payslip.dict.contract_id.external_wages
+    wage = fica_wage(payslip, categories)
+    if not wage:
+        return 0.0, 0.0
 
+    ytd_wage = fica_wage_ytd(payslip, categories)
     wage_base = float(payslip.dict.rule_parameter('fed_941_fica_m_wage_base'))  # inf
     remaining = wage_base - ytd_wage
-
-    wage = categories.GROSS + categories.DED_FICA_EXEMPT
 
     if remaining < 0.0:
         result = 0.0
@@ -81,8 +119,6 @@ er_us_941_fica_m = ee_us_941_fica_m
 def ee_us_941_fica_m_add(payslip, categories, worked_days, inputs):
     """
     Returns FICA Medicare Additional eligible wage and rate.
-    Note that this wage is not capped like the above rules.
-    WAGE = GROSS - WAGE_FICA_EXEMPT
     :return: result, result_rate (wage, percent)
     """
     exempt = payslip.dict.contract_id.us_payroll_config_value('fed_941_fica_exempt')
@@ -93,15 +129,13 @@ def ee_us_941_fica_m_add(payslip, categories, worked_days, inputs):
     result_rate = -payslip.dict.rule_parameter('fed_941_fica_m_add_rate')
 
     # Determine Wage
-    year = payslip.dict.get_year()
-    ytd_wage = payslip.sum_category('GROSS', str(year) + '-01-01', str(year+1) + '-01-01')
-    ytd_wage += payslip.sum_category('DED_FICA_EXEMPT', str(year) + '-01-01', str(year+1) + '-01-01')
-    ytd_wage += payslip.dict.contract_id.external_wages
+    wage = fica_wage(payslip, categories)
+    if not wage:
+        return 0.0, 0.0
 
+    ytd_wage = fica_wage_ytd(payslip, categories)
     wage_start = payslip.dict.rule_parameter('fed_941_fica_m_add_wage_start')
     existing_wage = ytd_wage - wage_start
-
-    wage = categories.GROSS + categories.DED_FICA_EXEMPT
 
     if existing_wage >= 0.0:
         result = wage
@@ -113,11 +147,54 @@ def ee_us_941_fica_m_add(payslip, categories, worked_days, inputs):
     return result, result_rate
 
 
+def fit_wage(payslip, categories):
+    """
+    Returns FIT eligible wage for current Payslip (no wage_base, just by categories)
+    WAGE = GROSS - ALW_FIT_EXEMPT + DED_FIT_EXEMPT
+    :return: wage
+    """
+    wage = categories.GROSS
+
+    wage -= categories.ALW_FIT_EXEMPT + \
+            categories.ALW_FIT_FICA_EXEMPT + \
+            categories.ALW_FIT_FICA_FUTA_EXEMPT + \
+            categories.ALW_FIT_FUTA_EXEMPT
+
+    wage += categories.DED_FIT_EXEMPT + \
+            categories.DED_FIT_FICA_EXEMPT + \
+            categories.DED_FIT_FICA_FUTA_EXEMPT + \
+            categories.DED_FIT_FUTA_EXEMPT
+
+    return wage
+
+
+def fit_wage_ytd(payslip, categories):
+    """
+    Returns Year to Date FIT eligible wages
+    WAGE = GROSS - ALW_FIT_EXEMPT + DED_FIT_EXEMPT
+    :return: wage
+    """
+    year = payslip.dict.get_year()
+    ytd_wage = payslip.sum_category('GROSS',                     str(year) + '-01-01', str(year+1) + '-01-01')
+
+    ytd_wage -= payslip.sum_category('ALW_FIT_EXEMPT',           str(year) + '-01-01', str(year+1) + '-01-01') + \
+                payslip.sum_category('ALW_FIT_FICA_EXEMPT',      str(year) + '-01-01', str(year+1) + '-01-01') + \
+                payslip.sum_category('ALW_FIT_FICA_FUTA_EXEMPT', str(year) + '-01-01', str(year+1) + '-01-01') + \
+                payslip.sum_category('ALW_FIT_FUTA_EXEMPT',      str(year) + '-01-01', str(year+1) + '-01-01')
+
+    ytd_wage += payslip.sum_category('DED_FIT_EXEMPT',           str(year) + '-01-01', str(year+1) + '-01-01') + \
+                payslip.sum_category('DED_FIT_FICA_EXEMPT',      str(year) + '-01-01', str(year+1) + '-01-01') + \
+                payslip.sum_category('DED_FIT_FICA_FUTA_EXEMPT', str(year) + '-01-01', str(year+1) + '-01-01') + \
+                payslip.sum_category('DED_FIT_FUTA_EXEMPT',      str(year) + '-01-01', str(year+1) + '-01-01')
+
+    ytd_wage += payslip.dict.contract_id.external_wages
+    return ytd_wage
+
+
 # Federal Income Tax
 def ee_us_941_fit(payslip, categories, worked_days, inputs):
     """
     Returns Wage and rate that is computed given the amount to withhold.
-    WAGE = GROSS + DED_FIT_EXEMPT
     :return: result, result_rate (wage, percent)
     """
     filing_status = payslip.dict.contract_id.us_payroll_config_value('fed_941_fit_w4_filing_status')
@@ -125,7 +202,10 @@ def ee_us_941_fit(payslip, categories, worked_days, inputs):
         return 0.0, 0.0
 
     schedule_pay = payslip.dict.contract_id.schedule_pay
-    wage = categories.GROSS + categories.DED_FIT_EXEMPT
+    wage = fit_wage(payslip, categories)
+    if not wage:
+        return 0.0, 0.0
+
     #_logger.warn('initial gross wage: ' + str(wage))
     year = payslip.dict.get_year()
     if year >= 2020:

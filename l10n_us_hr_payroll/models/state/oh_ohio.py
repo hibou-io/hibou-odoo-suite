@@ -1,6 +1,6 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from .general import _state_applies
+from .general import _state_applies, sit_wage
 
 
 def oh_ohio_state_income_withholding(payslip, categories, worked_days, inputs):
@@ -18,15 +18,16 @@ def oh_ohio_state_income_withholding(payslip, categories, worked_days, inputs):
         return 0.0, 0.0
 
     # Determine Wage
-    wage = categories.GROSS + categories.DED_FIT_EXEMPT
+    wage = sit_wage(payslip, categories)
+    if not wage:
+        return 0.0, 0.0
+
     pay_periods = payslip.dict.get_pay_periods_in_year()
     additional = payslip.dict.contract_id.us_payroll_config_value('state_income_tax_additional_withholding')
     exemptions = payslip.dict.contract_id.us_payroll_config_value('oh_it4_sit_exemptions')
     exemption_rate = payslip.dict.rule_parameter('us_oh_sit_exemption_rate')
     withholding_rate = payslip.dict.rule_parameter('us_oh_sit_rate')
     multiplier_rate = payslip.dict.rule_parameter('us_oh_sit_multiplier')
-    if wage == 0.0:
-        return 0.0, 0.0
 
     taxable_wage = (wage * pay_periods) - (exemption_rate * (exemptions or 0))
     withholding = 0.0

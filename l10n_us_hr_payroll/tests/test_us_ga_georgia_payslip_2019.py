@@ -114,7 +114,7 @@ class TestUsGAPayslip(TestUsPayslip):
         salary = 25000.00
         schedule_pay = 'monthly'
         allowances = 2
-        filing_status = 'exempt'
+        filing_status = ''
         additional_wh = 15.00
 
         employee = self._createEmployee()

@@ -1,12 +1,11 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from .general import _state_applies
+from .general import _state_applies, sit_wage
 
 
 def ga_georgia_state_income_withholding(payslip, categories, worked_days, inputs):
     """
     Returns SIT eligible wage and rate.
-    WAGE = GROSS + DED_FIT_EXEMPT
 
     :return: result, result_rate (wage, percent)
     """
@@ -14,11 +13,14 @@ def ga_georgia_state_income_withholding(payslip, categories, worked_days, inputs
     if not _state_applies(payslip, state_code):
         return 0.0, 0.0
     ga_filing_status = payslip.dict.contract_id.us_payroll_config_value('ga_g4_sit_filing_status')
-    if not ga_filing_status or ga_filing_status == 'exempt':
+    if not ga_filing_status:
         return 0.0, 0.0
 
     # Determine Wage
-    wage = categories.GROSS + categories.DED_FIT_EXEMPT
+    wage = sit_wage(payslip, categories)
+    if not wage:
+        return 0.0, 0.0
+
     schedule_pay = payslip.dict.contract_id.schedule_pay
     additional = payslip.dict.contract_id.us_payroll_config_value('state_income_tax_additional_withholding')
     dependent_allowances = payslip.dict.contract_id.us_payroll_config_value('ga_g4_sit_dependent_allowances')
@@ -27,10 +29,7 @@ def ga_georgia_state_income_withholding(payslip, categories, worked_days, inputs
     personal_allowance = payslip.dict.rule_parameter('us_ga_sit_personal_allowance').get(ga_filing_status, {}).get(schedule_pay)
     deduction = payslip.dict.rule_parameter('us_ga_sit_deduction').get(ga_filing_status, {}).get(schedule_pay)
     withholding_rate = payslip.dict.rule_parameter('us_ga_sit_rate').get(ga_filing_status, {}).get(schedule_pay)
-    if not all((dependent_allowance_rate, personal_allowance, deduction, withholding_rate)) or wage == 0.0:
-        return 0.0, 0.0
-
-    if wage == 0.0:
+    if not all((dependent_allowance_rate, personal_allowance, deduction, withholding_rate)):
         return 0.0, 0.0
 
     after_standard_deduction = wage - deduction
