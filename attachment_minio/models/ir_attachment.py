@@ -85,7 +85,10 @@ class MinioAttachment(models.Model):
             client = self._get_minio_client()
             bucket = self._get_minio_bucket(client)
             minio_key = self._get_minio_key(key)
-            client.put_object(bucket, minio_key, io.BytesIO(bin_data), len(bin_data))
+            client.put_object(
+                bucket, minio_key, io.BytesIO(bin_data), len(bin_data),
+                content_type=self.mimetype,
+            )
             return self._get_minio_fname(bucket, minio_key)
         return super(MinioAttachment, self)._store_file_write(key, bin_data)
 
