@@ -1,6 +1,6 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from .general import _state_applies
+from .general import _state_applies, sit_wage
 
 
 def mt_montana_state_income_withholding(payslip, categories, worked_days, inputs):
@@ -18,13 +18,16 @@ def mt_montana_state_income_withholding(payslip, categories, worked_days, inputs
         return 0.0, 0.0
 
     # Determine Wage
-    wage = categories.GROSS + categories.DED_FIT_EXEMPT
+    wage = sit_wage(payslip, categories)
+    if not wage:
+        return 0.0, 0.0
+
     schedule_pay = payslip.dict.contract_id.schedule_pay
     additional = payslip.dict.contract_id.us_payroll_config_value('state_income_tax_additional_withholding')
     exemptions = payslip.dict.contract_id.us_payroll_config_value('mt_mw4_sit_exemptions')
     exemption_rate = payslip.dict.rule_parameter('us_mt_sit_exemption_rate').get(schedule_pay)
     withholding_rate = payslip.dict.rule_parameter('us_mt_sit_rate').get(schedule_pay)
-    if not exemption_rate or not withholding_rate or wage == 0.0:
+    if not exemption_rate or not withholding_rate:
         return 0.0, 0.0
 
     adjusted_wage = wage - (exemption_rate * (exemptions or 0))

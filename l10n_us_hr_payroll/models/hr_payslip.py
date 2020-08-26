@@ -14,13 +14,45 @@ from .federal.fed_941 import ee_us_941_fica_ss, \
 from .state.general import general_state_unemployment, \
                            general_state_income_withholding, \
                            is_us_state
+from .state.al_alabama import al_alabama_state_income_withholding
+from .state.ar_arkansas import ar_arkansas_state_income_withholding
+from .state.az_arizona import az_arizona_state_income_withholding
+from .state.ca_california import ca_california_state_income_withholding
+from .state.co_colorado import co_colorado_state_income_withholding
+from .state.ct_connecticut import ct_connecticut_state_income_withholding
+from .state.de_delaware import de_delaware_state_income_withholding
 from .state.ga_georgia import ga_georgia_state_income_withholding
+from .state.hi_hawaii import hi_hawaii_state_income_withholding
+from .state.ia_iowa import ia_iowa_state_income_withholding
+from .state.id_idaho import id_idaho_state_income_withholding
+from .state.il_illinois import il_illinois_state_income_withholding
+from .state.in_indiana import in_indiana_state_income_withholding
+from .state.ks_kansas import ks_kansas_state_income_withholding
+from .state.ky_kentucky import ky_kentucky_state_income_withholding
+from .state.la_louisiana import la_louisiana_state_income_withholding
+from .state.me_maine import me_maine_state_income_withholding
+from .state.mi_michigan import mi_michigan_state_income_withholding
+from .state.mn_minnesota import mn_minnesota_state_income_withholding
+from .state.mo_missouri import mo_missouri_state_income_withholding
 from .state.ms_mississippi import ms_mississippi_state_income_withholding
 from .state.mt_montana import mt_montana_state_income_withholding
+from .state.nc_northcarolina import nc_northcarolina_state_income_withholding
+from .state.nd_north_dakota import nd_north_dakota_state_income_withholding
+from .state.ne_nebraska import ne_nebraska_state_income_withholding
+from .state.nj_newjersey import nj_newjersey_state_income_withholding
+from .state.nm_new_mexico import nm_new_mexico_state_income_withholding
+from .state.ny_new_york import ny_new_york_state_income_withholding
 from .state.oh_ohio import oh_ohio_state_income_withholding
+from .state.ok_oklahoma import ok_oklahoma_state_income_withholding
+from .state.ri_rhode_island import ri_rhode_island_state_income_withholding
+from .state.sc_south_carolina import sc_south_carolina_state_income_withholding
+from .state.ut_utah import ut_utah_state_income_withholding
+from .state.vt_vermont import vt_vermont_state_income_withholding
 from .state.va_virginia import va_virginia_state_income_withholding
 from .state.wa_washington import wa_washington_fml_er, \
                                  wa_washington_fml_ee
+from .state.wi_wisconsin import wi_wisconsin_state_income_withholding
+from .state.wv_west_virginia import wv_west_virginia_state_income_withholding
 
 
 class HRPayslip(models.Model):
@@ -53,13 +85,45 @@ class HRPayslip(models.Model):
             'general_state_unemployment': general_state_unemployment,
             'general_state_income_withholding': general_state_income_withholding,
             'is_us_state': is_us_state,
+            'al_alabama_state_income_withholding': al_alabama_state_income_withholding,
+            'ar_arkansas_state_income_withholding': ar_arkansas_state_income_withholding,
+            'az_arizona_state_income_withholding': az_arizona_state_income_withholding,
+            'ca_california_state_income_withholding': ca_california_state_income_withholding,
+            'co_colorado_state_income_withholding': co_colorado_state_income_withholding,
+            'ct_connecticut_state_income_withholding': ct_connecticut_state_income_withholding,
+            'de_delaware_state_income_withholding': de_delaware_state_income_withholding,
             'ga_georgia_state_income_withholding': ga_georgia_state_income_withholding,
+            'hi_hawaii_state_income_withholding': hi_hawaii_state_income_withholding,
+            'ia_iowa_state_income_withholding': ia_iowa_state_income_withholding,
+            'id_idaho_state_income_withholding': id_idaho_state_income_withholding,
+            'il_illinois_state_income_withholding': il_illinois_state_income_withholding,
+            'in_indiana_state_income_withholding': in_indiana_state_income_withholding,
+            'ks_kansas_state_income_withholding': ks_kansas_state_income_withholding,
+            'ky_kentucky_state_income_withholding':ky_kentucky_state_income_withholding,
+            'la_louisiana_state_income_withholding': la_louisiana_state_income_withholding,
+            'me_maine_state_income_withholding': me_maine_state_income_withholding,
+            'mi_michigan_state_income_withholding': mi_michigan_state_income_withholding,
+            'mn_minnesota_state_income_withholding': mn_minnesota_state_income_withholding,
+            'mo_missouri_state_income_withholding': mo_missouri_state_income_withholding,
             'ms_mississippi_state_income_withholding': ms_mississippi_state_income_withholding,
             'mt_montana_state_income_withholding': mt_montana_state_income_withholding,
+            'nc_northcarolina_state_income_withholding': nc_northcarolina_state_income_withholding,
+            'nd_north_dakota_state_income_withholding': nd_north_dakota_state_income_withholding,
+            'ne_nebraska_state_income_withholding': ne_nebraska_state_income_withholding,
+            'nj_newjersey_state_income_withholding': nj_newjersey_state_income_withholding,
+            'nm_new_mexico_state_income_withholding': nm_new_mexico_state_income_withholding,
+            'ny_new_york_state_income_withholding': ny_new_york_state_income_withholding,
             'oh_ohio_state_income_withholding': oh_ohio_state_income_withholding,
+            'ok_oklahoma_state_income_withholding': ok_oklahoma_state_income_withholding,
+            'ri_rhode_island_state_income_withholding': ri_rhode_island_state_income_withholding,
+            'sc_south_carolina_state_income_withholding': sc_south_carolina_state_income_withholding,
+            'ut_utah_state_income_withholding': ut_utah_state_income_withholding,
+            'vt_vermont_state_income_withholding': vt_vermont_state_income_withholding,
             'va_virginia_state_income_withholding': va_virginia_state_income_withholding,
             'wa_washington_fml_er': wa_washington_fml_er,
             'wa_washington_fml_ee': wa_washington_fml_ee,
+            'wi_wisconsin_state_income_withholding': wi_wisconsin_state_income_withholding,
+            'wv_west_virginia_state_income_withholding': wv_west_virginia_state_income_withholding,
         }
 
     def get_year(self):
@@ -82,34 +146,52 @@ class HRPayslip(models.Model):
                 self.employee_id = employee_id
                 self.dict = dict
                 self.env = env
+                # Customization to allow changing the behavior of the discrete browsable objects.
+                # you can think of this as 'compiling' the query based on the configuration.
+                sum_field = env['ir.config_parameter'].sudo().get_param('hr_payroll.payslip.sum_behavior', 'date_from')
+                if sum_field == 'date' and 'date' not in env['hr.payslip']:
+                    # missing attribute, closest by definition
+                    sum_field = 'date_to'
+                if not sum_field:
+                    sum_field = 'date_from'
+                self._compile_browsable_query(sum_field)
 
             def __getattr__(self, attr):
                 return attr in self.dict and self.dict.__getitem__(attr) or 0.0
 
+            def _compile_browsable_query(self, sum_field):
+                pass
+
         class InputLine(BrowsableObject):
             """a class that will be used into the python code, mainly for usability purposes"""
-            def sum(self, code, from_date, to_date=None):
-                if to_date is None:
-                    to_date = fields.Date.today()
-                self.env.cr.execute("""
+
+            def _compile_browsable_query(self, sum_field):
+                self.__browsable_query = """
                     SELECT sum(amount) as sum
                     FROM hr_payslip as hp, hr_payslip_input as pi
                     WHERE hp.employee_id = %s AND hp.state = 'done'
-                    AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s""",
-                    (self.employee_id, from_date, to_date, code))
+                    AND hp.{sum_field} >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s""".format(sum_field=sum_field)
+
+            def sum(self, code, from_date, to_date=None):
+                if to_date is None:
+                    to_date = fields.Date.today()
+                self.env.cr.execute(self.__browsable_query, (self.employee_id, from_date, to_date, code))
                 return self.env.cr.fetchone()[0] or 0.0
 
         class WorkedDays(BrowsableObject):
             """a class that will be used into the python code, mainly for usability purposes"""
-            def _sum(self, code, from_date, to_date=None):
-                if to_date is None:
-                    to_date = fields.Date.today()
-                self.env.cr.execute("""
+
+            def _compile_browsable_query(self, sum_field):
+                self.__browsable_query = """
                     SELECT sum(number_of_days) as number_of_days, sum(number_of_hours) as number_of_hours
                     FROM hr_payslip as hp, hr_payslip_worked_days as pi
                     WHERE hp.employee_id = %s AND hp.state = 'done'
-                    AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s""",
-                    (self.employee_id, from_date, to_date, code))
+                    AND hp.{sum_field} >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s""".format(sum_field=sum_field)
+
+            def _sum(self, code, from_date, to_date=None):
+                if to_date is None:
+                    to_date = fields.Date.today()
+                self.env.cr.execute(self.__browsable_query, (self.employee_id, from_date, to_date, code))
                 return self.env.cr.fetchone()
 
             def sum(self, code, from_date, to_date=None):
@@ -123,28 +205,37 @@ class HRPayslip(models.Model):
         class Payslips(BrowsableObject):
             """a class that will be used into the python code, mainly for usability purposes"""
 
+            def _compile_browsable_query(self, sum_field):
+                # Note that the core odoo has this as `hp.credit_note = False` but what if it is NULL?
+                # reverse of the desired behavior.
+                self.__browsable_query_rule = """
+                    SELECT sum(case when hp.credit_note is not True then (pl.total) else (-pl.total) end)
+                    FROM hr_payslip as hp, hr_payslip_line as pl
+                    WHERE hp.employee_id = %s AND hp.state = 'done'
+                    AND hp.{sum_field} >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id AND pl.code = %s""".format(sum_field=sum_field)
+                self.__browsable_query_category = """
+                    SELECT sum(case when hp.credit_note is not True then (pl.total) else (-pl.total) end)
+                    FROM hr_payslip as hp, hr_payslip_line as pl, hr_salary_rule_category as rc
+                    WHERE hp.employee_id = %s AND hp.state = 'done'
+                    AND hp.{sum_field} >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id
+                    AND rc.id = pl.category_id AND rc.code = %s""".format(sum_field=sum_field)
+
             def sum(self, code, from_date, to_date=None):
                 if to_date is None:
                     to_date = fields.Date.today()
-                self.env.cr.execute("""SELECT sum(case when hp.credit_note = False then (pl.total) else (-pl.total) end)
-                            FROM hr_payslip as hp, hr_payslip_line as pl
-                            WHERE hp.employee_id = %s AND hp.state = 'done'
-                            AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id AND pl.code = %s""",
-                            (self.employee_id, from_date, to_date, code))
+                self.env.cr.execute(self.__browsable_query_rule, (self.employee_id, from_date, to_date, code))
                 res = self.env.cr.fetchone()
                 return res and res[0] or 0.0
+
+            def rule_parameter(self, code):
+                return self.env['hr.rule.parameter']._get_parameter_from_code(code, self.dict.date_to)
 
             def sum_category(self, code, from_date, to_date=None):
                 # Hibou Backport
                 if to_date is None:
                     to_date = fields.Date.today()
 
-                self.env.cr.execute("""SELECT sum(case when hp.credit_note is not True then (pl.total) else (-pl.total) end)
-                            FROM hr_payslip as hp, hr_payslip_line as pl, hr_salary_rule_category as rc
-                            WHERE hp.employee_id = %s AND hp.state = 'done'
-                            AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id
-                            AND rc.id = pl.category_id AND rc.code = %s""",
-                                    (self.employee_id, from_date, to_date, code))
+                self.env.cr.execute(self.__browsable_query_category, (self.employee_id, from_date, to_date, code))
                 res = self.env.cr.fetchone()
                 return res and res[0] or 0.0
 

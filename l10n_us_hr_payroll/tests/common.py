@@ -22,6 +22,10 @@ class TestUsPayslip(common.TransactionCase):
     debug = False
     _logger = getLogger(__name__)
 
+    def setUp(self):
+        super(TestUsPayslip, self).setUp()
+        self.env['ir.config_parameter'].set_param('hr_payroll.payslip.sum_behavior', 'date_to')
+
     float_info = sys_float_info
 
     def float_round(self, value, digits):
@@ -154,15 +158,6 @@ class TestUsPayslip(common.TransactionCase):
     def assertPayrollAlmostEqual(self, first, second):
         self.assertAlmostEqual(first, second, self.payroll_digits-1)
 
-    def test_semi_monthly(self):
-        salary = 80000.0
-        employee = self._createEmployee()
-        # so the schedule_pay is now on the Structure...
-        contract = self._createContract(employee, wage=salary, schedule_pay='semi-monthly')
-        payslip = self._createPayslip(employee, '2019-01-01', '2019-01-14')
-
-        payslip.compute_sheet()
-
     def get_us_state(self, code, cache={}):
         country_key = 'US_COUNTRY'
         if code in cache:
@@ -177,7 +172,11 @@ class TestUsPayslip(common.TransactionCase):
         cache[code] = us_state
         return us_state
 
-    def _test_suta(self, category, state_code, rate, date, wage_base=None, **extra_contract):
+    def _test_suta(self, category, state_code, rate, date, wage_base=None, relaxed=False, **extra_contract):
+        if relaxed:
+            _assert = self.assertPayrollAlmostEqual
+        else:
+            _assert = self.assertPayrollEqual
         if wage_base:
             # Slightly larger than 1/2 the wage_base
             wage = round(wage_base / 2.0) + 100.0
@@ -200,18 +199,18 @@ class TestUsPayslip(common.TransactionCase):
         contract.us_payroll_config_id.fed_940_type = USHRContract.FUTA_TYPE_EXEMPT
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
-        self.assertPayrollEqual(cats.get(category, 0.0), 0.0)
+        _assert(cats.get(category, 0.0), 0.0)
 
         contract.us_payroll_config_id.fed_940_type = USHRContract.FUTA_TYPE_BASIC
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
-        self.assertPayrollEqual(cats.get(category, 0.0), 0.0)
+        _assert(cats.get(category, 0.0), 0.0)
 
         # Test Normal
         contract.us_payroll_config_id.fed_940_type = USHRContract.FUTA_TYPE_NORMAL
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
-        self.assertPayrollEqual(cats.get(category, 0.0), wage * rate)
+        _assert(cats.get(category, 0.0), wage * rate)
         process_payslip(payslip)
 
         # Second Payslip
@@ -222,7 +221,7 @@ class TestUsPayslip(common.TransactionCase):
         if wage_base:
             remaining_unemp_wages = wage_base - wage
             self.assertTrue((remaining_unemp_wages * rate) <= 0.01)  # less than 0.01 because rate is negative
-            self.assertPayrollEqual(cats.get(category, 0.0), remaining_unemp_wages * rate)
+            _assert(cats.get(category, 0.0), remaining_unemp_wages * rate)
 
             # As if they were paid once already, so the first "two payslips" would remove all of the tax obligation
             # 1 wage - Payslip (confirmed)
@@ -231,12 +230,12 @@ class TestUsPayslip(common.TransactionCase):
             contract.external_wages = wage
             payslip.compute_sheet()
             cats = self._getCategories(payslip)
-            self.assertPayrollEqual(cats.get(category, 0.0), 0.0)
+            _assert(cats.get(category, 0.0), 0.0)
         else:
-            self.assertPayrollEqual(cats.get(category, 0.0), wage * rate)
+            _assert(cats.get(category, 0.0), wage * rate)
 
-    def _test_er_suta(self, state_code, rate, date, wage_base=None, **extra_contract):
-        self._test_suta('ER_US_SUTA', state_code, rate, date, wage_base=wage_base, **extra_contract)
+    def _test_er_suta(self, state_code, rate, date, wage_base=None, relaxed=False, **extra_contract):
+        self._test_suta('ER_US_SUTA', state_code, rate, date, wage_base=wage_base, relaxed=relaxed, **extra_contract)
 
-    def _test_ee_suta(self, state_code, rate, date, wage_base=None, **extra_contract):
-        self._test_suta('EE_US_SUTA', state_code, rate, date, wage_base=wage_base, **extra_contract)
+    def _test_ee_suta(self, state_code, rate, date, wage_base=None, relaxed=False, **extra_contract):
+        self._test_suta('EE_US_SUTA', state_code, rate, date, wage_base=wage_base, relaxed=relaxed, **extra_contract)
