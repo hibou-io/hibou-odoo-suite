@@ -22,7 +22,7 @@ def migrate(cr, version):
 
     if row[0] == 's3':
         uid = odoo.SUPERUSER_ID
-        registry = odoo.modules.registry.RegistryManager.get(cr.dbname)
+        registry = odoo.modules.registry.Registry(cr.dbname)
         new_cr = registry.cursor()
         with closing(new_cr):
             with odoo.api.Environment.manage():
