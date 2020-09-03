@@ -32,7 +32,14 @@ def migrate(cr, version):
                      '|', ('res_model', '=', 'ir.ui.view'),
                           ('res_field', 'in', ['image_small',
                                                'image_medium',
-                                               'web_icon_data'])
+                                               'web_icon_data',
+                                               # image.mixin sizes
+                                               # image_128 is essentially image_medium
+                                               'image_128',
+                                               # depending on use case, these may need migrated/moved
+                                               # 'image_256',
+                                               # 'image_512',
+                                               ])
                      ],
                 )
 
