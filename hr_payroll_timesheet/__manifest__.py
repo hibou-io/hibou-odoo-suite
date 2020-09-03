@@ -16,4 +16,5 @@
         'hr_timesheet',
         'hr_payroll_overtime',
     ],
+    'pre_init_hook': 'ts_payroll_pre_init_hook',
 }
