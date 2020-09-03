@@ -17,4 +17,5 @@
         'hr_attendance',
         'hr_payroll_overtime',
     ],
+    'pre_init_hook': 'attn_payroll_pre_init_hook',
 }
