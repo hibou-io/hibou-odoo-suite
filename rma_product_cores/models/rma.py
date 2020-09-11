@@ -120,6 +120,10 @@ class RMA(models.Model):
             return res2
         return res
 
+    def _invoice_values_product_core_sale(self):
+        # the RMA invoice API will not be used as invoicing will happen at the SO level
+        return False
+
     def _get_dirty_core_from_service_line(self, line):
         original_product_line = line.core_line_id
         return original_product_line.product_id.product_core_id
