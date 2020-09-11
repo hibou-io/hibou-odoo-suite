@@ -20,6 +20,9 @@ class RMATemplate(models.Model):
     _inherit = 'rma.template'
 
     usage = fields.Selection(selection_add=[('sale_order', 'Sale Order')])
+    sale_order_warranty = fields.Boolean(string='Sale Order Warranty',
+                                         help='Determines if the regular return validity or '
+                                              'Warranty validity is used.')
     so_decrement_order_qty = fields.Boolean(string='SO Decrement Ordered Qty.',
                                             help='When completing the RMA, the Ordered Quantity will be decremented by '
                                                  'the RMA qty.')
@@ -87,7 +90,10 @@ class RMATemplate(models.Model):
         return super(RMATemplate, self)._portal_values(request_user, res_id=res_id)
 
     def _rma_sale_line_validity(self, so_line):
-        validity_days = so_line.product_id.rma_sale_validity
+        if self.sale_order_warranty:
+            validity_days = so_line.product_id.rma_sale_warranty_validity
+        else:
+            validity_days = so_line.product_id.rma_sale_validity
         if validity_days < 0:
             return ''
         elif validity_days > 0:
@@ -194,6 +200,10 @@ class RMA(models.Model):
         except UserError:
             pass
         return sale_orders.mapped('invoice_ids') - original_invoices
+
+    def _invoice_values_sale_order(self):
+        # the RMA invoice API will not be used as invoicing will happen at the SO level
+        return False
 
     def action_add_so_lines(self):
         make_line_obj = self.env['rma.sale.make.lines']
