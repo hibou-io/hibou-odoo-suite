@@ -42,4 +42,15 @@
         <field name="in_procure_method">make_to_stock</field>
         <field name="in_require_return" eval="True"/>
     </record>
+
+    <record id="template_rtv" model="rma.template">
+        <field name="name">Return To Vendor</field>
+        <field name="create_out_picking" eval="True"/>
+        <field name="out_type_id" ref="stock.picking_type_out"/>
+        <field name="out_location_id" ref="stock.stock_location_stock"/>
+        <field name="out_location_dest_id" ref="stock.stock_location_suppliers"/>
+        <field name="out_procure_method">make_to_stock</field>
+        <field name="invoice_done" eval="True"/>
+    </record>
+
 </odoo>

@@ -26,6 +26,7 @@
                     </div>
                     <group>
                         <group>
+                            <field name="parent_id" readonly="1" attrs="{'invisible': [('parent_id', '=', False)]}"/>
                             <field name="template_usage" invisible="1"/>
                             <field name="template_create_in_picking" invisible="1"/>
                             <field name="template_create_out_picking" invisible="1"/>
@@ -35,6 +36,7 @@
                             <button string="Add lines" type="object" name="action_add_picking_lines" attrs="{'invisible': ['|', ('stock_picking_id', '=', False), ('state', '!=', 'draft')]}"/>
                         </group>
                         <group>
+                            <field name="claim_number"/>
                             <field name="validity_date"/>
                             <field name="tag_ids" widget="many2many_tags" placeholder="Tags" options="{'no_create': True}"/>
                             <field name="partner_id" options="{'no_create_edit': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -137,6 +139,7 @@
         <field name="arch" type="xml">
             <search string="Search RMA">
                 <field name="name"/>
+                <field name="claim_number"/>
                 <field name="partner_id"/>
                 <field name="template_id"/>
                 <field name="stock_picking_id"/>
@@ -162,7 +165,6 @@
                         <h1>
                             <field name="name"/>
                         </h1>
-
                     </div>
                     <group>
                         <group>
@@ -172,6 +174,7 @@
                             <field name="company_id" options="{'no_create': True}"/>
                             <field name="portal_ok"/>
                             <field name="invoice_done" help="This feature is implemented in specific RMA types automatically when enabled."/>
+                            <field name="next_rma_template_id"/>
                         </group>
                         <group>
                             <field name="responsible_user_ids" domain="[('share', '=', False)]" widget="many2many_tags"/>
