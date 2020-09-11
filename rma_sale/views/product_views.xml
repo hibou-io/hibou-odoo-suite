@@ -9,6 +9,7 @@
             <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
                 <group name="rma_sale" string="RMA Sales">
                     <field name="rma_sale_validity" string="Eligible Days"/>
+                    <field name="rma_sale_warranty_validity" string="Warranty Eligible Days"/>
                 </group>
             </xpath>
         </field>
@@ -22,6 +23,7 @@
             <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
                 <group name="rma_sale" string="RMA Sales">
                     <field name="rma_sale_validity" string="Eligible Days"/>
+                    <field name="rma_sale_warranty_validity" string="Warranty Eligible Days"/>
                 </group>
             </xpath>
         </field>
