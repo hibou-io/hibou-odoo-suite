@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="work_input_attendance_break" model="hr.work.entry.type">
+        <field name="name">Break</field>
+        <field name="code">ATTN_BREAK</field>
+        <field name="allow_attendance" eval="True"/>
+        <field name="attendance_state">break</field>
+        <field name="attendance_icon">fa-hourglass-1</field>
+    </record>
+
+    <record id="work_input_attendance_lunch" model="hr.work.entry.type">
+        <field name="name">Lunch</field>
+        <field name="code">ATTN_LUNCH</field>
+        <field name="allow_attendance" eval="True"/>
+        <field name="attendance_state">lunch</field>
+        <field name="attendance_icon">fa-coffee</field>
+    </record>
+
+</odoo>
