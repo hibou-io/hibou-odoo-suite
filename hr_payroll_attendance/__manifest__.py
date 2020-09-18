@@ -15,6 +15,7 @@
     'depends': [
         'hr_payroll',
         'hr_attendance',
+        'hr_attendance_work_entry',
         'hr_payroll_overtime',
     ],
     'pre_init_hook': 'attn_payroll_pre_init_hook',
