@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="hr_kanban_view_employees_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.kanban.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban/field[@name='hr_presence_state']" position="after">
+                <field name="attendance_state"/>
+            </xpath>
+            <xpath expr="//strong[@class='o_kanban_record_title']/div[1]" position="before">
+                <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_in'">
+                    <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_green" role="img" aria-label="Available" title="Available"></span>
+                </div>
+                <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_out'">
+                    <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_red" role="img" aria-label="Not available" title="Not available"></span>
+                </div>
+                <div class="float-right" t-if="record.attendance_state.raw_value == 'lunch'">
+                    <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_orange" role="img" aria-label="At Lunch" title="At Lunch"></span>
+                </div>
+                <div class="float-right" t-if="record.attendance_state.raw_value == 'break'">
+                    <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_blue" role="img" aria-label="On Break" title="On Break"></span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- employee kanban view specifically for hr_attendance (to check in/out) -->
+    <record id="hr_employees_view_kanban_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.kanban.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_attendance.hr_employees_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='textbox']" position="replace">
+                <div id="textbox">
+                    <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_in'">
+                        <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_green" role="img" aria-label="Available" title="Available"></span>
+                    </div>
+                    <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_out'">
+                        <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_red" role="img" aria-label="Not available" title="Not available"></span>
+                    </div>
+                    <div class="float-right" t-if="record.attendance_state.raw_value == 'lunch'">
+                        <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_orange" role="img" aria-label="At Lunch" title="At Lunch"></span>
+                    </div>
+                    <div class="float-right" t-if="record.attendance_state.raw_value == 'break'">
+                        <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_blue" role="img" aria-label="On Break" title="On Break"></span>
+                    </div>
+                    <strong>
+                        <field name="name"/>
+                    </strong>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
