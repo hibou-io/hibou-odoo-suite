@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="work_input_attendance" model="hr.work.entry.type">
+        <field name="name">Attendance</field>
+        <field name="code">ATTN</field>
+        <field name="allow_attendance" eval="True"/>
+        <field name="attendance_state">checked_in</field>
+        <field name="attendance_icon">fa-sign-in</field>
+    </record>
+
+    <!-- Rename Stock "Attendance" type -->
+    <record id="hr_work_entry.work_entry_type_attendance" model="hr.work.entry.type">
+        <field name="name">Work Calendar</field>
+    </record>
+
+</odoo>
