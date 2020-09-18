@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    attendance_state = fields.Selection(selection_add=[('break', 'Break')])
+    attendance_state = fields.Selection(selection_add=[('break', 'Break'), ('lunch', 'Lunch')])
 
     @api.depends('last_attendance_id.work_type_id')
     def _compute_attendance_state(self):
@@ -20,6 +20,9 @@ class HrEmployee(models.Model):
 
     def attendance_manual(self, next_action, entered_pin=None, work_type_id=None):
         self = self.with_context(work_type_id=work_type_id)
+        if not entered_pin:
+            # fix for pin mode with specific argument order for work_type_id
+            entered_pin = None
         return super(HrEmployee, self).attendance_manual(next_action, entered_pin=entered_pin)
 
     def _attendance_action_change(self):
