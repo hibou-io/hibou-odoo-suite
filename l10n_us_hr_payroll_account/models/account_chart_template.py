@@ -17,7 +17,8 @@ class AccountChartTemplate(models.Model):
         self._us_configure_payroll_account_data(company)
         return res
 
-    def _us_configure_payroll_account_data(self, companies, ap_code=ACCOUNT_PAYABLE, salary_exp_code=SALARY_EXPENSES):
+    def _us_configure_payroll_account_data(self, companies, ap_code=ACCOUNT_PAYABLE, salary_exp_code=SALARY_EXPENSES,
+                                           salary_rules=None, full_reset=False):
         account_codes = (
             ap_code,
             salary_exp_code,
@@ -34,19 +35,33 @@ class AccountChartTemplate(models.Model):
                     [('company_id', '=', company.id), ('code', '=like', '%s%%' % code)], limit=1)
                 for code in account_codes
             }
+            accounts['none'] = self.env['account.account'].browse()
 
             def set_rule_accounts(code, account_debit, account_credit):
                 rule_domain = [
                     ('struct_id', 'in', us_structures.ids),
                     ('code', '=like', code),
                 ]
+                if salary_rules:
+                    rule_domain.append(('id', 'in', salary_rules.ids))
                 rules = self.env['hr.salary.rule'].search(rule_domain)
-                values = {}
-                if account_debit:
-                    values['account_debit'] = account_debit.id
-                if account_credit:
-                    values['account_credit'] = account_credit.id
-                rules.write(values)
+                if full_reset:
+                    values = {
+                        'account_debit': account_debit.id,
+                        'account_credit': account_credit.id,
+                    }
+                    rules.write(values)
+                else:
+                    # we need to ensure we do not update an account that is already set
+                    for rule in rules:
+                        values = {}
+                        if account_debit and not rule.account_debit:
+                            values['account_debit'] = account_debit.id
+                        if account_credit and not rule.account_credit:
+                            values['account_credit'] = account_credit.id
+                        if values:
+                            # save a write if no values to write
+                            rule.write(values)
 
             journal = self.env['account.journal'].search([
                 ('code', '=', 'PAYR'),
@@ -84,10 +99,12 @@ class AccountChartTemplate(models.Model):
             # Find all rules that are ...
 
             # BASIC* -> SALARY_EXPENSE debit account
-            set_rule_accounts('BASIC%', accounts[salary_exp_code], None)
+            set_rule_accounts('BASIC%', accounts[salary_exp_code], accounts['none'])
+            # ALW* -> SALARY_EXPENSE debit account
+            set_rule_accounts('ALW%', accounts[salary_exp_code], accounts['none'])
             # EE_* -> AP debit
-            set_rule_accounts('EE_%', accounts[ap_code], None)
+            set_rule_accounts('EE_%', accounts[ap_code], accounts['none'])
             # ER_* -> AP debit, SE credit
             set_rule_accounts('ER_%', accounts[ap_code], accounts[salary_exp_code])
             # NET* -> AP credit
-            set_rule_accounts('NET%', None, accounts[ap_code])
+            set_rule_accounts('NET%', accounts['none'], accounts[ap_code])
