@@ -6,7 +6,7 @@ from .us_payroll_config import FUTA_TYPE_NORMAL, \
                                FUTA_TYPE_EXEMPT
 
 
-class HrPayrollStructure(models.Model):
+class HrPayrollStructureType(models.Model):
     _inherit = 'hr.payroll.structure.type'
     default_schedule_pay = fields.Selection(selection_add=[('semi-monthly', 'Semi-monthly')])
 
