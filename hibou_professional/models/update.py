@@ -9,12 +9,10 @@ from odoo.exceptions import UserError
 
 class PublisherWarrantyContract(models.AbstractModel):
     _inherit = 'publisher_warranty.contract'
-    # CONFIG_HIBOU_URL = 'https://hibou.io/hibouapi/v1/professional'
-    CONFIG_HIBOU_URL = 'https://odoo-hibou-test12.hibou-test-odoo.us-w-p1.hibou.me/hibouapi/v1/professional'
-    # CONFIG_HIBOU_MESSAGE_URL = 'https://hibou.io/hibouapi/v1/professional/message'
-    CONFIG_HIBOU_MESSAGE_URL = 'https://odoo-hibou-test12.hibou-test-odoo.us-w-p1.hibou.me/hibouapi/v1/professional/message'
-    # CONFIG_HIBOU_QUOTE_URL = 'https://hibou.io/hibouapi/v1/professional/quote'
-    CONFIG_HIBOU_QUOTE_URL = 'https://odoo-hibou-test12.hibou-test-odoo.us-w-p1.hibou.me/hibouapi/v1/professional/quote'
+
+    CONFIG_HIBOU_URL = 'https://api.hibou.io/hibouapi/v1/professional'
+    CONFIG_HIBOU_MESSAGE_URL = 'https://api.hibou.io/hibouapi/v1/professional/message'
+    CONFIG_HIBOU_QUOTE_URL = 'https://api.hibou.io/hibouapi/v1/professional/quote'
     DAYS_ENDING_SOON = 7
 
     @api.model
