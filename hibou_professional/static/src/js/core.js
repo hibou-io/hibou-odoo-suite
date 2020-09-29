@@ -203,16 +203,17 @@ var HibouProfessionalSystrayWidget = Widget.extend({
             self.update_subject_selection(el);
         });
 
+        // propagation will dismiss the modal/dropdown
+        this.$el.find('.o_mail_navbar_dropdown').on('click', function(e){
+            e.stopPropagation();
+        });
+
         // Update Subscription Button
         this.$('.update_subscription').on('click', function(e){
-            e.preventDefault();
-            e.stopPropagation();
             self.button_update_subscription();
         });
 
         this.$('.hibou_get_messages').on('click', function(e){
-            e.preventDefault();
-            e.stopPropagation();
             self.button_get_messages();
         });
 
@@ -221,30 +222,18 @@ var HibouProfessionalSystrayWidget = Widget.extend({
             if (self.quote_url) {
                 return;  // allow default url click event
             }
-            e.preventDefault();
-            e.stopPropagation();
             self.button_quote();
         });
 
         // Update Message Preferences Button
         this.$('.update_message_preferences').on('click', function(e){
-            e.preventDefault();
-            e.stopPropagation();
             self.button_update_message_preferences();
         });
 
         // Send Message Button
         this.$('.hibou_send_message').on('click', function(e){
-            e.preventDefault();
-            e.stopPropagation();
             self.button_send_message();
         });
-
-        // Kill the default click event
-        this.$('.hibou_message_form_container').on('click', function (e) {
-            //e.preventDefault();
-            e.stopPropagation();
-        })
     },
 
     handleStatusUpdate: function(status) {
