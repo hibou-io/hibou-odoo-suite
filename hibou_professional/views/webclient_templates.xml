@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="Hibou Professional" inherit_id="web.assets_backend" priority='15'>
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/hibou_professional/static/src/js/core.js"></script>
+        </xpath>
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/css" href="/hibou_professional/static/src/css/web.css"/>
+        </xpath>
+    </template>
+</odoo>
