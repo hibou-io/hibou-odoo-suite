@@ -14,8 +14,11 @@ class TestRMA(common.TransactionCase):
         self.product1 = self.env.ref('product.product_product_24')
         self.template_missing = self.env.ref('rma.template_missing_item')
         self.template_return = self.env.ref('rma.template_picking_return')
+        self.template_rtv = self.env.ref('rma.template_rtv')
         self.partner1 = self.env.ref('base.res_partner_2')
         self.user1 = self.env.ref('base.user_demo')
+        # Additional partner in tests or vendor in Return To Vendor
+        self.partner2 = self.env.ref('base.res_partner_12')
 
     def test_00_basic_rma(self):
         self.template_missing.responsible_user_ids += self.user1
@@ -244,3 +247,62 @@ class TestRMA(common.TransactionCase):
         # RMA cannot be completed because the inbound picking state is confirmed
         with self.assertRaises(UserError):
             rma2.action_done()
+
+    def test_30_next_rma_rtv(self):
+        self.template_return.usage = False
+        self.template_return.in_require_return = False
+        self.template_return.next_rma_template_id = self.template_rtv
+        rma = self.env['rma.rma'].create({
+            'template_id': self.template_return.id,
+            'partner_id': self.partner1.id,
+            'partner_shipping_id': self.partner1.id,
+        })
+        self.assertEqual(rma.state, 'draft')
+        rma_line = self.env['rma.line'].create({
+            'rma_id': rma.id,
+            'product_id': self.product1.id,
+            'product_uom_id': self.product1.uom_id.id,
+            'product_uom_qty': 2.0,
+        })
+        rma.action_confirm()
+        # Should have made pickings
+        self.assertEqual(rma.state, 'confirmed')
+
+        # No outbound picking
+        self.assertFalse(rma.out_picking_id)
+        # Good inbound picking
+        self.assertTrue(rma.in_picking_id)
+        self.assertEqual(rma_line.product_id, rma.in_picking_id.move_lines.product_id)
+        self.assertEqual(rma_line.product_uom_qty, rma.in_picking_id.move_lines.product_uom_qty)
+
+        with self.assertRaises(UserError):
+            rma.action_done()
+
+        rma.in_picking_id.move_lines.quantity_done = 2.0
+        rma.in_picking_id.action_done()
+        rma.action_done()
+        self.assertEqual(rma.state, 'done')
+
+        # RTV RMA
+        rma_rtv = self.env['rma.rma'].search([('parent_id', '=', rma.id)])
+        self.assertTrue(rma_rtv)
+        self.assertEqual(rma_rtv.state, 'draft')
+
+        wiz = self.env['rma.make.rtv'].with_context(active_model='rma.rma', active_ids=rma_rtv.ids).create({})
+        self.assertTrue(wiz.rma_line_ids)
+        wiz.partner_id = self.partner2
+        wiz.create_batch()
+        self.assertTrue(rma_rtv.out_picking_id)
+        self.assertEqual(rma_rtv.out_picking_id.partner_id, self.partner2)
+        self.assertEqual(rma_rtv.state, 'confirmed')
+
+        # ship and finish
+        rma_rtv.out_picking_id.move_lines.quantity_done = 2.0
+        rma_rtv.out_picking_id.action_done()
+        rma_rtv.action_done()
+        self.assertEqual(rma_rtv.state, 'done')
+
+        # ensure invoice and type
+        rtv_invoice = rma_rtv.invoice_ids
+        self.assertTrue(rtv_invoice)
+        self.assertEqual(rtv_invoice.type, 'in_refund')
