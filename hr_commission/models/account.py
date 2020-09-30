@@ -24,8 +24,8 @@ class AccountMove(models.Model):
             'context': {'search_default_source_move_id': self[0].id}
         }
 
-    def action_post(self):
-        res = super(AccountMove, self).action_post()
+    def post(self):
+        res = super(AccountMove, self).post()
         invoices = self.filtered(lambda m: m.is_invoice())
         if invoices:
             self.env['hr.commission'].invoice_validated(invoices)
