@@ -1,0 +1,62 @@
+image: docker:stable
+services:
+  - docker:dind
+
+stages:
+  - build
+  - trigger
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  CONTAINER_IMAGE: registry.gitlab.com/hibou-io/hibou-odoo/suite
+  GITLAB_BASE_URL: https://gitlab.com
+  ENTERPRISE_PROJECT_ID: 10004796
+
+before_script:
+  - RELEASE=$(echo $CI_COMMIT_REF_NAME | sed "s{.*\/\(.*\)\/.*{\1{g")
+  - IMAGE_TAG=$(echo $CI_COMMIT_REF_SLUG | sed "s/^\([[:digit:]][[:digit:]]\)-\([[:digit:]]\)/\1\.\2/g")
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+
+merge_request:
+  variables:
+    GIT_STRATEGY: none
+  stage: build
+  only:
+    - /(^new\/)|(^mig\/)|(^imp\/)|(^fix\/)/
+  script:
+    - docker pull registry.gitlab.com/hibou-io/hibou-odoo/flow
+    - docker tag registry.gitlab.com/hibou-io/hibou-odoo/flow flow
+    - ENVS=`env | grep "CI_\|GITLAB_" | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' '`
+    - docker run $ENVS flow gitlab-automerge --target-branch "${RELEASE}-test" --automerge
+    - docker run $ENVS flow gitlab-automerge --remove-source
+
+build:
+  stage: build
+  script:
+    - apk add git
+    - git submodule sync --recursive
+    - git submodule update --init --recursive
+    - sed -i "s/RELEASE/$RELEASE/g" Dockerfile-GitLab
+    - docker build --pull -t $CONTAINER_IMAGE:$IMAGE_TAG -f Dockerfile-GitLab .
+    - docker push $CONTAINER_IMAGE:$IMAGE_TAG
+
+publish:
+  stage: build
+  script:
+    - docker pull registry.gitlab.com/hibou-io/hibou-odoo/flow
+    - docker tag registry.gitlab.com/hibou-io/hibou-odoo/flow flow
+    - ENVS=`env | grep "CI_\|GITLAB_" | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' '`
+    - docker run -v $PWD:/src $ENVS flow odoo-publish -n "Hibou Odoo Suite" -v $RELEASE
+  only:
+    - /^\d\d\.\d/
+
+trigger:
+  variables:
+    GIT_STRATEGY: none
+  stage: trigger
+  script:
+    - docker run byrnedo/alpine-curl curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=$RELEASE $GITLAB_BASE_URL/api/v4/projects/$ENTERPRISE_PROJECT_ID/trigger/pipeline
+  only:
+    - /^\d\d\.\d/
+
