@@ -14,3 +14,13 @@ class ProductTemplate(models.Model):
                                             'A positive number will allow the product to be '
                                             'returned up to that number of days. A negative '
                                             'number prevents the return of the product.')
+
+    rma_sale_warranty_validity = fields.Integer(string='RMA Eligible Days (Sale Warranty)',
+                                                help='Determines the number of days from the time '
+                                                     'of the sale that the product is eligible to '
+                                                     'be returned for warranty claims. '
+                                                     '0 (default) will allow the product to be '
+                                                     'returned for an indefinite period of time. '
+                                                     'A positive number will allow the product to be '
+                                                     'returned up to that number of days. A negative '
+                                                     'number prevents the return of the product.')

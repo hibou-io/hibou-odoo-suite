@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rma_make_rtv" model="ir.ui.view">
+        <field name="name">Return To Vendor</field>
+        <field name="model">rma.make.rtv</field>
+        <field name="arch" type="xml">
+            <form string="RMA Make RTV">
+                <p class="oe_grey">
+                    RMAs will be batched to pick simultaneously.
+                </p>
+                <group>
+                    <field name="partner_id"/>
+                    <field name="partner_shipping_id"/>
+                    <field name="rma_line_ids" nolabel="1" colspan="4">
+                        <tree decoration-warning="rma_state != 'draft'" editable="bottom">
+                            <field name="rma_id" readonly="1" force_save="1"/>
+                            <field name="rma_state" invisible="1"/>
+                            <field name="rma_claim_number"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button name="create_batch" string="Confirm" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_rma_make_rtv" model="ir.actions.act_window">
+        <field name="name">RMA Make RTV</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">rma.make.rtv</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="rma.model_rma_rma" />
+        <field name="binding_view_types">list</field>
+    </record>
+
+</odoo>

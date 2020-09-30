@@ -2,12 +2,13 @@
 
 {
     'name': 'Hibou RMAs',
-    'version': '13.0.1.2.0',
+    'version': '13.0.1.3.0',
     'category': 'Warehouse',
     'author': 'Hibou Corp.',
     'license': 'OPL-1',
     'website': 'https://hibou.io/',
     'depends': [
+        'hibou_professional',
         'stock',
         'delivery',
     ],

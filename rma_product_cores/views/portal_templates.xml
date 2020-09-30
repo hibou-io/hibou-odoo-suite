@@ -42,8 +42,8 @@
                                 <hr/>
                                 <div class="row">
                                     <div class="col-lg-1 text-center">
-                                        <img t-attf-src="/web/image/product.product/#{product.id}/image_64"
-                                             width="64" alt="Product image"></img>
+                                        <img class="mr4 float-left o_portal_product_img" t-if="product.image_128" t-att-src="image_data_uri(product.image_128)" alt="Product Image" width="64"/>
+                                        <img class="mr4 float-left o_portal_product_img" t-if="not product.image_128" src="/web/static/src/img/placeholder.png" alt="Product Image" width="64"/>
                                     </div>
                                     <div class="col-lg-4">
                                         <span t-esc="product.name"/>

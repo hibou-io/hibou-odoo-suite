@@ -3,7 +3,7 @@
 {
     'name': 'RMA - Product Cores',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '13.0.1.0.0',
+    'version': '13.0.1.0.1',
     'license': 'OPL-1',
     'category': 'Tools',
     'summary': 'RMA Product Cores',
@@ -12,6 +12,7 @@ RMA Product Cores - Return core products from customers.
     """,
     'website': 'https://hibou.io/',
     'depends': [
+        'hibou_professional',
         'product_cores',
         'rma_sale',
     ],

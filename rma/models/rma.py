@@ -52,6 +52,7 @@ class RMATemplate(models.Model):
     company_id = fields.Many2one('res.company', 'Company')
     responsible_user_ids = fields.Many2many('res.users', string='Responsible Users',
                                             help='Users that get activities when creating RMA.')
+    next_rma_template_id = fields.Many2one('rma.template', string='Next RMA Template')
 
     def _portal_try_create(self, request_user, res_id, **kw):
         if self.usage == 'stock_picking':
@@ -201,6 +202,7 @@ class RMA(models.Model):
             ('cancel', 'Cancelled'),
         ], string='State', default='draft', copy=False)
     company_id = fields.Many2one('res.company', 'Company')
+    parent_id = fields.Many2one('rma.rma')
     template_id = fields.Many2one('rma.template', string='Type', required=True)
     template_create_in_picking = fields.Boolean(related='template_id.create_in_picking')
     template_create_out_picking = fields.Boolean(related='template_id.create_out_picking')
@@ -215,6 +217,7 @@ class RMA(models.Model):
     customer_description = fields.Html(string='Customer Instructions', related='template_id.customer_description')
     template_usage = fields.Selection(string='Template Usage', related='template_id.usage')
     validity_date = fields.Datetime(string='Expiration Date')
+    claim_number = fields.Char(string='Claim Number')
     invoice_ids = fields.Many2many('account.move',
                                    'rma_invoice_rel',
                                    'rma_id',
@@ -363,6 +366,26 @@ class RMA(models.Model):
                        'in_picking_id': in_picking_id.id if in_picking_id else False,
                        'out_picking_id': out_picking_id.id if out_picking_id else False})
 
+    def _next_rma_values(self):
+        return {
+            'template_id': self.template_id.next_rma_template_id.id,
+            # Partners should be set when confirming or using the RTV wizard
+            # 'partner_id': self.partner_id.id,
+            # 'partner_shipping_id': self.partner_shipping_id.id,
+            'parent_id': self.id,
+            'lines': [(0, 0, {
+                'product_id': l.product_id.id,
+                'product_uom_id': l.product_uom_id.id,
+                'product_uom_qty': l.product_uom_qty,
+            }) for l in self.lines]
+        }
+
+    def _next_rma(self):
+        if self.template_id.next_rma_template_id:
+            # currently we do not want to automatically confirm them
+            # this is because we want to mass confirm and set picking to one partner/vendor
+            _ = self.create(self._next_rma_values())
+
     def action_done(self):
         for rma in self:
             if rma.in_picking_id and rma.in_picking_id.state not in ('done', 'cancel'):
@@ -370,6 +393,67 @@ class RMA(models.Model):
             if rma.out_picking_id and rma.out_picking_id.state not in ('done', 'cancel'):
                 raise UserError(_('Outbound picking not complete or cancelled.'))
         self.write({'state': 'done'})
+        self._done_invoice()
+        self._next_rma()
+
+    def _done_invoice(self):
+        for rma in self.filtered(lambda r: r.template_id.invoice_done):
+            # If you do NOT want to take part in the default invoicing functionality
+            # then your usage method (e.g. _invoice_values_sale_order) should be
+            # defined, and return nothing or extend _invoice_values to do the same
+            usage = rma.template_usage or ''
+            if hasattr(rma, '_invoice_values_' + usage):
+                values = getattr(rma, '_invoice_values_' + usage)()
+            else:
+                values = rma._invoice_values()
+            if values:
+                if hasattr(rma, '_invoice_' + usage):
+                    getattr(rma, '_invoice_' + usage)(values)
+                else:
+                    rma._invoice(values)
+
+    def _invoice(self, invoice_values):
+        self.invoice_ids += self.env['account.move'].with_context(default_type=invoice_values['type']).create(
+                invoice_values)
+
+    def _invoice_values(self):
+        self.ensure_one()
+        # special case for vendor return
+        supplier = self._context.get('rma_supplier')
+        if supplier is None and self.out_picking_id and self.out_picking_id.location_dest_id.usage == 'supplier':
+            supplier = True
+
+        fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(
+            self.partner_id.id, delivery_id=self.partner_shipping_id.id)
+
+        invoice_values = {
+            'type': 'in_refund' if supplier else 'out_refund',
+            'partner_id': self.partner_id.id,
+            'fiscal_position_id': fiscal_position_id,
+        }
+
+        line_commands = []
+        for rma_line in self.lines:
+            product = rma_line.product_id
+            accounts = product.product_tmpl_id.get_product_accounts()
+            account = accounts['expense'] if supplier else accounts['income']
+            qty = rma_line.product_uom_qty
+            uom = rma_line.product_uom_id
+            price = product.standard_price if supplier else product.lst_price
+            if uom != product.uom_id:
+                price = product.uom_id._compute_price(price, uom)
+            line_commands.append((0, 0, {
+                'product_id': product.id,
+                'product_uom_id': uom.id,
+                'name': product.name,
+                'price_unit': price,
+                'quantity': qty,
+                'account_id': account.id,
+                'tax_ids': [(6, 0, product.taxes_id.ids)],
+            }))
+        if line_commands:
+            invoice_values['invoice_line_ids'] = line_commands
+        return invoice_values
 
     def action_cancel(self):
         for rma in self:
@@ -382,12 +466,18 @@ class RMA(models.Model):
             'state': 'draft', 'in_picking_id': False, 'out_picking_id': False})
 
     def _create_in_picking(self):
+        if self._context.get('rma_in_picking_id'):
+            # allow passing/setting by context to allow many RMA's to include the same pickings
+            return self.env['stock.picking'].browse(self._context.get('rma_in_picking_id'))
         if self.template_usage and hasattr(self, '_create_in_picking_' + self.template_usage):
             return getattr(self, '_create_in_picking_' + self.template_usage)()
         values = self.template_id._values_for_in_picking(self)
         return self.env['stock.picking'].sudo().create(values)
 
     def _create_out_picking(self):
+        if self._context.get('rma_out_picking_id'):
+            # allow passing/setting by context to allow many RMA's to include the same pickings
+            return self.env['stock.picking'].browse(self._context.get('rma_out_picking_id'))
         if self.template_usage and hasattr(self, '_create_out_picking_' + self.template_usage):
             return getattr(self, '_create_out_picking_' + self.template_usage)()
         values = self.template_id._values_for_out_picking(self)
