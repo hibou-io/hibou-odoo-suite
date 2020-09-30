@@ -12,6 +12,7 @@ RMA Product Cores - Return core products from customers.
     """,
     'website': 'https://hibou.io/',
     'depends': [
+        'hibou_professional',
         'product_cores',
         'rma_sale',
     ],
