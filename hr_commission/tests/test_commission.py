@@ -8,6 +8,7 @@ from odoo.tests import common
 
 
 class TestCommission(common.TransactionCase):
+    # TODO refactor tests to not require sale.order
 
     def setUp(self):
         super().setUp()

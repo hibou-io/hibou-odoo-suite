@@ -9,6 +9,7 @@
     'website': 'https://hibou.io/',
     'depends': [
         # 'account_invoice_margin',  # optional
+        'hibou_professional',
         'hr_contract',
     ],
     'data': [
