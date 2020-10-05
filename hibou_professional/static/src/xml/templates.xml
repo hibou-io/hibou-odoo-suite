@@ -3,15 +3,14 @@
     <t t-name="HibouProfessionalSystrayWidget">
         <li class="hibou_professional_systray o_mail_systray_item">
             <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false" data-flip="false" data-display="static" href="#">
-                <img t-if="! (widget.expiring || widget.expired)" class="hibou-icon-small" width="16px" height="16px" src="hibou_professional/static/src/img/hibou_icon_small.png" alt="Hibou Icon"/>
+                <img t-if="! (widget.expiring || widget.expired)" class="hibou-icon-small" width="16px" height="16px" src="/hibou_professional/static/src/img/hibou_icon_small.png" alt="Hibou Icon"/>
                 <i class="fa fa-exclamation-triangle" t-if="widget.expiring || widget.expired"/>
                 <span class="expiration_message" t-if="widget.expiring" t-esc="widget.expiring"/>
                 <span class="expiration_message" t-if="widget.expired" t-esc="widget.expired"/>
             </a>
             <div class="dropdown-menu dropdown-menu-right o_mail_systray_dropdown" role="menu">
                 <div class="o_mail_systray_dropdown_items">
-                    <a href="https://odoo-hibou-test12.hibou-test-odoo.us-w-p1.hibou.me/help?utm_source=db&amp;utm_medium=help" target="_blank">
-<!--                    <a href="https://hibou.io/help?utm_source=db&amp;utm_medium=help" target="_blank">-->
+                    <a href="https://hibou.io/help?utm_source=db&amp;utm_medium=help" target="_blank">
                         <div class="o_mail_preview">
                             <div class="o_preview_info">
                                 <div class="o_preview_title">
