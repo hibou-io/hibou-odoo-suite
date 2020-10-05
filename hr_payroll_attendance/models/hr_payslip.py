@@ -28,7 +28,7 @@ class HrPayslip(models.Model):
         """
         if not self.contract_id.paid_hourly_attendance:
             return worked_day_lines
-        if not self.state == 'draft':
+        if not self.state in ('draft', 'verify'):
             return worked_day_lines
 
         attendance_to_keep = self.attendance_ids.filtered(lambda a: a.employee_id == self.employee_id
@@ -40,17 +40,20 @@ class HrPayslip(models.Model):
         ])
         self.update({'attendance_ids': [(6, 0, attendance_to_keep.ids)]})
 
-        attendance_type = self.env.ref('hr_payroll_attendance.work_input_attendance', raise_if_not_found=False)
+        attendance_type = self.env.ref('hr_attendance_work_entry.work_input_attendance', raise_if_not_found=False)
         if not attendance_type:
-            # return early, include the "work calendar lines"
-            return worked_day_lines
+            # different default type
+            attendance_type = self.struct_id.type_id.default_work_entry_type_id
+            if not attendance_type:
+                # return early, include the "work calendar lines"
+                return worked_day_lines
 
         original_work_type = self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
         if original_work_type:
             # filter out "work calendar lines"
             worked_day_lines = [w for w in worked_day_lines if w['work_entry_type_id'] != original_work_type.id]
 
-        work_data = self._pre_aggregate_attendance_data()
+        work_data = self._pre_aggregate_attendance_data(attendance_type)
         processed_data = self.aggregate_overtime(work_data)
 
         worked_day_lines += [{
@@ -67,13 +70,16 @@ class HrPayslip(models.Model):
         # Override if you pay differently for different work types
         return self.contract_id.wage
 
-    def _pre_aggregate_attendance_data(self):
-        attendance_type = self.env.ref('hr_payroll_attendance.work_input_attendance', raise_if_not_found=False)
+    def _pre_aggregate_attendance_data(self, default_workentrytype):
         worked_attn = defaultdict(list)
         for attn in self.attendance_ids:
             if attn.worked_hours:
                 # Avoid in/outs
                 attn_iso = attn.check_in.isocalendar()
+                attendance_type = attn.work_type_id or default_workentrytype
+                if attendance_type in self.struct_id.unpaid_work_entry_type_ids:
+                    # this is unpaid, so we have to skip it from aggregation
+                    continue
                 worked_attn[attn_iso].append((attendance_type, attn.worked_hours, attn))
         res = [(k, worked_attn[k]) for k in sorted(worked_attn.keys())]
         return res
