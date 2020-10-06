@@ -118,15 +118,15 @@
 
     <menuitem
         action="action_hr_commission"
-        id="menu_action_sales_commission_form"
-        parent="sale.sale_menu_root"
+        id="menu_action_account_commission_root"
+        parent="account.menu_finance_receivables"
         sequence="5"
         />
 
     <menuitem
         action="action_hr_commission"
-        id="menu_action_sales_commission_form2"
-        parent="menu_action_sales_commission_form"
+        id="menu_action_account_commission_form"
+        parent="menu_action_account_commission_root"
         sequence="5"
         />
 
@@ -223,8 +223,8 @@ action = records.action_mark_paid()
 
     <menuitem
         action="action_hr_commission_payment"
-        id="menu_action_sales_commission_payment_form"
-        parent="menu_action_sales_commission_form"
+        id="menu_action_account_commission_payment_form"
+        parent="menu_action_account_commission_root"
         sequence="10"
         />
 

@@ -57,8 +57,8 @@
                                 <t t-set="validity" t-value="rma_template._rma_sale_line_validity(line)"/>
                                 <div class="row" t-attf-class="row #{'' if validity == 'valid' else 'text-muted'}">
                                     <div class="col-lg-1 text-center">
-                                        <img t-attf-src="/web/image/product.product/#{line.product_id.id}/image_64"
-                                             width="64" alt="Product image"></img>
+                                        <img class="mr4 float-left o_portal_product_img" t-if="line.product_id.image_128" t-att-src="image_data_uri(line.product_id.image_128)" alt="Product Image" width="64"/>
+                                        <img class="mr4 float-left o_portal_product_img" t-if="not line.product_id.image_128" src="/web/static/src/img/placeholder.png" alt="Product Image" width="64"/>
                                     </div>
                                     <div class="col-lg-3">
                                         <span t-esc="line.product_id.name"/>

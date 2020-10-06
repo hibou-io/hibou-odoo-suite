@@ -9,6 +9,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='usage']" position="after">
                 <field name="so_decrement_order_qty" string="Decrement Ordered Qty" attrs="{'invisible': [('usage', '!=', 'sale_order')]}"/>
+                <field name="sale_order_warranty" string="Warranty" attrs="{'invisible': [('usage', '!=', 'sale_order')]}"/>
             </xpath>
         </field>
     </record>
