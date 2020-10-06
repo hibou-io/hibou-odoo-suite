@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="hr_work_entry_type_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.work.type.view.form.inherit</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/group" position="after">
+                <group name="timesheet" string="Timesheets">
+                    <field name="allow_timesheet"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem
+        id="hr_work_entry_type_menu"
+        name="Work Entry Types"
+        parent="hr_timesheet.hr_timesheet_menu_configuration"
+        action="hr_work_entry.hr_work_entry_type_action"/>
+
+</odoo>
