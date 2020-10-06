@@ -25,12 +25,42 @@
         <field name="name">hr.work.entry.overtime.type.tree</field>
         <field name="model">hr.work.entry.overtime.type</field>
         <field name="arch" type="xml">
-            <tree string="Overtime Rules" editable="bottom">
+            <tree string="Overtime Rules">
                 <field name="name"/>
                 <field name="hours_per_day"/>
                 <field name="hours_per_week"/>
                 <field name="multiplier"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_overtime_type_form" model="ir.ui.view">
+        <field name="name">hr.work.entry.overtime.type.form</field>
+        <field name="model">hr.work.entry.overtime.type</field>
+        <field name="arch" type="xml">
+            <form string="Overtime Rules">
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="multiplier"/>
+                    </group>
+                    <group>
+                        <field name="hours_per_day"/>
+                        <field name="hours_per_week"/>
+                    </group>
+                </group>
+                <group name="overrides" string="Overrides">
+                    <field name="override_ids" nolabel="1">
+                        <tree editable="top">
+                            <field name="work_type_id"/>
+                            <field name="multiplier"/>
+                            <field name="date"/>
+                            <field name="day_of_week"/>
+                            <field name="name"/>
+                        </tree>
+                    </field>
+                </group>
+            </form>
         </field>
     </record>
 
