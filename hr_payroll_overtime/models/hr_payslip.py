@@ -1,5 +1,6 @@
 from collections import defaultdict
 from odoo import models
+from odoo.exceptions import UserError
 
 
 class HRPayslip(models.Model):
@@ -30,10 +31,15 @@ class HRPayslip(models.Model):
         day_hours = defaultdict(float)
         week_hours = defaultdict(float)
         iso_days = set()
-        for iso_date, entries in work_data:
-            iso_date = _adjust_week(iso_date)
-            for work_type, hours, _ in entries:
-                self._aggregate_overtime_add_work_type_hours(work_type, hours, iso_date, result, iso_days, day_hours, week_hours)
+        try:
+            for iso_date, entries in work_data:
+                iso_date = _adjust_week(iso_date)
+                for work_type, hours, _ in entries:
+                    self._aggregate_overtime_add_work_type_hours(work_type, hours, iso_date, result, iso_days, day_hours, week_hours)
+        except RecursionError:
+            raise UserError('RecursionError raised.  Ensure you have not overtime loops, you should have an '
+                            'end work type that does not have any "overtime" version, and would be considered '
+                            'the "highest overtime" work type and rate.')
 
         return result
 
@@ -75,6 +81,9 @@ class HRPayslip(models.Model):
                 # we need to save this because it won't be set once it reenter, we won't know what the original
                 # overtime multiplier was
                 working_aggregation[work_type.overtime_work_type_id][2] = work_type.overtime_type_id.multiplier
+                if work_type == work_type.overtime_work_type_id:
+                    # trivial infinite recursion
+                    raise UserError('Work type %s (id %s) must not have itself as its next overtime type.' % (work_type.name, work_type.id))
                 self._aggregate_overtime_add_work_type_hours(work_type.overtime_work_type_id, ot_hours, iso_date,
                                                              working_aggregation, iso_days, day_hours, week_hours)
         else:
