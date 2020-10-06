@@ -1,4 +1,5 @@
 from odoo.tests import common
+from odoo.exceptions import UserError
 
 
 class TestOvertime(common.TransactionCase):
@@ -321,3 +322,41 @@ class TestOvertime(common.TransactionCase):
         self.assertTrue(self.work_type_overtime2 in result_data)
         self.assertEqual(result_data[self.work_type_overtime2][0], 0)
         self.assertEqual(result_data[self.work_type_overtime2][1], 2.0)
+
+    def test_13_recursive_infinite_trivial(self):
+        # recursive should will use a second overtime, but not this time!
+        self.overtime_rules.hours_per_day = 8.0
+        self.overtime_rules.multiplier_per_day = 1.5
+        self.work_type.overtime_type_id = self.overtime_rules
+        # overtime goes to itself
+        self.work_type.overtime_work_type_id = self.work_type
+
+        work_data = [
+            ((2020, 24, 2), [
+                # 2hr overtime
+                (self.work_type, 4.0, None),
+                (self.work_type, 6.0, None),
+            ]),
+        ]
+
+        with self.assertRaises(UserError):
+            result_data = self.payslip.aggregate_overtime(work_data)
+
+    def test_14_recursive_infinite_loop(self):
+        # recursive will use a second overtime, but not this time!
+        self.overtime_rules.hours_per_day = 8.0
+        self.overtime_rules.multiplier_per_day = 1.5
+        self.work_type_overtime.overtime_type_id = self.overtime_rules
+        # overtime goes back to worktype
+        self.work_type_overtime.overtime_work_type_id = self.work_type
+
+        work_data = [
+            ((2020, 24, 2), [
+                # 2hr overtime
+                (self.work_type, 4.0, None),
+                (self.work_type, 6.0, None),
+            ]),
+        ]
+
+        with self.assertRaises(UserError):
+            result_data = self.payslip.aggregate_overtime(work_data)
