@@ -11,9 +11,12 @@
         'views/hr_contract_view.xml',
         'views/hr_payslip_views.xml',
     ],
+    'demo': [
+        'data/hr_payroll_timesheet_demo.xml',
+    ],
     'depends': [
         'hr_payroll',
-        'hr_timesheet',
+        'hr_timesheet_work_entry',
         'hr_payroll_overtime',
     ],
     'pre_init_hook': 'ts_payroll_pre_init_hook',

@@ -28,7 +28,7 @@ class HrPayslip(models.Model):
         """
         if not self.contract_id.paid_hourly_timesheet:
             return worked_day_lines
-        if not self.state == 'draft':
+        if not self.state in ('draft', 'verify'):
             return worked_day_lines
 
         timesheet_to_keep = self.timesheet_ids.filtered(lambda ts: ts.employee_id == self.employee_id
@@ -40,17 +40,20 @@ class HrPayslip(models.Model):
         ])
         self.update({'timesheet_ids': [(6, 0, timesheet_to_keep.ids)]})
 
-        timesheet_type = self.env.ref('hr_payroll_timesheet.work_input_timesheet', raise_if_not_found=False)
+        timesheet_type = self.env.ref('hr_tiemsheet_work_entry.work_input_timesheet', raise_if_not_found=False)
         if not timesheet_type:
-            # return early, include the "work calendar lines"
-            return worked_day_lines
+            # different default type
+            timesheet_type = self.struct_id.type_id.default_work_entry_type_id
+            if not timesheet_type:
+                # return early, include the "work calendar lines"
+                return worked_day_lines
 
         original_work_type = self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
         if original_work_type:
             # filter out "work calendar lines"
             worked_day_lines = [w for w in worked_day_lines if w['work_entry_type_id'] != original_work_type.id]
 
-        work_data = self._pre_aggregate_timesheet_data()
+        work_data = self._pre_aggregate_timesheet_data(timesheet_type)
         processed_data = self.aggregate_overtime(work_data)
 
         worked_day_lines += [{
@@ -67,12 +70,15 @@ class HrPayslip(models.Model):
         # Override if you pay differently for different work types
         return self.contract_id.wage
 
-    def _pre_aggregate_timesheet_data(self):
-        timesheet_type = self.env.ref('hr_payroll_timesheet.work_input_timesheet', raise_if_not_found=False)
+    def _pre_aggregate_timesheet_data(self, default_workentrytype):
         worked_ts = defaultdict(list)
         for ts in self.timesheet_ids.sorted('id'):
             if ts.unit_amount:
                 ts_iso = ts.date.isocalendar()
+                timesheet_type = ts.work_type_id or default_workentrytype
+                if timesheet_type in self.struct_id.unpaid_work_entry_type_ids:
+                    # this is unpaid, so we have to skip it from aggregation
+                    continue
                 worked_ts[ts_iso].append((timesheet_type, ts.unit_amount, ts))
         res = [(k, worked_ts[k]) for k in sorted(worked_ts.keys())]
         return res
