@@ -125,3 +125,59 @@ class TestPayslipTimesheet(common.TransactionCase):
         self.assertTrue(timesheet_overtime_line)
         self.assertEqual(timesheet_overtime_line.number_of_days, 1.0)
         self.assertEqual(timesheet_overtime_line.number_of_hours, 12.0)
+
+    def test_payslip_timesheet_specific_work_entry_type(self):
+        self.assertTrue(self.contract.paid_hourly_timesheet)
+        worktype = self.env.ref('hr_timesheet_work_entry.work_input_timesheet_internal')
+
+        # Day 1
+        self.env['account.analytic.line'].create({
+            'employee_id': self.employee.id,
+            'project_id': self.project.id,
+            'date': '2018-01-01',
+            'unit_amount': 5.0,
+            'name': 'test',
+        })
+        self.env['account.analytic.line'].create({
+            'employee_id': self.employee.id,
+            'project_id': self.project.id,
+            'date': '2018-01-01',
+            'unit_amount': 3.0,
+            'name': 'test',
+        })
+
+        # Day 2
+        self.env['account.analytic.line'].create({
+            'employee_id': self.employee.id,
+            'project_id': self.project.id,
+            'date': '2018-01-02',
+            'unit_amount': 10.0,
+            'name': 'test',
+            'work_type_id': worktype.id,
+        })
+
+        # Make one that should be excluded.
+        self.env['account.analytic.line'].create({
+            'employee_id': self.employee.id,
+            'project_id': self.project.id,
+            'date': '2017-01-01',
+            'unit_amount': 5.0,
+            'name': 'test',
+            'payslip_id': self.payslip_dummy.id,
+        })
+
+        self.payslip._onchange_employee()
+        self.assertTrue(self.payslip.contract_id, 'No auto-discovered contract!')
+        wage = self.test_hourly_wage
+        self.payslip.compute_sheet()
+        self.assertTrue(self.payslip.worked_days_line_ids)
+
+        timesheet_line = self.payslip.worked_days_line_ids.filtered(lambda l: l.code == 'TS')
+        self.assertTrue(timesheet_line)
+        self.assertEqual(timesheet_line.number_of_days, 1.0)
+        self.assertEqual(timesheet_line.number_of_hours, 8.0)
+
+        worktype_line = self.payslip.worked_days_line_ids.filtered(lambda l: l.code == worktype.code)
+        self.assertTrue(worktype_line)
+        self.assertEqual(worktype_line.number_of_days, 1.0)
+        self.assertEqual(worktype_line.number_of_hours, 10.0)
