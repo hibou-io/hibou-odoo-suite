@@ -78,13 +78,24 @@ class HRPayslip(models.Model):
                 day_hours[iso_date] += regular_hours
                 week_hours[week] += regular_hours
             if ot_hours:
+                overtime_work_type = work_type.overtime_work_type_id
+                multiplier = work_type.overtime_type_id.multiplier
+                override = work_type.overtime_type_id.override_for_iso_date(iso_date)
+                if work_type == overtime_work_type:
+                    # trivial infinite recursion
+                    raise UserError('Work type "%s" (id %s) must not have itself as its next overtime type.' % (work_type.name, work_type.id))
+                if override:
+                    overtime_work_type = override.work_type_id
+                    multiplier = override.multiplier
+                    if work_type == overtime_work_type:
+                        # trivial infinite recursion from override
+                        raise UserError('Work type "%s" (id %s) must not have itself as its next overtime type. '
+                                        'This occurred due to an override "%s" from overtime rules "%s".' % (
+                            work_type.name, work_type.id, override.name, work_type.overtime_type_id.name))
                 # we need to save this because it won't be set once it reenter, we won't know what the original
                 # overtime multiplier was
-                working_aggregation[work_type.overtime_work_type_id][2] = work_type.overtime_type_id.multiplier
-                if work_type == work_type.overtime_work_type_id:
-                    # trivial infinite recursion
-                    raise UserError('Work type %s (id %s) must not have itself as its next overtime type.' % (work_type.name, work_type.id))
-                self._aggregate_overtime_add_work_type_hours(work_type.overtime_work_type_id, ot_hours, iso_date,
+                working_aggregation[overtime_work_type][2] = multiplier
+                self._aggregate_overtime_add_work_type_hours(overtime_work_type, ot_hours, iso_date,
                                                              working_aggregation, iso_days, day_hours, week_hours)
         else:
             # No overtime, just needs added to set
