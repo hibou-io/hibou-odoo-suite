@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    
+    <act_window id="action_payslip"
+                name="Payslip List"
+                res_model="hr.payslip.line"
+                view_mode="tree,pivot" />
+    
+    <menuitem id="payslip_reporting_view"
+              name="Payslip Lines"
+              parent="hr_payroll.menu_hr_payroll_report"
+              action="action_payslip" />
+    
+</odoo>
