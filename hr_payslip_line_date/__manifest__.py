@@ -17,7 +17,8 @@ Date on Payslip Lines
     'auto_install': True,
     'website': 'https://hibou.io/',
     'data': [
-        'payslip_view.xml',
+        'views/payslip_view.xml',
+        'views/payslip_menu.xml',
     ],
     'installable': True
 }
