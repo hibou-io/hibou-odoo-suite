@@ -24,8 +24,7 @@
                         <t t-foreach="docs" t-as="l">
                             <t t-foreach="l.lines" t-as="p">
                                 <tr>
-                                    <td><img t-att-src="p.product_id.image_512 or '/web/static/src/img/placeholder.png'" width="50" height="50"/></td>
-<!--                                    <td><<img t-att-src="p.product_id.image_64 and ('data:image/png;base64,' + to_text(product_id.image_64)) or '/web/static/src/img/placeholder.png'" width="50" height="50"/></td>-->
+                                    <td><img t-att-src="image_data_uri(p.product_id.image_128)" width="64" height="64"/></td>
                                     <td><span t-esc="p.qty"/></td>
                                     <td>
                                         <span t-if="p.product_id.seller_ids" t-field="p.product_id.seller_ids[0].name" /> -
