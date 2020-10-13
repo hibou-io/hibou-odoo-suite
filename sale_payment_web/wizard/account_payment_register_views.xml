@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_account_payment_form_multi_inherit" model="ir.ui.view">
+        <field name="name">account.payment.form.multi.inherit</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_form_multi"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/group[1]" position="inside">
+                <field name="company_id" invisible="1" />
+                <field name="partner_id" invisible="1" />
+                <field name="payment_token_id" nocreate="1" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
