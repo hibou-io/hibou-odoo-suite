@@ -14,10 +14,10 @@ class StockPicking(models.Model):
 
     @api.depends('move_lines.priority', 'carrier_id')
     def _compute_priority(self):
-        if self.carrier_id.procurement_priority:
-            self.priority = self.carrier_id.procurement_priority
-        else:
-            super(StockPicking, self)._compute_priority()
+        with_carrier_priority = self.filtered(lambda p: p.carrier_id.procurement_priority)
+        for picking in with_carrier_priority:
+            picking.priority = picking.carrier_id.procurement_priority
+        super(StockPicking, (self-with_carrier_priority))._compute_priority()
 
     @api.model
     def create(self, values):
