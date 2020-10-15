@@ -5,6 +5,13 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_is_zero
 
 
+class HrContract(models.Model):
+    _inherit = 'hr.contract'
+
+    payroll_fiscal_position_id = fields.Many2one('account.fiscal.position', 'Payroll Fiscal Position', domain="[('company_id', '=', company_id)]",
+                                                 help="Used for mapping accounts when processing payslip journal entries.")
+
+
 class HrPayslipRun(models.Model):
     _inherit = 'hr.payslip.run'
 
@@ -140,12 +147,15 @@ class HrPayslip(models.Model):
         #     payslips_to_post}
         # Hibou Customization: group with journal itself so that journal behavior can be derived.
         # Hibou Customization: prefer slip's `date` over end of month
+        # Hibou Customization: add an account mapping based on fiscal position
         slip_mapped_data = {
             slip.struct_id.journal_id: {slip.date or fields.Date().end_of(slip.date_to, 'month'): self.env['hr.payslip']} for slip
             in
             payslips_to_post}
         for slip in payslips_to_post:
             slip_mapped_data[slip.struct_id.journal_id][slip.date or fields.Date().end_of(slip.date_to, 'month')] |= slip
+
+        account_map = payslips_to_post._generate_account_map()
 
         for journal in slip_mapped_data:  # For each journal_id.
             """
@@ -154,9 +164,9 @@ class HrPayslip(models.Model):
             """
             for slip_date in slip_mapped_data[journal]:  # For each month.
                 if hasattr(self, '_generate_move_' + str(journal.payroll_entry_type)):
-                    getattr(self, '_generate_move_' + str(journal.payroll_entry_type))(slip_mapped_data, journal, slip_date)
+                    getattr(self, '_generate_move_' + str(journal.payroll_entry_type))(slip_mapped_data, journal, slip_date, account_map)
                 else:
-                    self._generate_move_original(slip_mapped_data, journal, slip_date)
+                    self._generate_move_original(slip_mapped_data, journal, slip_date, account_map)
 
     def _check_slips_employee_home_address(self):
         employees_missing_partner = self.mapped('employee_id').filtered(lambda e: not e.address_home_id)
@@ -167,7 +177,17 @@ class HrPayslip(models.Model):
         if len(address_ap) > 1:
             raise UserError(_('Employee\'s private address account payable not the same for all addresses.'))
 
-    def _process_journal_lines_grouped(self, line_ids, date, precision):
+    def _generate_account_map(self):
+        account_map = {}
+        rules = self.mapped('line_ids.salary_rule_id')
+        base_account_map = {a: a for a in (rules.mapped('account_debit') | rules.mapped('account_credit'))}
+        account_map[self.env['account.fiscal.position']] = base_account_map
+        fiscal_positions = self.mapped('contract_id.payroll_fiscal_position_id')
+        for fp in fiscal_positions:
+            account_map[fp] = fp.map_accounts(base_account_map.copy())
+        return account_map
+
+    def _process_journal_lines_grouped(self, line_ids, date, precision, account_map):
         slip = self
         employee_partner_id = slip.employee_id.address_home_id.id
         for line in slip.line_ids.filtered(lambda l: l.category_id):
@@ -181,8 +201,10 @@ class HrPayslip(models.Model):
                             amount += abs(tmp_line.total)
             if float_is_zero(amount, precision_digits=precision):
                 continue
-            debit_account_id = line.salary_rule_id.account_debit.id
-            credit_account_id = line.salary_rule_id.account_credit.id
+            debit_account = line.salary_rule_id.account_debit
+            debit_account_id = account_map[debit_account].id if debit_account else False
+            credit_account = line.salary_rule_id.account_credit
+            credit_account_id = account_map[credit_account].id if credit_account else False
             partner_id = line.salary_rule_id.partner_id.id or employee_partner_id
 
             if debit_account_id:  # If the rule has a debit account.
@@ -247,7 +269,7 @@ class HrPayslip(models.Model):
                     credit_line['debit'] += debit
                     credit_line['credit'] += credit
 
-    def _generate_move_grouped(self, slip_mapped_data, journal, slip_date):
+    def _generate_move_grouped(self, slip_mapped_data, journal, slip_date, account_map):
         slip_mapped_data[journal][slip_date]._check_slips_employee_home_address()
 
         precision = self.env['decimal.precision'].precision_get('Payroll')
@@ -263,9 +285,10 @@ class HrPayslip(models.Model):
         }
 
         for slip in slip_mapped_data[journal][slip_date]:
+            slip_accounts = account_map[slip.contract_id.payroll_fiscal_position_id]
             move_dict['narration'] += slip.number or '' + ' - ' + slip.employee_id.name or ''
             move_dict['narration'] += '\n'
-            slip._process_journal_lines_grouped(line_ids, date, precision)
+            slip._process_journal_lines_grouped(line_ids, date, precision, slip_accounts)
 
         for line_id in line_ids:  # Get the debit and credit sum.
             debit_sum += line_id['debit']
@@ -327,12 +350,13 @@ class HrPayslip(models.Model):
         for slip in slip_mapped_data[journal][slip_date]:
             slip.write({'move_id': move.id, 'date': date})
 
-    def _generate_move_slip(self, slip_mapped_data, journal, slip_date):
+    def _generate_move_slip(self, slip_mapped_data, journal, slip_date, account_map):
         slip_mapped_data[journal][slip_date]._check_slips_employee_home_address()
 
         precision = self.env['decimal.precision'].precision_get('Payroll')
 
         for slip in slip_mapped_data[journal][slip_date]:
+            slip_accounts = account_map[slip.contract_id.payroll_fiscal_position_id]
             line_ids = []
             debit_sum = 0.0
             credit_sum = 0.0
@@ -346,7 +370,7 @@ class HrPayslip(models.Model):
 
             move_dict['narration'] += slip.number or '' + ' - ' + slip.employee_id.name or ''
             move_dict['narration'] += '\n'
-            slip._process_journal_lines_grouped(line_ids, date, precision)
+            slip._process_journal_lines_grouped(line_ids, date, precision, slip_accounts)
 
             for line_id in line_ids:  # Get the debit and credit sum.
                 debit_sum += line_id['debit']
@@ -407,7 +431,7 @@ class HrPayslip(models.Model):
             move = self.env['account.move'].create(move_dict)
             slip.write({'move_id': move.id, 'date': date})
 
-    def _generate_move_original(self, slip_mapped_data, journal, slip_date):
+    def _generate_move_original(self, slip_mapped_data, journal, slip_date, account_map):
         """
         Odoo's original version.
         Fixed bug with 'matching' credit line
@@ -425,6 +449,7 @@ class HrPayslip(models.Model):
         }
 
         for slip in slip_mapped_data[journal][slip_date]:
+            slip_accounts = account_map[slip.contract_id.payroll_fiscal_position_id]
             move_dict['narration'] += slip.number or '' + ' - ' + slip.employee_id.name or ''
             move_dict['narration'] += '\n'
             for line in slip.line_ids.filtered(lambda l: l.category_id):
@@ -439,8 +464,10 @@ class HrPayslip(models.Model):
                 if float_is_zero(amount, precision_digits=precision):
                     continue
 
-                debit_account_id = line.salary_rule_id.account_debit.id
-                credit_account_id = line.salary_rule_id.account_credit.id
+                debit_account = line.salary_rule_id.account_debit
+                debit_account_id = slip_accounts[debit_account].id if debit_account else False
+                credit_account = line.salary_rule_id.account_credit
+                credit_account_id = slip_accounts[credit_account].id if credit_account else False
 
                 if debit_account_id:  # If the rule has a debit account.
                     debit = amount if amount > 0.0 else 0.0
