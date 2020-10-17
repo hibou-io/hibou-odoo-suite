@@ -1,5 +1,7 @@
+from datetime import date
+
 from odoo.tests import common
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class TestOvertime(common.TransactionCase):
@@ -360,3 +362,94 @@ class TestOvertime(common.TransactionCase):
 
         with self.assertRaises(UserError):
             result_data = self.payslip.aggregate_overtime(work_data)
+
+    def test_15_override_day_of_week(self):
+        iso_date = (2020, 24, 1)
+        self.overtime_rules.hours_per_day = 8.0
+        self.overtime_rules.multiplier_per_day = 1.5
+        work_data = [
+            (iso_date, [
+                (self.work_type, 4.0, None),
+                (self.work_type, 6.0, None),
+            ]),
+        ]
+
+        result_data = self.payslip.aggregate_overtime(work_data)
+        self.assertTrue(self.work_type in result_data)
+        self.assertEqual(result_data[self.work_type][0], 1)
+        self.assertEqual(result_data[self.work_type][1], 8.0)
+        self.assertTrue(self.work_type_overtime in result_data)
+        self.assertEqual(result_data[self.work_type_overtime][0], 0)
+        self.assertEqual(result_data[self.work_type_overtime][1], 2.0)
+        self.assertEqual(result_data[self.work_type_overtime][2], 1.5)
+
+
+        # Now lets make an override line
+        self.overtime_rules.write({
+            'override_ids': [(0, 0, {
+                'name': 'Day 1 Override',
+                'multiplier': 2.0,
+                'day_of_week': str(iso_date[2]),
+                'work_type_id': self.work_type_overtime.id,  # Note that this wouldn't be good in practice
+            })]
+        })
+        result_data = self.payslip.aggregate_overtime(work_data)
+        self.assertTrue(self.work_type in result_data)
+        self.assertEqual(result_data[self.work_type][0], 1)
+        self.assertEqual(result_data[self.work_type][1], 8.0)
+        self.assertTrue(self.work_type_overtime in result_data)
+        self.assertEqual(result_data[self.work_type_overtime][0], 0)
+        self.assertEqual(result_data[self.work_type_overtime][1], 2.0)
+        self.assertEqual(result_data[self.work_type_overtime][2], 2.0)  # rate 2x
+
+    def test_16_override_date(self):
+        iso_date = (2020, 24, 1)
+        self.overtime_rules.hours_per_day = 8.0
+        self.overtime_rules.multiplier_per_day = 1.5
+        work_data = [
+            (iso_date, [
+                (self.work_type, 4.0, None),
+                (self.work_type, 6.0, None),
+            ]),
+        ]
+
+        result_data = self.payslip.aggregate_overtime(work_data)
+        self.assertTrue(self.work_type in result_data)
+        self.assertEqual(result_data[self.work_type][0], 1)
+        self.assertEqual(result_data[self.work_type][1], 8.0)
+        self.assertTrue(self.work_type_overtime in result_data)
+        self.assertEqual(result_data[self.work_type_overtime][0], 0)
+        self.assertEqual(result_data[self.work_type_overtime][1], 2.0)
+        self.assertEqual(result_data[self.work_type_overtime][2], 1.5)
+
+        # Now lets make a specific date override
+        self.overtime_rules.write({
+            'override_ids': [(0, 0, {
+                'name': 'Day (2020, 24, 1) Override',
+                'multiplier': 3.0,
+                'date': date(2020, 6, 8),  # date.fromisocalendar(*iso_date),
+                'work_type_id': self.work_type_overtime.id,  # Note that this wouldn't be good in practice
+            })]
+        })
+        self.overtime_rules.flush()
+        result_data = self.payslip.aggregate_overtime(work_data)
+        self.assertTrue(self.work_type in result_data)
+        self.assertEqual(result_data[self.work_type][0], 1)
+        self.assertEqual(result_data[self.work_type][1], 8.0)
+        self.assertTrue(self.work_type_overtime in result_data)
+        self.assertEqual(result_data[self.work_type_overtime][0], 0)
+        self.assertEqual(result_data[self.work_type_overtime][1], 2.0)
+        self.assertEqual(result_data[self.work_type_overtime][2], 3.0)  # rate 3x
+
+    def test_17_override_config(self):
+        with self.assertRaises(ValidationError):
+            self.overtime_rules.write({
+                'override_ids': [(0, 0, {
+                    'name': 'Day (2020, 24, 1) Override',
+                    'multiplier': 3.0,
+                    # cannot have both date and day_of_week
+                    'date': date(2020, 6, 8),
+                    'day_of_week': '1',
+                    'work_type_id': self.work_type_overtime.id,  # Note that this wouldn't be good in practice
+                })]
+            })
