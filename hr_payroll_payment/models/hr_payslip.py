@@ -139,12 +139,13 @@ class HrPayslip(models.Model):
         #     in
         #     payslips_to_post}
         # Hibou Customization: group with journal itself so that journal behavior can be derived.
+        # Hibou Customization: prefer slip's `date` over end of month
         slip_mapped_data = {
-            slip.struct_id.journal_id: {fields.Date().end_of(slip.date_to, 'month'): self.env['hr.payslip']} for slip
+            slip.struct_id.journal_id: {slip.date or fields.Date().end_of(slip.date_to, 'month'): self.env['hr.payslip']} for slip
             in
             payslips_to_post}
         for slip in payslips_to_post:
-            slip_mapped_data[slip.struct_id.journal_id][fields.Date().end_of(slip.date_to, 'month')] |= slip
+            slip_mapped_data[slip.struct_id.journal_id][slip.date or fields.Date().end_of(slip.date_to, 'month')] |= slip
 
         for journal in slip_mapped_data:  # For each journal_id.
             """

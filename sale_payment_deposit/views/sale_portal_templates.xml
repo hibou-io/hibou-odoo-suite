@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="sale_order_portal_template_deposit" name="Sales Order Portal Template - Deposit" inherit_id="sale.sale_order_portal_template">
+        <!-- Display the Deposit amount prominently -->
+        <xpath expr="//t[@t-set='title']/h2" position="replace">
+            <h2 class="mb-0"><b t-field="sale_order.amount_total"/></h2>
+            <h5 t-if="sale_order.amount_total_deposit"><b t-field="sale_order.amount_total_deposit"/> Deposit</h5>
+        </xpath>
+        <!-- Display the Deposit and Total when Signing -->
+        <xpath expr="//div[@id='modalaccept']/div/form/main/p/ul/li[2]" position="replace">
+            <li><span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/></li>
+            <li t-if="sale_order.amount_total_deposit"><span>Deposit today of:</span> <b data-id="total_amount_deposit" t-field="sale_order.amount_total_deposit"/></li>
+            <li t-if="sale_order.payment_term_id.note"><span t-field="sale_order.payment_term_id.note"/></li>
+        </xpath>
+        <!-- Display the Deposit when Paying -->
+        <xpath expr="//div[@id='modalaccept']/div/div/main/p/ul/li[2]" position="replace">
+            <li t-if="sale_order.amount_total_deposit"><span>For the deposit amount of:</span> <b data-id="total_amount_deposit" t-field="sale_order.amount_total_deposit"/></li>
+            <li t-else=""><span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/></li>
+            <li t-if="sale_order.payment_term_id.note"><span t-field="sale_order.payment_term_id.note"/></li>
+        </xpath>
+    </template>
+</odoo>

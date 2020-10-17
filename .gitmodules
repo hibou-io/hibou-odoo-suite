@@ -13,3 +13,10 @@
 [submodule "external/hibou-oca/social"]
 	path = external/hibou-oca/social
 	url = https://github.com/hibou-io/oca-social.git
+[submodule "external/camptocamp-cloud-platform"]
+	path = external/camptocamp-cloud-platform
+	url = https://github.com/hibou-io/camptocamp-cloud-platform
+[submodule "external/hibou-shipbox"]
+	path = external/hibou-shipbox
+	url = https://gitlab.com/hibou-io/hibou-odoo/shipbox.git
+>>>>>>> .gitmodules

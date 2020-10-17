@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@class='page']" position="inside">
+            <div class="container" t-if="o.timesheet_ids">
+                <hr/>
+                <h3>Timesheets</h3>
+                <table class="table table-sm">
+                    <thead>
+                      <tr class="active">
+                        <th>Date</th>
+                        <th class="col-md-6">Description</th>
+                        <th>Responsible</th>
+                        <th>Duration</th>
+                      </tr>
+                    </thead>
+                    <t t-foreach="o.timesheet_ids.mapped('project_id')" t-as="project">
+                        <tr class="bg-primary"><td><h4>Project</h4></td><td colspan="3"><h4 t-esc="project.name"/></td></tr>
+                        <t t-foreach="o.timesheet_ids.filtered(lambda l: l.project_id == project).mapped('task_id')" t-as="task">
+                            <tr class="bg-info"><td><h5>Task</h5></td><td colspan="3"><h5 t-esc="task.name"/></td></tr>
+                            <tr t-foreach="o.timesheet_ids.filtered(lambda l: l.project_id == project and l.task_id == task)" t-as="timesheet">
+                                <td><t t-esc="timesheet.date"/></td>
+                                <td><t t-esc="timesheet.name"/></td>
+                                <td><t t-esc="timesheet.sudo().user_id.name"/></td>
+                                <td><span t-field="timesheet.unit_amount" t-options="{&quot;widget&quot;: &quot;duration&quot;, &quot;unit&quot;: &quot;hour&quot;, &quot;round&quot;: &quot;minute&quot;}"/></td>
+                            </tr>
+                        </t>
+                    </t>
+                </table>
+            </div>
+        </xpath>
+    </template>
+</odoo>

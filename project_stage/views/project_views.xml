@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="open_project_type_form" model="ir.actions.act_window">
+        <field name="name">Project Stages</field>
+        <field name="res_model">project.type</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add a stage in the project pipeline.
+          </p><p>
+            Define the steps that will be used by projects.
+          </p>
+        </field>
+    </record>
+
+    <menuitem action="open_project_type_form" id="menu_project_config_project_stage"
+              name="Project Stages"
+              parent="project.menu_project_config"
+              sequence="4"
+              groups="base.group_no_one"/>
+
+    <record id="view_project_type_kanban" model="ir.ui.view">
+        <field name="name">project.type.kanban</field>
+        <field name="model">project.type</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="fold"/>
+                <field name="description"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <strong><t t-esc="record.name.value"/></strong>
+                                </div>
+                            </div>
+                            <t t-if="record.description.value">
+                                <hr class="mt8 mb8"/>
+                                <t t-esc="record.description.value"/>
+                            </t>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="project_type_tree" model="ir.ui.view">
+        <field name="name">project.type.tree</field>
+        <field name="model">project.type</field>
+        <field name="arch" type="xml">
+            <tree string="Project Stage">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="fold"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="project_type_search" model="ir.ui.view">
+        <field name="name">project.type.search</field>
+        <field name="model">project.type</field>
+        <field name="arch" type="xml">
+            <search string="Project Stages">
+                <field name="name" string="Project Stages"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="project_type_edit" model="ir.ui.view">
+        <field name="name">project.type.form</field>
+        <field name="model">project.type</field>
+        <field name="arch" type="xml">
+            <form string="Project Stage">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="fold"/>
+                            <field name="sequence" groups="base.group_no_one"/>
+                            <field name="color" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                    <group string="Stage Description and Tooltips">
+                        <p class="text-muted" colspan="2">
+                            You can also add a description to help your coworkers understand the meaning and purpose of the stage.
+                        </p>
+                        <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Project -->
+    <record id="view_project_kanban_inherit" model="ir.ui.view">
+        <field name="name">project.project.kanban.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="arch" type="xml">
+            <!-- Add `o_kanban_small_column` to prevent strange wrapping -->
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="class">o_kanban_small_column oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors</attribute>
+            </xpath>
+            <xpath expr="//kanban/field[@name='name']" position="after">
+                <field name="stage_id" options="{'group_by_tooltip': {'description': 'Stage Description'}}"/>
+                <field name="stage_color"/>
+            </xpath>
+            <xpath expr="//templates//span[@t-if='record.partner_id.value']" position="after">
+                <div t-if="record.stage_id.value" class="o_kanban_tags" style="margin-top: 5px;">
+                    <span t-attf-class="o_tag o_tag_color_#{record.stage_color.raw_value}" style="font-size: 110%;">
+                        <span style="width: 12px; height: 12px;"/>
+                        <em><t t-esc="record.stage_id.value"/></em>
+                    </span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="edit_project_inherit" model="ir.ui.view">
+        <field name="name">project.project.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <header>
+                    <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}"/>
+                </header>
+            </xpath>
+            <xpath expr="//field[@name='message_follower_ids']" position="after">
+                <field name="message_ids" widget="mail_thread"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_project_project_filter_inherit" model="ir.ui.view">
+        <field name="name">project.project.select.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Stage" name="group_stage" context="{'group_by': 'stage_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

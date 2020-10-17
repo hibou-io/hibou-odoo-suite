@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="maintenance_team_view_form_inherited">
+        <field name="name">maintenance.team.form.inherited</field>
+        <field name="model">maintenance.team</field>
+        <field name="inherit_id" ref="maintenance.maintenance_team_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='member_ids']" position="after">
+                <field name="repair_location_id"/>
+                <field name="repair_location_dest_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="hr_equipment_request_view_form_inherited">
+        <field name="name">equipment.request.form.inherited</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='archive_equipment_request']" position="before">
+                <field name="repair_status" invisible="1"/>
+                <button type="object" name="action_complete_repair" string="Complete Repair" class="oe_highlight"
+                        attrs="{'invisible': [('repair_status', '!=', 'to repair')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="hr_equipment_request_view_form_notebook_inherited">
+        <field name="name">equipment.request.form.notebook.inherited</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance_notebook.hr_equipment_request_view_form_notebook"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Parts">
+                    <group>
+                        <group>
+                            <field name="repair_location_id"/>
+                            <field name="repair_status" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="repair_location_dest_id"/>
+                        </group>
+                    </group>
+
+                    <field name="repair_line_ids">
+                        <tree editable="bottom" string="Part Operations" colors="blue:state=='draft'">
+                            <field name="state" invisible="1"/>
+                            <field name="product_id" domain="[('type', 'in', ['product', 'consu'])]"/>
+                            <field name="product_uom_id"/>
+                            <field name="product_uom_qty"/>
+                            <field name="lst_price"/>
+                            <field name="standard_price" groups="account.group_account_user"/>
+                            <field name="cost" groups="account.group_account_user"/>
+                            <button type="object" name="action_complete" string="Complete" class="oe_highlight"
+                                    attrs="{'invisible': [('state', '=', 'done')]}"/>
+                        </tree>
+                    </field>
+
+                    <group>
+                        <group class="oe_subtotal_footer oe_right" name="repair_totals">
+                            <field name="total_lst_price" />
+                            <field name="total_standard_price" groups="account.group_account_user"/>
+                            <field name="total_cost" groups="account.group_account_user"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="hr_equipment_request_view_search_inherited">
+        <field name="name">equipment.request.search.inherited</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='done']" position="after">
+                <filter string="To Repair" name="to_repair" domain="[('repair_status', '=', 'to repair')]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

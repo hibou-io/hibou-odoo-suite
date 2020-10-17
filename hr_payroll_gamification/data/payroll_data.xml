@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Salary Other Input -->
+    <record id="badge_other_input" model="hr.payslip.input.type">
+        <field name="name">Badges</field>
+        <field name="code">BADGES</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_shipping_account_view_tree" model="ir.ui.view">
+        <field name="name">partner.shipping.account.tree</field>
+        <field name="model">partner.shipping.account</field>
+        <field name="arch" type="xml">
+            <tree string="Shipping Accounts">
+                <field name="description"/>
+                <field name="name"/>
+                <field name="delivery_type"/>
+                <field name="partner_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="partner_shipping_account_view_form" model="ir.ui.view">
+        <field name="name">partner.shipping.account.form</field>
+        <field name="model">partner.shipping.account</field>
+        <field name="arch" type="xml">
+            <form string="Shipping Account">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="description"/>
+                            <field name="name"/>
+                            <field name="delivery_type"/>
+                        </group>
+                        <group name="carrier"/>
+                    </group>
+                    <field name="note" placeholder="Any additional notes..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="partner_shipping_account_view_search" model="ir.ui.view">
+        <field name="name">partner.shipping.account.search</field>
+        <field name="model">partner.shipping.account</field>
+        <field name="arch" type="xml">
+            <search string="Shipping Account Search">
+                <field name="description"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="delivery_type"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="partner_shipping_account_action_main" model="ir.actions.act_window">
+        <field name="name">Shipping Accounts</field>
+        <field name="res_model">partner.shipping.account</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>
+                No accounts
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="partner_shipping_account_menu_main" name="Partner Shipping Accounts"
+              action="delivery_partner.partner_shipping_account_action_main"
+              sequence="20" parent="contacts.res_partner_menu_config"/>
+
+    <!-- Inherited -->
+    <record id="view_partner_property_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.carrier.property.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="delivery.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_delivery_carrier_id']" position="after">
+                <field name="shipping_account_ids" context="{'default_partner_id': active_id}">
+                    <tree>
+                        <field name="description"/>
+                        <field name="name"/>
+                        <field name="delivery_type"/>
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="before">
+                <field name="shipping_account_id" options="{'no_create': True, 'no_open': True}" domain="['|', ('partner_id', '=', False), ('partner_id', '=', partner_id)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
