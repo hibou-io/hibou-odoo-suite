@@ -35,11 +35,10 @@ merge_request:
     - docker run $ENVS flow gitlab-automerge --remove-source
 
 build:
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
   stage: build
   script:
-    - apk add git
-    - git submodule sync --recursive
-    - git submodule update --init --recursive
     - sed -i "s/RELEASE/$RELEASE/g" Dockerfile-GitLab
     - docker build --pull -t $CONTAINER_IMAGE:$IMAGE_TAG -f Dockerfile-GitLab .
     - docker push $CONTAINER_IMAGE:$IMAGE_TAG
