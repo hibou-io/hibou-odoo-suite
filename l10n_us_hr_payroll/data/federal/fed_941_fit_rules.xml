@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="hr_payroll_category_ee_fed_941_fit" model="hr.salary.rule.category">
+        <field name="name">EE: Federal 941 Income Tax Withholding</field>
+        <field name="code">EE_US_941_FIT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_fed_941_fit" model="hr.salary.rule">
+        <field name="sequence" eval="190"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_fed_941_fit"/>
+        <field name="name">EE: US Federal Income Tax Withholding</field>
+        <field name="code">EE_US_941_FIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = ee_us_941_fit(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = ee_us_941_fit(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_eftps_941"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

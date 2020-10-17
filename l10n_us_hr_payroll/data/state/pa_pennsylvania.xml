@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_pa_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US PA Pennsylvania SUTA Wage Base (ER)</field>
+        <field name="code">us_pa_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_pa_suta_wage_base_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">10000.00</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_pa_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_pa_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">10000.00</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_pa_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_pa_suta_rate" model="hr.rule.parameter">
+        <field name="name">US PA Pennsylvania SUTA Rate</field>
+        <field name="code">us_pa_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_pa_suta_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">3.6890</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_pa_suta_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_pa_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">3.6890</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_pa_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_pa_suta_ee_rate" model="hr.rule.parameter">
+        <field name="name">US PA Pennsylvania SUTA Employee Rate</field>
+        <field name="code">us_pa_suta_ee_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_pa_suta_ee_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.06</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_pa_suta_ee_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_pa_suta_ee_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.06</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_pa_suta_ee_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_pa_sit_rate" model="hr.rule.parameter">
+        <field name="name">US PA Pennsylvania SIT Rate</field>
+        <field name="code">us_pa_sit_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_pa_sit_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">3.07</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_pa_sit_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_pa_sit_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">3.07</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_pa_sit_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_pa_dor" model="res.partner">
+        <field name="name">US Pennsylvania - Department of Revenue - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_pa_dor_sit" model="res.partner">
+        <field name="name">US Pennsylvania - Department of Revenue - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_pa_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US PA Pennsylvania State Unemployment (UC-2)</field>
+        <field name="code">ER_US_PA_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_pa_suta_wage_base', rate='us_pa_suta_rate', state_code='PA')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_pa_suta_wage_base', rate='us_pa_suta_rate', state_code='PA')</field>
+        <field name="partner_id" ref="res_partner_us_pa_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_pa_suta" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_suta"/>
+        <field name="name">EE: US PA Pennsylvania State Unemployment (UC-2)</field>
+        <field name="code">EE_US_PA_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, rate='us_pa_suta_ee_rate', state_code='PA')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, rate='us_pa_suta_ee_rate', state_code='PA')</field>
+        <field name="partner_id" ref="res_partner_us_pa_dor"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_pa_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US PA Pennsylvania State Income Tax Withholding (PA-501)</field>
+        <field name="code">EE_US_PA_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_income_withholding(payslip, categories, worked_days, inputs, rate='us_pa_sit_rate', state_code='PA')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_income_withholding(payslip, categories, worked_days, inputs, rate='us_pa_sit_rate', state_code='PA')</field>
+        <field name="partner_id" ref="res_partner_us_pa_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>
