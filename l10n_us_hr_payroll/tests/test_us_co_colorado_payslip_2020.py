@@ -34,3 +34,4 @@ class TestUsCOPayslip(TestUsPayslip):
         self._test_sit(20000.0, 'married', 0.0, 'quarterly', date(2020, 1, 1), 833.4)
         self._test_sit(20000.0, 'married', 10.0, 'quarterly', date(2020, 1, 1), 843.4)
         self._test_sit(20000.0, 'married', 0.0, 'quarterly', date(2020, 1, 1), 0.0, True)
+        self._test_sit(800.0, '', 0.0, 'weekly', date(2020, 1, 1), 0.00)

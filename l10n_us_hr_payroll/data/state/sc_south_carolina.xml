@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_sc_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US SC South Carolina SUTA Wage Base</field>
+        <field name="code">us_sc_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_sc_suta_wage_base_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">14000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_sc_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_sc_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">14000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_sc_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_sc_suta_rate" model="hr.rule.parameter">
+        <field name="name">US SC South Carolina SUTA Rate</field>
+        <field name="code">us_sc_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_sc_suta_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.09</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_sc_suta_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- Tax rate from https://taxnews.ey.com/news/2019-2183-south-carolina-2020-sui-tax-rates-to-decrease-due-to-elimination-of-the-variable-solvency-surcharge-wage-base-unchanged -->
+        <record id="rule_parameter_us_sc_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.55</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_sc_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_sc_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US SC South Carolina SIT Tax Rate</field>
+        <field name="code">us_sc_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_sc_sit_tax_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">[
+                ( 2450, 1.1,    0.0),
+                ( 4900, 3.0,  26.95),
+                ( 7350, 4.0, 100.45),
+                ( 9800, 5.0, 198.45),
+                (12250, 6.0, 320.95),
+                ('inf', 7.0, 467.95),
+            ]</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_sc_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- Substraction Method table from https://dor.sc.gov/forms-site/Forms/WH1603F_2020.pdf-->
+        <record id="rule_parameter_us_sc_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">[
+                ( 2620, 0.8,    0.0),
+                ( 5240, 3.0,  57.64),
+                ( 7860, 4.0, 110.04),
+                (10490, 5.0, 188.64),
+                (13110, 6.0, 293.54),
+                ('inf', 7.0, 424.64),
+            ]</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_sc_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_sc_sit_personal_exemption_rate" model="hr.rule.parameter">
+        <field name="name">US SC South Carolina Personal Exemption Rate</field>
+        <field name="code">us_sc_sit_personal_exemption_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_sc_sit_personal_exemption_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">2510</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_sc_sit_personal_exemption_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_sc_sit_personal_exemption_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">2590</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_sc_sit_personal_exemption_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_sc_sit_standard_deduction_rate" model="hr.rule.parameter">
+        <field name="name">US SC South Carolina Standard Deduction Rate</field>
+        <field name="code">us_sc_sit_standard_deduction_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_sc_sit_standard_deduction_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">3470.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_sc_sit_standard_deduction_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_sc_sit_standard_deduction_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">3820.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_sc_sit_standard_deduction_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_sc_dor" model="res.partner">
+        <field name="name">US South Carolina - Department of Labor and Industrial Relations - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_sc_dor_sit" model="res.partner">
+        <field name="name">US South Carolina - Department of Taxation - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_sc_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US SC South Carolina State Unemployment</field>
+        <field name="code">ER_US_SC_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_sc_suta_wage_base', rate='us_sc_suta_rate', state_code='SC')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_sc_suta_wage_base', rate='us_sc_suta_rate', state_code='SC')</field>
+        <field name="partner_id" ref="res_partner_us_sc_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_sc_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US SC South Carolina State Income Tax Withholding</field>
+        <field name="code">EE_US_SC_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = sc_south_carolina_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = sc_south_carolina_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_sc_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

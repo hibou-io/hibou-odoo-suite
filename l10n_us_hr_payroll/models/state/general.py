@@ -102,7 +102,6 @@ def general_state_unemployment(payslip, categories, worked_days, inputs, wage_ba
 
     ytd_wage = suta_wage_ytd(payslip, categories)
 
-    wage = categories.GROSS + categories.DED_FUTA_EXEMPT
     return _general_rate(payslip, wage, ytd_wage, wage_base=wage_base, wage_start=wage_start, rate=rate)
 
 

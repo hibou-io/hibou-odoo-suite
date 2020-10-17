@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_nd_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US ND North Dakota SUTA Wage Base</field>
+        <field name="code">us_nd_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nd_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">37900.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nd_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_nd_suta_rate" model="hr.rule.parameter">
+        <field name="name">US ND North Dakota SUTA Rate</field>
+        <field name="code">us_nd_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nd_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.02</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nd_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    <!-- Table based on https://www.nd.gov/tax/data/upfiles/media/rates-and-instructions.pdf?20191208155535 -->
+    <record id="rule_parameter_us_nd_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US ND North Dakota SIT Tax Rate</field>
+        <field name="code">us_nd_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nd_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': {
+                    'weekly': (
+                        (  119,   0.00, 0.00),
+                        (  891,   0.00, 1.10),
+                        ( 1988,   8.49, 2.04),
+                        ( 4016,  30.87, 2.27),
+                        ( 8592,  76.91, 2.64),
+                        ('inf', 197.71, 2.90),
+                    ),
+                    'bi-weekly': (
+                        (   238,   0.00, 0.00),
+                        (  1782,   0.00, 1.10),
+                        (  3975,  16.98, 2.04),
+                        (  8033,  61.72, 2.27),
+                        ( 17185, 153.84, 2.64),
+                        ( 'inf', 395.45, 2.90),
+                    ),
+                    'semi-monthly': (
+                        (   258,   0.00, 0.00),
+                        (  1930,   0.00, 1.10),
+                        (  4306,  18.39, 2.04),
+                        (  8702,  66.86, 2.27),
+                        ( 18617, 166.65, 2.64),
+                        ( 'inf', 428.41, 2.90),
+                    ),
+                    'monthly': (
+                        (   517,   0.00, 0.00),
+                        (  3860,   0.00, 1.10),
+                        (  8613,  36.77, 2.04),
+                        ( 17404, 133.73, 2.27),
+                        ( 37233, 333.29, 2.64),
+                        ( 'inf', 856.78, 2.90),
+                    ),
+                    'quarterly': (
+                        (   1550,    0.00, 0.00),
+                        (  11581,    0.00, 1.10),
+                        (  25838,  110.34, 2.04),
+                        (  52213,  401.18, 2.27),
+                        ( 111700,  999.90, 2.64),
+                        (  'inf', 2570.35, 2.90),
+                    ),
+                    'semi-annual': (
+                        (   3100,    0.00, 0.00),
+                        (  23163,    0.00, 1.10),
+                        (  51675,  220.69, 2.04),
+                        ( 104425,  802.34, 2.27),
+                        ( 223400, 1999.76, 2.64),
+                        (  'inf', 5140.70, 2.90),
+                    ),
+                    'annual': (
+                        (   6200,     0.00, 0.00),
+                        (  46325,     0.00, 1.10),
+                        ( 103350,   441.38, 2.04),
+                        ( 208850,  1604.69, 2.27),
+                        ( 446800,  3999.54, 2.64),
+                        (  'inf', 10281.42, 2.90),
+                    ),
+                },
+                'married': {
+                    'weekly': (
+                        (  238,   0.00, 0.00),
+                        (  883,   0.00, 1.10),
+                        ( 1796,   7.10, 2.04),
+                        ( 2611,  25.72, 2.27),
+                        ( 4475,  44.22, 2.64),
+                        ('inf',  93.43, 2.90),
+                    ),
+                    'bi-weekly': (
+                        (   477,   0.00, 0.00),
+                        (  1766,   0.00, 1.10),
+                        (  3591,  14.18, 2.04),
+                        (  5221,  51.41, 2.27),
+                        (  8950,  88.41, 2.64),
+                        ( 'inf', 186.86, 2.90),
+                    ),
+                    'semi-monthly': (
+                        (   517,   0.00, 0.00),
+                        (  1914,   0.00, 1.10),
+                        (  3891,  15.37, 2.04),
+                        (  5656,  55.70, 2.27),
+                        (  9696,  95.76, 2.64),
+                        ( 'inf', 202.42, 2.90),
+                    ),
+                    'monthly': (
+                        (  1033,   0.00, 0.00),
+                        (  3827,   0.00, 1.10),
+                        (  7781,  30.73, 2.04),
+                        ( 11313, 111.40, 2.27),
+                        ( 19392, 191.57, 2.64),
+                        ( 'inf', 404.86, 2.90),
+                    ),
+                    'quarterly': (
+                        (  3100,    0.00, 0.00),
+                        ( 11481,    0.00, 1.10),
+                        ( 23344,   92.19, 2.04),
+                        ( 33938,  334.20, 2.27),
+                        ( 58175,  574.68, 2.64),
+                        ( 'inf', 1214.54, 2.90),
+                    ),
+                    'semi-annual': (
+                        (   6200,    0.00, 0.00),
+                        (  22963,    0.00, 1.10),
+                        (  46688,  184.39, 2.04),
+                        (  67875,  668.38, 2.27),
+                        ( 116350, 1149.33, 2.64),
+                        (  'inf', 2429.07, 2.90),
+                    ),
+                    'annual': (
+                        (  12400,    0.00, 0.00),
+                        (  45925,    0.00, 1.10),
+                        (  93375,  368.78, 2.04),
+                        ( 135750, 1336.76, 2.27),
+                        ( 232700, 2298.67, 2.64),
+                        (  'inf', 4858.15, 2.90),
+                    ),
+                },
+                'head_household':{
+                    'weekly': (
+                        (  119,   0.00, 0.00),
+                        (  891,   0.00, 1.10),
+                        ( 1988,   8.49, 2.04),
+                        ( 4016,  30.87, 2.27),
+                        ( 8592,  76.91, 2.64),
+                        ('inf', 197.71, 2.90),
+                    ),
+                    'bi-weekly': (
+                        (   238,   0.00, 0.00),
+                        (  1782,   0.00, 1.10),
+                        (  3975,  16.98, 2.04),
+                        (  8033,  61.72, 2.27),
+                        ( 17185, 153.84, 2.64),
+                        ( 'inf', 395.45, 2.90),
+                    ),
+                    'semi-monthly': (
+                        (   258,   0.00, 0.00),
+                        (  1930,   0.00, 1.10),
+                        (  4306,  18.39, 2.04),
+                        (  8702,  66.86, 2.27),
+                        ( 18617, 166.65, 2.64),
+                        ( 'inf', 428.41, 2.90),
+                    ),
+                    'monthly': (
+                        (   517,   0.00, 0.00),
+                        (  3860,   0.00, 1.10),
+                        (  8613,  36.77, 2.04),
+                        ( 17404, 133.73, 2.27),
+                        ( 37233, 333.29, 2.64),
+                        ( 'inf', 856.78, 2.90),
+                    ),
+                    'quarterly': (
+                        (   1550,    0.00, 0.00),
+                        (  11581,    0.00, 1.10),
+                        (  25838,  110.34, 2.04),
+                        (  52213,  401.18, 2.27),
+                        ( 111700,  999.90, 2.64),
+                        (  'inf', 2570.35, 2.90),
+                    ),
+                    'semi-annual': (
+                        (   3100,    0.00, 0.00),
+                        (  23163,    0.00, 1.10),
+                        (  51675,  220.69, 2.04),
+                        ( 104425,  802.34, 2.27),
+                        ( 223400, 1999.76, 2.64),
+                        (  'inf', 5140.70, 2.90),
+                    ),
+                    'annual': (
+                        (   6200,     0.00, 0.00),
+                        (  46325,     0.00, 1.10),
+                        ( 103350,   441.38, 2.04),
+                        ( 208850,  1604.69, 2.27),
+                        ( 446800,  3999.54, 2.64),
+                        (  'inf', 10281.42, 2.90),
+                    ),
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nd_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_nd_sit_allowances_rate" model="hr.rule.parameter">
+        <field name="name">US ND North Dakota Allowances Rate</field>
+        <field name="code">us_nd_sit_allowances_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nd_sit_allowances_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly' :        83.00,
+                'bi-weekly' :    165.00,
+                'semi-monthly':  179.00,
+                'monthly' :      358.00,
+                'quarterly' :   1075.00,
+                'semi-annual':  2150.00,
+                'annually':     4300.00,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nd_sit_allowances_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_nd_dor" model="res.partner">
+        <field name="name">US North Dakota - Office of State Tax Commissioner - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_nd_dor_sit" model="res.partner">
+        <field name="name">US North Dakota - Taxpayer Access Point - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_nd_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US ND North Dakota State Unemployment</field>
+        <field name="code">ER_US_ND_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nd_suta_wage_base', rate='us_nd_suta_rate', state_code='ND')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nd_suta_wage_base', rate='us_nd_suta_rate', state_code='ND')</field>
+        <field name="partner_id" ref="res_partner_us_nd_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_nd_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US ND North Dakota State Income Tax Withholding</field>
+        <field name="code">EE_US_ND_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = nd_north_dakota_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = nd_north_dakota_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_nd_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

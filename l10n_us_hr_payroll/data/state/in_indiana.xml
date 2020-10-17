@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_in_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US IN Indiana SUTA Wage Base</field>
+        <field name="code">us_in_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_in_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">9500.00</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_in_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_in_suta_rate" model="hr.rule.parameter">
+        <field name="name">US IN Indiana SUTA Rate</field>
+        <field name="code">us_in_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_in_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.5</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_in_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    <!-- state income rate -->
+    <record id="rule_parameter_us_in_suta_income_rate" model="hr.rule.parameter">
+        <field name="name">US IN Indiana SUTA Income Rate</field>
+        <field name="code">us_in_suta_income_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_in_suta_income_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">3.23</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_in_suta_income_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_in_sit_personal_exemption_rate" model="hr.rule.parameter">
+        <field name="name">US IN Indiana SIT Personal Exemption Rate</field>
+        <field name="code">us_in_sit_personal_exemption_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_in_sit_personal_exemption_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'daily':          (  2.74,   5.48,   8.22,  10.96,  13.70,  16.44),
+                'weekly':         ( 19.23,  38.46,  57.69,  76.92,  96.15, 115.38),
+                'bi-weekly':      ( 38.46,  76.92, 115.38, 153.85, 192.31, 230.77),
+                'semi-monthly':   ( 41.67,  83.33, 125.00, 166.67, 208.33, 250.00),
+                'monthly':        ( 83.33, 166.67, 250.00, 333.33, 416.67, 500.00),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_in_sit_personal_exemption_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_in_sit_dependent_exemption_rate" model="hr.rule.parameter">
+        <field name="name">US IN Indiana SIT Dependent Exemption Rate</field>
+        <field name="code">us_in_sit_dependent_exemption_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_in_sit_dependent_exemption_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'daily':          (  4.11,   8.22,  12.33,  16.44,  20.55),
+                'weekly':         ( 28.85,  57.69,  86.54, 115.38, 144.23),
+                'bi-weekly':      ( 57.69, 115.38, 173.08, 230.77, 288.46),
+                'semi-monthly':   ( 62.50, 125.00, 187.50, 250.00, 312.50),
+                'monthly':        (125.00, 250.00, 375.00, 500.00, 625.00),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_in_sit_dependent_exemption_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_in_dor" model="res.partner">
+        <field name="name">US Indiana - Department of Workforce Development - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_in_dor_sit" model="res.partner">
+        <field name="name">US Indiana - Department of Revenue - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_in_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US IN Indiana State Unemployment</field>
+        <field name="code">ER_US_IN_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_in_suta_wage_base', rate='us_in_suta_rate', state_code='IN')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_in_suta_wage_base', rate='us_in_suta_rate', state_code='IN')</field>
+        <field name="partner_id" ref="res_partner_us_in_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_in_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US IN Indiana State Income Tax Withholding</field>
+        <field name="code">EE_US_IN_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = in_indiana_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = in_indiana_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_in_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

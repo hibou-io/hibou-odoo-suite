@@ -95,6 +95,8 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_ct_sit_initial_tax_rate"/>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- https://portal.ct.gov/-/media/DRS/Forms/2020/WTH/TPG-211_0320.pdf -->
+        <!-- Table B Initial Tax Calculation -->
         <record id="rule_parameter_us_ct_sit_initial_tax_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'a': [
@@ -226,6 +228,8 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_ct_sit_tax_rate"/>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- https://portal.ct.gov/-/media/DRS/Forms/2020/WTH/TPG-211_0320.pdf -->
+        <!-- Table C 3% -->
         <record id="rule_parameter_us_ct_sit_tax_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'a': [
@@ -432,6 +436,8 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_ct_sit_decimal_rate"/>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- https://portal.ct.gov/-/media/DRS/Forms/2020/WTH/TPG-211_0320.pdf -->
+        <!-- Table E Personal Tax Credits -->
         <record id="rule_parameter_us_ct_sit_decimal_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'a': [
@@ -782,6 +788,8 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_ct_sit_recapture_rate"/>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- https://portal.ct.gov/-/media/DRS/Forms/2020/WTH/TPG-211_0320.pdf -->
+        <!-- Table D Tax recapture -->
         <record id="rule_parameter_us_ct_sit_recapture_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'a': [
@@ -824,7 +832,7 @@
                     (530000, 3000),
                     (535000, 3050),
                     (540000, 3100),
-                    ( 'inf',  200),
+                    ( 'inf', 3150),
                 ],
                 'b': [
                     (320000,    0),
@@ -950,7 +958,7 @@
                     (530000, 3000),
                     (535000, 3050),
                     (540000, 3100),
-                    ( 'inf',  200),
+                    ( 'inf', 3150),
                 ],
                 'f': [
                     (200000,    0),
@@ -992,7 +1000,7 @@
                     (530000, 3000),
                     (535000, 3050),
                     (540000, 3100),
-                    ( 'inf',  200),
+                    ( 'inf', 3150),
                 ],
             }</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_ct_sit_recapture_rate"/>
@@ -1094,6 +1102,8 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_ct_sit_personal_exemption_rate"/>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- https://portal.ct.gov/-/media/DRS/Forms/2020/WTH/TPG-211_0320.pdf -->
+        <!-- Table A Personal Exemptions -->
         <record id="rule_parameter_us_ct_sit_personal_exemption_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'a' : [

@@ -163,7 +163,7 @@ class TestUsALPayslip(TestUsPayslip):
         contract = self._createContract(employee,
                                         wage=salary,
                                         state_id=self.get_us_state('AL'),
-                                        al_a4_sit_exemptions='0',
+                                        al_a4_sit_exemptions='',
                                         state_income_tax_additional_withholding=0.0,
                                         state_income_tax_exempt=True,
                                         al_a4_sit_dependents=dependents,

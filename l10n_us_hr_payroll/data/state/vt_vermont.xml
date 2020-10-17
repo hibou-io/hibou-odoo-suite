@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base from  https://labor.vermont.gov/unemployment-insurance/ui-employers/quarterly-reporting-taxable-wage-information -->
+    <record id="rule_parameter_us_vt_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US VT Vermont SUTA Wage Base</field>
+        <field name="code">us_vt_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_vt_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">16100.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_vt_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_vt_suta_rate" model="hr.rule.parameter">
+        <field name="name">US VT Vermont SUTA Rate</field>
+        <field name="code">us_vt_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_vt_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_vt_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_vt_sit_allowances_rate" model="hr.rule.parameter">
+        <field name="name">US VT Vermont Allowances Rate</field>
+        <field name="code">us_vt_sit_allowances_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_vt_sit_allowances_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly' :         83.65,
+                'bi-weekly' :     167.31,
+                'semi-monthly':   181.25,
+                'monthly' :       362.50,
+                'quarterly' :    1087.50,
+                'annually':      4350.00,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_vt_sit_allowances_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    <!-- Table based on https://tax.vermont.gov/sites/tax/files/documents/WithholdingInstructions.pdf-->
+    <record id="rule_parameter_us_vt_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US VT Vermont SIT Tax Rate</field>
+        <field name="code">us_vt_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_vt_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': {
+                    'weekly': (
+                        (   60,   0.00, 0.00),
+                        (  836,   0.00, 3.35),
+                        ( 1941,  26.00, 6.60),
+                        ( 3983,  98.93, 7.60),
+                        ('inf', 254.12, 8.75),
+                    ),
+                    'bi-weekly': (
+                        (  120,   0.00, 0.00),
+                        ( 1672,   0.00, 3.35),
+                        ( 3882,  51.99, 6.60),
+                        ( 7966, 197.85, 7.60),
+                        ('inf', 508.24, 8.75),
+                    ),
+                    'semi-monthly': (
+                        (  130,   0.00, 0.00),
+                        ( 1811,   0.00, 3.35),
+                        ( 4205,  56.31, 6.60),
+                        ( 8630, 214.32, 7.60),
+                        ('inf', 550.62, 8.75),
+                    ),
+                    'monthly': (
+                        (  260,    0.00, 0.00),
+                        ( 3623,    0.00, 3.35),
+                        ( 8410,  112.66, 6.60),
+                        (17260,  428.60, 7.60),
+                        ('inf', 1101.20, 8.75),
+                    ),
+                    'quarterly': (
+                        (  781,    0.00, 0.00),
+                        (10869,    0.00, 3.35),
+                        (25231,  337.95, 6.60),
+                        (51781, 1285.84, 7.60),
+                        ('inf', 3303.64, 8.75),
+                    ),
+                    'annually': (
+                        (  3125,     0.00, 0.00),
+                        ( 43475,     0.00, 3.35),
+                        (100925,  1351.73, 6.60),
+                        (207125,  5143.43, 7.60),
+                        ( 'inf', 13214.63, 8.75),
+                    ),
+                },
+                'married': {
+                    'weekly': (
+                        (  180,   0.00, 0.00),
+                        ( 1477,   0.00, 3.35),
+                        ( 3315,  43.45, 6.60),
+                        ( 4956, 164.76, 7.60),
+                        ('inf', 289.47, 8.75),
+                    ),
+                    'bi-weekly': (
+                        (  361,   0.00, 0.00),
+                        ( 2955,   0.00, 3.35),
+                        ( 6630,  86.90, 6.60),
+                         (9913, 329.45, 7.60),
+                        ('inf', 578.96, 8.75),
+                    ),
+                    'semi-monthly': (
+                        (  391,   0.00, 0.00),
+                        ( 3201,   0.00, 3.35),
+                        ( 7182,  94.14, 6.60),
+                        (10739, 356.88, 7.60),
+                        ('inf', 627.21, 8.75),
+                    ),
+                    'monthly': (
+                        (  781,    0.00, 0.00),
+                        ( 6402,    0.00, 3.35),
+                        (14365,  188.30, 6.60),
+                        (21477,  713.86, 7.60),
+                        ('inf', 1254.37, 8.75),
+                    ),
+                    'quarterly': (
+                        ( 2344,    0.00, 0.00),
+                        (19206,    0.00, 3.35),
+                        (43094,  564.88, 6.60),
+                        (64431, 2141.49, 7.60),
+                        ('inf', 3763.10, 8.75),
+                    ),
+                    'annually': (
+                        (  9375,     0.00, 0.00),
+                        ( 76825,     0.00, 3.35),
+                        (172375,  2259.58, 6.60),
+                        (257725,  8565.88, 7.60),
+                        ( 'inf', 15052.48, 8.75),
+                    ),
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_vt_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_vt_dor" model="res.partner">
+        <field name="name">US Vermont - Employment Security Commission - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_vt_dor_sit" model="res.partner">
+        <field name="name">US Vermont - Tax Commission - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_vt_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US VT Vermont State Unemployment</field>
+        <field name="code">ER_US_VT_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_vt_suta_wage_base', rate='us_vt_suta_rate', state_code='VT')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_vt_suta_wage_base', rate='us_vt_suta_rate', state_code='VT')</field>
+        <field name="partner_id" ref="res_partner_us_vt_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_vt_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US VT Vermont State Income Tax Withholding</field>
+        <field name="code">EE_US_VT_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = vt_vermont_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = vt_vermont_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_vt_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

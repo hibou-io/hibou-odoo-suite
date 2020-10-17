@@ -30,6 +30,6 @@ class TestUsIDPayslip(TestUsPayslip):
         self._test_er_suta('ID', self.ID_UNEMP, date(2020, 1, 1), wage_base=self.ID_UNEMP_MAX_WAGE)
         self._test_sit(1212.0, 'single', 4.0, 'bi-weekly', date(2020, 1, 1), 10.0)
         self._test_sit(10000.0, 'married', 1.0, 'annually', date(2020, 1, 1), 0.0)
-        self._test_sit(52000.0, 'married', 4.0, 'monthly', date(2020, 1, 1), 3348.02)
+        self._test_sit(52000.0, 'married', 4.0, 'monthly', date(2020, 1, 1), 3345.0)
         self._test_sit(5000.0, 'head of household', 0.0, 'semi-monthly', date(2020, 1, 1), 300.0)
         self._test_sit(5900.0, 'single', 5.0, 'weekly', date(2020, 1, 1), 367.0)

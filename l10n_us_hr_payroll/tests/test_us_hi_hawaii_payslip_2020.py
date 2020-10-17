@@ -33,3 +33,5 @@ class TestUsHIPayslip(TestUsPayslip):
         self._test_sit(5000.0, 'married', 0.0, 2.0, 'monthly', date(2020, 1, 1), 287.1)
         self._test_sit(5000.0, 'married', 10.0, 2.0, 'monthly', date(2020, 1, 1), 297.1)
         self._test_sit(50000.0, 'head_of_household', 0.0, 3.0, 'weekly', date(2020, 1, 1), 3933.65)
+        self._test_sit(750.0, 'single', 10.0, 3.0, 'bi-weekly', date(2020, 1, 1), 40.59)
+        self._test_sit(3000.0, '', 0.0, 3.0, 'weekly', date(2020, 1, 1), 0.00)

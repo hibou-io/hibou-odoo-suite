@@ -25,6 +25,8 @@ class TestUsPayslip(common.TransactionCase):
     def setUp(self):
         super(TestUsPayslip, self).setUp()
         self.env['ir.config_parameter'].set_param('hr_payroll.payslip.sum_behavior', 'date_to')
+        self.structure_type_id = self.ref('l10n_us_hr_payroll.structure_type_employee')
+        self.resource_calendar_id = self.ref('resource.resource_calendar_std')
 
     float_info = sys_float_info
 
@@ -93,13 +95,13 @@ class TestUsPayslip(common.TransactionCase):
         if not contract_values.get('state'):
             contract_values['state'] = 'open'  # Running
         if not contract_values.get('structure_type_id'):
-            contract_values['structure_type_id'] = self.ref('l10n_us_hr_payroll.structure_type_employee')
+            contract_values['structure_type_id'] = self.structure_type_id
         if not contract_values.get('date_start'):
             contract_values['date_start'] = '2016-01-01'
         if not contract_values.get('date_end'):
             contract_values['date_end'] = '2030-12-31'
         if not contract_values.get('resource_calendar_id'):
-            contract_values['resource_calendar_id'] = self.ref('resource.resource_calendar_std')
+            contract_values['resource_calendar_id'] = self.resource_calendar_id
 
         # Compatibility with earlier Odoo versions
         if not contract_values.get('journal_id') and hasattr(contract_model, 'journal_id'):
