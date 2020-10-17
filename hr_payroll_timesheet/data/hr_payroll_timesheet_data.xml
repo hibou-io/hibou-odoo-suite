@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Work Entry Type -->
+    <record id="work_input_timesheet_overtime" model="hr.work.entry.type">
+        <field name="name">Timesheet Overtime</field>
+        <field name="code">TS_OT</field>
+    </record>
+
+    <record id="hr_timesheet_work_entry.work_input_timesheet" model="hr.work.entry.type">
+        <field name="overtime_type_id" ref="hr_payroll_overtime.work_entry_overtime_type"/>
+        <field name="overtime_work_type_id" ref="work_input_timesheet_overtime"/>
+    </record>
+
+</odoo>
