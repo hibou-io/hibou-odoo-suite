@@ -4,6 +4,7 @@ services:
 
 stages:
   - build
+  - release
   - trigger
 
 variables:
@@ -15,6 +16,7 @@ variables:
 
 before_script:
   - RELEASE=$(echo $CI_COMMIT_REF_NAME | sed "s{.*\/\(.*\)\/.*{\1{g")
+  - RELEASE_DATE="$(date '+%Y-%m-%d')"
   - IMAGE_TAG=$(echo $CI_COMMIT_REF_SLUG | sed "s/^\([[:digit:]][[:digit:]]\)-\([[:digit:]]\)/\1\.\2/g")
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
 
@@ -40,6 +42,20 @@ build:
     - sed -i "s/RELEASE/$RELEASE/g" Dockerfile-GitLab
     - docker build --pull -t $CONTAINER_IMAGE:$IMAGE_TAG -f Dockerfile-GitLab .
     - docker push $CONTAINER_IMAGE:$IMAGE_TAG
+
+release:
+  stage: release
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - apk add python3
+    - docker pull registry.gitlab.com/hibou-io/hibou-odoo/flow
+    - docker tag registry.gitlab.com/hibou-io/hibou-odoo/flow flow
+    - docker run -v "${PWD}/.local:/dest" flow self-install /dest
+    - cd .local/flow
+    - ./entrypoint.sh docker-release $CONTAINER_IMAGE:$IMAGE_TAG $CONTAINER_IMAGE:$IMAGE_TAG:$RELEASE_DATE
+  only:
+    - /^\d+\.\d+$/
 
 publish:
   stage: build
