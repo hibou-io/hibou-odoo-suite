@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="dashboard">
+        <t t-call="portal.portal_layout">
+
+            <div id="dashboard_container">
+                <t t-call="sale_timesheet_manager.assigned_tasks"/>
+            </div>
+
+        </t>
+
+    </template>
+
+    <!-- Main Dashboard -->
+    <template id="assigned_tasks">
+        <div class="row">
+            <div class="col-lg-12 mt-2 mb-4 mb-0">
+                <div class="card">
+                    <h3 class="m-3">Assigned Tasks</h3>
+                    <!-- TODO: Add quick-search on-type filtering for list -->
+                    <div class="position-absolute mr-4" style="right: 0; top: 50%; transform: translateY(-50%);">
+                        <a href="#" class="btn float-right">
+                            <i class="fa fa-search text-muted"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="task_container" class="card-container d-inline-block w-100"
+             style="overflow-x: scroll; white-space: nowrap;">
+            <t t-foreach="projects" t-as="project">
+                <t t-set="tasks" t-value="projects[project]"/>
+                <span class="task-container"
+                      style="width: 320px; display: inline-block; position: relative; vertical-align: top;">
+                    <div>
+                        <div>
+                            <div class="ml-4">
+                                <strong class="card-title">
+                                    <span t-esc="project.name"/>
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <t t-foreach="tasks" t-as="task">
+                            <div>
+                                <div>
+                                    <div class="task-card card m-2 p-1" t-att-data-record-id="task.id">
+                                        <!-- Task Title and ID -->
+                                        <a href="#" t-att-title="task.name" class="card-header"
+                                           style="overflow: hidden;">
+                                            <strong class="card-title">
+                                                <span t-esc="task.name"/>
+                                            </strong>
+                                        </a>
+                                        <!-- Conditionally colored star system -->
+                                        <t t-if="task.priority">
+                                            <t t-set="priority" t-value="task.priority"/>
+                                            <span class="task-priority-stars float-right"
+                                                  style="position: absolute; left: 50%; bottom: 5px; transform: translate(-50%, -50%);">
+                                                <t t-foreach="range(int(priority))" t-as="star">
+                                                    <t t-if="star == 0">
+                                                        <i class="fa fa-star text-muted"></i>
+                                                    </t>
+                                                    <t t-if="star == 1">
+                                                        <i class="fa fa-star text-primary"></i>
+                                                    </t>
+                                                    <t t-if="star &gt;= 2">
+                                                        <i class="fa fa-star text-warning"></i>
+                                                    </t>
+                                                </t>
+                                            </span>
+                                        </t>
+
+
+                                        <!-- Task Actions -->
+                                        <div class="card-body text-center">
+                                            <span>
+                                                <a href="#" class="btn m-1">
+                                                    <i class="fa fa-2x fa-play-circle text-success"></i>
+                                                </a>
+                                                <a href="#" class="btn btn-warning m-1 d-none">
+                                                    <i class="fa fa-2x fa-pause-circle"></i>
+                                                </a>
+                                                <a href="#" class="btn btn-danger m-1 d-none">
+                                                    <i class="fa fa-2x fa-stop-circle"></i>
+                                                </a>
+                                            </span>
+                                        </div>
+
+                                        <!-- Task info -->
+                                        <div class="card-footer">
+                                            <a href="#" class="text-info">
+                                                <i class="fa fa-list-ul mr-1"></i>
+                                                Entries
+                                            </a>
+                                            <span class="float-right text-muted">
+                                                H
+                                                <t t-esc="task.id"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </span>
+            </t>
+        </div>
+    </template>
+
+</odoo>
