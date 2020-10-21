@@ -19,3 +19,6 @@
 [submodule "external/hibou-shipbox"]
 	path = external/hibou-shipbox
 	url = https://gitlab.com/hibou-io/hibou-odoo/shipbox.git
+[submodule "external/hibou-oca/queue"]
+	path = external/hibou-oca/queue
+	url = https://github.com/hibou-io/oca-queue.git
