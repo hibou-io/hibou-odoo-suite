@@ -43,7 +43,8 @@ class TestProductCores(common.TransactionCase):
             'core_ok': True,
             'service_type': 'manual',
             'supplier_taxes_id': [(6, 0, [self.purchase_tax_service.id])],
-            'taxes_id': [(6, 0, [self.sale_tax_service.id])]
+            'taxes_id': [(6, 0, [self.sale_tax_service.id])],
+            'product_core_validity': 30,
         })
         self.product_core = self.env['product.product'].create({
             'name': 'Turbo Core',
@@ -109,7 +110,14 @@ class TestProductCores(common.TransactionCase):
         purchase.button_confirm()
         self.assertEqual(purchase.state, 'purchase')
         self.assertEqual(len(purchase.picking_ids), 1)
+        self.assertEqual(len(purchase.picking_ids.move_line_ids), 1)  # shouldn't have the service
+        purchase.picking_ids.move_line_ids.qty_done = purchase.picking_ids.move_line_ids.product_uom_qty
         purchase.picking_ids.button_validate()
+        purchase.flush()
+
+        # All lines should be received on the PO
+        for line in purchase.order_line:
+            self.assertEqual(line.product_qty, line.qty_received)
 
         # From purchase.tests.test_purchase_order_report in 13
         f = Form(self.env['account.move'].with_context(default_type='in_invoice'))
@@ -118,6 +126,12 @@ class TestProductCores(common.TransactionCase):
         vendor_bill = f.save()
         self.assertEqual(len(vendor_bill.invoice_line_ids), 2)
         vendor_bill.post()
+        for line in vendor_bill.invoice_line_ids:
+            pol = purchase.order_line.filtered(lambda l: l.product_id == line.product_id)
+            self.assertTrue(pol)
+            self.assertEqual(line.quantity, pol.product_qty)
+            if line.product_id.type == 'service':
+                self.assertNotEqual(line.date, line.date_maturity)
         purchase.flush()
 
         # Duplicate PO
