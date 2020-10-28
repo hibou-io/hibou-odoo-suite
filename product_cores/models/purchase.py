@@ -34,7 +34,7 @@ class PurchaseOrderLine(models.Model):
 
     def write(self, values):
         res = super(PurchaseOrderLine, self).write(values)
-        if 'product_id' in values or 'product_qty' in values or 'product_uom' in values:
+        if any(f in values for f in ('product_id', 'product_qty', 'product_uom')):
             self.filtered(lambda l: not l.core_line_id)\
                 .mapped('order_id.order_line')\
                 .filtered('core_line_id')\
@@ -62,3 +62,9 @@ class PurchaseOrderLine(models.Model):
                 })
             elif line.core_line_id:
                 line.unlink()
+
+    @api.depends('qty_received_method', 'qty_received_manual', 'core_line_id.qty_received')
+    def _compute_qty_received(self):
+        super(PurchaseOrderLine, self)._compute_qty_received()
+        for line in self.filtered(lambda l: l.qty_received_method == 'manual' and l.core_line_id):
+            line.qty_received = line.core_line_id.qty_received
