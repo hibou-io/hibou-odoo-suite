@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="pos_config_view_form_inherit_pos_elavon" model="ir.ui.view">
+        <field name="name">pos.config.form.inherit.elavon</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <div id="btn_use_pos_mercury" position="after">
+                <!-- TODO Put in a button to install Elavon, this will be hidden unless you have Mercury -->
+                <div class="mt16">
+                    <button name="%(pos_elavon.action_configuration_form)d" icon="fa-arrow-right" type="action" string="Elavon Accounts" class="btn-link"/>
+                </div>
+            </div>
+        </field>
+    </record>
+    
+</odoo>
