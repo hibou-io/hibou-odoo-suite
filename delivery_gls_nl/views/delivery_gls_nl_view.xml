@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_delivery_carrier_form_with_provider_gls_nl" model="ir.ui.view">
+        <field name="name">delivery.carrier.form.provider.gls_nl</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='destination']" position='before'>
+                <page string="GLS NL Configuration" attrs="{'invisible': [('delivery_type', '!=', 'gls_nl')]}">
+                    <group>
+                        <group>
+                            <field name="gls_nl_username" attrs="{'required': [('delivery_type', '=', 'gls_nl')]}" />
+                            <field name="gls_nl_password" attrs="{'required': [('delivery_type', '=', 'gls_nl')]}" password="True"/>
+                        </group>
+                        <group>
+                            <button name="button_gls_nl_test_rates" type="object" string="Test Rates" class="bnt-primary" attrs="{'invisible': [('gls_nl_rate_id', '=', False)]}"/>
+                            <field name="gls_nl_rate_id"/>
+                            <field name="gls_nl_labeltype" attrs="{'required': [('delivery_type', '==', 'gls_nl')]}"/>
+                            <field name="gls_nl_express"/>
+                        </group>
+                    </group>
+                    <group string='GLS NL Tutorial'>
+                        <ul>
+                            <li>
+                                <b>Go to <a href='https://api-portal.gls.nl/' target='_blank'>GLS Netherlands API</a> to create an API capable account.</b>
+                                <br/><br/>
+                            </li>
+                            <li>
+                                <p>You can use the username of "test" and any password to use default test credentials (only when not in Production mode).
+                                    This allows you to put in your production password and simply replace the username with "test" to use the API default test credentials.<br/>
+                                    (as of 2019-07-28 it is known that actual credentials will not work on the test environment, and the test environment is not available at all times of the day)</p>
+                            </li>
+                            <li>
+                                <b>Rates can be uploaded with the following format.</b>
+                                <ul>
+                                    <li>Header row with One Column named "Country". Rows should have 2 letter country codes in this column.</li>
+                                    <li>Header row with numeric values in ascending value to the right (weight in kg).  Rows should have the rate in Euros if the order/package is less than the header weight.</li>
+                                    <li>Columns not matching the mentioned headers will be ignored and can be used for comments or maintainer data.</li>
+                                </ul>
+                                <p>Example:</p>
+                                <pre>Country Name,Country,2,5,15,32
+Belgium,BE,4.7,4.95,5.9,9.7
+Germany,DE,4.15,5.3,6.4,12.8
+                                </pre>
+                                <p>Rating a package going to Germany weighing <b>4.5kg</b> (less than 5kg) will return <b>5.30 EUR</b> (converted to order currency).</p>
+                                <p>It is recommended to name the attachment appropriately (e.g. <b>GLS_RATES_2019.csv</b>), and find/use the same attachment on other delivery methods (e.g. with express settings and higher margin).</p>
+                                <br/><br/>
+                            </li>
+                            <li>
+                                Use the <b>Test Rates</b> button to perform a thorough test (weights parse as numeric for all rows, country is round in Odoo database).
+                                <br/><br/>
+                            </li>
+                        </ul>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
