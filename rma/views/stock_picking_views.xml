@@ -6,7 +6,8 @@
         <field name="inherit_id" ref="delivery.view_picking_withcarrier_out_form" />
         <field name="arch" type="xml">
             <xpath expr="//button[@name='send_to_shipper']" position="attributes">
-                <attribute name="attrs">{'invisible':['|','|','|',('carrier_tracking_ref','!=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False)]}</attribute>
+                <!-- remove requirement that picking is in done state -->
+                <attribute name="attrs">{'invisible':['|','|','|',('carrier_tracking_ref','!=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('picking_type_code', '=', 'incoming')]}</attribute>
             </xpath>
         </field>
     </record>
