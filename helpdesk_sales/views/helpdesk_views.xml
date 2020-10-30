@@ -10,6 +10,7 @@
             <xpath expr="//button[@name='toggle_active']" position="before">
                 <button class="oe_stat_button" type="object" name="action_partner_sales"
                         context="{'search_default_partner_id': partner_id}"
+                        attrs="{'invisible': [('partner_id', '=', False)]}"
                         icon="fa-usd">
                     <field string="Sales" name="sale_order_count" widget="statinfo"/>
                 </button>
