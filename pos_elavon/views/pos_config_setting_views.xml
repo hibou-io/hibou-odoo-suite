@@ -6,12 +6,16 @@
         <field name="model">pos.config</field>
         <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
         <field name="arch" type="xml">
-            <div id="btn_use_pos_mercury" position="after">
-                <!-- TODO Put in a button to install Elavon, this will be hidden unless you have Mercury -->
-                <div class="mt16">
-                    <button name="%(pos_elavon.action_configuration_form)d" icon="fa-arrow-right" type="action" string="Elavon Accounts" class="btn-link"/>
+            <xpath expr="//div[@id='payment_methods']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="pos_elavon">
+                    <div class="o_setting_right_pane">
+                        <span class="o_form_label">Elavon</span>
+                        <div>
+                            <button name="%(pos_elavon.action_configuration_form)d" icon="fa-arrow-right" type="action" string="Elavon Accounts" class="btn-link"/>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </xpath>
         </field>
     </record>
     
