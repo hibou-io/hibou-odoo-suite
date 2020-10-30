@@ -51,7 +51,7 @@ class TestRMA(common.TransactionCase):
             rma.action_done()
 
         rma.out_picking_id.move_lines.quantity_done = 2.0
-        rma.out_picking_id.action_done()
+        rma.out_picking_id.button_validate()
         rma.action_done()
         self.assertEqual(rma.state, 'done')
 
@@ -89,6 +89,12 @@ class TestRMA(common.TransactionCase):
             'product_qty': 0.0,
         })
         adj.action_validate()
+
+        # No Quants after moving inventory out (quant exists with qty == 0 in Odoo 14)
+        quant = self.env['stock.quant'].search([('product_id', '=', self.product1.id),
+                                                ('location_id', '=', location.id),
+                                                ('quantity', '!=', 0)])
+        self.assertEqual(len(quant), 0)
 
         # Adjust in a single serial
         self.product1.tracking = 'serial'
@@ -199,7 +205,9 @@ class TestRMA(common.TransactionCase):
         rma.action_done()
 
         # Ensure that the same lot was in fact returned into our destination inventory
-        quant = self.env['stock.quant'].search([('product_id', '=', self.product1.id), ('location_id', '=', location.id)])
+        quant = self.env['stock.quant'].search([('product_id', '=', self.product1.id),
+                                                ('location_id', '=', location.id),
+                                                ('quantity', '!=', 0)])
         self.assertEqual(len(quant), 1)
         self.assertEqual(quant.lot_id, lot)
 
@@ -279,7 +287,7 @@ class TestRMA(common.TransactionCase):
             rma.action_done()
 
         rma.in_picking_id.move_lines.quantity_done = 2.0
-        rma.in_picking_id.action_done()
+        rma.in_picking_id.button_validate()
         rma.action_done()
         self.assertEqual(rma.state, 'done')
 
@@ -298,11 +306,11 @@ class TestRMA(common.TransactionCase):
 
         # ship and finish
         rma_rtv.out_picking_id.move_lines.quantity_done = 2.0
-        rma_rtv.out_picking_id.action_done()
+        rma_rtv.out_picking_id.button_validate()
         rma_rtv.action_done()
         self.assertEqual(rma_rtv.state, 'done')
 
         # ensure invoice and type
         rtv_invoice = rma_rtv.invoice_ids
         self.assertTrue(rtv_invoice)
-        self.assertEqual(rtv_invoice.type, 'in_refund')
+        self.assertEqual(rtv_invoice.move_type, 'in_refund')

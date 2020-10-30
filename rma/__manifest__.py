@@ -2,7 +2,7 @@
 
 {
     'name': 'Hibou RMAs',
-    'version': '13.0.1.3.0',
+    'version': '14.0.1.0.0',
     'category': 'Warehouse',
     'author': 'Hibou Corp.',
     'license': 'OPL-1',

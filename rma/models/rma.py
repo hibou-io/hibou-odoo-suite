@@ -413,7 +413,7 @@ class RMA(models.Model):
                     rma._invoice(values)
 
     def _invoice(self, invoice_values):
-        self.invoice_ids += self.env['account.move'].with_context(default_type=invoice_values['type']).create(
+        self.invoice_ids += self.env['account.move'].with_context(default_move_type=invoice_values['move_type']).create(
                 invoice_values)
 
     def _invoice_values(self):
@@ -427,7 +427,7 @@ class RMA(models.Model):
             self.partner_id.id, delivery_id=self.partner_shipping_id.id)
 
         invoice_values = {
-            'type': 'in_refund' if supplier else 'out_refund',
+            'move_type': 'in_refund' if supplier else 'out_refund',
             'partner_id': self.partner_id.id,
             'fiscal_position_id': fiscal_position_id,
         }
