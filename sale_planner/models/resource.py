@@ -7,7 +7,6 @@ from odoo.addons.resource.models.resource import make_aware
 class ResourceCalendar(models.Model):
     _inherit = 'resource.calendar'
 
-    @api.multi
     def plan_days_end(self, days, day_dt, compute_leaves=False, domain=None):
         """
         Override to `plan_days` that allows you to get the nearest 'end' including today.

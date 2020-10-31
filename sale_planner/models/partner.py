@@ -9,7 +9,6 @@ except ImportError:
 class Partner(models.Model):
     _inherit = 'res.partner'
 
-    @api.multi
     def geo_localize(self):
         # We need country names in English below
         for partner in self.with_context(lang='en_US'):

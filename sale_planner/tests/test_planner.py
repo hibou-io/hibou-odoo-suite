@@ -128,36 +128,36 @@ class TestPlanner(common.TransactionCase):
             'standard_price': 1.0,
         })
         self.product_both = self.product_both.product_variant_id
-        self.env['stock.change.product.qty'].create({
+        self.env['stock.quant'].create({
             'location_id': self.warehouse_1.lot_stock_id.id,
             'product_id': self.product_1.id,
-            'new_quantity': 100,
-        }).change_product_qty()
-        self.env['stock.change.product.qty'].create({
+            'quantity': 100,
+        })
+        self.env['stock.quant'].create({
             'location_id': self.warehouse_1.lot_stock_id.id,
             'product_id': self.product_12.id,
-            'new_quantity': 100,
-        }).change_product_qty()
-        self.env['stock.change.product.qty'].create({
+            'quantity': 100,
+        })
+        self.env['stock.quant'].create({
             'location_id': self.warehouse_1.lot_stock_id.id,
             'product_id': self.product_both.id,
-            'new_quantity': 100,
-        }).change_product_qty()
-        self.env['stock.change.product.qty'].create({
+            'quantity': 100,
+        })
+        self.env['stock.quant'].create({
             'location_id': self.warehouse_2.lot_stock_id.id,
             'product_id': self.product_2.id,
-            'new_quantity': 100,
-        }).change_product_qty()
-        self.env['stock.change.product.qty'].create({
+            'quantity': 100,
+        })
+        self.env['stock.quant'].create({
             'location_id': self.warehouse_2.lot_stock_id.id,
             'product_id': self.product_22.id,
-            'new_quantity': 100,
-        }).change_product_qty()
-        self.env['stock.change.product.qty'].create({
+            'quantity': 100,
+        })
+        self.env['stock.quant'].create({
             'location_id': self.warehouse_2.lot_stock_id.id,
             'product_id': self.product_both.id,
-            'new_quantity': 100,
-        }).change_product_qty()
+            'quantity': 100,
+        })
 
         self.policy_closest = self.env['sale.order.planning.policy'].create({
             'always_closest_warehouse': True,
@@ -210,8 +210,11 @@ class TestPlanner(common.TransactionCase):
             'product_id': self.product_1.id,
             'name': 'demo',
         })
-        self.assertEqual(self.product_1.with_context(warehouse=self.warehouse_1.id).qty_available, 100)
         self.assertEqual(self.product_1.with_context(warehouse=self.warehouse_2.id).qty_available, 0)
+        self.product_1.invalidate_cache(fnames=['qty_available'], ids=self.product_1.ids)
+        self.assertEqual(self.product_1.with_context(warehouse=self.warehouse_1.id).qty_available, 100)
+        self.product_1.invalidate_cache(fnames=['qty_available'], ids=self.product_1.ids)
+
         both_wh_ids = self.both_wh_ids()
         planner = self.env['sale.order.make.plan'].with_context(warehouse_domain=[('id', 'in', both_wh_ids)], skip_plan_shipping=True).create({'order_id': self.so.id})
         self.assertTrue(planner.planning_option_ids, 'Must have one or more plans.')
@@ -229,7 +232,9 @@ class TestPlanner(common.TransactionCase):
             'name': 'demo',
         })
         self.assertEqual(self.product_2.with_context(warehouse=self.warehouse_1.id).qty_available, 0)
+        self.product_2.invalidate_cache(fnames=['qty_available'], ids=self.product_2.ids)
         self.assertEqual(self.product_2.with_context(warehouse=self.warehouse_2.id).qty_available, 100)
+        self.product_2.invalidate_cache(fnames=['qty_available'], ids=self.product_2.ids)
         both_wh_ids = self.both_wh_ids()
         planner = self.env['sale.order.make.plan'].with_context(warehouse_domain=[('id', 'in', both_wh_ids)], skip_plan_shipping=True).create({'order_id': self.so.id})
         self.assertTrue(planner.planning_option_ids, 'Must have one or more plans.')
@@ -396,7 +401,7 @@ class TestPlanner(common.TransactionCase):
         planner = self.env['sale.order.make.plan'].with_context(warehouse_domain=[('id', 'in', both_wh_ids)],
                                                                 skip_plan_shipping=True).create({'order_id': self.so.id})
         self.assertTrue(planner.planning_option_ids, 'Must have one or more plans.')
-        self.assertEqual(planner.planning_option_ids.warehouse_id, self.warehouse_1, 'If this fails, it will probably pass next time.')
+        self.assertEqual(planner.planning_option_ids.warehouse_id, self.warehouse_2)
         self.assertTrue(planner.planning_option_ids.sub_options)
 
         sub_options = json_decode(planner.planning_option_ids.sub_options)
