@@ -6,7 +6,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form>
-                <field name="planning_option_ids">
+                <field name="planning_option_ids" readonly="1" force_save="1">
                     <tree>
                         <field name="warehouse_id" />
                         <field name="date_planned" />
@@ -32,7 +32,6 @@
      <record id="action_plan_sale_order" model="ir.actions.act_window">
         <field name="name">Plan Sale Order</field>
         <field name="res_model">sale.order.make.plan</field>
-        <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_plan_sale_order" />
         <field name="target">new</field>

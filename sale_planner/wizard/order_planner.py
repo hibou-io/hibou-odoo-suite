@@ -14,7 +14,6 @@ except ImportError:
     SearchEngine = None
 
 from odoo import api, fields, models, tools
-from odoo.addons.base_geolocalize.models.res_partner import geo_find, geo_query_address
 
 
 class FakeCollection():
@@ -28,8 +27,11 @@ class FakeCollection():
     def filtered(self, f):
         return filter(f, self.vals)
 
+    def sudo(self, *args, **kwargs):
+        return self
 
-class FakePartner():
+
+class FakePartner(FakeCollection):
     def __init__(self, **kwargs):
         """
         'delivery.carrier'.verify_carrier(contact) ->
@@ -71,11 +73,9 @@ class FakePartner():
                             return self._date_localization
 
                 # The slow way.
-                result = geo_find(geo_query_address(
-                    city=self.city,
-                    state=self.state_id.name,
-                    country=self.country_id.name,
-                ))
+                geo_obj = self.env['base.geocoder']
+                search = geo_obj.geo_query_address(city=self.city, state=self.state_id.name, country=self.country_id.name)
+                result = geo_obj.geo_find(search, force_country=self.country_id.id)
                 if result:
                     self.partner_latitude = result[0]
                     self.partner_longitude = result[1]
@@ -92,7 +92,7 @@ class FakePartner():
         return getattr(self, item)
 
 
-class FakeOrderLine():
+class FakeOrderLine(FakeCollection):
     def __init__(self, **kwargs):
         """
         'delivery.carrier'.get_price_available(order) ->
@@ -130,7 +130,7 @@ class FakeOrderLine():
         return getattr(self, item)
 
 
-class FakeSaleOrder():
+class FakeSaleOrder(FakeCollection):
     """
     partner_id :: used in shipping
     partner_shipping_id :: is used in several places
@@ -209,7 +209,6 @@ class SaleOrderMakePlan(models.TransientModel):
     def plan_order(self, vals):
         pass
 
-    @api.multi
     def select_option(self, option):
         for plan in self:
             self.plan_order_option(plan.order_id, option)
@@ -304,6 +303,8 @@ class SaleOrderMakePlan(models.TransientModel):
                 domain = tools.safe_eval(domain)
         else:
             domain = []
+            if 'allowed_company_ids' in self.env.context:
+                domain.append(('company_id', 'in', self.env.context['allowed_company_ids']))
 
         if self.env.context.get('warehouse_domain'):
             domain.extend(self.env.context.get('warehouse_domain'))
@@ -606,7 +607,7 @@ class SaleOrderMakePlan(models.TransientModel):
         return base_option
 
     def _is_in_stock(self, p_stock, buy_qty):
-        return p_stock['real_qty_available'] >= buy_qty
+        return p_stock['type'] == 'consu' or p_stock['qty_available'] >= buy_qty
 
     def _find_closest_warehouse_by_partner(self, warehouses, partner):
         if not partner.date_localization:
@@ -637,6 +638,8 @@ class SaleOrderMakePlan(models.TransientModel):
     def _fetch_product_stock(self, warehouses, products):
         output = {}
         for wh in warehouses:
+            products.invalidate_cache(fnames=['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'],
+                                      ids=products.ids)
             products = products.with_context({'location': wh.lot_stock_id.id})
             output[wh.id] = {
                 p.id: {
@@ -644,22 +647,22 @@ class SaleOrderMakePlan(models.TransientModel):
                     'virtual_available': p.virtual_available,
                     'incoming_qty': p.incoming_qty,
                     'outgoing_qty': p.outgoing_qty,
-                    'real_qty_available': p.qty_available - p.outgoing_qty,
-                    'sku': p.default_code
+                    'sku': p.default_code or str(p.id),
+                    'type': p.type,
                 } for p in products}
         return output
 
     def generate_shipping_options(self, base_option, order_fake):
         # generate a carrier_id, amount, requested_date (promise date)
         # if base_option['carrier_id'] then that is the only carrier we want to collect rates for.
-        product_lines = list(filter(lambda line: line.product_id.type == 'product', order_fake.order_line))
+        product_lines = list(filter(lambda line: line.product_id.type in ('product', 'consu'), order_fake.order_line))
         domain = []
         for line in product_lines:
             policy = line.product_id.product_tmpl_id.get_planning_policy()
             if policy and policy.carrier_filter_id:
                 domain.extend(tools.safe_eval(policy.carrier_filter_id.domain))
         carriers = self.get_shipping_carriers(base_option.get('carrier_id'), domain=domain)
-        _logger.info('generate_shipping_options:: base_optoin: ' + str(base_option) + ' order_fake: ' + str(order_fake) + ' carriers: ' + str(carriers))
+        _logger.info('generate_shipping_options:: base_option: ' + str(base_option) + ' order_fake: ' + str(order_fake) + ' carriers: ' + str(carriers))
 
         if not carriers:
             return base_option
@@ -800,7 +803,6 @@ class SaleOrderPlanningOption(models.TransientModel):
             values['sub_options'] = dumps(values['sub_options'], default=datetime_converter)
         return super(SaleOrderPlanningOption, self).create(values)
 
-    @api.multi
     def _compute_sub_options_text(self):
         for option in self:
             sub_options = option.sub_options
@@ -839,7 +841,6 @@ class SaleOrderPlanningOption(models.TransientModel):
     sub_options = fields.Text('Sub Options JSON')
     sub_options_text = fields.Text('Sub Options', compute=_compute_sub_options_text)
 
-    @api.multi
     def select_plan(self):
         for option in self:
             option.plan_id.select_option(option)

@@ -8,7 +8,6 @@ class ProductTemplate(models.Model):
         string="Order Planner Policy",
         help="The Order Planner Policy to use when making a sale order planner.")
 
-    @api.multi
     def get_planning_policy(self):
         self.ensure_one()
         return self.property_planning_policy_id or self.categ_id.property_planning_policy_categ_id

@@ -4,7 +4,6 @@ from odoo import api, fields, models
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    @api.multi
     def action_planorder(self):
         plan_obj = self.env['sale.order.make.plan']
         for order in self:
