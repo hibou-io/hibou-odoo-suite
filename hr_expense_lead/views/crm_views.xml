@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="crm_lead_view_form_inherit" model="ir.ui.view">
+        <field name="name">	crm.lead.form.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/div[@name='button_box']" position="inside">
+                <button name="%(hr_expense.hr_expense_actions_all)d" class="oe_stat_button" icon="fa-money" type="action" context="{'search_default_lead_id': active_id}">
+                    <div class="o_stat_info">
+                        <field name="expense_total_amount" widget="monetary" nolabel="1" options="{'currency_field': 'company_currency'}"/>
+                        <span class="o_stat_text"> Expenses</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
