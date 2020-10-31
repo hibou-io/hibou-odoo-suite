@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form.warehouse</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='route_id']" position="before">
+                <field name="date_planned"/>
+                <field name="warehouse_id"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='route_id']" position="before">
+                <field name="date_planned"/>
+                <field name="warehouse_id"/>
+            </xpath>
+            <xpath expr="//field[@name='commitment_date']" position="before">
+                <field name="date_planned" />
+                <field name="requested_date" />
+            </xpath>
+        </field>
+    </record>
+    <record id="view_order_line_tree" model="ir.ui.view">
+        <field name="name">sale.order.line.tree.warehouse</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_order_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='route_id']" position="before">
+                <field name="date_planned"/>
+                <field name="warehouse_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
