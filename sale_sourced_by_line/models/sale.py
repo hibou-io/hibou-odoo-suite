@@ -50,7 +50,7 @@ class SaleOrderLine(models.Model):
                 date = line.order_id.commitment_date
             else:
                 date = line._expected_date()
-            grouped_lines[(warehouse, date)] |= line
+            grouped_lines[(warehouse.id, date)] |= line
 
         treated = self.browse()
         for (warehouse, scheduled_date), lines in grouped_lines.items():
