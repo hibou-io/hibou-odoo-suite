@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_plan_sale_order" model="ir.ui.view">
+        <field name="name">view.plan.sale.order</field>
+        <field name="model">sale.order.make.plan</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="planning_option_ids" readonly="1" force_save="1">
+                    <tree>
+                        <field name="warehouse_id" />
+                        <field name="date_planned" />
+                        <field name="requested_date" />
+                        <field name="transit_days" />
+                        <field name="carrier_id" />
+                        <field name="shipping_price" />
+                        <field name="sub_options_text" />
+                        <button class="eo_highlight"
+                                name="select_plan"
+                                string="Select"
+                                type="object" />
+                    </tree>
+                </field>
+                <footer>
+                    <button class="oe_link"
+                            special="cancel"
+                            string="Cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+     <record id="action_plan_sale_order" model="ir.actions.act_window">
+        <field name="name">Plan Sale Order</field>
+        <field name="res_model">sale.order.make.plan</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_plan_sale_order" />
+        <field name="target">new</field>
+    </record>
+</odoo>
