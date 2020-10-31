@@ -13,7 +13,8 @@ except ImportError:
     _logger.warn('module "uszipcode" cannot be loaded, falling back to Google API')
     SearchEngine = None
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
+from odoo.tools.safe_eval import safe_eval
 
 
 class FakeCollection():
@@ -300,7 +301,7 @@ class SaleOrderMakePlan(models.TransientModel):
 
         if domain:
             if not isinstance(domain, (list, tuple)):
-                domain = tools.safe_eval(domain)
+                domain = safe_eval(domain)
         else:
             domain = []
             if 'allowed_company_ids' in self.env.context:
@@ -311,7 +312,7 @@ class SaleOrderMakePlan(models.TransientModel):
 
         irconfig_parameter = self.env['ir.config_parameter'].sudo()
         if irconfig_parameter.get_param('sale.order.planner.warehouse_domain'):
-            domain.extend(tools.safe_eval(irconfig_parameter.get_param('sale.order.planner.warehouse_domain')))
+            domain.extend(safe_eval(irconfig_parameter.get_param('sale.order.planner.warehouse_domain')))
 
         return warehouse.search(domain)
 
@@ -322,7 +323,7 @@ class SaleOrderMakePlan(models.TransientModel):
 
         if domain:
             if not isinstance(domain, (list, tuple)):
-                domain = tools.safe_eval(domain)
+                domain = safe_eval(domain)
         else:
             domain = []
 
@@ -332,7 +333,7 @@ class SaleOrderMakePlan(models.TransientModel):
 
         irconfig_parameter = self.env['ir.config_parameter'].sudo()
         if irconfig_parameter.get_param('sale.order.planner.carrier_domain'):
-            domain.extend(tools.safe_eval(irconfig_parameter.get_param('sale.order.planner.carrier_domain')))
+            domain.extend(safe_eval(irconfig_parameter.get_param('sale.order.planner.carrier_domain')))
 
         return Carrier.search(domain)
 
@@ -660,7 +661,7 @@ class SaleOrderMakePlan(models.TransientModel):
         for line in product_lines:
             policy = line.product_id.product_tmpl_id.get_planning_policy()
             if policy and policy.carrier_filter_id:
-                domain.extend(tools.safe_eval(policy.carrier_filter_id.domain))
+                domain.extend(safe_eval(policy.carrier_filter_id.domain))
         carriers = self.get_shipping_carriers(base_option.get('carrier_id'), domain=domain)
         _logger.info('generate_shipping_options:: base_option: ' + str(base_option) + ' order_fake: ' + str(order_fake) + ' carriers: ' + str(carriers))
 
