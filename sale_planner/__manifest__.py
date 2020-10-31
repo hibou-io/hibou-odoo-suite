@@ -1,7 +1,7 @@
 {
     'name': 'Sale Order Planner',
     'summary': 'Plans order dates and warehouses.',
-    'version': '12.0.1.0.0',
+    'version': '13.0.1.0.0',
     'author': "Hibou Corp.",
     'category': 'Sale',
     'license': 'AGPL-3',
