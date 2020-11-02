@@ -1,7 +1,7 @@
 {
     'name': 'Account Invoice Change',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '11.0.1.0.0',
+    'version': '12.0.1.0.0',
     'category': 'Accounting',
     'sequence': 95,
     'summary': 'Technical foundation for changing invoices.',
