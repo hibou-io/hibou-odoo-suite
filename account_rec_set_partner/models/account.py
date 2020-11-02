@@ -1,5 +1,6 @@
 from odoo import api, fields, models
 from odoo.tools import float_compare, float_is_zero
+from collections import defaultdict
 
 
 class AccountReconcileModel(models.Model):
@@ -23,185 +24,64 @@ class AccountReconcileModel(models.Model):
             * status:       'reconciled' if the lines has been already reconciled, 'write_off' if the write-off must be
                             applied on the statement line.
         '''
-        available_models = self.filtered(lambda m: m.rule_type != 'writeoff_button')
+        # This functions uses SQL to compute its results. We need to flush before doing anything more.
+        for model_name in ('account.bank.statement', 'account.bank.statement.line', 'account.move', 'account.move.line', 'res.company', 'account.journal', 'account.account'):
+            self.env[model_name].flush(self.env[model_name]._fields)
 
-        results = dict((r.id, {'aml_ids': []}) for r in st_lines)
+        results = {line.id: {'aml_ids': []} for line in st_lines}
 
-        if not available_models:
-            return results
+        available_models = self.filtered(lambda m: m.rule_type != 'writeoff_button').sorted()
+        aml_ids_to_exclude = set() # Keep track of already processed amls.
+        reconciled_amls_ids = set() # Keep track of already reconciled amls.
 
-        ordered_models = available_models.sorted(key=lambda m: (m.sequence, m.id))
+        # First associate with each rec models all the statement lines for which it is applicable
+        lines_with_partner_per_model = defaultdict(lambda: [])
+        for st_line in st_lines:
 
-        grouped_candidates = {}
+            # Statement lines created in old versions could have a residual amount of zero. In that case, don't try to
+            # match anything.
+            if not st_line.amount_residual:
+                continue
 
-        # Type == 'invoice_matching'.
-        # Map each (st_line.id, model_id) with matching amls.
-        invoices_models = ordered_models.filtered(lambda m: m.rule_type == 'invoice_matching')
-        if invoices_models:
-            query, params = invoices_models._get_invoice_matching_query(st_lines, excluded_ids=excluded_ids, partner_map=partner_map)
-            self._cr.execute(query, params)
-            query_res = self._cr.dictfetchall()
+            mapped_partner = (partner_map and partner_map.get(st_line.id) and self.env['res.partner'].browse(partner_map[st_line.id])) or st_line.partner_id
 
-            for res in query_res:
-                grouped_candidates.setdefault(res['id'], {})
-                grouped_candidates[res['id']].setdefault(res['model_id'], [])
-                grouped_candidates[res['id']][res['model_id']].append(res)
+            for rec_model in available_models:
+                partner = mapped_partner or rec_model._get_partner_from_mapping(st_line)
 
-        # Type == 'writeoff_suggestion'.
-        # Map each (st_line.id, model_id) with a flag indicating the st_line matches the criteria.
-        write_off_models = ordered_models.filtered(lambda m: m.rule_type == 'writeoff_suggestion')
-        if write_off_models:
-            query, params = write_off_models._get_writeoff_suggestion_query(st_lines, excluded_ids=excluded_ids, partner_map=partner_map)
-            self._cr.execute(query, params)
-            query_res = self._cr.dictfetchall()
-
-            for res in query_res:
-                grouped_candidates.setdefault(res['id'], {})
-                grouped_candidates[res['id']].setdefault(res['model_id'], True)
-
-        # Keep track of already processed amls.
-        amls_ids_to_exclude = set()
-
-        # Keep track of already reconciled amls.
-        reconciled_amls_ids = set()
-
-        # Iterate all and create results.
-        for line in st_lines:
-            line_currency = line.currency_id or line.journal_id.currency_id or line.company_id.currency_id
-            line_residual = line.currency_id and line.amount_currency or line.amount
-
-            # Search for applicable rule.
-            # /!\ BREAK are very important here to avoid applying multiple rules on the same line.
-            for model in ordered_models:
-                # No result found.
-                if not grouped_candidates.get(line.id) or not grouped_candidates[line.id].get(model.id):
-                    continue
-
-                excluded_lines_found = False
-
-                if model.rule_type == 'invoice_matching':
-                    candidates = grouped_candidates[line.id][model.id]
-
-                    # If some invoices match on the communication, suggest them.
-                    # Otherwise, suggest all invoices having the same partner.
-                    # N.B: The only way to match a line without a partner is through the communication.
-                    first_batch_candidates = []
-                    second_batch_candidates = []
-                    for c in candidates:
-                        # Don't take into account already reconciled lines.
-                        if c['aml_id'] in reconciled_amls_ids:
-                            continue
-
-                        # Dispatch candidates between lines matching invoices with the communication or only the partner.
-                        if c['communication_flag']:
-                            first_batch_candidates.append(c)
-                        elif not first_batch_candidates:
-                            second_batch_candidates.append(c)
-                    available_candidates = first_batch_candidates or second_batch_candidates
-
-                    # Special case: the amount are the same, submit the line directly.
-                    for c in available_candidates:
-                        residual_amount = c['aml_currency_id'] and c['aml_amount_residual_currency'] or c['aml_amount_residual']
-
-                        if float_is_zero(residual_amount - line_residual, precision_rounding=line_currency.rounding):
-                            available_candidates = [c]
-                            break
-
-                    # Needed to handle check on total residual amounts.
-                    if first_batch_candidates or model._check_rule_propositions(line, available_candidates):
-                        results[line.id]['model'] = model
-
-                        # Add candidates to the result.
-                        for candidate in available_candidates:
-
-                            # Special case: the propositions match the rule but some of them are already consumed by
-                            # another one. Then, suggest the remaining propositions to the user but don't make any
-                            # automatic reconciliation.
-                            if candidate['aml_id'] in amls_ids_to_exclude:
-                                excluded_lines_found = True
-                                continue
-
-                            results[line.id]['aml_ids'].append(candidate['aml_id'])
-                            amls_ids_to_exclude.add(candidate['aml_id'])
-
-                        if excluded_lines_found:
-                            break
-
-                        # Create write-off lines.
-                        move_lines = self.env['account.move.line'].browse(results[line.id]['aml_ids'])
-                        partner = partner_map and partner_map.get(line.id) and self.env['res.partner'].browse(partner_map[line.id])
-
-                        # Customization
-                        if not partner and model.set_partner_id and not model.match_partner:
-                            partner = model.set_partner_id
-                            line.partner_id = partner
-                        # End Customization
-
-                        reconciliation_results = model._prepare_reconciliation(line, move_lines, partner=partner)
-
-                        # A write-off must be applied.
-                        if reconciliation_results['new_aml_dicts']:
-                            results[line.id]['status'] = 'write_off'
-
-                        # Process auto-reconciliation.
-                        if model.auto_reconcile:
-                            # An open balance is needed but no partner has been found.
-                            if reconciliation_results['open_balance_dict'] is False:
-                                break
-
-                            new_aml_dicts = reconciliation_results['new_aml_dicts']
-                            if reconciliation_results['open_balance_dict']:
-                                new_aml_dicts.append(reconciliation_results['open_balance_dict'])
-                            if not line.partner_id and partner:
-                                line.partner_id = partner
-                            counterpart_moves = line.process_reconciliation(
-                                counterpart_aml_dicts=reconciliation_results['counterpart_aml_dicts'],
-                                payment_aml_rec=reconciliation_results['payment_aml_rec'],
-                                new_aml_dicts=new_aml_dicts,
-                            )
-                            results[line.id]['status'] = 'reconciled'
-                            results[line.id]['reconciled_lines'] = counterpart_moves.mapped('line_ids')
-
-                            # The reconciled move lines are no longer candidates for another rule.
-                            reconciled_amls_ids.update(move_lines.ids)
-
-                        # Break models loop.
-                        break
-
-                elif model.rule_type == 'writeoff_suggestion' and grouped_candidates[line.id][model.id]:
-                    results[line.id]['model'] = model
-                    results[line.id]['status'] = 'write_off'
-
-                    # Create write-off lines.
-                    partner = partner_map and partner_map.get(line.id) and self.env['res.partner'].browse(partner_map[line.id])
-
+                if rec_model._is_applicable_for(st_line, partner):
                     # Customization
-                    if not partner and model.set_partner_id and not model.match_partner:
-                        partner = model.set_partner_id
-                        line.partner_id = partner
+                    if not partner and rec_model.set_partner_id and not rec_model.match_partner:
+                        partner = rec_model.set_partner_id
+                        st_line.partner_id = partner
                     # End Customization
 
-                    reconciliation_results = model._prepare_reconciliation(line, partner=partner)
+                    lines_with_partner_per_model[rec_model].append((st_line, partner))
 
-                    # An open balance is needed but no partner has been found.
-                    if reconciliation_results['open_balance_dict'] is False:
-                        break
+        # Execute only one SQL query for each model (for performance)
+        matched_lines = self.env['account.bank.statement.line']
+        for rec_model in available_models:
 
-                    # Process auto-reconciliation.
-                    if model.auto_reconcile:
-                        new_aml_dicts = reconciliation_results['new_aml_dicts']
-                        if reconciliation_results['open_balance_dict']:
-                            new_aml_dicts.append(reconciliation_results['open_balance_dict'])
-                        if not line.partner_id and partner:
-                            line.partner_id = partner
-                        counterpart_moves = line.process_reconciliation(
-                            counterpart_aml_dicts=reconciliation_results['counterpart_aml_dicts'],
-                            payment_aml_rec=reconciliation_results['payment_aml_rec'],
-                            new_aml_dicts=new_aml_dicts,
-                        )
-                        results[line.id]['status'] = 'reconciled'
-                        results[line.id]['reconciled_lines'] = counterpart_moves.mapped('line_ids')
+            # We filter the lines for this model, in case a previous one has already found something for them
+            filtered_st_lines_with_partner = [x for x in lines_with_partner_per_model[rec_model] if x[0] not in matched_lines]
 
-                    # Break models loop.
-                    break
+            if not filtered_st_lines_with_partner:
+                # No unreconciled statement line for this model
+                continue
+
+            all_model_candidates = rec_model._get_candidates(filtered_st_lines_with_partner, excluded_ids)
+
+            for st_line, partner in filtered_st_lines_with_partner:
+                candidates = all_model_candidates[st_line.id]
+                if candidates:
+                    model_rslt, new_reconciled_aml_ids, new_treated_aml_ids = rec_model._get_rule_result(st_line, candidates, aml_ids_to_exclude, reconciled_amls_ids, partner)
+
+                    if model_rslt:
+                        # We inject the selected partner (possibly coming from the rec model)
+                        model_rslt['partner']= partner
+
+                        results[st_line.id] = model_rslt
+                        reconciled_amls_ids |= new_reconciled_aml_ids
+                        aml_ids_to_exclude |= new_treated_aml_ids
+                        matched_lines += st_line
+
         return results
