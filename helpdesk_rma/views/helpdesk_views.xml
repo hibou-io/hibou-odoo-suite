@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Helpdesk Ticket -->
+    <record id="helpdesk_ticket_view_form_inherit" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_get_attachment_tree_view']" position="after">
+                <button class="oe_stat_button" type="object" name="action_partner_rma"
+                        context="{'search_default_partner_id': partner_id, 'default_partner_id': partner_id}"
+                        attrs="{'invisible': [('partner_id', '=', False)]}"
+                        icon="fa-cubes">
+                    <field string="RMAs" name="rma_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
