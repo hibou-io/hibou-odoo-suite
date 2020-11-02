@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_reconcile_model_form_inherit" model="ir.ui.view">
+        <field name="name">account.reconcile.model.form.inherit</field>
+        <field name="model">account.reconcile.model</field>
+        <field name="inherit_id" ref="account.view_account_reconcile_model_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='match_partner']" position="before">
+                <field name="set_partner_id"
+                       attrs="{'invisible': [('match_partner', '=', True)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
