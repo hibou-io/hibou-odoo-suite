@@ -12,7 +12,6 @@ class AccountReconcileModel(models.Model):
     write off if the rule has a "set_partner_id" and the statement
     line does not have a partner set.
     """
-    @api.multi
     def _apply_rules(self, st_lines, excluded_ids=None, partner_map=None):
         ''' Apply criteria to get candidates for all reconciliation models.
         :param st_lines:        Account.bank.statement.lines recordset.
