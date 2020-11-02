@@ -37,6 +37,9 @@ class AccountReconcileModel(models.Model):
         # Type == 'invoice_matching'.
         # Map each (st_line.id, model_id) with matching amls.
         invoices_models = ordered_models.filtered(lambda m: m.rule_type == 'invoice_matching')
+        self.env['account.move'].flush(['state'])
+        self.env['account.move.line'].flush(['balance', 'reconciled'])
+        self.env['account.bank.statement.line'].flush(['company_id'])
         if invoices_models:
             query, params = invoices_models._get_invoice_matching_query(st_lines, excluded_ids=excluded_ids, partner_map=partner_map)
             self._cr.execute(query, params)
@@ -77,8 +80,6 @@ class AccountReconcileModel(models.Model):
                 if not grouped_candidates.get(line.id) or not grouped_candidates[line.id].get(model.id):
                     continue
 
-                excluded_lines_found = False
-
                 if model.rule_type == 'invoice_matching':
                     candidates = grouped_candidates[line.id][model.id]
 
@@ -86,18 +87,35 @@ class AccountReconcileModel(models.Model):
                     # Otherwise, suggest all invoices having the same partner.
                     # N.B: The only way to match a line without a partner is through the communication.
                     first_batch_candidates = []
+                    first_batch_candidates_proposed = []
                     second_batch_candidates = []
+                    second_batch_candidates_proposed = []
+                    third_batch_candidates = []
+                    third_batch_candidates_proposed = []
                     for c in candidates:
                         # Don't take into account already reconciled lines.
                         if c['aml_id'] in reconciled_amls_ids:
                             continue
 
                         # Dispatch candidates between lines matching invoices with the communication or only the partner.
-                        if c['communication_flag']:
-                            first_batch_candidates.append(c)
+                        elif c['payment_reference_flag']:
+                            if c['aml_id'] in amls_ids_to_exclude:
+                                first_batch_candidates_proposed.append(c)
+                            else:
+                                first_batch_candidates.append(c)
+                        elif c['communication_flag']:
+                            if c['aml_id'] in amls_ids_to_exclude:
+                                second_batch_candidates_proposed.append(c)
+                            else:
+                                second_batch_candidates.append(c)
                         elif not first_batch_candidates:
-                            second_batch_candidates.append(c)
-                    available_candidates = first_batch_candidates or second_batch_candidates
+                            if c['aml_id'] in amls_ids_to_exclude:
+                                third_batch_candidates_proposed.append(c)
+                            else:
+                                third_batch_candidates.append(c)
+                    available_candidates = (first_batch_candidates + first_batch_candidates_proposed
+                                            or second_batch_candidates + second_batch_candidates_proposed
+                                            or third_batch_candidates + third_batch_candidates_proposed)
 
                     # Special case: the amount are the same, submit the line directly.
                     for c in available_candidates:
@@ -108,24 +126,13 @@ class AccountReconcileModel(models.Model):
                             break
 
                     # Needed to handle check on total residual amounts.
-                    if first_batch_candidates or model._check_rule_propositions(line, available_candidates):
+                    if first_batch_candidates or first_batch_candidates_proposed or model._check_rule_propositions(line, available_candidates):
                         results[line.id]['model'] = model
 
                         # Add candidates to the result.
                         for candidate in available_candidates:
-
-                            # Special case: the propositions match the rule but some of them are already consumed by
-                            # another one. Then, suggest the remaining propositions to the user but don't make any
-                            # automatic reconciliation.
-                            if candidate['aml_id'] in amls_ids_to_exclude:
-                                excluded_lines_found = True
-                                continue
-
                             results[line.id]['aml_ids'].append(candidate['aml_id'])
                             amls_ids_to_exclude.add(candidate['aml_id'])
-
-                        if excluded_lines_found:
-                            break
 
                         # Create write-off lines.
                         move_lines = self.env['account.move.line'].browse(results[line.id]['aml_ids'])
@@ -144,7 +151,7 @@ class AccountReconcileModel(models.Model):
                             results[line.id]['status'] = 'write_off'
 
                         # Process auto-reconciliation.
-                        if model.auto_reconcile:
+                        if (first_batch_candidates or second_batch_candidates) and model.auto_reconcile:
                             # An open balance is needed but no partner has been found.
                             if reconciliation_results['open_balance_dict'] is False:
                                 break
@@ -174,6 +181,7 @@ class AccountReconcileModel(models.Model):
 
                     # Create write-off lines.
                     partner = partner_map and partner_map.get(line.id) and self.env['res.partner'].browse(partner_map[line.id])
+                    reconciliation_results = model._prepare_reconciliation(line, partner=partner)
 
                     # Customization
                     if not partner and model.set_partner_id and not model.match_partner:
@@ -181,9 +189,6 @@ class AccountReconcileModel(models.Model):
                         line.partner_id = partner
                     # End Customization
 
-                    reconciliation_results = model._prepare_reconciliation(line, partner=partner)
-
-                    # An open balance is needed but no partner has been found.
                     if reconciliation_results['open_balance_dict'] is False:
                         break
 
