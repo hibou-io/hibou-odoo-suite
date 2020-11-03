@@ -91,8 +91,8 @@ class ProductCoreAgedReport(models.AbstractModel):
                 MAX(pc.product_name) AS product_name,
                 MAX(UPPER(pc.product_name)) AS UPNAME,
                 SUM(CASE 
-                      WHEN COALESCE(l.date_maturity, l.date) < (SELECT date_from FROM constants) AND l.debit != 0 THEN l.quantity
-                      WHEN COALESCE(l.date_maturity, l.date) < (SELECT date_from FROM constants) THEN -l.quantity
+                      WHEN COALESCE(l.date_maturity, l.date) < (SELECT date_from FROM constants) AND l.debit != 0 THEN ABS(l.quantity)
+                      WHEN COALESCE(l.date_maturity, l.date) < (SELECT date_from FROM constants) THEN -ABS(l.quantity)
                       ELSE 0.0 END) AS total_expired_qty,
                 SUM(CASE 
                       WHEN COALESCE(l.date_maturity, l.date) < (SELECT date_from FROM constants) THEN l.debit
@@ -101,8 +101,8 @@ class ProductCoreAgedReport(models.AbstractModel):
                       WHEN COALESCE(l.date_maturity, l.date) < (SELECT date_from FROM constants) THEN l.credit
                       ELSE 0.0 END) AS total_expired_credit,
                 SUM(CASE 
-                      WHEN COALESCE(l.date_maturity, l.date) >= (SELECT date_from FROM constants) AND l.debit != 0 THEN l.quantity
-                      WHEN COALESCE(l.date_maturity, l.date) >= (SELECT date_from FROM constants) THEN -l.quantity
+                      WHEN COALESCE(l.date_maturity, l.date) >= (SELECT date_from FROM constants) AND l.debit != 0 THEN ABS(l.quantity)
+                      WHEN COALESCE(l.date_maturity, l.date) >= (SELECT date_from FROM constants) THEN -ABS(l.quantity)
                       ELSE 0.0 END) AS total_qty,
                 SUM(CASE 
                       WHEN COALESCE(l.date_maturity, l.date) >= (SELECT date_from FROM constants) THEN l.debit
@@ -168,7 +168,7 @@ class ProductCoreAgedReport(models.AbstractModel):
                     amount = aml.debit - aml.credit
                     amount_not_expired = amount if not expired else 0.0
                     amount_expired = amount if expired else 0.0
-                    qty = aml.quantity if aml.debit else -aml.quantity
+                    qty = abs(aml.quantity) if aml.debit else -abs(aml.quantity)
                     qty_not_expired = qty if not expired else 0.0
                     qty_expired = qty if expired else 0.0
 
