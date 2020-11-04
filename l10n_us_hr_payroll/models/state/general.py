@@ -1,8 +1,15 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 from odoo.exceptions import UserError
+from ..federal.fed_940 import futa_wage, futa_wage_ytd
+from ..federal.fed_941 import fit_wage, fit_wage_ytd
 
 # import logging
 # _logger = logging.getLogger(__name__)
+
+suta_wage = futa_wage
+suta_wage_ytd = futa_wage_ytd
+sit_wage = fit_wage
+sit_wage_ytd = fit_wage_ytd
 
 
 def _state_applies(payslip, state_code):
@@ -89,12 +96,12 @@ def general_state_unemployment(payslip, categories, worked_days, inputs, wage_ba
         return 0.0, 0.0
 
     # Determine Wage
-    year = payslip.dict.get_year()
-    ytd_wage = payslip.sum_category('GROSS', str(year) + '-01-01', str(year + 1) + '-01-01')
-    ytd_wage += payslip.sum_category('DED_FUTA_EXEMPT', str(year) + '-01-01', str(year + 1) + '-01-01')
-    ytd_wage += payslip.dict.contract_id.external_wages
+    wage = suta_wage(payslip, categories)
+    if not wage:
+        return 0.0, 0.0
 
-    wage = categories.GROSS + categories.DED_FUTA_EXEMPT
+    ytd_wage = suta_wage_ytd(payslip, categories)
+
     return _general_rate(payslip, wage, ytd_wage, wage_base=wage_base, wage_start=wage_start, rate=rate)
 
 
@@ -112,12 +119,8 @@ def general_state_income_withholding(payslip, categories, worked_days, inputs, w
         return 0.0, 0.0
 
     # Determine Wage
-    year = payslip.dict.get_year()
-    ytd_wage = payslip.sum_category('GROSS', str(year) + '-01-01', str(year + 1) + '-01-01')
-    ytd_wage += payslip.sum_category('DED_FIT_EXEMPT', str(year) + '-01-01', str(year + 1) + '-01-01')
-    ytd_wage += payslip.dict.contract_id.external_wages
-
-    wage = categories.GROSS + categories.DED_FIT_EXEMPT
+    ytd_wage = sit_wage_ytd(payslip, categories)
+    wage = sit_wage(payslip, categories)
     result, result_rate = _general_rate(payslip, wage, ytd_wage, wage_base=wage_base, wage_start=wage_start, rate=rate)
     additional = payslip.dict.contract_id.us_payroll_config_value('state_income_tax_additional_withholding')
     if additional:

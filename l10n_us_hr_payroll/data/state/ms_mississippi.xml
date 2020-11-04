@@ -43,6 +43,8 @@
                 ]</field>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- https://www.dor.ms.gov/Documents/Computer%20Payroll%20Flowchart.pdf -->
+        <!-- Table D. -->
         <record id="rule_parameter_us_ms_sit_rate_2020" model="hr.payroll.rate">
             <field name="name">US MS Mississippi SIT Rate Table</field>
             <field name="code">us_ms_sit_rate</field>
@@ -66,6 +68,19 @@
                 'married':            4600.0,
             }</field>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://www.dor.ms.gov/Documents/Computer%20Payroll%20Flowchart.pdf -->
+        <!-- Table C. -->
+        <record id="rule_parameter_us_ms_sit_deduction_2020" model="hr.payroll.rate">
+            <field name="name">US MS Mississippi SIT Deduction</field>
+            <field name="code">us_ms_sit_deduction</field>
+            <field name="parameter_value">{
+                'single':             2300.0,
+                'head_of_household':  3400.0,
+                'married_dual':       2300.0,
+                'married':            4600.0,
+            }</field>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
 
