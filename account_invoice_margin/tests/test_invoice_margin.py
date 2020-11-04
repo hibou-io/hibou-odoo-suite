@@ -47,7 +47,7 @@ class TestInvoiceMargin(TestSaleMargin):
 
         account = self.env['account.account'].search([('internal_type', '=', 'other')], limit=1)
         inv = self.AccountMove.create({
-            'type': 'in_invoice',
+            'move_type': 'in_invoice',
             'partner_id': self.partner_id,
             'invoice_line_ids': [
                 (0, 0, {

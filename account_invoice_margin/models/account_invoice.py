@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from odoo.addons import decimal_precision as dp
 
 
 class AccountMoveLine(models.Model):
@@ -26,13 +25,15 @@ class AccountMoveLine(models.Model):
     def product_id_change_margin(self):
         for line in self:
             if not line.product_id:
-                return
-            line.purchase_price = line._compute_margin(line.move_id, line.product_id, line.product_uom_id, line.sale_line_ids)
+                line.purchase_price = 0
+            else:
+                line.purchase_price = line._compute_margin(line.move_id, line.product_id, line.product_uom_id, line.sale_line_ids)
 
     @api.model_create_multi
     def create(self, vals):
         line = super(AccountMoveLine, self).create(vals)
-        line.product_id_change_margin()
+        if 'purchase_price' not in vals[0]:
+            line.product_id_change_margin()
         return line
 
     @api.depends('product_id', 'purchase_price', 'quantity', 'price_unit', 'price_subtotal')
