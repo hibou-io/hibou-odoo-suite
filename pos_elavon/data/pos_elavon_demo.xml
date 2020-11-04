@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+      <!-- Elavon Test Account -->
+      <!-- This is a test account for testing with test cards and cannot be used in a live environment -->
+      <record id="pos_elavon_configuration" model="pos_elavon.configuration">
+        <field name="name">Elavon Demo</field>
+        <field name="merchant_id">123</field>
+        <field name="merchant_user_id">POS</field>
+      </record>
+    </data>
+</odoo>
