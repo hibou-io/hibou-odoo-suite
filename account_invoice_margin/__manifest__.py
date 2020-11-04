@@ -1,7 +1,7 @@
 {
     'name': 'Invoice Margin',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '13.0.1.0.0',
+    'version': '14.0.1.0.0',
     'category': 'Accounting',
     'sequence': 95,
     'summary': 'Invoices include margin calculation.',
