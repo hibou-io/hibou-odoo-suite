@@ -124,6 +124,11 @@ class SaleOrderImportMapper(Component):
             return {'team_id': self.backend_record.team_id.id}
 
     @mapping
+    def user_id(self, record):
+        if self.backend_record.user_id:
+            return {'user_id': self.backend_record.user_id.id}
+
+    @mapping
     def payment_mode_id(self, record):
         assert self.backend_record.payment_mode_id, ("Payment mode must be specified.")
         return {'payment_mode_id': self.backend_record.payment_mode_id.id}
