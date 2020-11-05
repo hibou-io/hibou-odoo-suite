@@ -9,7 +9,8 @@
     'website': "https://hibou.io",
     'description': """
 Golden State Overnight (gso.com) Shipping
-==========================
+=========================================
+
 * Provides estimates on shipping costs through gso.com.
 * Send your shippings through gso.com and allows tracking of packages.
 """,
