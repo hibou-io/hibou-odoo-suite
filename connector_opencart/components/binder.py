@@ -20,4 +20,6 @@ class OpencartModelBinder(Component):
         'opencart.sale.order',
         'opencart.sale.order.line',
         'opencart.stock.picking',
+        'opencart.product.template',
+        'opencart.product.template.attribute.value',
     ]

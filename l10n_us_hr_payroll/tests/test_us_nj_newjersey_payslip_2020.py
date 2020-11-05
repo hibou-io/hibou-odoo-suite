@@ -46,3 +46,6 @@ class TestUsNJPayslip(TestUsPayslip):
         self._test_sit(300.0, 'single', 1, 'weekly', date(2020, 1, 1), 4.21)
         self._test_sit(375.0, 'married_separate', 3, 'weekly', date(2020, 1, 1), 4.76)
         self._test_sit(1400.0, 'head_household', 3, 'weekly', date(2020, 1, 1), 27.60)
+        self._test_sit(1400.0, '', 3, 'weekly', date(2020, 1, 1), 0.00)
+        self._test_sit(2500.0, 'single', 3, 'bi-weekly', date(2020, 1, 1), 82.66)
+        self._test_sit(15000.0, 'married_joint', 2, 'monthly', date(2020, 1, 1), 844.85)

@@ -231,6 +231,11 @@ XMLIDS_TO_REMOVE_2020 = [
     'l10n_us_pa_hr_payroll.hr_payroll_rules_pa_unemp_wages_2018',
     'l10n_us_pa_hr_payroll.hr_payroll_rules_pa_inc_withhold_add',
 
+    'l10n_us_sc_hr_payroll.hr_payroll_sc_unemp_wages',
+    'l10n_us_sc_hr_payroll.hr_payroll_sc_unemp',
+    'l10n_us_sc_hr_payroll.hr_payroll_sc_income_withhold',
+    'l10n_us_sc_hr_payroll.hr_payroll_rules_sc_unemp_wages',
+
     'l10n_us_tx_hr_payroll.contrib_register_txdor',
     'l10n_us_tx_hr_payroll.hr_payroll_tx_unemp_wages',
     'l10n_us_tx_hr_payroll.hr_payroll_tx_unemp',
@@ -248,6 +253,10 @@ XMLIDS_TO_REMOVE_2020 = [
     'l10n_us_wa_hr_payroll.hr_payroll_wa_lni',
     'l10n_us_wa_hr_payroll.hr_payroll_wa_lni_withhold',
     'l10n_us_wa_hr_payroll.hr_payroll_rules_wa_unemp_wages_2018',
+
+    'l10n_us_wy_hr_payroll.hr_payroll_wy_unemp_wages',
+    'l10n_us_wy_hr_payroll.hr_payroll_wy_unemp',
+    'l10n_us_wy_hr_payroll.hr_payroll_rules_wy_unemp_wages'
 
 ]
 
@@ -409,6 +418,13 @@ XMLIDS_TO_RENAME_2020 = {
     'l10n_us_pa_hr_payroll.hr_payroll_rules_pa_unemp_company_2018': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_pa_suta',
     'l10n_us_pa_hr_payroll.hr_payroll_rules_pa_inc_withhold_2018': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_pa_sit',
 
+    'l10n_us_sc_hr_payroll.res_partner_sc_dew_unemp': 'l10n_us_hr.payroll.res_partner_us_sc_dor',
+    'l10n_us_sc_hr_payroll.res_partner_sc_dor_withhold': 'l10n_us_hr.payroll.res_partner_us_sc_dor_sit',
+    'l10n_us_sc_hr_payroll.contrib_register_sc_dew_unemp': 'l10n_us_hr.payroll.contrib_register_us_sc_dor',
+    'l10n_us_sc_hr_payroll.contrib_register_sc_dor_withhold': 'l10n_us_hr.payroll.contrib_register_us_sc_dor_sit',
+    'l10n_us_sc_hr_payroll.hr_payroll_rules_sc_unemp': 'l10n_us_hr.payroll.hr_payroll_rule_er_us_sc_suta',
+    'l10n_us_sc_hr_payroll.hr_payroll_rules_sc_inc_withhold': 'l10n_us_hr.payroll.hr_payroll_rule_ee_us_sc_sit',
+
     'l10n_us_tx_hr_payroll.res_partner_txdor': 'l10n_us_hr_payroll.res_partner_us_tx_dor',
     'l10n_us_tx_hr_payroll.contrib_register_txdor': 'l10n_us_hr_payroll.contrib_register_us_tx_dor',
     'l10n_us_tx_hr_payroll.hr_payroll_rules_tx_unemp_2018': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_tx_suta',
@@ -429,6 +445,10 @@ XMLIDS_TO_RENAME_2020 = {
     'l10n_us_wa_hr_payroll.hr_payroll_rules_wa_unemp_2018': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_wa_suta',
     'l10n_us_wa_hr_payroll.hr_payroll_rules_wa_lni_withhold': 'l10n_us_hr_payroll.hr_payroll_rule_ee_us_wa_lni',
     'l10n_us_wa_hr_payroll.hr_payroll_rules_wa_lni': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_wa_lni',
+
+    'l10n_us_wy_hr_payroll.res_partner_wy_dws_unemp': 'l10n_us_hr_payroll.res_partner_us_wy_dor',
+    'l10n_us_wy_hr_payroll.contrib_register_wy_dws_unemp': 'l10n_us_hr_payroll.contrib_register_us_wy_dor',
+    'l10n_us_wy_hr_payroll.hr_payroll_rules_wy_unemp': 'l10n_us_hr_payroll.hr_payroll_rule_er_us_wy_suta',
 
 }
 
