@@ -39,3 +39,6 @@
 [submodule "external/hibou-oca/connector-magento"]
 	path = external/hibou-oca/connector-magento
 	url = https://github.com/hibou-io/oca-connector-magento.git
+[submodule "external/hibou-oca/purchase-workflow"]
+	path = external/hibou-oca/purchase-workflow
+	url = https://github.com/hibou-io/oca-purchase-workflow.git
