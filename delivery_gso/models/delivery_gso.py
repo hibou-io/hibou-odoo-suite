@@ -254,7 +254,7 @@ class ProviderGSO(models.Model):
                 _ = service.delete_shipment(request_body)
         except HTTPError as e:
             raise ValidationError(e)
-        picking.message_post(body=(_('Shipment N° %s has been cancelled') % (picking.carrier_tracking_ref, )))
+        picking.message_post(body=_('Shipment N° %s has been cancelled') % (picking.carrier_tracking_ref, ))
         picking.write({'carrier_tracking_ref': '', 'carrier_price': 0.0})
 
     def gso_rate_shipment(self, order):
