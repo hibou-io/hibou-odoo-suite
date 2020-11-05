@@ -32,3 +32,4 @@ class TestUsCTPayslip(TestUsPayslip):
         self._test_sit(5000.0, 'f', 15.0, 'monthly', date(2020, 1, 1), 230.25)
         self._test_sit(15000.0, 'c', 0.0, 'monthly', date(2020, 1, 1), 783.33)
         self._test_sit(18000.0, 'b', 0.0, 'weekly', date(2020, 1, 1), 1254.35)
+        self._test_sit(500.0, 'd', 0.0, 'weekly', date(2020, 1, 1), 21.15)

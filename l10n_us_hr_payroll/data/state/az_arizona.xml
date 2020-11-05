@@ -35,6 +35,7 @@
     <!-- Partners and Contribution Registers -->
     <record id="res_partner_us_az_dor" model="res.partner">
         <field name="name">US Arizona - Department of Economic Security (ADES) - Unemployment Tax</field>
+        <field name="supplier">1</field>
     </record>
     <record id="contrib_register_us_az_dor" model="hr.contribution.register">
         <field name="name">US Arizona - Department of Economic Security (ADES) - Unemployment Tax</field>
@@ -43,6 +44,7 @@
 
     <record id="res_partner_us_az_dor_sit" model="res.partner">
         <field name="name">US Arizona - Department of Revenue (ADOR) - Income Tax</field>
+        <field name="supplier">1</field>
     </record>
     <record id="contrib_register_us_az_dor_sit" model="hr.contribution.register">
         <field name="name">US Arizona - Department of Revenue (ADOR) - Income Tax</field>

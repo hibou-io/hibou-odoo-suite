@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- PARTNERS -->
+    <record id="res_partner_ia_wd_unemp" model="res.partner">
+        <field name="name">Iowa Workforce Development- Unemployment Tax</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+    <record id="res_partner_ia_dor_withhold" model="res.partner">
+        <field name="name">Iowa Department of Revenue - Income Tax Withholding</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+
+    <!-- CONTRIBUTION REGISTERS -->
+    <record id="contrib_register_ia_wd_unemp" model="hr.contribution.register">
+        <field name="name">Iowa Unemployment</field>
+        <field name="note">Iowa Workforce Development - Unemployment</field>
+        <field name="partner_id" ref="res_partner_ia_wd_unemp"/>
+    </record>
+    <record id="contrib_register_ia_dor_withhold" model="hr.contribution.register">
+        <field name="name">Iowa Income Tax Withholding</field>
+        <field name="note">Iowa Department of Revenue - Income Tax Withholding</field>
+        <field name="partner_id" ref="res_partner_ia_dor_withhold"/>
+    </record>
+
+
+    <!-- HR SALARY RULE CATEGORIES-->
+    <record id="hr_payroll_ia_unemp_wages" model="hr.salary.rule.category">
+        <field name="name">Wage: US-IA Unemployment</field>
+        <field name="code">WAGE_US_IA_UNEMP</field>
+    </record>
+
+    <record id="hr_payroll_ia_unemp" model="hr.salary.rule.category">
+        <field name="name">ER: US-IA Unemployment</field>
+        <field name="code">ER_US_IA_UNEMP</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="hr_payroll_ia_income_withhold" model="hr.salary.rule.category">
+        <field name="name">EE: US-IA Income Tax Withholding</field>
+        <field name="code">EE_US_IA_INC_WITHHOLD</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+</odoo>

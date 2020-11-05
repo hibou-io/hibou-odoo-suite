@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_contract_form_l10n_us_ar_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.form.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="priority">106</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//group[@name='state_filing']" position="inside">
+                    <group string="Arkansas" name="ar">
+                        <field name="ar_ar4ec_allowances" string="Allowances"/>
+                        <field name="ar_ar4ec_additional_wh" string="Additional Withholding"/>
+                        <field name="ar_ar4ec_tax_exempt" string="Tax Exempt"/>
+                        <field name="ar_ar4ec_texarkana_exemption" string="Texarkana Exemption"/>
+                    </group>
+                </xpath>
+            </data>
+            </field>
+        </record>
+    </data>
+</odoo>

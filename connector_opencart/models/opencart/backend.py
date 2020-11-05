@@ -2,12 +2,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-from datetime import datetime, timedelta
 from logging import getLogger
 from contextlib import contextmanager
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.addons.connector.models.checkpoint import add_checkpoint
 from ...components.api.opencart import Opencart
 
 _logger = getLogger(__name__)
@@ -62,6 +62,8 @@ class OpencartBackend(models.Model):
              "in Odoo.",
     )
     # payment_mode_id = fields.Many2one(comodel_name='account.payment.mode', string="Payment Mode")
+    coupon_product_id = fields.Many2one(comodel_name='product.product', string='Coupon Product',
+                                        help='Product to represent coupon discounts.')
 
     # New Product fields.
     product_categ_id = fields.Many2one(comodel_name='product.category', string='Product Category',
@@ -71,6 +73,9 @@ class OpencartBackend(models.Model):
         string='Import sale orders after id',
     )
 
+    so_require_product_setup = fields.Boolean(string='SO Require Product Setup',
+                                              help='Prevents SO from being confirmed (failed queue job), if one or more products has an open checkpoint.')
+
     @contextmanager
     @api.multi
     def work_on(self, model_name, **kwargs):
@@ -79,6 +84,27 @@ class OpencartBackend(models.Model):
         _super = super(OpencartBackend, self)
         with _super.work_on(model_name, opencart_api=opencart_api, **kwargs) as work:
             yield work
+
+    @api.multi
+    def add_checkpoint(self, record):
+        self.ensure_one()
+        record.ensure_one()
+        return add_checkpoint(self.env, record._name, record.id,
+                              self._name, self.id)
+
+    @api.multi
+    def find_checkpoint(self, record):
+        self.ensure_one()
+        record.ensure_one()
+        checkpoint_model = self.env['connector.checkpoint']
+        model_model = self.env['ir.model']
+        model = model_model.search([('model', '=', record._name)], limit=1)
+        return checkpoint_model.search([
+            ('backend_id', '=', '%s,%s' % (self._name, self.id)),
+            ('model_id', '=', model.id),
+            ('record_id', '=', record.id),
+            ('state', '=', 'need_review'),
+        ], limit=1)
 
     @api.multi
     def synchronize_metadata(self):

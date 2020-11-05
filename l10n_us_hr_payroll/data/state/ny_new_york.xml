@@ -251,7 +251,7 @@
                         (2205350, 0.9454, 161786.00),
                         (  'inf', 0.0962, 209056.00),
                     ),
-                }
+                },
             }</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>

@@ -59,6 +59,21 @@
             ref('hr_payroll_rule_er_us_il_suta'),
             ref('hr_payroll_rule_ee_us_il_sit'),
 
+            ref('hr_payroll_rule_er_us_in_suta'),
+            ref('hr_payroll_rule_ee_us_in_sit'),
+
+            ref('hr_payroll_rule_er_us_ks_suta'),
+            ref('hr_payroll_rule_ee_us_ks_sit'),
+
+            ref('hr_payroll_rule_er_us_ky_suta'),
+            ref('hr_payroll_rule_ee_us_ky_sit'),
+
+            ref('hr_payroll_rule_er_us_la_suta'),
+            ref('hr_payroll_rule_ee_us_la_sit'),
+
+            ref('hr_payroll_rule_er_us_me_suta'),
+            ref('hr_payroll_rule_ee_us_me_sit'),
+
             ref('hr_payroll_rule_er_us_mn_suta'),
             ref('hr_payroll_rule_ee_us_mn_sit'),
 
@@ -78,6 +93,12 @@
             ref('hr_payroll_rule_er_us_nc_suta'),
             ref('hr_payroll_rule_ee_us_nc_sit'),
 
+            ref('hr_payroll_rule_er_us_nd_suta'),
+            ref('hr_payroll_rule_ee_us_nd_sit'),
+
+            ref('hr_payroll_rule_er_us_ne_suta'),
+            ref('hr_payroll_rule_ee_us_ne_sit'),
+
             ref('hr_payroll_rule_er_us_nh_suta'),
 
             ref('hr_payroll_rule_er_us_nj_suta'),
@@ -93,6 +114,8 @@
             ref('hr_payroll_rule_er_us_nm_suta'),
             ref('hr_payroll_rule_ee_us_nm_sit'),
 
+            ref('hr_payroll_rule_er_us_nv_suta'),
+
             ref('hr_payroll_rule_er_us_ny_suta'),
             ref('hr_payroll_rule_er_us_ny_suta_rsf'),
             ref('hr_payroll_rule_er_us_ny_suta_mctmt'),
@@ -101,22 +124,49 @@
             ref('hr_payroll_rule_er_us_oh_suta'),
             ref('hr_payroll_rule_ee_us_oh_sit'),
 
+            ref('hr_payroll_rule_er_us_ok_suta'),
+            ref('hr_payroll_rule_ee_us_ok_sit'),
+
             ref('hr_payroll_rule_er_us_pa_suta'),
             ref('hr_payroll_rule_ee_us_pa_suta'),
             ref('hr_payroll_rule_ee_us_pa_sit'),
+
+            ref('hr_payroll_rule_er_us_ri_suta'),
+            ref('hr_payroll_rule_ee_us_ri_sit'),
+
+            ref('hr_payroll_rule_er_us_sc_suta'),
+            ref('hr_payroll_rule_ee_us_sc_sit'),
+
+            ref('hr_payroll_rule_er_us_sd_suta'),
+
+            ref('hr_payroll_rule_er_us_tn_suta'),
 
             ref('hr_payroll_rule_er_us_tx_suta'),
             ref('hr_payroll_rule_er_us_tx_suta_oa'),
             ref('hr_payroll_rule_er_us_tx_suta_etia'),
 
+            ref('hr_payroll_rule_er_us_ut_suta'),
+            ref('hr_payroll_rule_ee_us_ut_sit'),
+
             ref('hr_payroll_rule_er_us_va_suta'),
             ref('hr_payroll_rule_ee_us_va_sit'),
+
+            ref('hr_payroll_rule_er_us_vt_suta'),
+            ref('hr_payroll_rule_ee_us_vt_sit'),
 
             ref('hr_payroll_rule_er_us_wa_suta'),
             ref('hr_payroll_rule_er_us_wa_fml'),
             ref('hr_payroll_rule_ee_us_wa_fml'),
             ref('hr_payroll_rule_er_us_wa_lni'),
             ref('hr_payroll_rule_ee_us_wa_lni'),
+
+            ref('hr_payroll_rule_er_us_wi_suta'),
+            ref('hr_payroll_rule_ee_us_wi_sit'),
+
+            ref('hr_payroll_rule_er_us_wv_suta'),
+            ref('hr_payroll_rule_ee_us_wv_sit'),
+
+            ref('hr_payroll_rule_er_us_wy_suta'),
 
             ref('hr_salary_rule_commission'),
             ref('hr_salary_rule_gamification'),

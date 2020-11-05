@@ -33,6 +33,8 @@
     </data>
 
     <data noupdate="1">
+        <!-- https://files.nc.gov/ncdor/documents/files/NC-30_book_Web_1-16-19_v4_Final.pdf -->
+        <!-- Allowance Table  Page 19.  SD For single or married  SD for Head of household (SD Page. 16-18)-->
         <record id="rule_parameter_us_nc_sit_allowance_rate_2019" model="hr.payroll.rate">
             <field name="name">US NC North Carolina Allowance Rate</field>
             <field name="code">us_nc_sit_allowance_rate</field>
@@ -44,6 +46,8 @@
             }</field>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- https://files.nc.gov/ncdor/documents/files/2020-NC-30_Final.pdf -->
+        <!-- Allowance Table  Page 19.  SD For single or married  SD for Head of household (SD Page. 16-18)-->
         <record id="rule_parameter_us_nc_sit_allowance_rate_2020" model="hr.payroll.rate">
             <field name="name">US NC North Carolina Allowance Rate</field>
             <field name="code">us_nc_sit_allowance_rate</field>

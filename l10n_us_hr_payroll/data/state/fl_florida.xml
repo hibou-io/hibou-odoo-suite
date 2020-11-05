@@ -35,6 +35,7 @@
     <!-- Partners and Contribution Registers -->
     <record id="res_partner_us_fl_dor" model="res.partner">
         <field name="name">US Florida - Department of Revenue</field>
+        <field name="supplier">1</field>
     </record>
 
     <record id="contrib_register_us_fl_dor" model="hr.contribution.register">

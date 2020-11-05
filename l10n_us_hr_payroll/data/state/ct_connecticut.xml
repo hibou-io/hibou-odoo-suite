@@ -85,6 +85,8 @@
             }</field>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- https://portal.ct.gov/-/media/DRS/Forms/2020/WTH/TPG-211_0320.pdf -->
+        <!-- Table B Initial Tax Calculation -->
         <record id="rule_parameter_us_ct_sit_initial_tax_rate_2020" model="hr.payroll.rate">
             <field name="name">US CT Connecticut SIT Initial Tax Rate</field>
             <field name="code">us_ct_sit_initial_tax_rate</field>
@@ -213,6 +215,8 @@
             }</field>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- https://portal.ct.gov/-/media/DRS/Forms/2020/WTH/TPG-211_0320.pdf -->
+        <!-- Table C 3% -->
         <record id="rule_parameter_us_ct_sit_tax_rate_2020" model="hr.payroll.rate">
             <field name="name">US CT Connecticut Tax Rate</field>
             <field name="code">us_ct_sit_tax_rate</field>
@@ -416,6 +420,8 @@
             }</field>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- https://portal.ct.gov/-/media/DRS/Forms/2020/WTH/TPG-211_0320.pdf -->
+        <!-- Table E Personal Tax Credits -->
         <record id="rule_parameter_us_ct_sit_decimal_rate_2020" model="hr.payroll.rate">
             <field name="name">US CT Connecticut Decimal Rate</field>
             <field name="code">us_ct_sit_decimal_rate</field>
@@ -590,7 +596,7 @@
                     (530000, 3000),
                     (535000, 3050),
                     (540000, 3100),
-                    ( 'inf',  200),
+                    ( 'inf', 3150),
                 ],
                 'b': [
                     (320000,    0),
@@ -716,7 +722,7 @@
                     (530000, 3000),
                     (535000, 3050),
                     (540000, 3100),
-                    ( 'inf',  200),
+                    ( 'inf', 3150),
                 ],
                 'f': [
                     (200000,    0),
@@ -758,11 +764,13 @@
                     (530000, 3000),
                     (535000, 3050),
                     (540000, 3100),
-                    ( 'inf',  200),
+                    ( 'inf', 3150),
                 ],
             }</field>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- https://portal.ct.gov/-/media/DRS/Forms/2020/WTH/TPG-211_0320.pdf -->
+        <!-- Table D Tax recapture -->
         <record id="rule_parameter_us_ct_sit_recapture_rate_2020" model="hr.payroll.rate">
             <field name="name">US CT Connecticut Recapture Rate</field>
             <field name="code">us_ct_sit_recapture_rate</field>
@@ -807,7 +815,7 @@
                     (530000, 3000),
                     (535000, 3050),
                     (540000, 3100),
-                    ( 'inf',  200),
+                    ( 'inf', 3150),
                 ],
                 'b': [
                     (320000,    0),
@@ -933,7 +941,7 @@
                     (530000, 3000),
                     (535000, 3050),
                     (540000, 3100),
-                    ( 'inf',  200),
+                    ( 'inf', 3150),
                 ],
                 'f': [
                     (200000,    0),
@@ -975,7 +983,7 @@
                     (530000, 3000),
                     (535000, 3050),
                     (540000, 3100),
-                    ( 'inf',  200),
+                    ( 'inf', 3150),
                 ],
             }</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
@@ -1072,6 +1080,8 @@
             }</field>
             <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
         </record>
+        <!-- https://portal.ct.gov/-/media/DRS/Forms/2020/WTH/TPG-211_0320.pdf -->
+        <!-- Table A Personal Exemptions -->
         <record id="rule_parameter_us_ct_sit_personal_exemption_rate_2020" model="hr.payroll.rate">
             <field name="name">US CT Connecticut Personal Exemption Rate</field>
             <field name="code">us_ct_sit_personal_exemption_rate</field>
@@ -1166,6 +1176,7 @@
     <!-- Partners and Contribution Registers -->
     <record id="res_partner_us_ct_dor" model="res.partner">
         <field name="name">US Connecticut - Department of Labor (CDOL) - Unemployment Tax</field>
+        <field name="supplier">1</field>
     </record>
     <record id="contrib_register_us_ct_dor" model="hr.contribution.register">
         <field name="name">US Connecticut - Department of Labor (CDOL) - Unemployment Tax</field>
@@ -1174,6 +1185,7 @@
 
     <record id="res_partner_us_ct_dor_sit" model="res.partner">
         <field name="name">US Connecticut - Department of Revenue Services (CDRS) - Income Tax</field>
+        <field name="supplier">1</field>
     </record>
     <record id="contrib_register_us_ct_dor_sit" model="hr.contribution.register">
         <field name="name">US Connecticut - Department of Revenue Services (CDRS) - Unemployment Tax</field>
