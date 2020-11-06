@@ -7,6 +7,7 @@ class TestAccount(TransactionCase):
     def setUp(self):
         super(TestAccount, self).setUp()
         self.PartnerShippingAccount = self.env['partner.shipping.account']
+        self.partner = self.env.ref('base.res_partner_12')
     
     def test_dhl_account_information(self):
         # Create object and confirm
@@ -14,7 +15,7 @@ class TestAccount(TransactionCase):
             wrong_account_number = self.PartnerShippingAccount.create({
                 'name':          '1234567',
                 'description':   'Error Account',
-                'partner_id':    5,
+                'partner_id':    self.partner.id,
                 'delivery_type': 'dhl',
                 'note':          'This is a note'
             })
@@ -23,7 +24,15 @@ class TestAccount(TransactionCase):
             no_account_number = self.PartnerShippingAccount.create({
                 'name':          '',
                 'description':   'Error Account',
-                'partner_id':    5,
+                'partner_id':    self.partner.id,
                 'delivery_type': 'dhl',
                 'note':          'This is a note'
             })
+        
+        _ = self.PartnerShippingAccount.create({
+            'name':          '123456789',
+            'description':   'Success',
+            'partner_id':    self.partner.id,
+            'delivery_type': 'dhl',
+            'note':          'This is a note'
+        })
