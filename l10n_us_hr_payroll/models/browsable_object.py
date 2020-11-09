@@ -76,12 +76,35 @@ class Payslips(BrowsableObject):
             FROM hr_payslip as hp, hr_payslip_line as pl
             WHERE hp.employee_id = %s AND hp.state = 'done'
             AND hp.{sum_field} >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id AND pl.code = %s""".format(sum_field=sum_field)
+        # Original (non-recursive)
+        # self.__browsable_query_category = """
+        #     SELECT sum(case when hp.credit_note is not True then (pl.total) else (-pl.total) end)
+        #     FROM hr_payslip as hp, hr_payslip_line as pl, hr_salary_rule_category as rc
+        #     WHERE hp.employee_id = %s AND hp.state = 'done'
+        #     AND hp.{sum_field} >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id
+        #     AND rc.id = pl.category_id AND rc.code = %s""".format(sum_field=sum_field)
+
+        # Hibou Recursive version
         self.__browsable_query_category = """
+            WITH RECURSIVE
+            category_by_code as (
+                SELECT id
+                FROM hr_salary_rule_category
+                WHERE code = %s
+                ),
+            category_ids as (
+                SELECT COALESCE((SELECT id FROM category_by_code), -1) AS id
+                UNION ALL
+                SELECT rc.id
+                FROM hr_salary_rule_category AS rc
+                JOIN category_ids AS rcs ON rcs.id = rc.parent_id
+            )
+
             SELECT sum(case when hp.credit_note is not True then (pl.total) else (-pl.total) end)
-            FROM hr_payslip as hp, hr_payslip_line as pl, hr_salary_rule_category as rc
+            FROM hr_payslip as hp, hr_payslip_line as pl
             WHERE hp.employee_id = %s AND hp.state = 'done'
             AND hp.{sum_field} >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id
-            AND rc.id = pl.category_id AND rc.code = %s""".format(sum_field=sum_field)
+            AND pl.category_id in (SELECT id from category_ids)""".format(sum_field=sum_field)
 
     def sum(self, code, from_date, to_date=None):
         if to_date is None:
@@ -101,7 +124,10 @@ class Payslips(BrowsableObject):
         self.env['hr.payslip.line'].flush(['total', 'slip_id', 'category_id'])
         self.env['hr.salary.rule.category'].flush(['code'])
 
-        self.env.cr.execute(self.__browsable_query_category, (self.employee_id, from_date, to_date, code))
+        # standard version
+        # self.env.cr.execute(self.__browsable_query_category, (self.employee_id, from_date, to_date, code))
+        # recursive category version
+        self.env.cr.execute(self.__browsable_query_category, (code, self.employee_id, from_date, to_date))
         res = self.env.cr.fetchone()
         return res and res[0] or 0.0
 
