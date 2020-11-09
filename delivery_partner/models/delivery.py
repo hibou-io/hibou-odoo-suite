@@ -21,7 +21,7 @@ class PartnerShippingAccount(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', help='Leave blank to allow as a generic 3rd party shipper.')
     delivery_type = fields.Selection([
         ('other', 'Other'),
-    ], string='Carrier', required=True)
+    ], string='Carrier', required=True, default='other')
     note = fields.Text(string='Internal Note')
 
     def name_get(self):
