@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 class PartnerShippingAccount(models.Model):
     _inherit = 'partner.shipping.account'
 
-    delivery_type = fields.Selection(selection_add=[('ups', 'UPS')])
+    delivery_type = fields.Selection(selection_add=[('ups', 'UPS')], ondelete={'ups': 'set default'})
     ups_zip = fields.Char(string='UPS Account ZIP')
 
     def ups_check_validity(self):
