@@ -12,17 +12,17 @@ def fica_wage(payslip, categories):
     """
     wage = categories.GROSS
 
-    wage -= categories.ALW_FICA_EXEMPT + \
-            categories.ALW_FIT_FICA_EXEMPT + \
-            categories.ALW_FIT_FICA_FUTA_EXEMPT + \
-            categories.ALW_FICA_FUTA_EXEMPT
+    less_exempt = categories.ALW_FICA_EXEMPT + \
+                  categories.ALW_FIT_FICA_EXEMPT + \
+                  categories.ALW_FIT_FICA_FUTA_EXEMPT + \
+                  categories.ALW_FICA_FUTA_EXEMPT
 
-    wage += categories.DED_FICA_EXEMPT + \
-            categories.DED_FIT_FICA_EXEMPT + \
-            categories.DED_FIT_FICA_FUTA_EXEMPT + \
-            categories.DED_FICA_FUTA_EXEMPT
-
-    return wage
+    plus_exempt = categories.DED_FICA_EXEMPT + \
+                  categories.DED_FIT_FICA_EXEMPT + \
+                  categories.DED_FIT_FICA_FUTA_EXEMPT + \
+                  categories.DED_FICA_FUTA_EXEMPT
+    # _logger.info('fica wage GROSS: %0.2f less exempt ALW: %0.2f plus exempt DED: %0.2f' % (wage, less_exempt, plus_exempt))
+    return wage - less_exempt + plus_exempt
 
 
 def fica_wage_ytd(payslip, categories):
@@ -34,18 +34,19 @@ def fica_wage_ytd(payslip, categories):
     year = payslip.dict.get_year()
     ytd_wage = payslip.sum_category('GROSS',                     str(year) + '-01-01', str(year+1) + '-01-01')
 
-    ytd_wage -= payslip.sum_category('ALW_FICA_EXEMPT',          str(year) + '-01-01', str(year+1) + '-01-01') + \
-                payslip.sum_category('ALW_FIT_FICA_EXEMPT',      str(year) + '-01-01', str(year+1) + '-01-01') + \
-                payslip.sum_category('ALW_FIT_FICA_FUTA_EXEMPT', str(year) + '-01-01', str(year+1) + '-01-01') + \
-                payslip.sum_category('ALW_FICA_FUTA_EXEMPT',     str(year) + '-01-01', str(year+1) + '-01-01')
+    less_exempt = payslip.sum_category('ALW_FICA_EXEMPT',          str(year) + '-01-01', str(year+1) + '-01-01') + \
+                  payslip.sum_category('ALW_FIT_FICA_EXEMPT',      str(year) + '-01-01', str(year+1) + '-01-01') + \
+                  payslip.sum_category('ALW_FIT_FICA_FUTA_EXEMPT', str(year) + '-01-01', str(year+1) + '-01-01') + \
+                  payslip.sum_category('ALW_FICA_FUTA_EXEMPT',     str(year) + '-01-01', str(year+1) + '-01-01')
 
-    ytd_wage += payslip.sum_category('DED_FICA_EXEMPT',          str(year) + '-01-01', str(year+1) + '-01-01') + \
-                payslip.sum_category('DED_FIT_FICA_EXEMPT',      str(year) + '-01-01', str(year+1) + '-01-01') + \
-                payslip.sum_category('DED_FIT_FICA_FUTA_EXEMPT', str(year) + '-01-01', str(year+1) + '-01-01') + \
-                payslip.sum_category('DED_FICA_FUTA_EXEMPT',     str(year) + '-01-01', str(year+1) + '-01-01')
+    plus_exempt = payslip.sum_category('DED_FICA_EXEMPT',          str(year) + '-01-01', str(year+1) + '-01-01') + \
+                  payslip.sum_category('DED_FIT_FICA_EXEMPT',      str(year) + '-01-01', str(year+1) + '-01-01') + \
+                  payslip.sum_category('DED_FIT_FICA_FUTA_EXEMPT', str(year) + '-01-01', str(year+1) + '-01-01') + \
+                  payslip.sum_category('DED_FICA_FUTA_EXEMPT',     str(year) + '-01-01', str(year+1) + '-01-01')
 
-    ytd_wage += payslip.contract_id.external_wages
-    return ytd_wage
+    external_wages = payslip.dict.contract_id.external_wages
+    # _logger.info('fica ytd wage GROSS: %0.2f less exempt ALW: %0.2f plus exempt DED: %0.2f plus external: %0.2f' % (ytd_wage, less_exempt, plus_exempt, external_wages))
+    return ytd_wage - less_exempt + plus_exempt + external_wages
 
 
 def ee_us_941_fica_ss(payslip, categories, worked_days, inputs):
