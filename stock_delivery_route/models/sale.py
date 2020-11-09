@@ -7,7 +7,6 @@ class SaleOrder(models.Model):
     delivery_route_id = fields.Many2one('stock.warehouse.delivery.route', string='Delivery Route')
 
     @api.onchange('partner_id', 'partner_shipping_id', 'warehouse_id')
-    @api.multi
     def _prefill_delivery_route(self):
         for so in self:
             if so.warehouse_id:
@@ -23,7 +22,6 @@ class SaleOrder(models.Model):
             else:
                 so.delivery_route_id = False
 
-    @api.multi
     def action_confirm(self):
         val = super(SaleOrder, self).action_confirm()
         for so in self:
