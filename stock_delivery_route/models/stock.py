@@ -16,7 +16,6 @@ class Picking(models.Model):
     delivery_route_id = fields.Many2one('stock.warehouse.delivery.route', string='Delivery Route')
     partner_address = fields.Char(string='Address', compute='_compute_partner_address')
 
-    @api.multi
     def _compute_partner_address(self):
         for pick in self:
             if pick.partner_id:
@@ -32,7 +31,6 @@ class WarehouseDeliveryRoute(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
     note = fields.Text(string='Note')
 
-    @api.multi
     def name_get(self):
         res = []
         for route in self:
