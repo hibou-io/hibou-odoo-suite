@@ -6,7 +6,7 @@ class TestSaleRoutes(common.TransactionCase):
     def test_plan_two_warehouses(self):
         partner = self.env.ref('base.res_partner_2')
         product_1 = self.env.ref('product.product_product_24_product_template')
-        wh_1 = self.env.ref('stock.stock_warehouse_shop0')
+        wh_1 = self.env.ref('stock.warehouse0')
         delivery_route = self.env['stock.warehouse.delivery.route'].create({
             'name': 'Test',
             'warehouse_id': wh_1.id,
