@@ -21,7 +21,6 @@ class SaleLineChangeOrder(models.TransientModel):
             rec['line_ids'] = [(0, 0, line_model.values_from_so_line(l)) for l in order.order_line]
         return rec
 
-    @api.multi
     def apply(self):
         self.ensure_one()
         self.line_ids.apply()
