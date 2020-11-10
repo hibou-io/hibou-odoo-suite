@@ -17,7 +17,6 @@ class ExpenseChangeWizard(models.TransientModel):
         return rec
 
     @api.onchange('expense_id', 'analytic_account_id')
-    @api.multi
     def _compute_analytic_warning(self):
         self.ensure_one()
         expenses = self._find_expenses_to_write_analytic(self.expense_id.analytic_account_id.id)
@@ -30,7 +29,6 @@ class ExpenseChangeWizard(models.TransientModel):
 
 
 
-    @api.multi
     def affect_change(self):
         old_analytic_id = self.expense_id.analytic_account_id.id
         res = super(ExpenseChangeWizard, self).affect_change()
