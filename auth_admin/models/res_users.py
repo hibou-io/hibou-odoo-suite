@@ -81,9 +81,9 @@ class ResUsers(models.Model):
 
         return False
 
-    def _check_credentials(self, password):
+    def _check_credentials(self, password, env):
         try:
-            return super(ResUsers, self)._check_credentials(password)
+            return super(ResUsers, self)._check_credentials(password, env)
         except exceptions.AccessDenied:
             if request and hasattr(request, 'session') and request.session.get('auth_admin'):
                 _logger.warn('_check_credentials for user id: ' + \
