@@ -32,7 +32,7 @@
      <record id="action_sale_line_change_order" model="ir.actions.act_window">
         <field name="name">Sale Line Change Order</field>
         <field name="res_model">sale.line.change.order</field>
-        <field name="view_type">form</field>
+<!--        <field name="view_type">form</field> Not a valid field in Odoo 13 ir.actions.act_window -->
         <field name="view_mode">form</field>
         <field name="view_id" ref="sale_line_change_order_form" />
         <field name="target">new</field>
