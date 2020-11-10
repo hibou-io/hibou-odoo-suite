@@ -1,7 +1,7 @@
 {
     'name': 'HR Expense Change - Analytic',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '12.0.1.0.0',
+    'version': '13.0.1.0.0',
     'category': 'Employees',
     'sequence': 96,
     'summary': 'Change Analytic Account on Expense.',
