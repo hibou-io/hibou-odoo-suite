@@ -11,7 +11,6 @@ class TestProductCreation(common.TransactionCase):
         for a in range(1, 4):
             attribute = self.env['product.attribute'].create({
                 'name': 'Attr ' + str(a),
-                'type': 'radio',
                 'create_variant': 'always',
             })
             self.attrs.append(attribute)
@@ -32,14 +31,19 @@ class TestProductCreation(common.TransactionCase):
             'type': 'product',
         })
         attr_line_model = self.env['product.template.attribute.line']
+
+        with self.assertRaises(UserError):
+            for a in self.attrs:
+                attr_line_model.create({
+                    'product_tmpl_id': product_tmpl.id,
+                    'attribute_id': a.id,
+                    'value_ids': [(6, 0, a.value_ids.ids)],
+                })
+
+        product_tmpl.always_variant_on_so = True
         for a in self.attrs:
             attr_line_model.create({
                 'product_tmpl_id': product_tmpl.id,
                 'attribute_id': a.id,
                 'value_ids': [(6, 0, a.value_ids.ids)],
             })
-        with self.assertRaises(UserError):
-            product_tmpl.create_variant_ids()
-
-        product_tmpl.always_variant_on_so = True
-        product_tmpl.create_variant_ids()
