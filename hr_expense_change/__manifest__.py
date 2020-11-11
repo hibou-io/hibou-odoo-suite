@@ -23,6 +23,7 @@ the invoice is currently in.
         'hr_expense',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'wizard/expense_change_views.xml',
     ],
     'installable': True,
