@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_plan_sale_order_inherit" model="ir.ui.view">
+        <field name="name">view.plan.sale.order.inherit</field>
+        <field name="model">sale.order.make.plan</field>
+        <field name="inherit_id" ref="sale_planner.view_plan_sale_order"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='warehouse_id']" position="after">
+                <field name="delivery_route_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
