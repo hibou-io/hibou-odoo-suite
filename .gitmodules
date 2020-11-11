@@ -2,3 +2,6 @@
 	path = external/hibou-oca/server-tools
 	url = https://github.com/hibou-io/oca-server-tools.git
 	branch = 14.0
+[submodule "external/hibou-oca/sale-workflow"]
+	path = external/hibou-oca/sale-workflow
+	url = https://github.com/hibou-io/oca-sale-workflow.git
