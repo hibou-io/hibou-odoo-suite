@@ -141,12 +141,12 @@ class TestAccountEntry(test_expenses.TestExpenses):
         self.assertEqual(expense_sheet.accounting_date, expense_sheet.account_move_id.date)
 
         expense = expense_sheet.expense_line_ids[0]
-
+        self.expense = expense
         ctx = {'active_model': 'hr.expense', 'active_ids': expense.ids}
         change = self.env['hr.expense.change'].sudo(flag=True).with_context(ctx).create({})
         self.assertEqual(change.date, expense.date)
 
-        change_date = '2018-01-01'
+        change_date = '2017-01-31'
         change.write({'date': change_date})
 
         change.affect_change()
