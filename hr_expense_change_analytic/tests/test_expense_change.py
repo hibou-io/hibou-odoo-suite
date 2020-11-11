@@ -1,8 +1,16 @@
-from odoo.addons.hr_expense_change.tests.test_expense_change import TestAccountEntry
+from odoo.addons.hr_expense_change.tests import test_expense_change
+from odoo.tests import tagged
+from odoo import fields
 
 
-class TestWizard(TestAccountEntry):
+@tagged('-at_install', 'post_install')
+class TestWizard(test_expense_change.TestAccountEntry):
+
     def test_expense_change_basic(self):
+        super(TestWizard, self).test_expense_values()
+
+        # Tests Adding an Analytic Account
+
         self.analytic_account = self.env['account.analytic.account'].create({
             'name': 'test account',
         })
@@ -10,24 +18,19 @@ class TestWizard(TestAccountEntry):
             'name': 'test account2',
         })
 
-        self.expense.expense_line_ids.write({'analytic_account_id': False})
-
-        super(TestWizard, self).test_expense_change_basic()
-
-        # Tests Adding an Analytic Account
-        self.assertFalse(self.expense.expense_line_ids.analytic_account_id)
-        ctx = {'active_model': 'hr.expense', 'active_ids': self.expense.expense_line_ids.ids}
-        change = self.env['hr.expense.change'].with_context(ctx).create({})
+        self.assertNotEqual(self.expense.analytic_account_id, self.analytic_account)
+        ctx = {'active_model': 'hr.expense', 'active_ids': self.expense.ids}
+        change = self.env['hr.expense.change'].sudo().with_context(ctx).create({})
         change.analytic_account_id = self.analytic_account
         change.affect_change()
-        self.assertEqual(self.expense.expense_line_ids.analytic_account_id, self.analytic_account)
+        self.assertEqual(self.expense.analytic_account_id, self.analytic_account)
 
         # Tests Changing
         change.analytic_account_id = self.analytic_account2
         change.affect_change()
-        self.assertEqual(self.expense.expense_line_ids.analytic_account_id, self.analytic_account2)
+        self.assertEqual(self.expense.analytic_account_id, self.analytic_account2)
 
         # Tests Removing
         change.analytic_account_id = False
         change.affect_change()
-        self.assertFalse(self.expense.expense_line_ids.analytic_account_id)
+        self.assertFalse(self.expense.analytic_account_id)
