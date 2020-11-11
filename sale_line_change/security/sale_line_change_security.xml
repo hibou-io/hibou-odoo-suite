@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="base.user_root" model="res.users">
+        <field name="groups_id" eval="[(4, ref('sale_line_change.group_account_user'))]"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="groups_id" eval="[(4, ref('sale_line_change.group_account_user'))]"/>
+    </record>
+</odoo>

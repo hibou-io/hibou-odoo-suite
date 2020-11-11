@@ -1,7 +1,7 @@
 {
     'name': 'Sale Line Change',
     'summary': 'Change Confirmed Sale Lines Routes or Warehouses.',
-    'version': '13.0.1.0.0',
+    'version': '14.0.1.0.0',
     'author': "Hibou Corp.",
     'category': 'Sale',
     'license': 'AGPL-3',
@@ -17,6 +17,7 @@
     ],
     'demo': [],
     'data': [
+        'security/ir.model.access.csv',
         'wizard/sale_line_change_views.xml',
         'views/sale_views.xml',
     ],
