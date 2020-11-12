@@ -11,6 +11,10 @@
                 <field name="partner_id" invisible="1" />
                 <field name="payment_token_id" nocreate="1" />
             </xpath>
+            <xpath expr="//field[@name='payment_date']" position="after">
+                <field name="currency_id" invisible="True"/>
+                <field name="amount"/>
+            </xpath>
         </field>
     </record>
 
