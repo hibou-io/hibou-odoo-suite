@@ -160,7 +160,7 @@ class ProviderGSO(models.Model):
             company = self.get_shipper_company(picking=picking)
             from_ = self.get_shipper_warehouse(picking=picking)
             to = self.get_recipient(picking=picking)
-            address_type = 'B' if bool(to.company or to.parent_id.company) else 'R'
+            address_type = 'B' if "company" in (to.company_type, to.parent_id.company_type) else 'R'
 
             request_body = {
                 'AccountNumber': sudoself.gso_account_number,
@@ -251,7 +251,7 @@ class ProviderGSO(models.Model):
             }
             for tracking in picking.carrier_tracking_ref.split(','):
                 request_body['TrackingNumber'] = tracking
-                _ = service.delete_shipment(request_body)
+                __ = service.delete_shipment(request_body)
         except HTTPError as e:
             raise ValidationError(e)
         picking.message_post(body=_('Shipment N° %s has been cancelled') % (picking.carrier_tracking_ref, ))
@@ -262,7 +262,7 @@ class ProviderGSO(models.Model):
         service = sudoself._get_gso_service()
         from_ = sudoself.get_shipper_warehouse(order=order)
         to = sudoself.get_recipient(order=order)
-        address_type = 'B' if bool(to.company or to.parent_id.company) else 'R'
+        address_type = 'B' if "company" in (to.company_type, to.parent_id.company_type) else 'R'
 
         est_weight_value = self._gso_convert_weight(
             sum([(line.product_id.weight * line.product_uom_qty) for line in order.order_line]) or 0.0)
