@@ -1,6 +1,5 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.addons.payment.controllers.portal import PaymentProcessing
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -14,6 +13,9 @@ class AccountPaymentRegister(models.TransientModel):
                                             "(instead of capturing the amount) are not available.")
     company_id = fields.Many2one('res.company')  # technical requirement for acquirer domain
     partner_id = fields.Many2one('res.partner')  # technical payment mode/token domain
+
+    currency_id = fields.Many2one(related='journal_id.currency_id')
+    amount = fields.Monetary('Amount')
 
     @api.model
     def default_get(self, fields):
@@ -35,6 +37,8 @@ class AccountPaymentRegister(models.TransientModel):
             raise UserError('Your partner must have an Account Receivable setup.')
         if 'sale_order_ids' not in rec:
             rec['sale_order_ids'] = [(6, 0, sale_orders.ids)]
+            if 'amount' not in rec:
+                rec['amount'] = sum(sale_orders.mapped('amount_total'))
         if 'company_id' not in rec:
             rec['company_id'] = sale_orders[0].company_id.id
         if 'partner_id' not in rec:
@@ -81,7 +85,8 @@ class AccountPaymentRegister(models.TransientModel):
             documents.
         :return: The payment values as a dictionary.
         '''
-        amount = sum(sale_orders.mapped('amount_total'))
+        if self.amount <= 0:
+            raise UserError("You must enter a positive amount.")
         values = {
             'journal_id': self.journal_id.id,
             'payment_method_id': self.payment_method_id.id,
@@ -89,8 +94,8 @@ class AccountPaymentRegister(models.TransientModel):
             'communication': self._prepare_communication_sale_orders(sale_orders),
             # TODO sale orders need to get to transactions somehow
             # 'invoice_ids': [(6, 0, invoices.ids)],
-            'payment_type': ('inbound' if amount > 0 else 'outbound'),
-            'amount': abs(amount),
+            'payment_type': 'inbound', #if amount can be negative we need to allow this to be outbound
+            'amount': self.amount,
             'currency_id': sale_orders[0].currency_id.id,
             'partner_id': sale_orders[0].partner_id.id,
             'partner_type': 'customer',
