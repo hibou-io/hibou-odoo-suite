@@ -8,6 +8,7 @@
     'depends': [
         'hr_payroll',
         'hr_contract_reports',
+        'hibou_professional',
     ],
     'description': """
 United States of America - Payroll Rules.
