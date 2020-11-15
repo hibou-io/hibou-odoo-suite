@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets" inherit_id="point_of_sale.assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_pax/static/src/js/jquery_base64.js"></script>
+            <script type="text/javascript" src="/pos_pax/static/src/js/pax_device.js"></script>
+            <script type="text/javascript" src="/pos_pax/static/src/js/pos_pax.js"></script>
+            <link rel="stylesheet" href="/pos_pax/static/src/css/pos_pax.css" />
+        </xpath>
+    </template>
+
+</odoo>
