@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_pos_order" model="ir.ui.view">
+        <field name="name">POS orders</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_ids']//field[@name='amount']" position="before">
+                <field name="pax_card_number"/>
+                <field name="pax_txn_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
