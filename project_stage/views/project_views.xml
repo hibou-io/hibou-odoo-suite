@@ -105,6 +105,7 @@
             <!-- Add `o_kanban_small_column` to prevent strange wrapping -->
             <xpath expr="//kanban" position="attributes">
                 <attribute name="class">o_kanban_small_column oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors</attribute>
+                <attribute name="group_create">true</attribute>
             </xpath>
             <xpath expr="//kanban/field[@name='name']" position="after">
                 <field name="stage_id" options="{'group_by_tooltip': {'description': 'Stage Description'}}"/>
@@ -119,6 +120,10 @@
                 </div>
             </xpath>
         </field>
+    </record>
+
+    <record id="project.open_view_project_all" model="ir.actions.act_window">
+        <field name="context">{"search_default_group_stage":1}</field>
     </record>
 
     <record id="edit_project_inherit" model="ir.ui.view">
