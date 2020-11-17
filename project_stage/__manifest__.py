@@ -1,6 +1,6 @@
 {
     'name': 'Project Stages',
-    'version': '13.0.1.0.1',
+    'version': '14.0.1.0.0',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'website': 'https://hibou.io/',
     'license': 'AGPL-3',
