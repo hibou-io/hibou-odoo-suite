@@ -24,11 +24,11 @@ class TestDeliveryHibou(common.TransactionCase):
 
     def test_delivery_hibou(self):
         # Assign a new shipping account
-        self.partner.shipping_account_id = self.shipping_account
+        self.partner.shipping_account_ids = self.shipping_account
 
         # Assign values to new Carrier
         test_insurance_value = 600
-        test_procurement_priority = '2'
+        test_procurement_priority = '1'
         self.carrier.automatic_insurance_value = test_insurance_value
         self.carrier.procurement_priority = test_procurement_priority
 
@@ -135,9 +135,9 @@ class TestDeliveryHibou(common.TransactionCase):
         picking_in.carrier_id = self.carrier
         # This relies heavily on the 'stock' demo data.
         # Should only have a single move_line_ids and it should not be done at all.
-        self.assertEqual(picking_in.move_line_ids.mapped('qty_done'), [0.0])
-        self.assertEqual(picking_in.move_line_ids.mapped('product_uom_qty'), [35.0])
-        self.assertEqual(picking_in.move_line_ids.mapped('product_id.standard_price'), [55.0])
+        self.assertEqual(picking_in.move_line_ids.mapped('qty_done'), [0.0, 0.0, 0.0])
+        self.assertEqual(picking_in.move_line_ids.mapped('product_uom_qty'), [35.0, 10.0, 12.0])
+        self.assertEqual(picking_in.move_line_ids.mapped('product_id.standard_price'), [55.0, 35.0, 1700.0])
 
         self.assertEqual(picking_in.carrier_id._classify_picking(picking=picking_in), 'in')
         self.assertEqual(picking_in.carrier_id.get_shipper_company(picking=picking_in),
