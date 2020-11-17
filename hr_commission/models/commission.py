@@ -86,7 +86,6 @@ class Commission(models.Model):
             commission.amount = amount
 
 
-    @api.model
     def create(self, values):
         res = super(Commission, self).create(values)
         res._compute_amount()
@@ -102,12 +101,10 @@ class Commission(models.Model):
     def _filter_source_moves_for_creation(self, moves):
         return moves.filtered(lambda i: i.user_id and not i.commission_ids)
 
-    @api.model
     def _commissions_to_confirm(self, moves):
         commissions = moves.mapped('commission_ids')
         return commissions.filtered(lambda c: c.state != 'cancel' and not c.move_id)
 
-    @api.model
     def invoice_validated(self, moves):
         employee_obj = self.env['hr.employee'].sudo()
         commission_obj = self.sudo()
@@ -155,7 +152,6 @@ class Commission(models.Model):
 
         return True
 
-    @api.model
     def invoice_paid(self, moves):
         commissions = self._commissions_to_confirm(moves)
         commissions.sudo().action_confirm()
@@ -172,7 +168,7 @@ class Commission(models.Model):
                 continue
 
             journal = commission.company_id.commission_journal_id
-            if not journal or not journal.default_debit_account_id or not journal.default_credit_account_id:
+            if not journal or not journal.default_account_id:
                 raise UserError('Commission Journal not configured.')
 
             liability_account = commission.company_id.commission_liability_id
@@ -186,7 +182,7 @@ class Commission(models.Model):
             # Already paid.
             payments = commission.source_move_id._get_reconciled_payments()
             if payments:
-                date = max(payments.mapped('payment_date'))
+                date = max(payments.mapped('date'))
             if commission.accounting_date:
                 date = commission.accounting_date
 
@@ -198,7 +194,7 @@ class Commission(models.Model):
                 'date': date,
                 'ref': ref,
                 'journal_id': journal.id,
-                'type': 'entry',
+                'move_type': 'entry',
                 'line_ids': [
                     (0, 0, {
                         'name': ref,
@@ -210,7 +206,7 @@ class Commission(models.Model):
                     (0, 0, {
                         'name': ref,
                         'partner_id': commission.employee_id.address_home_id.id,
-                        'account_id': journal.default_credit_account_id.id if commission.amount > 0.0 else journal.default_debit_account_id.id,
+                        'account_id': journal.default_account_id.id,
                         'credit': 0.0 if commission.amount > 0.0 else -commission.amount,
                         'debit': commission.amount if commission.amount > 0.0 else 0.0,
                     }),

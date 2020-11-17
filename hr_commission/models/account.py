@@ -39,7 +39,7 @@ class AccountMove(models.Model):
     def amount_for_commission(self):
         # TODO Should toggle in Config Params
         if hasattr(self, 'margin') and self.company_id.commission_amount_type == 'on_invoice_margin':
-            sign = -1 if self.type in ['in_refund', 'out_refund'] else 1
+            sign = -1 if self.move_type in ['in_refund', 'out_refund'] else 1
             return self.margin * sign
         return self.amount_total_signed
 

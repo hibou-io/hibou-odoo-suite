@@ -3,12 +3,13 @@
 {
     'name': 'Hibou Commissions',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '13.0.1.0.1',
+    'version': '14.0.1.0.0',
     'category': 'Accounting/Commissions',
     'license': 'OPL-1',
     'website': 'https://hibou.io/',
     'depends': [
         # 'account_invoice_margin',  # optional
+        'account',
         'hr_contract',
     ],
     'data': [
