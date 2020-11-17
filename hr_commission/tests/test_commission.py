@@ -2,10 +2,6 @@
 
 from odoo.tests import common
 
-# TODO Tests won't pass without `sale`
-#   Tests should be refactored to not build sale orders
-#   to invoice, just create invoices directly.
-
 
 class TestCommission(common.TransactionCase):
 
@@ -44,34 +40,32 @@ class TestCommission(common.TransactionCase):
             'admin_commission_rate': admin_commission_rate,
             'state': 'open',  # if not "Running" then no automatic selection when Payslip is created in 11.0
         })
-
-    def _createInvoiceableSaleOrder(self, user):
-        product = self.env.ref('sale.advance_product_0')
-        partner = self.env.ref('base.res_partner_12')
-        sale = self.env['sale.order'].create({
-            'partner_id': partner.id,
-            'user_id': user.id,
-            'order_line': [(0, 0, {
-                'name': 'test deposit',
-                'product_id': product.id,
-                'product_uom_qty': 1.0,
-                'product_uom': product.uom_id.id,
+    
+    def _create_invoice(self, user):
+        # Create invoice
+        invoice = self.env['account.move'].create({
+            'move_type':        'out_invoice',
+            'partner_id':       self.env.ref("base.res_partner_2").id,
+            'currency_id':      self.env.ref('base.USD').id,
+            'invoice_date':     '2020-12-11',
+            'invoice_user_id':  user.id,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.env.ref("product.product_product_4").id,
+                'quantity':   1,
                 'price_unit': 5.0,
-            })]
+            })],
         })
-        self.assertEqual(sale.user_id, user)
-        sale.action_confirm()
-        self.assertTrue(sale.state in ('sale', 'done'))
-        self.assertEqual(sale.invoice_status, 'to invoice')
-        return sale
-
+        
+        self.assertEqual(invoice.invoice_user_id.id, user.id)
+        self.assertEqual(invoice.payment_state, 'not_paid')
+        return invoice
+    
     def test_commission(self):
         # find and configure company commissions journal
         commission_journal = self.env['account.journal'].search([('type', '=', 'general')], limit=1)
         self.assertTrue(commission_journal)
         expense_account = self.env.ref('l10n_generic_coa.1_expense')
-        commission_journal.default_debit_account_id = expense_account
-        commission_journal.default_credit_account_id = expense_account
+        commission_journal.default_account_id = expense_account
         self.env.user.company_id.commission_journal_id = commission_journal
 
         coach = self._createEmployee(self.browse_ref('base.user_root'))
@@ -83,12 +77,12 @@ class TestCommission(common.TransactionCase):
 
         contract = self._createContract(emp, 5.0)
 
-        so = self._createInvoiceableSaleOrder(user)
-        inv = so._create_invoices()
+        inv = self._create_invoice(user)
+
         self.assertFalse(inv.commission_ids, 'Commissions exist when invoice is created.')
         inv.action_post()  # validate
         self.assertEqual(inv.state, 'posted')
-        self.assertEqual(inv.invoice_payment_state, 'not_paid')
+        self.assertEqual(inv.payment_state, 'not_paid')
         self.assertTrue(inv.commission_ids, 'Commissions not created when invoice is validated.')
 
         user_commission = inv.commission_ids.filtered(lambda c: c.employee_id.id == emp.id)
@@ -114,11 +108,12 @@ class TestCommission(common.TransactionCase):
             'currency_id': inv.currency_id.id,
             'journal_id': pay_journal.id,
         })
-        payment.post()
+        payment.action_post()
 
-        receivable_line = payment.move_line_ids.filtered('credit')
+        receivable_line = payment.move_id.line_ids.filtered('credit')
+
         inv.js_assign_outstanding_line(receivable_line.id)
-        self.assertEqual(inv.invoice_payment_state, 'paid', 'Invoice is not paid.')
+        self.assertEqual(inv.payment_state, 'in_payment', 'Invoice is not paid.')
 
         user_commission = inv.commission_ids.filtered(lambda c: c.employee_id.id == emp.id)
         self.assertEqual(user_commission.state, 'done', 'Commission is not done.')
@@ -150,8 +145,7 @@ class TestCommission(common.TransactionCase):
         commission_journal = self.env['account.journal'].search([('type', '=', 'general')], limit=1)
         self.assertTrue(commission_journal)
         expense_account = self.env.ref('l10n_generic_coa.1_expense')
-        commission_journal.default_debit_account_id = expense_account
-        commission_journal.default_credit_account_id = expense_account
+        commission_journal.default_account_id = expense_account
         self.env.user.company_id.commission_journal_id = commission_journal
 
 
@@ -164,8 +158,7 @@ class TestCommission(common.TransactionCase):
 
         contract = self._createContract(emp, 5.0)
 
-        so = self._createInvoiceableSaleOrder(user)
-        inv = so._create_invoices()
+        inv = self._create_invoice(user)
         self.assertFalse(inv.commission_ids, 'Commissions exist when invoice is created.')
         inv.action_post()  # validate
         self.assertEqual(inv.state, 'posted')
@@ -188,8 +181,7 @@ class TestCommission(common.TransactionCase):
         commission_journal = self.env['account.journal'].search([('type', '=', 'general')], limit=1)
         self.assertTrue(commission_journal)
         expense_account = self.env.ref('l10n_generic_coa.1_expense')
-        commission_journal.default_debit_account_id = expense_account
-        commission_journal.default_credit_account_id = expense_account
+        commission_journal.default_account_id = expense_account
         self.env.user.company_id.commission_journal_id = commission_journal
 
 
@@ -202,8 +194,6 @@ class TestCommission(common.TransactionCase):
 
         contract = self._createContract(emp, 5.0)
 
-        so = self._createInvoiceableSaleOrder(user)
-
         # Create and set commission structure
         commission_structure = self.env['hr.commission.structure'].create({
             'name': 'Test Structure',
@@ -212,9 +202,9 @@ class TestCommission(common.TransactionCase):
                 (0, 0, {'employee_id': coach.id, 'rate': 0.0}),  # This means it will use the coach's contract normal rate
             ],
         })
-        so.partner_id.commission_structure_id = commission_structure
 
-        inv = so._create_invoices()
+        inv = self._create_invoice(user)
+        inv.partner_id.commission_structure_id = commission_structure
         self.assertFalse(inv.commission_ids, 'Commissions exist when invoice is created.')
         inv.action_post()  # validate
         self.assertEqual(inv.state, 'posted')
