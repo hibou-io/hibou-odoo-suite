@@ -34,7 +34,7 @@ class ProjectTaskLine(models.Model):
         help="A task's kanban state indicates special situations affecting it:\n"
              " * Blank is the default situation\n"
              " * Blocked indicates something is preventing the progress of this task\n"
-             " * Doen indicates the task is complete")
+             " * Done indicates the task is complete")
 
     @api.onchange('kanban_state')
     def _onchange_kanban_state(self):
