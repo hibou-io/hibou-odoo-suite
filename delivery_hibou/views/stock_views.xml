@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_picking_withcarrier_out_form" model="ir.ui.view">
+        <field name="name">hibou.delivery.stock.picking_withcarrier.form.view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="delivery.view_picking_withcarrier_out_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='carrier_id']" position="before">
+                <field name="require_insurance" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                <field name="shipping_account_id" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
