@@ -27,14 +27,14 @@ class ProjectTaskLine(models.Model):
     user_id = fields.Many2one('res.users', string='User')
     sequence = fields.Integer(string='Sequence')
     kanban_state = fields.Selection([
-        ('normal', 'Grey'),
-        ('done', 'Green'),
-        ('blocked', 'Red')], string='Kanban State',
+        ('normal', ''),
+        ('done', 'Done'),
+        ('blocked', 'Blocked')], string='State',
         copy=False, default='normal', required=True,
         help="A task's kanban state indicates special situations affecting it:\n"
-             " * Grey is the default situation\n"
-             " * Red indicates something is preventing the progress of this task\n"
-             " * Green indicates the task is complete")
+             " * Blank is the default situation\n"
+             " * Blocked indicates something is preventing the progress of this task\n"
+             " * Doen indicates the task is complete")
 
     @api.onchange('kanban_state')
     def _onchange_kanban_state(self):
