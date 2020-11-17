@@ -12,12 +12,11 @@ class StockPicking(models.Model):
         ], string='Require Insurance', default='auto',
         help='If your carrier supports it, auto should be calculated off of the "Automatic Insurance Value" field.')
 
-    @api.depends('move_lines.priority', 'carrier_id')
-    def _compute_priority(self):
-        with_carrier_priority = self.filtered(lambda p: p.carrier_id.procurement_priority)
-        for picking in with_carrier_priority:
-            picking.priority = picking.carrier_id.procurement_priority
-        super(StockPicking, (self-with_carrier_priority))._compute_priority()
+    @api.onchange('carrier_id')
+    def _onchange_carrier_id_for_priority(self):
+        for picking in self:
+            if picking.carrier_id and picking.carrier_id.procurement_priority:
+                picking.priority = picking.carrier_id.procurement_priority
 
     @api.model
     def create(self, values):
@@ -26,6 +25,11 @@ class StockPicking(models.Model):
             so = self.env['sale.order'].search([('name', '=', str(origin))], limit=1)
             if so and so.shipping_account_id:
                 values['shipping_account_id'] = so.shipping_account_id.id
+        carrier_id = values.get('carrier_id')
+        if carrier_id:
+            carrier = self.env['delivery.carrier'].browse(carrier_id)
+            if carrier.procurement_priority:
+                values['priority'] = carrier.procurement_priority
 
         res = super(StockPicking, self).create(values)
         return res
@@ -37,12 +41,3 @@ class StockPicking(models.Model):
             # Assume Full Value
             cost = sum([(l.product_id.standard_price * l.product_uom_qty) for l in self.move_lines] or [0.0])
         return cost
-
-
-class StockMove(models.Model):
-    _inherit = 'stock.move'
-
-    def _prepare_procurement_values(self):
-        res = super(StockMove, self)._prepare_procurement_values()
-        res['priority'] = self.picking_id.priority or self.priority
-        return res
