@@ -20,7 +20,7 @@ class ProductPackaging(models.Model):
 class ProviderGSO(models.Model):
     _inherit = 'delivery.carrier'
 
-    delivery_type = fields.Selection(selection_add=[('gso', 'gso.com')])
+    delivery_type = fields.Selection(selection_add=[('gso', 'gso.com')], ondelete={'gso': 'cascade'})
     gso_username = fields.Char(string='gso.com Username', groups='base.group_system')
     gso_password = fields.Char(string='gso.com Password', groups='base.group_system')
     gso_account_number = fields.Char(string='gso.com Account Number', groups='base.group_system')
@@ -139,7 +139,7 @@ class ProviderGSO(models.Model):
             package_type = self.gso_default_packaging_id
         else:
             package_type = package.packaging_id
-        return {'Length': package_type.length, 'Width': package_type.width, 'Height': package_type.height}
+        return {'Length': package_type.packaging_length, 'Width': package_type.width, 'Height': package_type.height}
 
     def _gso_convert_weight(self, weight_in_kg):
         # m(lb) = m(kg) / 0.45359237
