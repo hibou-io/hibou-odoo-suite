@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="purchase_sale_history_make_form" model="ir.ui.view">
+        <field name="name">purchase.sale.history.make.form</field>
+        <field name="model">purchase.sale.history.make</field>
+        <field name="arch" type="xml">
+            <form string="Fill PO From Sales History">
+                <sheet>
+                    <field name="id" invisible="1"/>
+                    <field name="purchase_id" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="history_start"/>
+                            <field name="history_end"/>
+                            <field name="history_days"/>
+                            <field name="history_warehouse_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="procure_days"/>
+                            <field name="product_count"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string='Run' name="action_confirm" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="purchase_sale_history_make_action" model="ir.actions.act_window">
+        <field name="name">Fill PO From Sales History</field>
+        <field name="res_model">purchase.sale.history.make</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="purchase_sale_history_make_form"/>
+        <field name="target">new</field>
+        <field name="context">{'default_purchase_id': active_id}</field>
+    </record>
+
+    <!-- Button on Purchase Order to launch wizard -->
+    <record id="purchase_order_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_confirm']" position="after">
+                <button name="%(purchase_by_sale_history.purchase_sale_history_make_action)d" type="action" string="Fill by Sales" attrs="{'invisible': ['|', ('state', 'in', ('purchase', 'done', 'cancel')), ('partner_id', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
