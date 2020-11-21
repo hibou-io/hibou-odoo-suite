@@ -7,7 +7,7 @@
         'hr_payroll_rate',
         'hibou_professional',
     ],
-    'version': '12.0.2020.1.0',
+    'version': '12.0.2020.2.1',
     'description': """
 USA Payroll Rules.
 ==================
