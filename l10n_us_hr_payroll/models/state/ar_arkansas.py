@@ -18,7 +18,7 @@ def ar_arkansas_state_income_withholding(payslip, categories, worked_days, input
 
     # Determine Wage
     wage = sit_wage(payslip, categories)
-    if wage == 0.0:
+    if not wage:
         return 0.0, 0.0
 
     pay_periods = payslip.dict.get_pay_periods_in_year()

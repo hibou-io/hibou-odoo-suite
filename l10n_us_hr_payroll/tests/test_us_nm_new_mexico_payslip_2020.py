@@ -33,3 +33,4 @@ class TestUsNMPayslip(TestUsPayslip):
         self._test_sit(1000.0, 'married', 10.0, 'weekly', date(2020, 1, 1), 39.47)
         self._test_sit(25000.0, 'single', 0.0, 'bi-weekly', date(2020, 1, 1), 1202.60)
         self._test_sit(25000.0, 'married_as_single', 0.0, 'monthly', date(2020, 1, 1), 1152.95)
+        self._test_sit(4400.0, '', 0.0, 'monthly', date(2020, 1, 1), 0.00)
