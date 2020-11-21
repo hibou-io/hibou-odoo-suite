@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" inherit_id="point_of_sale.template">
+
+  <t t-name="PAXPaymentTransactionPopupWidget">
+    <div class="modal-dialog">
+      <div class="popup">
+        <p class="title">PAX Electronic Payment</p>
+        <p class="body"></p>
+      </div>
+    </div>
+  </t>
+
+  <t t-extend="PaymentScreen-Paymentlines">
+    <t t-jquery=".col-name" t-operation="inner">
+      <t t-if="line.cashregister.journal.type === 'bank'">
+        <t t-if="line.pax_txn_pending">
+          <div>WAITING FOR TXN</div>
+        </t>
+        <t t-if="! line.pax_txn_pending">
+          <t t-esc='line.name' />
+        </t>
+        <t t-else="">
+          <span class="btn btn-small pax_send_transaction">Send</span>
+        </t>
+      </t>
+      <t t-if="line.cashregister.journal.type !== 'bank'">
+        <t t-esc='line.name' />
+      </t>
+    </t>
+    <t t-jquery="tbody tr.paymentline.selected">
+      this.removeAttr('class');
+      this.attr('t-attf-class', 'paymentline selected #{line.pax_txn_pending ? \'o_pos_pax_txn_pending\' : \'\'}');
+    </t>
+    <t t-jquery="tbody tr.paymentline[t-att-data-cid*='line.cid']">
+      this.removeAttr('class');
+      this.attr('t-attf-class', 'paymentline #{line.pax_txn_pending ? \'o_pos_pax_txn_pending\' : \'\'}');
+    </t>
+    <t t-jquery="tbody tr td.col-tendered.edit">
+      this.removeAttr('class');
+      this.attr('t-attf-class', 'col-tendered edit #{line.pax_txn_pending ? \'o_pos_pax_txn_pending\' : \'\'}');
+    </t>
+  </t>
+
+  <t t-name="PosPAXSignature">
+    <t t-foreach="paymentlines" t-as="paymentline">
+      <t t-if="!gift &amp;&amp; paymentline.pax_txn_id &amp;&amp; ! printed_signature">
+        <br />
+        <div>CARDHOLDER WILL PAY CARD ISSUER</div>
+        <div>ABOVE AMOUNT PURSUANT</div>
+        <div>TO CARDHOLDER AGREEMENT</div>
+        <br />
+        <br />
+        <div>X______________________________</div>
+        <t t-set="printed_signature" t-value="true"/>
+      </t>
+    </t>
+  </t>
+
+  <t t-extend="XmlReceipt">
+    <t t-jquery="t[t-foreach*='paymentlines'][t-as*='line']" t-operation="append">
+      <t t-if="!gift &amp;&amp; line.pax_auth_code">
+        <line line-ratio="1">
+          <left><pre>  APPROVAL CODE:</pre><t t-esc="line.pax_approval"/></left>
+        </line>
+      </t>
+    </t>
+    <t t-jquery="receipt" t-operation="append">
+      <div>
+        <t t-call="PosPAXSignature"/>
+      </div>
+    </t>
+  </t>
+
+  <t t-extend="PosTicket">
+    <t t-jquery="t[t-foreach*='paymentlines'][t-as*='line']" t-operation="append">
+      <tr>
+        <td colspan="2">
+          <t t-if="!gift &amp;&amp; line.pax_auth_code">
+            &amp;nbsp;&amp;nbsp;APPROVAL CODE: <t t-esc="line.pax_approval"/>
+          </t>
+        </td>
+      </tr>
+    </t>
+    <t t-jquery="t[t-if*='receipt.footer']" t-operation="after">
+      <div class="pos-center-align">
+        <t t-call="PosPAXSignature"/>
+      </div>
+    </t>
+  </t>
+</templates>
