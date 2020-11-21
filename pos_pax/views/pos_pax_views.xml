@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_account_journal_pos_user_form" model="ir.ui.view">
+        <field name="name">POS Journal</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="point_of_sale.view_account_journal_pos_user_form"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='amount_authorized']" position="after">
+                <group attrs="{'invisible': [('type', '!=', 'bank')]}">
+                    <field name="pos_use_pax"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_bank_journal_form_inherited_pos_pax" model="ir.ui.view">
+        <field name="name">account.bank.journal.form.inherited.pos.pax</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="point_of_sale.view_account_bank_journal_form_inherited_pos"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='journal_user']" position="after">
+                <field name="pos_use_pax" attrs="{'invisible': [('journal_user', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_order" model="ir.ui.view">
+      <field name="name">POS orders</field>
+      <field name="model">pos.order</field>
+      <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='amount']" position="before">
+          <field name="pax_card_number"/>
+          <field name="pax_txn_id"/>
+        </xpath>
+      </field>
+    </record>
+
+</odoo>
