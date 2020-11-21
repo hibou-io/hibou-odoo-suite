@@ -1,0 +1,21 @@
+.hibou_professional_systray .o_mail_systray_dropdown {
+    max-height: 580px !important;
+}
+.hibou_professional_systray .o_mail_systray_dropdown_items {
+    max-height: 578px !important;
+}
+.hibou_professional_systray .subscription_form button {
+    margin-top: 6px;
+}
+
+.hibou_professional_systray .hibou-icon-small {
+    margin-top: -2px;
+}
+
+.hibou_professional_systray .hibou_professional_help {
+    color: #0a6fa2;
+}
+
+.hibou_professional_systray .o_preview_title span {
+    font-weight: bold;
+}
