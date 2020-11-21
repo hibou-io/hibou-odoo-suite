@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from odoo import api, fields, models, _
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
