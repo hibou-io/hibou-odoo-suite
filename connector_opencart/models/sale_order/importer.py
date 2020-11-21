@@ -2,11 +2,13 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from copy import deepcopy, copy
+from html import unescape
 
 from odoo import fields, _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 from odoo.exceptions import ValidationError
+from odoo.addons.queue_job.exception import RetryableJobError
 
 
 class SaleOrderBatchImporter(Component):
@@ -52,31 +54,55 @@ class SaleOrderImportMapper(Component):
 
     direct = [('order_id', 'external_id'),
               ('store_id', 'store_id'),
-              # ('customerOrderId', 'customer_order_id'),
               ]
 
     children = [('products', 'opencart_order_line_ids', 'opencart.sale.order.line'),
                 ]
 
-    # def _map_child(self, map_record, from_attr, to_attr, model_name):
-    #     return super(SaleOrderImportMapper, self)._map_child(map_record, from_attr, to_attr, model_name)
+    def _add_coupon_lines(self, map_record, values):
+        # Data from API
+        # 'coupons': [{'amount': '7.68', 'code': '1111'}],
+        record = map_record.source
+
+        coupons = record.get('coupons')
+        if not coupons:
+            return values
+
+        coupon_product = self.options.store.coupon_product_id or self.backend_record.coupon_product_id
+        if not coupon_product:
+            coupon_product = self.env.ref('connector_ecommerce.product_product_discount', raise_if_not_found=False)
+
+        if not coupon_product:
+            raise ValueError('Coupon %s on order requires coupon product in configuration.' % (coupons, ))
+        for coupon in coupons:
+            line_builder = self.component(usage='order.line.builder')
+            line_builder.price_unit = -float(coupon.get('amount', 0.0))
+            line_builder.product = coupon_product
+            # `order.line.builder` does not allow naming.
+            line_values = line_builder.get_line()
+            code = coupon.get('code')
+            if code:
+                line_values['name'] = '%s Code: %s' % (coupon_product.name, code)
+            values['order_line'].append((0, 0, line_values))
+        return values
 
     def _add_shipping_line(self, map_record, values):
         record = map_record.source
 
         line_builder = self.component(usage='order.line.builder.shipping')
-        line_builder.price_unit = 0.0
+        line_builder.price_unit = record.get('shipping_exclude_tax', 0.0)
 
         if values.get('carrier_id'):
             carrier = self.env['delivery.carrier'].browse(values['carrier_id'])
             line_builder.product = carrier.product_id
+            line = (0, 0, line_builder.get_line())
+            values['order_line'].append(line)
 
-        line = (0, 0, line_builder.get_line())
-        values['order_line'].append(line)
         return values
 
     def finalize(self, map_record, values):
         values.setdefault('order_line', [])
+        self._add_coupon_lines(map_record, values)
         self._add_shipping_line(map_record, values)
         values.update({
             'partner_id': self.options.partner_id,
@@ -120,9 +146,8 @@ class SaleOrderImportMapper(Component):
             [('name', '=', record_method)],
             limit=1,
         )
-        assert method, ("method %s should exist because the import fails "
-                        "in SaleOrderImporter._before_import when it is "
-                        " missing" % record_method)
+        if not method:
+            raise ValueError('Payment Mode named "%s", cannot be found.' % (record_method, ))
         return {'payment_mode_id': method.id}
 
     @mapping
@@ -138,8 +163,11 @@ class SaleOrderImportMapper(Component):
             return {'warehouse_id': warehouse.id}
 
     @mapping
-    def shipping_method(self, record):
-        method = record['shipping_method'] or ''
+    def shipping_code(self, record):
+        method = record.get('shipping_code') or record.get('shipping_method')
+        if not method:
+            return {'carrier_id': False}
+
         carrier_domain = [('opencart_code', '=', method.strip())]
         company = self.options.store.company_id or self.backend_record.company_id
         if company:
@@ -148,8 +176,8 @@ class SaleOrderImportMapper(Component):
             ]
         carrier = self.env['delivery.carrier'].search(carrier_domain, limit=1)
         if not carrier:
-            raise ValueError('Delivery Carrier for methodCode "%s", cannot be found.' % (method, ))
-        return {'carrier_id': carrier.id, 'shipping_method_code': method}
+            raise ValueError('Delivery Carrier for method Code "%s", cannot be found.' % (method, ))
+        return {'carrier_id': carrier.id}
 
     @mapping
     def company_id(self, record):
@@ -186,6 +214,9 @@ class SaleOrderImporter(Component):
 
     def _partner_matches(self, partner, values):
         for key, value in values.items():
+            if key in ('active', 'parent_id', 'type'):
+                continue
+
             if key == 'state_id':
                 if value != partner.state_id.id:
                     return False
@@ -197,7 +228,7 @@ class SaleOrderImporter(Component):
         return True
 
     def _make_partner_name(self, firstname, lastname):
-        name = (str(firstname) + ' ' + str(lastname)).strip()
+        name = (str(firstname or '').strip() + ' ' + str(lastname or '').strip()).strip()
         if not name:
             return 'Undefined'
         return name
@@ -233,24 +264,31 @@ class SaleOrderImporter(Component):
         ], limit=1)
 
         return {
-            'email': email,
-            'name': name,
-            'phone': phone,
-            'street': street,
-            'street2': street2,
-            'zip': zip_,
-            'city': city,
+            'email': email.strip(),
+            'name': name.strip(),
+            'phone': phone.strip(),
+            'street': street.strip(),
+            'street2': street2.strip(),
+            'zip': zip_.strip(),
+            'city': city.strip(),
             'state_id': state.id,
             'country_id': country.id,
         }
 
     def _import_addresses(self):
-        record = self.opencart_record
-
         partner_values = self._get_partner_values()
-        partner = self.env['res.partner'].search([
+        partners = self.env['res.partner'].search([
             ('email', '=', partner_values['email']),
-        ], limit=1)
+            '|', ('active', '=', False), ('active', '=', True),
+        ], order='active DESC, id ASC')
+
+        partner = None
+        for possible in partners:
+            if self._partner_matches(possible, partner_values):
+                partner = possible
+                break
+        if not partner and partners:
+            partner = partners[0]
 
         if not partner:
             # create partner.
@@ -258,18 +296,25 @@ class SaleOrderImporter(Component):
 
         if not self._partner_matches(partner, partner_values):
             partner_values['parent_id'] = partner.id
-            partner_values['active'] = False
-            shipping_partner = self._create_partner(copy(partner_values))
+            shipping_values = copy(partner_values)
+            shipping_values['type'] = 'delivery'
+            shipping_partner = self._create_partner(shipping_values)
         else:
             shipping_partner = partner
 
         invoice_values = self._get_partner_values(info_string='payment_')
+        invoice_values['type'] = 'invoice'
 
         if (not self._partner_matches(partner, invoice_values)
                 and not self._partner_matches(shipping_partner, invoice_values)):
-            partner_values['parent_id'] = partner.id
-            partner_values['active'] = False
-            invoice_partner = self._create_partner(copy(invoice_values))
+            # Try to find existing invoice address....
+            for possible in partners:
+                if self._partner_matches(possible, invoice_values):
+                    invoice_partner = possible
+                    break
+            else:
+                invoice_values['parent_id'] = partner.id
+                invoice_partner = self._create_partner(copy(invoice_values))
         elif self._partner_matches(partner, invoice_values):
             invoice_partner = partner
         elif self._partner_matches(shipping_partner, invoice_values):
@@ -317,7 +362,18 @@ class SaleOrderImporter(Component):
         return binding
 
     def _import_dependencies(self):
+        record = self.opencart_record
         self._import_addresses()
+        products_need_setup = []
+        for product in record.get('products', []):
+            if 'product_id' in product and product['product_id']:
+                needs_product_setup = self._import_dependency(product['product_id'], 'opencart.product.template')
+                if needs_product_setup:
+                    products_need_setup.append(product['product_id'])
+
+        if products_need_setup and self.backend_record.so_require_product_setup:
+            # There are products that were either just imported, or
+            raise RetryableJobError('Products need setup. OpenCart Product IDs:' + str(products_need_setup), seconds=3600)
 
 
 class SaleOrderLineImportMapper(Component):
@@ -328,33 +384,21 @@ class SaleOrderLineImportMapper(Component):
 
     direct = [('quantity', 'product_uom_qty'),
               ('price', 'price_unit'),
-              ('name', 'name'),
               ('order_product_id', 'external_id'),
               ]
 
-    def _finalize_product_values(self, record, values):
-        # This would be a good place to create a vendor or add a route...
-        return values
-
-    def _product_values(self, record):
-        reference = record['model']
-        values = {
-            'default_code': reference,
-            'name': record.get('name', reference),
-            'type': 'product',
-            'list_price': record.get('price', 0.0),
-            'categ_id': self.backend_record.product_categ_id.id,
-        }
-        return self._finalize_product_values(record, values)
+    @mapping
+    def name(self, record):
+        return {'name': unescape(record['name'])}
 
     @mapping
     def product_id(self, record):
-        reference = record['model']
-        product = self.env['product.product'].search([
-            ('default_code', '=', reference)
-        ], limit=1)
-
-        if not product:
-            # we could use a record like (0, 0, values)
-            product = self.env['product.product'].create(self._product_values(record))
+        product_id = record['product_id']
+        binder = self.binder_for('opencart.product.template')
+        # do not unwrap, because it would be a product.template, but I need a specific variant
+        opencart_product_template = binder.to_internal(product_id, unwrap=False)
+        if record.get('option'):
+            product = opencart_product_template.opencart_sale_get_combination(record.get('option'))
+        else:
+            product = opencart_product_template.odoo_id.product_variant_id
         return {'product_id': product.id, 'product_uom': product.uom_id.id}

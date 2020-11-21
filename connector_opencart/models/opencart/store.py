@@ -50,6 +50,8 @@ class OpencartStore(models.Model):
              "order 36071 in Opencart, will be named 'OC-36071' "
              "in Odoo. (overridden from backend)",
     )
+    coupon_product_id = fields.Many2one(comodel_name='product.product', string='Coupon Product',
+                                        help='Product to represent coupon discounts.')
 
 
 class OpencartStoreAdapter(Component):

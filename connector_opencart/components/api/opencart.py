@@ -5,6 +5,9 @@ import requests
 from urllib.parse import urlencode
 from json import loads, dumps
 
+import logging
+_logger = logging.getLogger(__name__)
+
 
 class Opencart:
 
@@ -22,6 +25,10 @@ class Opencart:
     def stores(self):
         return Stores(connection=self)
 
+    @property
+    def products(self):
+        return Products(connection=self)
+
     def get_headers(self, url, method):
         headers = {}
         if method in ('POST', 'PUT', ):
@@ -33,11 +40,19 @@ class Opencart:
         if params:
             encoded_url += '?%s' % urlencode(params)
         headers = self.get_headers(encoded_url, method)
-
+        _logger.debug('send_request method: %s url: %s headers: %s params: %s body: %s' % (
+            method,
+            url,
+            headers,
+            params,
+            body
+        ))
         if method == 'GET':
-            return loads(self.session.get(url, params=params, headers=headers).text)
+            result_text = self.session.get(url, params=params, headers=headers).text
         elif method == 'PUT' or method == 'POST':
-            return loads(self.session.put(url, data=body, headers=headers).text)
+            result_text = self.session.put(url, data=body, headers=headers).text
+        _logger.debug('raw_text: ' + str(result_text))
+        return loads(result_text)
 
 
 class Resource:
@@ -134,6 +149,17 @@ class Stores(Resource):
 
     def all(self):
         return self.connection.send_request(method='GET', url=self.url)
+
+    def get(self, id):
+        url = self.url + ('/%s' % id)
+        return self.connection.send_request(method='GET', url=url)
+
+
+class Products(Resource):
+    """
+    Retrieves Product details
+    """
+    path = 'products'
 
     def get(self, id):
         url = self.url + ('/%s' % id)

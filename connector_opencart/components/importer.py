@@ -88,7 +88,8 @@ class OpencartImporter(AbstractComponent):
         if not external_id:
             return
         binder = self.binder_for(binding_model)
-        if always or not binder.to_internal(external_id):
+        record = binder.to_internal(external_id)
+        if always or not record:
             if importer is None:
                 importer = self.component(usage='record.importer',
                                           model_name=binding_model)
@@ -99,6 +100,13 @@ class OpencartImporter(AbstractComponent):
                     'Dependency import of %s(%s) has been ignored.',
                     binding_model._name, external_id
                 )
+            return True
+        if binding_model == 'opencart.product.template' and record.backend_id.so_require_product_setup:
+            # Though this is not the "right" place to do this,
+            # we need to return True if there is a checkpoint for a product.
+            if record.backend_id.find_checkpoint(record):
+                return True
+        return False
 
     def _import_dependencies(self):
         """ Import the dependencies for the record

@@ -3,7 +3,7 @@
 
 {
     'name': 'Opencart Connector',
-    'version': '12.0.1.0.0',
+    'version': '12.0.1.1.0',
     'category': 'Connector',
     'depends': [
         'account',
@@ -17,9 +17,12 @@
     'license': 'AGPL-3',
     'website': 'https://hibou.io',
     'data': [
+        'data/connector_opencart_data.xml',
         'security/ir.model.access.csv',
         'views/delivery_views.xml',
         'views/opencart_backend_views.xml',
+        'views/opencart_product_views.xml',
+        'views/product_views.xml',
     ],
     'installable': True,
     'application': False,
