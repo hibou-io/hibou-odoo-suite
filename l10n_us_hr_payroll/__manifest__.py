@@ -3,12 +3,10 @@
 {
     'name': 'United States of America - Payroll',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '13.0.2020.0.0',
+    'version': '14.0.2020.0.0',
     'category': 'Payroll Localization',
     'depends': [
-        'hr_payroll',
-        'hr_contract_reports',
-        'hibou_professional',
+        'hr_payroll_hibou',
     ],
     'description': """
 United States of America - Payroll Rules.
@@ -74,7 +72,6 @@ United States of America - Payroll Rules.
         'data/state/wv_west_virginia.xml',
         'data/state/wy_wyoming.xml',
         'views/hr_contract_views.xml',
-        'views/res_config_settings_views.xml',
         'views/us_payroll_config_views.xml',
     ],
     'demo': [
