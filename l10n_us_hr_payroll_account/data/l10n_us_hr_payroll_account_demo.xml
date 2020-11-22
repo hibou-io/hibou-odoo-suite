@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Employee Contract -->
+    <record id="hr_contract.hr_contract_admin" model="hr.contract">
+        <field name="structure_type_id" ref="l10n_us_hr_payroll.structure_type_employee"/>
+    </record>
+
+    <record id="hr_contract.hr_contract_qdp" model="hr.contract">
+        <field name="structure_type_id" ref="l10n_us_hr_payroll.structure_type_employee"/>
+    </record>
+
+</odoo>
+
