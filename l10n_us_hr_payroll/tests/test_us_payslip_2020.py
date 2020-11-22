@@ -30,7 +30,6 @@ class TestUsPayslip2020(TestUsPayslip):
     ###
 
     def test_2020_taxes(self):
-        self.debug = False
         # salary is high so that second payslip runs over max
         # social security salary
         salary = 80000.0
@@ -42,17 +41,16 @@ class TestUsPayslip2020(TestUsPayslip):
 
         self._log('2019 tax last slip')
         payslip = self._createPayslip(employee, '2019-12-01', '2019-12-31')
-        payslip.compute_sheet()
+        self.assertEqual(payslip.contract_id, contract)
         self._log(payslip.read())
         process_payslip(payslip)
 
         # Ensure amounts are there, they shouldn't be added in the next year...
         cats = self._getCategories(payslip)
-        self.assertTrue(cats['ER_US_940_FUTA'], self.FUTA_MAX_WAGE * self.FUTA)
+        self.assertTrue(cats['ER_US_940_FUTA'], ' Value should be well above whatever was available that year!')
 
         self._log('2020 tax first payslip:')
         payslip = self._createPayslip(employee, '2020-01-01', '2020-01-31')
-        payslip.compute_sheet()
 
         cats = self._getCategories(payslip)
         rules = self._getRules(payslip)
@@ -74,8 +72,6 @@ class TestUsPayslip2020(TestUsPayslip):
         self._log('2020 tax second payslip:')
         payslip = self._createPayslip(employee, '2020-02-01', '2020-02-28')
 
-        payslip.compute_sheet()
-
         cats = self._getCategories(payslip)
         rules = self._getRules(payslip)
 
@@ -90,8 +86,6 @@ class TestUsPayslip2020(TestUsPayslip):
         self._log('2020 tax third payslip:')
         payslip = self._createPayslip(employee, '2020-03-01', '2020-03-31')
 
-        payslip.compute_sheet()
-
         cats = self._getCategories(payslip)
         rules = self._getRules(payslip)
 
@@ -103,8 +97,6 @@ class TestUsPayslip2020(TestUsPayslip):
 
         self._log('2020 tax fourth payslip:')
         payslip = self._createPayslip(employee, '2020-04-01', '2020-04-30')
-
-        payslip.compute_sheet()
 
         cats = self._getCategories(payslip)
         rules = self._getRules(payslip)

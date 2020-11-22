@@ -124,9 +124,5 @@ class HRPayslip(models.Model):
         })
         return res
 
-    def get_year(self):
-        # Helper method to get the year (normalized between Odoo Versions)
-        return self.date_to.year
-
     def get_pay_periods_in_year(self):
         return self.PAY_PERIODS_IN_YEAR.get(self.contract_id.schedule_pay, 0)
