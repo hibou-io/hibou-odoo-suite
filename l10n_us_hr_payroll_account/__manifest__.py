@@ -3,7 +3,7 @@
 {
     'name': 'United States of America - Payroll with Accounting',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '13.0.2019.0.0',
+    'version': '14.0.2020.0.0',
     'category': 'Human Resources',
     'depends': [
         'l10n_us_hr_payroll',

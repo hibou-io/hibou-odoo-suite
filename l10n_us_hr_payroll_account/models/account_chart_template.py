@@ -69,10 +69,8 @@ class AccountChartTemplate(models.Model):
                 ('company_id', '=', company.id),
             ])
             if journal:
-                if not journal.default_credit_account_id:
-                    journal.default_credit_account_id = accounts[SALARY_EXPENSES].id
-                if not journal.default_debit_account_id:
-                    journal.default_debit_account_id = accounts[SALARY_EXPENSES].id
+                if not journal.default_account_id:
+                    journal.default_account_id = accounts[SALARY_EXPENSES].id
                 if hasattr(journal, 'payroll_entry_type'):
                     journal.payroll_entry_type = 'grouped'
             else:
@@ -81,19 +79,16 @@ class AccountChartTemplate(models.Model):
                     'code': 'PAYR',
                     'type': 'general',
                     'company_id': company.id,
-                    'default_credit_account_id': accounts[SALARY_EXPENSES].id,
-                    'default_debit_account_id': accounts[SALARY_EXPENSES].id,
+                    'default_account_id': accounts[SALARY_EXPENSES].id,
                 })
                 if hasattr(journal, 'payroll_entry_type'):
                     journal.payroll_entry_type = 'grouped'
 
-                self.env['ir.property'].create([{
-                    'name': 'structure_journal_id',
-                    'company_id': company.id,
-                    'fields_id': journal_field_id.id,
-                    'value_reference': 'account.journal,%s' % journal.id,
-                    'res_id': 'hr.payroll.structure,%s' % structure.id,
-                } for structure in us_structures])
+                self.env['ir.property']._set_multi(
+                    "journal_id",
+                    "hr.payroll.structure",
+                    {structure.id: journal for structure in us_structures},
+                )
 
             # Find rules and set accounts on them.
             # Find all rules that are ...
