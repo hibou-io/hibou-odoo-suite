@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_ny_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US NY New York SUTA Wage Base</field>
+        <field name="code">us_ny_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ny_suta_wage_base_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">11400.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ny_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_ny_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">11600.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ny_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_ny_suta_rate" model="hr.rule.parameter">
+        <field name="name">US NY New York SUTA Rate</field>
+        <field name="code">us_ny_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ny_suta_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.5</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ny_suta_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_ny_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.5</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ny_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_ny_suta_rsf_rate" model="hr.rule.parameter">
+        <field name="name">US NY New York SUTA RSF Rate</field>
+        <field name="code">us_ny_suta_rsf_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ny_suta_rsf_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.075</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ny_suta_rsf_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_ny_suta_rsf_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.075</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ny_suta_rsf_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_ny_suta_mctmt_rate" model="hr.rule.parameter">
+        <field name="name">US NY New York SUTA MCTMT Rate</field>
+        <field name="code">us_ny_suta_mctmt_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ny_suta_mctmt_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ny_suta_mctmt_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_ny_suta_mctmt_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ny_suta_mctmt_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_ny_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US NY New York SIT Tax Rate</field>
+        <field name="code">us_ny_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ny_sit_tax_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': {
+                    'weekly': ((163, 0.0400, 0.0), (225, 0.0450, 6.54), (267, 0.0525, 9.31), (412, 0.0590, 11.54), (1551, 0.0633, 20.04), (1862, 0.0657, 92.17), (2070, 0.0758, 112.58), (3032, 0.0808, 128.38), (4142, 0.0707, 206.08), (5104, 0.0856, 284.60), (20722, 0.0735, 366.90), (21684, 0.5208, 1514.85), ('inf', 0.0962, 2015.62)),
+                    'bi-weekly': ((327, 0.0400, 0.0), (450, 0.0450, 13.08), (535, 0.0525, 18.62), (823, 0.0590, 23.08), (3102, 0.0633, 40.08), (3723, 0.0657, 184.35), (4140, 0.0758, 225.15), (6063, 0.0808, 256.77), (8285, 0.0707, 412.15), (10208, 0.0856, 569.19), (41444, 0.0735, 733.81), (43367, 0.5208, 3029.69), ('inf', 0.0962, 4021.23)),
+                    'semi-monthly': ((354, 0.0400, 0.0), (488, 0.0450, 14.17), (579, 0.0525, 20.17), (892, 0.0590, 25.00), (3360, 0.0633, 43.42), (4033, 0.0657, 199.71), (4485, 0.0758, 243.92), (6569, 0.0808, 278.17), (8975, 0.0707, 446.50), (11058, 0.0856, 616.63), (44898, 0.0735, 794.96), (46981, 0.5208, 3282.17), ('inf', 0.0962, 4367.17)),
+                    'monthly': ((708, 0.0400, 0.0), (975, 0.0450, 28.33), (1158, 0.0525, 40.33), (1783, 0.0590, 50.00), (6721, 0.0633, 86.83), (8067, 0.0657, 399.42), (8971, 0.0758, 487.83), (13138, 0.0808, 556.33), (17950, 0.0707, 893.00), (22117, 0.0856, 1233.25), (89796, 0.0735, 1589.92), (93963, 0.5208, 6564.33), ('inf', 0.0962, 8734.33)),
+                    'annually': ((8500, 0.0400, 0.0), (11700, 0.0450, 340.00), (13900, 0.0525, 484.00), (21400, 0.0590, 600.00), (80650, 0.0633, 1042.00), (96800, 0.0657, 4793.00), (107650, 0.0758, 5854.00), (157650, 0.0808, 6676.00), (215400, 0.0707, 10716.00), (265400, 0.0856, 14799.00), (1077550, 0.0735, 19079.00), (1127550, 0.5208, 78772.00), ('inf', 0.0962, 104812.00)),
+                },
+                'married': {
+                    'weekly': ((163, 0.0400, 0.0), (225, 0.0450, 6.54), (267, 0.0525, 9.31), (412, 0.0590, 11.54), (1551, 0.0633, 20.04), (1862, 0.0657, 92.17), (2070, 0.0783, 112.58), (3032, 0.0833, 128.90), (4068, 0.0785, 209.00), (6215, 0.0707, 290.37), (7177, 0.0916, 442.17), (20722, 0.0735, 530.25), (41449, 0.0765, 1525.83), (42411, 0.9454, 3111.42), ('inf', 0.0962, 4020.46)),
+                    'bi-weekly': ((327, 0.0400, 0.0), (450, 0.0450, 13.08), (535, 0.0525, 18.62), (823, 0.0590, 23.08), (3102, 0.0633, 40.08), (3723, 0.0657, 184.35), (4140, 0.0783, 225.15), (6063, 0.0833, 257.81), (8137, 0.0785, 418.00), (12431, 0.0707, 580.73), (14354, 0.0916, 884.35), (41444, 0.0735, 1060.50), (82898, 0.0765, 3051.65), (84821, 0.9454, 6222.85), ('inf', 0.0962, 8040.92)),
+                    'semi-monthly': ((354, 0.0400, 0.0), (488, 0.0450, 14.17), (579, 0.0525, 20.17), (892, 0.0590, 25.00), (3360, 0.0633, 43.42), (4033, 0.0657, 199.71), (4485, 0.0783, 243.92), (6569, 0.0833, 279.29), (8815, 0.0785, 452.83), (13476, 0.0707, 629.13), (15550, 0.0916, 958.04), (44898, 0.0735, 1148.88), (89806, 0.0765, 3305.96), (91890, 0.9454, 6741.42), ('inf', 0.0962, 8711.00)),
+                    'monthly': ((708, 0.0400, 0.0), (975, 0.0450, 28.33), (1158, 0.0525, 40.33), (1783, 0.0590, 50.00), (6721, 0.0633, 86.83), (8067, 0.0657, 399.42), (8971, 0.0783, 487.83), (13138, 0.0833, 558.58), (17629, 0.0785, 905.67), (26933, 0.0707, 1258.25), (31100, 0.0916, 1916.08), (89796, 0.0735, 2297.75), (179613, 0.0765, 6611.92), (183779, 0.9454, 13482.83), ('inf', 0.0962, 17422.00)),
+                    'annually': ((8500, 0.0400, 0.0), (11700, 0.0450, 340.00), (13900, 0.0525, 484.00), (21400, 0.0590, 600.00), (80650, 0.0633, 1042.00), (96800, 0.0657, 4793.00), (107650, 0.0783, 5854.00), (157650, 0.0833, 6703.00), (211550, 0.0785, 10868.00), (323200, 0.0707, 15099.00), (373200, 0.0916, 22993.00), (1077550, 0.0735, 27573.00), (2155350, 0.0765, 79343.00), (2205350, 0.9454, 161794.00), ('inf', 0.0962, 209064.00)),
+                }
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ny_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_ny_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': {
+                    'weekly': (
+                        (  163, 0.0400,    0.00),
+                        (  225, 0.0450,    6.54),
+                        (  267, 0.0525,    9.31),
+                        (  412, 0.0590,   11.54),
+                        ( 1551, 0.0609,   20.04),
+                        ( 1862, 0.0641,   89.42),
+                        ( 2070, 0.0745,  109.35),
+                        ( 3032, 0.0795,  124.88),
+                        ( 4142, 0.0691,  201.33),
+                        ( 5104, 0.0925,  278.06),
+                        (20722, 0.0735,  367.00),
+                        (21684, 0.5208, 1514.94),
+                        ('inf', 0.0962, 2015.71),
+                    ),
+                    'bi-weekly': (
+                        (  327, 0.0400,    0.00),
+                        (  450, 0.0450,   13.08),
+                        (  535, 0.0525,   18.62),
+                        (  823, 0.0590,   23.08),
+                        ( 3102, 0.0609,   40.08),
+                        ( 3723, 0.0641,  178.85),
+                        ( 4140, 0.0745,  218.69),
+                        ( 6063, 0.0795,  249.77),
+                        ( 8285, 0.0691,  402.65),
+                        (10208, 0.0925,  556.12),
+                        (41444, 0.0735,  734.00),
+                        (43367, 0.5208, 3029.88),
+                        ('inf', 0.0962, 4031.42),
+                    ),
+                    'semi-monthly': (
+                        (  354, 0.0400,    0.00),
+                        (  488, 0.0450,   14.17),
+                        (  579, 0.0525,   20.17),
+                        (  892, 0.0590,   25.00),
+                        ( 3360, 0.0609,   43.42),
+                        ( 4033, 0.0641,  193.75),
+                        ( 4485, 0.0745,  236.92),
+                        ( 6569, 0.0795,  270.58),
+                        ( 8975, 0.0691,  436.21),
+                        (11058, 0.0925,  602.46),
+                        (44898, 0.0735,  795.17),
+                        (46981, 0.5208, 3282.38),
+                        ('inf', 0.0962, 4367.38),
+                    ),
+                    'monthly': (
+                        (  708, 0.0400,    0.00),
+                        (  975, 0.0450,   28.33),
+                        ( 1158, 0.0525,   40.33),
+                        ( 1783, 0.0590,   50.00),
+                        ( 6721, 0.0609,   86.83),
+                        ( 8067, 0.0641,  387.50),
+                        ( 8971, 0.0745,  473.83),
+                        (13138, 0.0795,  541.17),
+                        (17950, 0.0691,  872.42),
+                        (22117, 0.0925, 1204.92),
+                        (89796, 0.0735, 1590.33),
+                        (93963, 0.5208, 6564.75),
+                        ('inf', 0.0962, 8734.75),
+                    ),
+                    'annually': (
+                        (   8500, 0.0400,      0.00),
+                        (  11700, 0.0450,    340.00),
+                        (  13900, 0.0525,    484.00),
+                        (  21400, 0.0590,    600.00),
+                        (  80650, 0.0609,   1042.00),
+                        (  96800, 0.0641,   4650.00),
+                        ( 107650, 0.0745,   5686.00),
+                        ( 157650, 0.0795,   6494.00),
+                        ( 215400, 0.0691,  10469.00),
+                        ( 265400, 0.0925,  14459.00),
+                        (1077550, 0.0735,  19084.00),
+                        (1127550, 0.5208,  78777.00),
+                        (  'inf', 0.0962, 104817.00),
+                    ),
+                },
+                'married': {
+                    'weekly': (
+                        (  163, 0.0400,    0.00),
+                        (  225, 0.0450,    6.54),
+                        (  267, 0.0525,    9.31),
+                        (  412, 0.0590,   11.54),
+                        ( 1551, 0.0609,   20.04),
+                        ( 1862, 0.0641,   89.42),
+                        ( 2070, 0.0746,  109.35),
+                        ( 3032, 0.0796,  124.90),
+                        ( 4068, 0.0794,  201.44),
+                        ( 6215, 0.0691,  283.75),
+                        ( 7177, 0.1019,  432.12),
+                        (20722, 0.0735,  530.10),
+                        (41449, 0.0765, 1525.65),
+                        (42411, 0.9454, 3111.27),
+                        ('inf', 0.0962, 4020.31),
+                    ),
+                    'bi-weekly': (
+                        (  327, 0.0400,    0.00),
+                        (  450, 0.0450,   13.08),
+                        (  535, 0.0525,   18.62),
+                        (  823, 0.0590,   23.08),
+                        ( 3102, 0.0609,   40.08),
+                        ( 3723, 0.0641,  178.85),
+                        ( 4140, 0.0746,  218.69),
+                        ( 6063, 0.0796,  249.81),
+                        ( 8137, 0.0794,  402.88),
+                        (12431, 0.0691,  567.50),
+                        (14354, 0.1019,  864.23),
+                        (41444, 0.0735, 1060.19),
+                        (82898, 0.0765, 3051.31),
+                        (84821, 0.9454, 6222.54),
+                        ('inf', 0.0962, 8040.62),
+                    ),
+                    'semi-monthly': (
+                        (  354, 0.0400,    0.00),
+                        (  488, 0.0450,   14.17),
+                        (  579, 0.0525,   20.17),
+                        (  892, 0.0590,   25.00),
+                        ( 3360, 0.0609,   43.42),
+                        ( 4033, 0.0641,  193.75),
+                        ( 4485, 0.0746,  236.92),
+                        ( 6569, 0.0796,  270.63),
+                        ( 8815, 0.0794,  436.46),
+                        (13467, 0.0691,  614.79),
+                        (15550, 0.1019,  936.25),
+                        (44898, 0.0735, 1148.54),
+                        (89806, 0.0765, 3305.58),
+                        (91890, 0.9454, 6741.08),
+                        ('inf', 0.0962, 8710.67),
+                    ),
+                    'monthly': (
+                        (   708, 0.0400,     0.00),
+                        (   975, 0.0450,    28.33),
+                        (  1158, 0.0525,    40.33),
+                        (  1783, 0.0590,    50.00),
+                        (  6721, 0.0609,    86.83),
+                        (  8067, 0.0641,   387.50),
+                        (  8971, 0.0746,   473.83),
+                        ( 13138, 0.0796,   541.25),
+                        ( 17629, 0.0794,   872.92),
+                        ( 26933, 0.0691,  1229.58),
+                        ( 31100, 0.1019,  1872.50),
+                        ( 89796, 0.0735,  2297.08),
+                        (179613, 0.0765,  6611.17),
+                        (183779, 0.9454, 13482.17),
+                        ( 'inf', 0.0962, 17421.33),
+                    ),
+                    'annually': (
+                        (   8500, 0.0400,      0.00),
+                        (  11700, 0.0450,    340.00),
+                        (  13900, 0.0525,    484.00),
+                        (  21400, 0.0590,    600.00),
+                        (  80650, 0.0609,   1042.00),
+                        (  96800, 0.0641,   4650.00),
+                        ( 107650, 0.0746,   5686.00),
+                        ( 157650, 0.0796,   6495.00),
+                        ( 211550, 0.0794,  10475.00),
+                        ( 323200, 0.0691,  14755.00),
+                        ( 373200, 0.1019,  22470.00),
+                        (1077550, 0.0735,  27565.00),
+                        (2155350, 0.0765,  79334.00),
+                        (2205350, 0.9454, 161786.00),
+                        (  'inf', 0.0962, 209056.00),
+                    ),
+                }
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ny_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_ny_sit_over_10_exemption_rate" model="hr.rule.parameter">
+        <field name="name">US NY New York Over 10 Exemption Rate</field>
+        <field name="code">us_ny_sit_over_10_exemption_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ny_sit_over_10_exemption_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly':       (142.30, 152.90, 19.25),
+                'bi-weekly':    (284.60, 305.80, 38.50),
+                'semi-monthly': (308.35, 331.25, 41.65),
+                'monthly':      (616.70, 662.50, 83.30),
+                'annual':       (7400, 7950, 1000),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ny_sit_over_10_exemption_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_ny_sit_over_10_exemption_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly':       (142.30, 152.90, 19.25),
+                'bi-weekly':    (284.60, 305.80, 38.50),
+                'semi-monthly': (308.35, 331.25, 41.65),
+                'monthly':      (616.70, 662.50, 83.30),
+                'annual':       (7400, 7950, 1000),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ny_sit_over_10_exemption_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    <!-- Table A - Combined deduction and exemption allowance (Step 1) -->
+    <record id="rule_parameter_us_ny_sit_deduction_exemption_rate" model="hr.rule.parameter">
+        <field name="name">US NY New York Deduction Exemption Rate</field>
+        <field name="code">us_ny_sit_deduction_exemption_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ny_sit_deduction_exemption_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': {
+                    'weekly':       (142.30, 161.55, 180.80, 200.05, 219.30, 238.55, 257.80, 277.05, 296.30, 315.55, 334.80),
+                    'bi-weekly':    (284.60, 323.10, 361.60, 400.10, 438.60, 477.10, 515.60, 544.10, 592.60, 631.10, 669.60),
+                    'semi-monthly': (308.35, 350.0, 391.65, 433.30, 474.95, 516.60, 558.25, 599.90, 641.55, 683.20, 724.85),
+                    'monthly':      (616.70, 700, 783.30, 866.60, 949.90, 1033.20, 1116.50, 1199.80, 1283.10, 1366.40, 1449.70),
+                    'annually':     (7400, 8400, 9400, 10400, 11400, 12400, 13400, 14400, 15400, 16400, 17400),
+                },
+                'married': {
+                    'weekly':       (152.90, 172.15, 191.40, 210.65, 229.90, 249.15, 268.40, 287.65, 306.90, 326.15, 345.40),
+                    'bi-weekly':    (305.80, 344.30, 382.80, 421.30, 459.80, 498.30, 536.80, 575.30, 613.80, 652.30, 690.80),
+                    'semi-monthly': (331.25, 372.90, 414.55, 456.20, 497.85, 539.50, 581.15, 622.80, 664.45, 706.10, 747.75),
+                    'monthly':      (662.50, 745.80, 829.10, 912.40, 995.70, 1079.00, 1162.30, 1245.60, 1328.90, 1412.20, 1495.50),
+                    'annually':     (7950, 8950, 9950, 10950, 11950, 12950, 13950, 14950, 15950, 16950, 17950),
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ny_sit_deduction_exemption_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_ny_sit_deduction_exemption_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': {
+                    'weekly':       (142.30, 161.55, 180.80, 200.05, 219.30, 238.55, 257.80, 277.05, 296.30, 315.55, 334.80),
+                    'bi-weekly':    (284.60, 323.10, 361.60, 400.10, 438.60, 477.10, 515.60, 544.10, 592.60, 631.10, 669.60),
+                    'semi-monthly': (308.35, 350.0, 391.65, 433.30, 474.95, 516.60, 558.25, 599.90, 641.55, 683.20, 724.85),
+                    'monthly':      (616.70, 700, 783.30, 866.60, 949.90, 1033.20, 1116.50, 1199.80, 1283.10, 1366.40, 1449.70),
+                    'annually':     (7400, 8400, 9400, 10400, 11400, 12400, 13400, 14400, 15400, 16400, 17400),
+                },
+                'married': {
+                    'weekly':       (152.90, 172.15, 191.40, 210.65, 229.90, 249.15, 268.40, 287.65, 306.90, 326.15, 345.40),
+                    'bi-weekly':    (305.80, 344.30, 382.80, 421.30, 459.80, 498.30, 536.80, 575.30, 613.80, 652.30, 690.80),
+                    'semi-monthly': (331.25, 372.90, 414.55, 456.20, 497.85, 539.50, 581.15, 622.80, 664.45, 706.10, 747.75),
+                    'monthly':      (662.50, 745.80, 829.10, 912.40, 995.70, 1079.00, 1162.30, 1245.60, 1328.90, 1412.20, 1495.50),
+                    'annually':     (7950, 8950, 9950, 10950, 11950, 12950, 13950, 14950, 15950, 16950, 17950),
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ny_sit_deduction_exemption_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_ny_dor" model="res.partner">
+        <field name="name">US New York - Department of Taxation and Finance - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_ny_dor_rsf" model="res.partner">
+        <field name="name">US New York - Department of Taxation and Finance - Re-employment Service Fund</field>
+    </record>
+
+    <record id="res_partner_us_ny_dor_mcmt" model="res.partner">
+        <field name="name">US New York - Department of Taxation and Finance - Metropolitan Commuter Transportation Mobility Tax</field>
+    </record>
+
+    <record id="res_partner_us_ny_dor_sit" model="res.partner">
+        <field name="name">US New York - Department of Taxation and Finance - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_ny_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US NY New York State Unemployment</field>
+        <field name="code">ER_US_NY_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ny_suta_wage_base', rate='us_ny_suta_rate', state_code='NY')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ny_suta_wage_base', rate='us_ny_suta_rate', state_code='NY')</field>
+        <field name="partner_id" ref="res_partner_us_ny_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_er_us_ny_suta_rsf" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US NY New York State Re-employment Service Fund</field>
+        <field name="code">ER_US_NY_SUTA_RSF</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ny_suta_wage_base', rate='us_ny_suta_rsf_rate', state_code='NY')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ny_suta_wage_base', rate='us_ny_suta_rsf_rate', state_code='NY')</field>
+        <field name="partner_id" ref="res_partner_us_ny_dor_rsf"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_er_us_ny_suta_mctmt" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US NY New York State Metropolitan Commuter Transportation Mobility Tax</field>
+        <field name="code">ER_US_NY_SUTA_MCTMT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ny_suta_wage_base', rate='us_ny_suta_mctmt_rate', state_code='NY')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ny_suta_wage_base', rate='us_ny_suta_mctmt_rate', state_code='NY')</field>
+        <field name="partner_id" ref="res_partner_us_ny_dor_mcmt"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_ny_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US NY New York State Income Tax Withholding</field>
+        <field name="code">EE_US_NY_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = ny_new_york_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = ny_new_york_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_ny_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

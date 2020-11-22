@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_de_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US DE Delaware SUTA Wage Base</field>
+        <field name="code">us_de_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_de_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">16500.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_de_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_de_suta_rate" model="hr.rule.parameter">
+        <field name="name">US DE Delaware SUTA Rate</field>
+        <field name="code">us_de_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_de_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.50</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_de_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_de_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US DE Delaware SIT Tax Rate</field>
+        <field name="code">us_de_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_de_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">[
+                ( 2000,    0.0, 0.00),
+                ( 5000,    0.0, 2.20),
+                (10000,   66.0, 3.90),
+                (20000,  261.0, 4.80),
+                (25000,  741.0, 5.20),
+                (60000, 1001.0, 5.55),
+                ('inf', 2943.0, 6.60),
+
+            ]</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_de_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_de_sit_standard_deduction_rate" model="hr.rule.parameter">
+        <field name="name">US DE Delaware Standard Deduction Rate</field>
+        <field name="code">us_de_sit_standard_deduction_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_de_sit_standard_deduction_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">3250</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_de_sit_standard_deduction_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_de_sit_personal_exemption_rate" model="hr.rule.parameter">
+        <field name="name">US DE Delaware Personal Exemption Rate</field>
+        <field name="code">us_de_sit_personal_exemption_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_de_sit_personal_exemption_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">110</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_de_sit_personal_exemption_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_de_dor" model="res.partner">
+        <field name="name">US Delaware - Division of Unemployment Insurance - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_de_dor_sit" model="res.partner">
+        <field name="name">US Delaware - Division of Revenue - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_de_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US DE Delaware State Unemployment</field>
+        <field name="code">ER_US_DE_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_de_suta_wage_base', rate='us_de_suta_rate', state_code='DE')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_de_suta_wage_base', rate='us_de_suta_rate', state_code='DE')</field>
+        <field name="partner_id" ref="res_partner_us_de_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_de_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US DE Delaware State Income Tax Withholding</field>
+        <field name="code">EE_US_DE_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = de_delaware_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = de_delaware_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_de_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_mn_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US MN Minnesota SUTA Wage Base</field>
+        <field name="code">us_mn_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_mn_suta_wage_base_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">34000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mn_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_mn_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">35000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mn_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_mn_suta_rate" model="hr.rule.parameter">
+        <field name="name">US MN Minnesota SUTA Rate</field>
+        <field name="code">us_mn_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_mn_suta_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.11</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mn_suta_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_mn_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.11</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mn_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_mn_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US MN Minnesota SIT Tax Rate</field>
+        <field name="code">us_mn_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_mn_sit_tax_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': (
+                    ( 28920,   2400, 5.35,     0.00),
+                    ( 89510,  28920, 7.05,  1418.82),
+                    (166290,  89510, 7.85,  5690.42),
+                    ( 'inf', 166290, 9.85, 11717.65),
+                ),
+                'married': (
+                    (  47820,   9050,  5.35,     0.00),
+                    ( 163070,  47820,  7.05,   2074.20),
+                    ( 282200, 163070,  7.85,  10199.33),
+                    (  'inf', 282200,  9.85,  19551.04),
+                ),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mn_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://www.revenue.state.mn.us/sites/default/files/2019-12/wh_inst_20_0.pdf -->
+        <!-- Chart for step 5 value -->
+        <record id="rule_parameter_us_mn_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': (
+                    ( 30760,   3800, 5.35,     0.00),
+                    ( 92350,  30760, 6.80,  1442.36),
+                    (168200,  92350, 7.85,  5630.48),
+                    ( 'inf', 168200, 9.85, 11584.71),
+                ),
+                'married': (
+                    (  51310,  11900,  5.35,      0.00),
+                    ( 168470,  51310,  6.80,   2108.44),
+                    ( 285370, 168470,  7.85,  10075.32),
+                    (  'inf', 285370,  9.85,  19251.97),
+                ),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mn_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_mn_sit_allowances_rate" model="hr.rule.parameter">
+        <field name="name">US MN Minnesota Allowances Rate</field>
+        <field name="code">us_mn_sit_allowances_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_mn_sit_allowances_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">4250.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mn_sit_allowances_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://www.revenue.state.mn.us/sites/default/files/2019-12/wh_inst_20_0.pdf -->
+        <!-- Step 3. -->
+        <record id="rule_parameter_us_mn_sit_allowances_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">4300.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mn_sit_allowances_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_mn_dor" model="res.partner">
+        <field name="name">US Minnesota - Unemployment Insurance Agency - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_mn_dor_sit" model="res.partner">
+        <field name="name">US Minnesota - Department of Treasury - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_mn_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US MN Minnesota State Unemployment</field>
+        <field name="code">ER_US_MN_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_mn_suta_wage_base', rate='us_mn_suta_rate', state_code='MN')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_mn_suta_wage_base', rate='us_mn_suta_rate', state_code='MN')</field>
+        <field name="partner_id" ref="res_partner_us_mn_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_mn_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US MN Minnesota State Income Tax Withholding</field>
+        <field name="code">EE_US_MN_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = mn_minnesota_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = mn_minnesota_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_mn_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

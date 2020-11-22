@@ -1,0 +1,943 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_ga_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US GA Georgia SUTA Wage Base</field>
+        <field name="code">us_ga_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ga_suta_wage_base_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">9500.00</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ga_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_ga_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">9500.00</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ga_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_ga_suta_rate" model="hr.rule.parameter">
+        <field name="name">US GA Georgia SUTA Rate</field>
+        <field name="code">us_ga_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ga_suta_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.7</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ga_suta_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_ga_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.7</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ga_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_ga_sit_rate" model="hr.rule.parameter">
+        <field name="name">US GA Georgia SIT Rate Table</field>
+        <field name="code">us_ga_sit_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ga_sit_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'married filing joint, both spouses working': {
+                    'weekly': (
+                        ( 9.50, 0.00, 1.00),
+                        (29.00, 0.10, 2.00),
+                        (48.00, 0.48, 3.00),
+                        (67.50, 1.06, 4.00),
+                        (96.00, 1.83, 5.00),
+                        ('inf', 3.27, 5.75),
+                    ),
+                    'bi-weekly': (
+                        ( 19.00, 0.00, 1.00),
+                        ( 57.50, 0.19, 2.00),
+                        ( 96.00, 0.96, 3.00),
+                        (135.00, 2.12, 4.00),
+                        (192.00, 3.65, 5.00),
+                        ( 'inf', 6.54, 5.75),
+                    ),
+                    'semi-monthly': (
+                        ( 21.00, 0.00, 1.00),
+                        ( 62.50, 0.21, 2.00),
+                        (104.00, 1.04, 3.00),
+                        (146.00, 2.29, 4.00),
+                        (208.00, 3.96, 5.00),
+                        ( 'inf', 7.08, 5.75),
+                    ),
+                    'monthly': (
+                        ( 41.50,  0.00, 1.00),
+                        (125.50,  0.42, 2.00),
+                        (208.00,  2.08, 3.00),
+                        (292.00,  4.58, 4.00),
+                        (417.00,  7.92, 5.00),
+                        ( 'inf', 14.17, 5.75),
+                    ),
+                    'quarterly': (
+                        ( 125.00,  0.00, 1.00),
+                        ( 375.00,  1.25, 2.00),
+                        ( 625.00,  6.25, 3.00),
+                        ( 875.00, 13.75, 4.00),
+                        (1250.00, 23.75, 5.00),
+                        (  'inf', 42.50, 5.75),
+                    ),
+                    'semi-annual': (
+                        ( 250.00,  0.00, 1.00),
+                        ( 750.00,  2.50, 2.00),
+                        (1250.00, 12.50, 3.00),
+                        (1750.00, 27.50, 4.00),
+                        (2500.00, 47.50, 5.00),
+                        (  'inf', 85.00, 5.75),
+                    ),
+                    'annual': (
+                        ( 500.00,   0.00, 1.00),
+                        (1500.00,   5.00, 2.00),
+                        (2500.00,  25.00, 3.00),
+                        (3500.00,  55.00, 4.00),
+                        (5000.00,  95.00, 5.00),
+                        (  'inf', 170.00, 5.75),
+                    ),
+                },
+                'married filing joint, one spouse working': {
+                    'weekly': (
+                        ( 19.00, 0.00, 1.00),
+                        ( 57.50, 0.19, 2.00),
+                        ( 96.00, 0.96, 3.00),
+                        (135.00, 2.12, 4.00),
+                        (192.50, 3.65, 5.00),
+                        ( 'inf', 6.54, 5.75),
+                    ),
+                    'bi-weekly': (
+                        ( 38.50,  0.00, 1.00),
+                        (115.00,  0.38, 2.00),
+                        (192.00,  1.92, 3.00),
+                        (269.00,  4.23, 4.00),
+                        (385.00,  7.31, 5.00),
+                        ( 'inf', 13.08, 5.75),
+                    ),
+                    'semi-monthly': (
+                        ( 41.50,  0.00, 1.00),
+                        (125.00,  0.42, 2.00),
+                        (208.00,  2.08, 3.00),
+                        (292.00,  4.58, 4.00),
+                        (417.00,  7.92, 5.00),
+                        ( 'inf', 14.17, 5.75),
+                    ),
+                    'monthly': (
+                        ( 83.00,  0.00, 1.00),
+                        (250.00,  0.83, 2.00),
+                        (417.00,  4.17, 3.00),
+                        (583.00,  9.17, 4.00),
+                        (833.00, 15.83, 5.00),
+                        ( 'inf', 28.33, 5.75),
+                    ),
+                    'quarterly': (
+                        ( 250.00,  0.00, 1.00),
+                        ( 750.00,  2.50, 2.00),
+                        (1250.00, 12.50, 3.00),
+                        (1750.00, 27.50, 4.00),
+                        (2500.00, 47.50, 5.00),
+                        (  'inf', 85.00, 5.75),
+                    ),
+                    'semi-annual': (
+                        ( 500.00,   0.00, 1.00),
+                        (1500.00,   5.00, 2.00),
+                        (2500.00,  25.00, 3.00),
+                        (3500.00,  55.00, 4.00),
+                        (5000.00,  95.00, 5.00),
+                        (  'inf', 170.00, 5.75),
+                    ),
+                    'annual': (
+                        ( 1000.00,   0.00, 1.00),
+                        ( 3000.00,  10.00, 2.00),
+                        ( 5000.00,  50.00, 3.00),
+                        ( 7000.00, 110.00, 4.00),
+                        (10000.00, 190.00, 5.00),
+                        (   'inf', 340.00, 5.75),
+                    ),
+                },
+                'single': {
+                    'weekly': (
+                        ( 14.50, 0.00, 1.00),
+                        ( 43.50, 0.14, 2.00),
+                        ( 72.00, 0.72, 3.00),
+                        (101.00, 1.59, 4.00),
+                        (135.00, 2.74, 5.00),
+                        ( 'inf', 4.42, 5.75),
+                    ),
+                    'bi-weekly': (
+                        ( 29.00, 0.00, 1.00),
+                        ( 86.50, 0.29, 2.00),
+                        (144.00, 1.44, 3.00),
+                        (202.00, 3.17, 4.00),
+                        (269.00, 5.48, 5.00),
+                        ( 'inf', 8.85, 5.75),
+                    ),
+                    'semi-monthly': (
+                        ( 31.00, 0.00, 1.00),
+                        ( 93.50, 0.31, 2.00),
+                        (156.00, 1.56, 3.00),
+                        (219.00, 3.34, 4.00),
+                        (292.00, 5.94, 5.00),
+                        ( 'inf', 9.58, 5.75),
+                    ),
+                    'monthly': (
+                        ( 62.50,  0.00, 1.00),
+                        (187.00,  0.62, 2.00),
+                        (312.00,  3.12, 3.00),
+                        (437.00,  6.87, 4.00),
+                        (583.00, 11.87, 5.00),
+                        ( 'inf', 19.17, 5.75),
+                    ),
+                    'quarterly': (
+                        ( 187.50,  0.00, 1.00),
+                        ( 562.50,  1.88, 2.00),
+                        ( 937.50,  9.38, 3.00),
+                        (1312.00, 20.63, 4.00),
+                        (1750.00, 35.63, 5.00),
+                        (  'inf', 57.50, 5.75),
+                    ),
+                    'semi-annual': (
+                        ( 375.00,   0.00, 1.00),
+                        (1125.00,   3.75, 2.00),
+                        (1875.00,  18.75, 3.00),
+                        (2625.00,  41.25, 4.00),
+                        (3500.00,  71.25, 5.00),
+                        (  'inf', 115.00, 5.75),
+                    ),
+                    'annual': (
+                        ( 750.00,   0.00, 1.00),
+                        (2250.00,   7.50, 2.00),
+                        (3750.00,  37.50, 3.00),
+                        (5250.00,  82.50, 4.00),
+                        (7000.00, 142.50, 5.00),
+                        (  'inf', 230.00, 5.75),
+                    ),
+                },
+                'head of household': {
+                    'weekly': (
+                        ( 19.00, 0.00, 1.00),
+                        ( 57.50, 0.19, 2.00),
+                        ( 96.00, 0.96, 3.00),
+                        (135.00, 2.12, 4.00),
+                        (192.50, 3.65, 5.00),
+                        ( 'inf', 6.54, 5.75),
+                    ),
+                    'bi-weekly': (
+                        ( 38.50,  0.00, 1.00),
+                        (115.00,  0.38, 2.00),
+                        (192.00,  1.92, 3.00),
+                        (269.00,  4.23, 4.00),
+                        (385.00,  7.31, 5.00),
+                        ( 'inf', 13.08, 5.75),
+                    ),
+                    'semi-monthly': (
+                        ( 41.50,  0.00, 1.00),
+                        (125.00,  0.42, 2.00),
+                        (208.00,  2.08, 3.00),
+                        (292.00,  4.58, 4.00),
+                        (417.00,  7.92, 5.00),
+                        ( 'inf', 14.17, 5.75),
+                    ),
+                    'monthly': (
+                        ( 83.00,  0.00, 1.00),
+                        (250.00,  0.83, 2.00),
+                        (417.00,  4.17, 3.00),
+                        (583.00,  9.17, 4.00),
+                        (833.00, 15.83, 5.00),
+                        ( 'inf', 28.33, 5.75),
+                    ),
+                    'quarterly': (
+                        ( 250.00,  0.00, 1.00),
+                        ( 750.00,  2.50, 2.00),
+                        (1250.00, 12.50, 3.00),
+                        (1750.00, 27.50, 4.00),
+                        (2500.00, 47.50, 5.00),
+                        (  'inf', 85.00, 5.75),
+                    ),
+                    'semi-annual': (
+                        ( 500.00,   0.00, 1.00),
+                        (1500.00,   5.00, 2.00),
+                        (2500.00,  25.00, 3.00),
+                        (3500.00,  55.00, 4.00),
+                        (5000.00,  95.00, 5.00),
+                        (  'inf', 170.00, 5.75),
+                    ),
+                    'annual': (
+                        ( 1000.00,   0.00, 1.00),
+                        ( 3000.00,  10.00, 2.00),
+                        ( 5000.00,  50.00, 3.00),
+                        ( 7000.00, 110.00, 4.00),
+                        (10000.00, 190.00, 5.00),
+                        (   'inf', 340.00, 5.75),
+                    ),
+                },
+                'married filing separate': {
+                    'weekly': (
+                        ( 9.50, 0.00, 1.00),
+                        (29.00, 0.10, 2.00),
+                        (48.00, 0.48, 3.00),
+                        (67.50, 1.06, 4.00),
+                        (96.00, 1.83, 5.00),
+                        ('inf', 3.27, 5.75),
+                    ),
+                    'bi-weekly': (
+                        ( 19.00, 0.00, 1.00),
+                        ( 57.50, 0.19, 2.00),
+                        ( 96.00, 0.96, 3.00),
+                        (135.00, 2.12, 4.00),
+                        (192.00, 3.65, 5.00),
+                        ( 'inf', 6.54, 5.75),
+                    ),
+                    'semi-monthly': (
+                        ( 21.00, 0.00, 1.00),
+                        ( 62.50, 0.21, 2.00),
+                        (104.00, 1.04, 3.00),
+                        (146.00, 2.29, 4.00),
+                        (208.00, 3.96, 5.00),
+                        ( 'inf', 7.08, 5.75),
+                    ),
+                    'monthly': (
+                        ( 41.50,  0.00, 1.00),
+                        (125.50,  0.42, 2.00),
+                        (208.00,  2.08, 3.00),
+                        (292.00,  4.58, 4.00),
+                        (417.00,  7.92, 5.00),
+                        ( 'inf', 14.17, 5.75),
+                    ),
+                    'quarterly': (
+                        ( 125.00,  0.00, 1.00),
+                        ( 375.00,  1.25, 2.00),
+                        ( 625.00,  6.25, 3.00),
+                        ( 875.00, 13.75, 4.00),
+                        (1250.00, 23.75, 5.00),
+                        (  'inf', 42.50, 5.75),
+                    ),
+                    'semi-annual': (
+                        ( 250.00,  0.00, 1.00),
+                        ( 750.00,  2.50, 2.00),
+                        (1250.00, 12.50, 3.00),
+                        (1750.00, 27.50, 4.00),
+                        (2500.00, 47.50, 5.00),
+                        (  'inf', 85.00, 5.75),
+                    ),
+                    'annual': (
+                        ( 500.00,   0.00, 1.00),
+                        (1500.00,   5.00, 2.00),
+                        (2500.00,  25.00, 3.00),
+                        (3500.00,  55.00, 4.00),
+                        (5000.00,  95.00, 5.00),
+                        (  'inf', 170.00, 5.75),
+                    ),
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ga_sit_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://dor.georgia.gov/employers-tax-guide File 2020 -->
+        <!-- Table F, G ,H-->
+        <record id="rule_parameter_us_ga_sit_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'married filing joint, both spouses working': {
+                    'weekly': (
+                        ( 9.50, 0.00, 1.00),
+                        (29.00, 0.10, 2.00),
+                        (48.00, 0.48, 3.00),
+                        (67.50, 1.06, 4.00),
+                        (96.00, 1.83, 5.00),
+                        ('inf', 3.27, 5.75),
+                    ),
+                    'bi-weekly': (
+                        ( 19.00, 0.00, 1.00),
+                        ( 57.50, 0.19, 2.00),
+                        ( 96.00, 0.96, 3.00),
+                        (135.00, 2.12, 4.00),
+                        (192.00, 3.65, 5.00),
+                        ( 'inf', 6.54, 5.75),
+                    ),
+                    'semi-monthly': (
+                        ( 21.00, 0.00, 1.00),
+                        ( 62.50, 0.21, 2.00),
+                        (104.00, 1.04, 3.00),
+                        (146.00, 2.29, 4.00),
+                        (208.00, 3.96, 5.00),
+                        ( 'inf', 7.08, 5.75),
+                    ),
+                    'monthly': (
+                        ( 41.50,  0.00, 1.00),
+                        (125.50,  0.42, 2.00),
+                        (208.00,  2.08, 3.00),
+                        (292.00,  4.58, 4.00),
+                        (417.00,  7.92, 5.00),
+                        ( 'inf', 14.17, 5.75),
+                    ),
+                    'quarterly': (
+                        ( 125.00,  0.00, 1.00),
+                        ( 375.00,  1.25, 2.00),
+                        ( 625.00,  6.25, 3.00),
+                        ( 875.00, 13.75, 4.00),
+                        (1250.00, 23.75, 5.00),
+                        (  'inf', 42.50, 5.75),
+                    ),
+                    'semi-annual': (
+                        ( 250.00,  0.00, 1.00),
+                        ( 750.00,  2.50, 2.00),
+                        (1250.00, 12.50, 3.00),
+                        (1750.00, 27.50, 4.00),
+                        (2500.00, 47.50, 5.00),
+                        (  'inf', 85.00, 5.75),
+                    ),
+                    'annual': (
+                        ( 500.00,   0.00, 1.00),
+                        (1500.00,   5.00, 2.00),
+                        (2500.00,  25.00, 3.00),
+                        (3500.00,  55.00, 4.00),
+                        (5000.00,  95.00, 5.00),
+                        (  'inf', 170.00, 5.75),
+                    ),
+                },
+                'married filing joint, one spouse working': {
+                    'weekly': (
+                        ( 19.00, 0.00, 1.00),
+                        ( 57.50, 0.19, 2.00),
+                        ( 96.00, 0.96, 3.00),
+                        (135.00, 2.12, 4.00),
+                        (192.50, 3.65, 5.00),
+                        ( 'inf', 6.54, 5.75),
+                    ),
+                    'bi-weekly': (
+                        ( 38.50,  0.00, 1.00),
+                        (115.00,  0.38, 2.00),
+                        (192.00,  1.92, 3.00),
+                        (269.00,  4.23, 4.00),
+                        (385.00,  7.31, 5.00),
+                        ( 'inf', 13.08, 5.75),
+                    ),
+                    'semi-monthly': (
+                        ( 41.50,  0.00, 1.00),
+                        (125.00,  0.42, 2.00),
+                        (208.00,  2.08, 3.00),
+                        (292.00,  4.58, 4.00),
+                        (417.00,  7.92, 5.00),
+                        ( 'inf', 14.17, 5.75),
+                    ),
+                    'monthly': (
+                        ( 83.00,  0.00, 1.00),
+                        (250.00,  0.83, 2.00),
+                        (417.00,  4.17, 3.00),
+                        (583.00,  9.17, 4.00),
+                        (833.00, 15.83, 5.00),
+                        ( 'inf', 28.33, 5.75),
+                    ),
+                    'quarterly': (
+                        ( 250.00,  0.00, 1.00),
+                        ( 750.00,  2.50, 2.00),
+                        (1250.00, 12.50, 3.00),
+                        (1750.00, 27.50, 4.00),
+                        (2500.00, 47.50, 5.00),
+                        (  'inf', 85.00, 5.75),
+                    ),
+                    'semi-annual': (
+                        ( 500.00,   0.00, 1.00),
+                        (1500.00,   5.00, 2.00),
+                        (2500.00,  25.00, 3.00),
+                        (3500.00,  55.00, 4.00),
+                        (5000.00,  95.00, 5.00),
+                        (  'inf', 170.00, 5.75),
+                    ),
+                    'annual': (
+                        ( 1000.00,   0.00, 1.00),
+                        ( 3000.00,  10.00, 2.00),
+                        ( 5000.00,  50.00, 3.00),
+                        ( 7000.00, 110.00, 4.00),
+                        (10000.00, 190.00, 5.00),
+                        (   'inf', 340.00, 5.75),
+                    ),
+                },
+                'single': {
+                    'weekly': (
+                        ( 14.50, 0.00, 1.00),
+                        ( 43.50, 0.14, 2.00),
+                        ( 72.00, 0.72, 3.00),
+                        (101.00, 1.59, 4.00),
+                        (135.00, 2.74, 5.00),
+                        ( 'inf', 4.42, 5.75),
+                    ),
+                    'bi-weekly': (
+                        ( 29.00, 0.00, 1.00),
+                        ( 86.50, 0.29, 2.00),
+                        (144.00, 1.44, 3.00),
+                        (202.00, 3.17, 4.00),
+                        (269.00, 5.48, 5.00),
+                        ( 'inf', 8.85, 5.75),
+                    ),
+                    'semi-monthly': (
+                        ( 31.00, 0.00, 1.00),
+                        ( 93.50, 0.31, 2.00),
+                        (156.00, 1.56, 3.00),
+                        (219.00, 3.34, 4.00),
+                        (292.00, 5.94, 5.00),
+                        ( 'inf', 9.58, 5.75),
+                    ),
+                    'monthly': (
+                        ( 62.50,  0.00, 1.00),
+                        (187.00,  0.62, 2.00),
+                        (312.00,  3.12, 3.00),
+                        (437.00,  6.87, 4.00),
+                        (583.00, 11.87, 5.00),
+                        ( 'inf', 19.17, 5.75),
+                    ),
+                    'quarterly': (
+                        ( 187.50,  0.00, 1.00),
+                        ( 562.50,  1.88, 2.00),
+                        ( 937.50,  9.38, 3.00),
+                        (1312.00, 20.63, 4.00),
+                        (1750.00, 35.63, 5.00),
+                        (  'inf', 57.50, 5.75),
+                    ),
+                    'semi-annual': (
+                        ( 375.00,   0.00, 1.00),
+                        (1125.00,   3.75, 2.00),
+                        (1875.00,  18.75, 3.00),
+                        (2625.00,  41.25, 4.00),
+                        (3500.00,  71.25, 5.00),
+                        (  'inf', 115.00, 5.75),
+                    ),
+                    'annual': (
+                        ( 750.00,   0.00, 1.00),
+                        (2250.00,   7.50, 2.00),
+                        (3750.00,  37.50, 3.00),
+                        (5250.00,  82.50, 4.00),
+                        (7000.00, 142.50, 5.00),
+                        (  'inf', 230.00, 5.75),
+                    ),
+                },
+                'head of household': {
+                    'weekly': (
+                        ( 19.00, 0.00, 1.00),
+                        ( 57.50, 0.19, 2.00),
+                        ( 96.00, 0.96, 3.00),
+                        (135.00, 2.12, 4.00),
+                        (192.50, 3.65, 5.00),
+                        ( 'inf', 6.54, 5.75),
+                    ),
+                    'bi-weekly': (
+                        ( 38.50,  0.00, 1.00),
+                        (115.00,  0.38, 2.00),
+                        (192.00,  1.92, 3.00),
+                        (269.00,  4.23, 4.00),
+                        (385.00,  7.31, 5.00),
+                        ( 'inf', 13.08, 5.75),
+                    ),
+                    'semi-monthly': (
+                        ( 41.50,  0.00, 1.00),
+                        (125.00,  0.42, 2.00),
+                        (208.00,  2.08, 3.00),
+                        (292.00,  4.58, 4.00),
+                        (417.00,  7.92, 5.00),
+                        ( 'inf', 14.17, 5.75),
+                    ),
+                    'monthly': (
+                        ( 83.00,  0.00, 1.00),
+                        (250.00,  0.83, 2.00),
+                        (417.00,  4.17, 3.00),
+                        (583.00,  9.17, 4.00),
+                        (833.00, 15.83, 5.00),
+                        ( 'inf', 28.33, 5.75),
+                    ),
+                    'quarterly': (
+                        ( 250.00,  0.00, 1.00),
+                        ( 750.00,  2.50, 2.00),
+                        (1250.00, 12.50, 3.00),
+                        (1750.00, 27.50, 4.00),
+                        (2500.00, 47.50, 5.00),
+                        (  'inf', 85.00, 5.75),
+                    ),
+                    'semi-annual': (
+                        ( 500.00,   0.00, 1.00),
+                        (1500.00,   5.00, 2.00),
+                        (2500.00,  25.00, 3.00),
+                        (3500.00,  55.00, 4.00),
+                        (5000.00,  95.00, 5.00),
+                        (  'inf', 170.00, 5.75),
+                    ),
+                    'annual': (
+                        ( 1000.00,   0.00, 1.00),
+                        ( 3000.00,  10.00, 2.00),
+                        ( 5000.00,  50.00, 3.00),
+                        ( 7000.00, 110.00, 4.00),
+                        (10000.00, 190.00, 5.00),
+                        (   'inf', 340.00, 5.75),
+                    ),
+                },
+                'married filing separate': {
+                    'weekly': (
+                        ( 9.50, 0.00, 1.00),
+                        (29.00, 0.10, 2.00),
+                        (48.00, 0.48, 3.00),
+                        (67.50, 1.06, 4.00),
+                        (96.00, 1.83, 5.00),
+                        ('inf', 3.27, 5.75),
+                    ),
+                    'bi-weekly': (
+                        ( 19.00, 0.00, 1.00),
+                        ( 57.50, 0.19, 2.00),
+                        ( 96.00, 0.96, 3.00),
+                        (135.00, 2.12, 4.00),
+                        (192.00, 3.65, 5.00),
+                        ( 'inf', 6.54, 5.75),
+                    ),
+                    'semi-monthly': (
+                        ( 21.00, 0.00, 1.00),
+                        ( 62.50, 0.21, 2.00),
+                        (104.00, 1.04, 3.00),
+                        (146.00, 2.29, 4.00),
+                        (208.00, 3.96, 5.00),
+                        ( 'inf', 7.08, 5.75),
+                    ),
+                    'monthly': (
+                        ( 41.50,  0.00, 1.00),
+                        (125.50,  0.42, 2.00),
+                        (208.00,  2.08, 3.00),
+                        (292.00,  4.58, 4.00),
+                        (417.00,  7.92, 5.00),
+                        ( 'inf', 14.17, 5.75),
+                    ),
+                    'quarterly': (
+                        ( 125.00,  0.00, 1.00),
+                        ( 375.00,  1.25, 2.00),
+                        ( 625.00,  6.25, 3.00),
+                        ( 875.00, 13.75, 4.00),
+                        (1250.00, 23.75, 5.00),
+                        (  'inf', 42.50, 5.75),
+                    ),
+                    'semi-annual': (
+                        ( 250.00,  0.00, 1.00),
+                        ( 750.00,  2.50, 2.00),
+                        (1250.00, 12.50, 3.00),
+                        (1750.00, 27.50, 4.00),
+                        (2500.00, 47.50, 5.00),
+                        (  'inf', 85.00, 5.75),
+                    ),
+                    'annual': (
+                        ( 500.00,   0.00, 1.00),
+                        (1500.00,   5.00, 2.00),
+                        (2500.00,  25.00, 3.00),
+                        (3500.00,  55.00, 4.00),
+                        (5000.00,  95.00, 5.00),
+                        (  'inf', 170.00, 5.75),
+                    ),
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ga_sit_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_ga_sit_personal_allowance" model="hr.rule.parameter">
+        <field name="name">US GA Georgia SIT Personal Allowance</field>
+        <field name="code">us_ga_sit_personal_allowance</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ga_sit_personal_allowance_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'married filing joint, both spouses working': {
+                    'weekly':        142.30,
+                    'bi-weekly':     284.62,
+                    'semi-monthly':  308.33,
+                    'monthly':       616.67,
+                    'quarterly':    1850.00,
+                    'semi-annual':  3700.00,
+                    'annual':       7400.00,
+                },
+                'married filing joint, one spouse working': {
+                    'weekly':        142.30,
+                    'bi-weekly':     284.62,
+                    'semi-monthly':  308.33,
+                    'monthly':       616.67,
+                    'quarterly':    1850.00,
+                    'semi-annual':  3700.00,
+                    'annual':       7400.00,
+                },
+                'single': {
+                    'weekly':         51.92,
+                    'bi-weekly':     103.85,
+                    'semi-monthly':  112.50,
+                    'monthly':       225.00,
+                    'quarterly':     675.00,
+                    'semi-annual':  1350.00,
+                    'annual':       2700.00,
+                },
+                'head of household': {
+                    'weekly':         51.92,
+                    'bi-weekly':     103.85,
+                    'semi-monthly':  112.50,
+                    'monthly':       225.00,
+                    'quarterly':     675.00,
+                    'semi-annual':  1350.00,
+                    'annual':       2700.00,
+                },
+                'married filing separate': {
+                    'weekly':         71.15,
+                    'bi-weekly':     142.30,
+                    'semi-monthly':  154.16,
+                    'monthly':       308.33,
+                    'quarterly':     925.00,
+                    'semi-annual':  1850.00,
+                    'annual':       3700.00,
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ga_sit_personal_allowance"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://dor.georgia.gov/employers-tax-guide File 2020 -->
+        <!-- Table E Column 4. 5. 6.-->
+        <record id="rule_parameter_us_ga_sit_personal_allowance_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'married filing joint, both spouses working': {
+                    'weekly':        142.30,
+                    'bi-weekly':     284.62,
+                    'semi-monthly':  308.33,
+                    'monthly':       616.67,
+                    'quarterly':    1850.00,
+                    'semi-annual':  3700.00,
+                    'annual':       7400.00,
+                },
+                'married filing joint, one spouse working': {
+                    'weekly':        142.30,
+                    'bi-weekly':     284.62,
+                    'semi-monthly':  308.33,
+                    'monthly':       616.67,
+                    'quarterly':    1850.00,
+                    'semi-annual':  3700.00,
+                    'annual':       7400.00,
+                },
+                'single': {
+                    'weekly':         51.92,
+                    'bi-weekly':     103.85,
+                    'semi-monthly':  112.50,
+                    'monthly':       225.00,
+                    'quarterly':     675.00,
+                    'semi-annual':  1350.00,
+                    'annual':       2700.00,
+                },
+                'head of household': {
+                    'weekly':         51.92,
+                    'bi-weekly':     103.85,
+                    'semi-monthly':  112.50,
+                    'monthly':       225.00,
+                    'quarterly':     675.00,
+                    'semi-annual':  1350.00,
+                    'annual':       2700.00,
+                },
+                'married filing separate': {
+                    'weekly':         71.15,
+                    'bi-weekly':     142.30,
+                    'semi-monthly':  154.16,
+                    'monthly':       308.33,
+                    'quarterly':     925.00,
+                    'semi-annual':  1850.00,
+                    'annual':       3700.00,
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ga_sit_personal_allowance"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_ga_sit_dependent_allowance_rate" model="hr.rule.parameter">
+        <field name="name">US GA Georgia SIT Dependent Allowance Rate</field>
+        <field name="code">us_ga_sit_dependent_allowance_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ga_sit_dependent_allowance_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly':         57.50,
+                'bi-weekly':     115.00,
+                'semi-monthly':  125.00,
+                'monthly':       250.00,
+                'quarterly':     750.00,
+                'semi-annual':  1500.00,
+                'annual':       3000.00,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ga_sit_dependent_allowance_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://dor.georgia.gov/employers-tax-guide File 2020 -->
+        <!-- Table E Column 7.-->
+        <record id="rule_parameter_us_ga_sit_dependent_allowance_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly':         57.50,
+                'bi-weekly':     115.00,
+                'semi-monthly':  125.00,
+                'monthly':       250.00,
+                'quarterly':     750.00,
+                'semi-annual':  1500.00,
+                'annual':       3000.00,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ga_sit_dependent_allowance_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_ga_sit_deduction" model="hr.rule.parameter">
+        <field name="name">US GA Georgia SIT Deduction</field>
+        <field name="code">us_ga_sit_deduction</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ga_sit_deduction_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'married filing joint, both spouses working': {
+                    'weekly':        115.50,
+                    'bi-weekly':     230.75,
+                    'semi-monthly':  250.00,
+                    'monthly':       500.00,
+                    'quarterly':    1500.00,
+                    'semi-annual':  3000.00,
+                    'annual':       6000.00,
+                },
+                'married filing joint, one spouse working': {
+                    'weekly':        115.50,
+                    'bi-weekly':     230.75,
+                    'semi-monthly':  250.00,
+                    'monthly':       500.00,
+                    'quarterly':    1500.00,
+                    'semi-annual':  3000.00,
+                    'annual':       6000.00,
+                },
+                'single': {
+                    'weekly':         88.50,
+                    'bi-weekly':     177.00,
+                    'semi-monthly':  191.75,
+                    'monthly':       383.50,
+                    'quarterly':    1150.00,
+                    'semi-annual':  2300.00,
+                    'annual':       4600.00,
+                },
+                'head of household': {
+                    'weekly':         88.50,
+                    'bi-weekly':     177.00,
+                    'semi-monthly':  191.75,
+                    'monthly':       383.50,
+                    'quarterly':    1150.00,
+                    'semi-annual':  2300.00,
+                    'annual':       4600.00,
+                },
+                'married filing separate': {
+                    'weekly':         57.75,
+                    'bi-weekly':     115.50,
+                    'semi-monthly':  125.00,
+                    'monthly':       250.00,
+                    'quarterly':     750.00,
+                    'semi-annual':  1500.00,
+                    'annual':       3000.00,
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ga_sit_deduction"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://dor.georgia.gov/employers-tax-guide File 2020 -->
+        <!-- Table E Column 1. 2. 3.-->
+        <record id="rule_parameter_us_ga_sit_deduction_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'married filing joint, both spouses working': {
+                    'weekly':        115.50,
+                    'bi-weekly':     230.75,
+                    'semi-monthly':  250.00,
+                    'monthly':       500.00,
+                    'quarterly':    1500.00,
+                    'semi-annual':  3000.00,
+                    'annual':       6000.00,
+                },
+                'married filing joint, one spouse working': {
+                    'weekly':        115.50,
+                    'bi-weekly':     230.75,
+                    'semi-monthly':  250.00,
+                    'monthly':       500.00,
+                    'quarterly':    1500.00,
+                    'semi-annual':  3000.00,
+                    'annual':       6000.00,
+                },
+                'single': {
+                    'weekly':         88.50,
+                    'bi-weekly':     177.00,
+                    'semi-monthly':  191.75,
+                    'monthly':       383.50,
+                    'quarterly':    1150.00,
+                    'semi-annual':  2300.00,
+                    'annual':       4600.00,
+                },
+                'head of household': {
+                    'weekly':         88.50,
+                    'bi-weekly':     177.00,
+                    'semi-monthly':  191.75,
+                    'monthly':       383.50,
+                    'quarterly':    1150.00,
+                    'semi-annual':  2300.00,
+                    'annual':       4600.00,
+                },
+                'married filing separate': {
+                    'weekly':         57.75,
+                    'bi-weekly':     115.50,
+                    'semi-monthly':  125.00,
+                    'monthly':       250.00,
+                    'quarterly':     750.00,
+                    'semi-annual':  1500.00,
+                    'annual':       3000.00,
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ga_sit_deduction"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_ga_dor" model="res.partner">
+        <field name="name">US Georgia - Department of Taxation - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_ga_dor_sit" model="res.partner">
+        <field name="name">US Georgia - Department of Taxation - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_ga_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US GA Georgia State Unemployment</field>
+        <field name="code">ER_US_GA_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ga_suta_wage_base', rate='us_ga_suta_rate', state_code='GA')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ga_suta_wage_base', rate='us_ga_suta_rate', state_code='GA')</field>
+        <field name="partner_id" ref="res_partner_us_ga_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_ga_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US GA Georgia State Income Tax Withholding</field>
+        <field name="code">EE_US_GA_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = ga_georgia_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = ga_georgia_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_ga_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

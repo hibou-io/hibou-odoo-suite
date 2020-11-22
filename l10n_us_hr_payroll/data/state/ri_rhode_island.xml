@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_ri_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US RI Rhode Island SUTA Wage Base</field>
+        <field name="code">us_ri_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ri_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">24000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ri_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_ri_suta_rate" model="hr.rule.parameter">
+        <field name="name">US RI Rhode Island SUTA Rate</field>
+        <field name="code">us_ri_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ri_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.06</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ri_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    <!-- Withhooding tax exemption based on two table on page 7. from http://www.tax.ri.gov/forms/2020/Withholding/2020%20Withhholding%20Tax%20Booklet.pdf -->
+    <record id="rule_parameter_us_ri_sit_exemption_rate" model="hr.rule.parameter">
+        <field name="name">US RI Rhode Island Exemption Rate</field>
+        <field name="code">us_ri_sit_exemption_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ri_sit_exemption_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly' :        (( 0.00,   19.23), (   4451.92,  0.00)),
+                'bi-weekly' :     (( 0.00,   38.46), (   8903.85,  0.00)),
+                'semi-monthly':   (( 0.00,   41.67), (   9645.83,  0.00)),
+                'monthly' :       (( 0.00,   83.33), (  19291.67,  0.00)),
+                'quarterly' :     (( 0.00,  250.00), (  57875.00,  0.00)),
+                'semi-annually':  (( 0.00,  500.00), ( 115750.00,  0.00)),
+                'annually':       (( 0.00,  1000.0), ( 231500.00,  0000)),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ri_sit_exemption_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_ri_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US RI Rhode Island SIT Tax Rate</field>
+        <field name="code">us_ri_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ri_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly': (
+                    ( 1255,   0.00, 3.75),
+                    ( 2853,  47.06, 4.75),
+                    ('inf', 122.97, 5.99),
+                ),
+                'bi-weekly': (
+                    ( 2510,   0.00, 3.75),
+                    ( 5706,  94.13, 4.75),
+                    ('inf', 245.94, 5.99),
+                ),
+                'semi-monthly': (
+                    ( 2719,   0.00, 3.75),
+                    ( 6181, 101.96, 4.75),
+                    ('inf', 266.41, 5.99),
+                ),
+                'monthly': (
+                    ( 5438,   0.00, 3.75),
+                    (12363, 203.93, 4.75),
+                    ('inf', 532.87, 5.99),
+                ),
+                'quarterly': (
+                    (16313,    0.00, 3.75),
+                    (37088,  611.74, 4.75),
+                    ('inf', 1598.55, 5.99),
+                ),
+                'semi-annually': (
+                    (32625,    0.00, 3.75),
+                    (74175, 1223.44, 4.75),
+                    ('inf', 3197.07, 5.99),
+                ),
+                'annually': (
+                    ( 65250,    0.00, 3.75),
+                    (148350, 2446.88, 4.75),
+                    ( 'inf', 6394.13, 5.99),
+                ),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ri_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_ri_dor" model="res.partner">
+        <field name="name">US Rhode Island - Department of Labor and Training - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_ri_dor_sit" model="res.partner">
+        <field name="name">US Rhode Island - Division of Taxations - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_ri_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US RI Rhode Island State Unemployment</field>
+        <field name="code">ER_US_RI_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ri_suta_wage_base', rate='us_ri_suta_rate', state_code='RI')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ri_suta_wage_base', rate='us_ri_suta_rate', state_code='RI')</field>
+        <field name="partner_id" ref="res_partner_us_ri_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_ri_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US RI Rhode Island State Income Tax Withholding</field>
+        <field name="code">EE_US_RI_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = ri_rhode_island_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = ri_rhode_island_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_ri_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>
