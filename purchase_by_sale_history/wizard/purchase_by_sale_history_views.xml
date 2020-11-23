@@ -32,7 +32,6 @@
     <record id="purchase_sale_history_make_action" model="ir.actions.act_window">
         <field name="name">Fill PO From Sales History</field>
         <field name="res_model">purchase.sale.history.make</field>
-        <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="purchase_sale_history_make_form"/>
         <field name="target">new</field>
