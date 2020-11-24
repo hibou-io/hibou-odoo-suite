@@ -8,6 +8,7 @@ class ResConfigSettings(models.TransientModel):
 
     # TODO We need MORE here...
     module_l10n_us_hr_payroll = fields.Boolean(string='USA Payroll')
+    module_l10n_us_hr_payroll_401k = fields.Boolean(string='USA Payroll 401k')
 
     payslip_sum_type = fields.Selection([
         ('date_from', 'Date From'),
