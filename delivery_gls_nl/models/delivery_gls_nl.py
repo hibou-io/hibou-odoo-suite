@@ -232,21 +232,23 @@ class ProviderGLSNL(models.Model):
             # }
             if picking.package_ids:
                 for package in picking.package_ids:
-                    rate = self._gls_nl_rate(to.country_id.code, package.shipping_weight or 0.0)
+                    converted_weight = self._gls_convert_weight(package.shipping_weight)
+                    rate = self._gls_nl_rate(to.country_id.code, converted_weight or 0.0)
                     if rate and rate != self.GLS_NL_COUNTRY_NOT_FOUND:
                         total_rate += rate
                     unit = {
                         'unitId': package.name,
-                        'weight': package.shipping_weight,
+                        'weight': converted_weight
                     }
                     request_body['units'].append(unit)
             else:
-                rate = self._gls_nl_rate(to.country_id.code, picking.shipping_weight or 0.0)
+                converted_weight = self._gls_convert_weight(picking.shipping_weight)
+                rate = self._gls_nl_rate(to.country_id.code, converted_weight or 0.0)
                 if rate and rate != self.GLS_NL_COUNTRY_NOT_FOUND:
                     total_rate += rate
                 unit = {
                     'unitId': picking.name,
-                    'weight': picking.shipping_weight,
+                    'weight': converted_weight,
                 }
                 request_body['units'].append(unit)
 
@@ -292,3 +294,11 @@ class ProviderGLSNL(models.Model):
             picking.write({'carrier_tracking_ref': '', 'carrier_price': 0.0})
         except HTTPError as e:
             raise ValidationError(e)
+
+    def _gls_convert_weight(self, weight):
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        product_weight_in_lbs_param = get_param('product.weight_in_lbs')
+        if product_weight_in_lbs_param == '1':
+            return weight / 2.20462
+        else:
+            return weight
