@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Shared -->
+    <record id="rule_parameter_941_fit_allowance" model="hr.rule.parameter">
+        <field name="name">Federal 941 FIT Allowance</field>
+        <field name="code">fed_941_fit_allowance</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_941_fit_allowance_2018" model="hr.rule.parameter.value">
+        <!-- Bogus 2018 -->
+        <field name="parameter_value">{
+            'weekly':            80.80,
+            'bi-weekly':        161.50,
+            'semi-monthly':     175.00,
+            'monthly':          350.00,
+            'quarterly':       1050.00,
+            'semi-annually':   2100.00,
+            'annually':        4200.00,
+            }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fit_allowance"/>
+        <field name="date_from" eval="datetime(2018, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_941_fit_allowance_2019" model="hr.rule.parameter.value">
+        <field name="parameter_value">{
+            'weekly':            80.80,
+            'bi-weekly':        161.50,
+            'semi-monthly':     175.00,
+            'monthly':          350.00,
+            'quarterly':       1050.00,
+            'semi-annually':   2100.00,
+            'annually':        4200.00,
+            }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fit_allowance"/>
+        <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_941_fit_allowance_2020" model="hr.rule.parameter.value">
+        <!-- Warning, major change to allowance in 2020 -->
+        <field name="parameter_value">4300.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fit_allowance"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_941_fit_nra_additional" model="hr.rule.parameter">
+        <field name="name">Federal 941 FIT NRA Additional</field>
+        <field name="code">fed_941_fit_nra_additional</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_941_fit_nra_additional_2018" model="hr.rule.parameter.value">
+        <!-- Bogus from 2018 -->
+        <field name="parameter_value">{
+            'weekly':           153.80,
+            'bi-weekly':        307.70,
+            'semi-monthly':     333.30,
+            'monthly':          666.70,
+            'quarterly':       2000.00,
+            'semi-annually':   4000.00,
+            'annually':        8000.00,
+            }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fit_nra_additional"/>
+        <field name="date_from" eval="datetime(2018, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_941_fit_nra_additional_2019" model="hr.rule.parameter.value">
+        <field name="parameter_value">{
+            'weekly':           153.80,
+            'bi-weekly':        307.70,
+            'semi-monthly':     333.30,
+            'monthly':          666.70,
+            'quarterly':       2000.00,
+            'semi-annually':   4000.00,
+            'annually':        8000.00,
+            }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fit_nra_additional"/>
+        <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_941_fit_nra_additional_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">{
+            'weekly':           238.50,
+            'bi-weekly':        476.90,
+            'semi-monthly':     516.70,
+            'monthly':         1033.30,
+            'quarterly':       3100.00,
+            'semi-annually':   6200.00,
+            'annually':       12400.00,
+            }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fit_nra_additional"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <!-- Single and Married Single Rate -->
+    <record id="rule_parameter_941_fit_table_single" model="hr.rule.parameter">
+        <field name="name">Federal 941 FIT Table Single</field>
+        <field name="code">fed_941_fit_table_single</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_941_fit_table_single_2018" model="hr.rule.parameter.value">
+        <!-- Bogus 2018 -->
+        <!-- But-not-over, $, % -->
+        <field name="parameter_value">{
+            'weekly': [
+                (      73.00,      0.00,    0),
+                (     260.00,      0.00,   10),
+                (     832.00,     18.70,   12),
+                (    1692.00,     87.34,   22),
+                (    3164.00,    276.54,   24),
+                (    3998.00,    629.82,   32),
+                (    9887.00,    896.70,   35),
+                (      'inf',   2957.85,   37),
+            ],
+            'bi-weekly': [
+                (     146.00,      0.00,    0),
+                (     519.00,      0.00,   10),
+                (    1664.00,     37.30,   12),
+                (    3385.00,    174.70,   22),
+                (    6328.00,    553.32,   24),
+                (    7996.00,   1259.64,   32),
+                (   19773.00,   1793.40,   35),
+                (      'inf',   5915.35,   37),
+            ],
+            'semi-monthly': [
+                (     158.00,      0.00,    0),
+                (     563.00,      0.00,   10),
+                (    1803.00,     40.50,   12),
+                (    3667.00,    189.30,   22),
+                (    6855.00,    599.38,   24),
+                (    8663.00,   1364.50,   32),
+                (   21421.00,   1943.06,   35),
+                (      'inf',   6408.36,   37),
+            ],
+            'monthly': [
+                (     317.00,      0.00,    0),
+                (    1125.00,      0.00,   10),
+                (    3606.00,     80.80,   12),
+                (    7333.00,    378.52,   22),
+                (   13710.00,   1198.46,   24),
+                (   17325.00,   2728.94,   32),
+                (   42842.00,   3885.74,   35),
+                (      'inf',  12816.69,   37),
+            ],
+            'quarterly': [
+                (     950.00,      0.00,    0),
+                (    3375.00,      0.00,   10),
+                (   10819.00,    242.50,   12),
+                (   22000.00,   1135.78,   22),
+                (   41131.00,   3595.60,   24),
+                (   51975.00,   8187.04,   32),
+                (  128525.00,  11657.12,   35),
+                (      'inf',  38449.62,   37),
+            ],
+            'semi-annually': [
+                (    1900.00,      0.00,    0),
+                (    6750.00,      0.00,   10),
+                (   21638.00,    485.00,   12),
+                (   44000.00,   2271.56,   22),
+                (   82263.00,   7191.20,   24),
+                (  103950.00,  16374.32,   32),
+                (  257050.00,  23314.16,   35),
+                (      'inf',  76899.16,   37),
+            ],
+            'annually': [
+                (    3800.00,      0.00,    0),
+                (   13500.00,      0.00,   10),
+                (   43275.00,    970.00,   12),
+                (   88000.00,   4543.00,   22),
+                (  164525.00,  14382.50,   24),
+                (  207900.00,  32748.50,   32),
+                (  514100.00,  46628.50,   35),
+                (      'inf', 153798.50,   37),
+            ],
+            }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fit_table_single"/>
+        <field name="date_from" eval="datetime(2018, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_941_fit_table_single_2019" model="hr.rule.parameter.value">
+        <!-- But-not-over, $, % -->
+        <field name="parameter_value">{
+            'weekly': [
+                (      73.00,      0.00,    0),
+                (     260.00,      0.00,   10),
+                (     832.00,     18.70,   12),
+                (    1692.00,     87.34,   22),
+                (    3164.00,    276.54,   24),
+                (    3998.00,    629.82,   32),
+                (    9887.00,    896.70,   35),
+                (      'inf',   2957.85,   37),
+            ],
+            'bi-weekly': [
+                (     146.00,      0.00,    0),
+                (     519.00,      0.00,   10),
+                (    1664.00,     37.30,   12),
+                (    3385.00,    174.70,   22),
+                (    6328.00,    553.32,   24),
+                (    7996.00,   1259.64,   32),
+                (   19773.00,   1793.40,   35),
+                (      'inf',   5915.35,   37),
+            ],
+            'semi-monthly': [
+                (     158.00,      0.00,    0),
+                (     563.00,      0.00,   10),
+                (    1803.00,     40.50,   12),
+                (    3667.00,    189.30,   22),
+                (    6855.00,    599.38,   24),
+                (    8663.00,   1364.50,   32),
+                (   21421.00,   1943.06,   35),
+                (      'inf',   6408.36,   37),
+            ],
+            'monthly': [
+                (     317.00,      0.00,    0),
+                (    1125.00,      0.00,   10),
+                (    3606.00,     80.80,   12),
+                (    7333.00,    378.52,   22),
+                (   13710.00,   1198.46,   24),
+                (   17325.00,   2728.94,   32),
+                (   42842.00,   3885.74,   35),
+                (      'inf',  12816.69,   37),
+            ],
+            'quarterly': [
+                (     950.00,      0.00,    0),
+                (    3375.00,      0.00,   10),
+                (   10819.00,    242.50,   12),
+                (   22000.00,   1135.78,   22),
+                (   41131.00,   3595.60,   24),
+                (   51975.00,   8187.04,   32),
+                (  128525.00,  11657.12,   35),
+                (      'inf',  38449.62,   37),
+            ],
+            'semi-annually': [
+                (    1900.00,      0.00,    0),
+                (    6750.00,      0.00,   10),
+                (   21638.00,    485.00,   12),
+                (   44000.00,   2271.56,   22),
+                (   82263.00,   7191.20,   24),
+                (  103950.00,  16374.32,   32),
+                (  257050.00,  23314.16,   35),
+                (      'inf',  76899.16,   37),
+            ],
+            'annually': [
+                (    3800.00,      0.00,    0),
+                (   13500.00,      0.00,   10),
+                (   43275.00,    970.00,   12),
+                (   88000.00,   4543.00,   22),
+                (  164525.00,  14382.50,   24),
+                (  207900.00,  32748.50,   32),
+                (  514100.00,  46628.50,   35),
+                (      'inf', 153798.50,   37),
+            ],
+            }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fit_table_single"/>
+        <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_941_fit_table_single_2020" model="hr.rule.parameter.value">
+        <!-- Major changes in 2020 -->
+        <!-- Wage Threshold, Base Withholding Amount, Marginal Rate Over Threshold -->
+        <field name="parameter_value">{
+            'standard': [
+                (       0.00,      0.00,   0.00),
+                (    3800.00,      0.00,   0.10),
+                (   13675.00,    987.50,   0.12),
+                (   43925.00,   4617.50,   0.22),
+                (   89325.00,  14605.50,   0.24),
+                (  167100.00,  33271.50,   0.32),
+                (  211150.00,  47367.50,   0.35),
+                (  522200.00, 156235.00,   0.37),
+            ],
+            'higher': [
+                (       0.00,      0.00,   0.00),
+                (    6200.00,      0.00,   0.10),
+                (   11138.00,    493.75,   0.12),
+                (   26263.00,   2308.75,   0.22),
+                (   48963.00,   7302.75,   0.24),
+                (   87850.00,  16635.75,   0.32),
+                (  109875.00,  23683.75,   0.35),
+                (  265400.00,  78117.50,   0.37),
+            ],
+            }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fit_table_single"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <!-- Married -->
+    <record id="rule_parameter_941_fit_table_married" model="hr.rule.parameter">
+        <field name="name">Federal 941 FIT Table Married</field>
+        <field name="code">fed_941_fit_table_married</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_941_fit_table_married_2018" model="hr.rule.parameter.value">
+        <!-- Bogus 2018 -->
+        <!-- But-not-over, $, % -->
+        <field name="parameter_value">{
+            'weekly': [
+                (     227.00,      0.00,    0),
+                (     600.00,      0.00,   10),
+                (    1745.00,     37.30,   12),
+                (    3465.00,    174.70,   22),
+                (    6409.00,    553.10,   24),
+                (    8077.00,   1259.66,   32),
+                (   12003.00,   1793.42,   35),
+                (      'inf',   3167.52,   37),
+            ],
+            'bi-weekly': [
+                (     454.00,      0.00,    0),
+                (    1200.00,      0.00,   10),
+                (    3490.00,     74.60,   12),
+                (    6931.00,    349.40,   22),
+                (   12817.00,   1106.42,   24),
+                (   16154.00,   2519.06,   32),
+                (   24006.00,   3586.90,   35),
+                (      'inf',   6335.10,   37),
+            ],
+            'semi-monthly': [
+                (     492.00,      0.00,    0),
+                (    1300.00,      0.00,   10),
+                (    3781.00,     80.80,   12),
+                (    7508.00,    378.52,   22),
+                (   13885.00,   1198.46,   24),
+                (   17500.00,   2728.94,   32),
+                (   26006.00,   3885.74,   35),
+                (      'inf',   6862.84,   37),
+            ],
+            'monthly': [
+                (     983.00,      0.00,    0),
+                (    2600.00,      0.00,   10),
+                (    7563.00,    161.70,   12),
+                (   15017.00,    757.26,   22),
+                (   27771.00,   2397.14,   24),
+                (   35000.00,   5458.10,   32),
+                (   52013.00,   7771.38,   35),
+                (      'inf',  13725.93,   37),
+            ],
+            'quarterly': [
+                (    2950.00,      0.00,    0),
+                (    7800.00,      0.00,   10),
+                (   22688.00,    485.00,   12),
+                (   45050.00,   2271.56,   22),
+                (   83313.00,   7191.20,   24),
+                (  105000.00,  16374.32,   32),
+                (  156038.00,  23314.16,   35),
+                (      'inf',  41177.46,   37),
+            ],
+            'semi-annually': [
+                (    5900.00,      0.00,    0),
+                (   15600.00,      0.00,   10),
+                (   45375.00,    970.00,   12),
+                (   90100.00,   4543.00,   22),
+                (  166625.00,  14382.50,   24),
+                (  210000.00,  32748.50,   32),
+                (  312075.00,  46628.50,   35),
+                (      'inf',  82354.75,   37),
+            ],
+            'annually': [
+                (   11800.00,      0.00,    0),
+                (   31200.00,      0.00,   10),
+                (   90750.00,   1940.00,   12),
+                (  180200.00,   9086.00,   22),
+                (  333250.00,  28765.00,   24),
+                (  420000.00,  65497.00,   32),
+                (  624150.00,  93257.00,   35),
+                (      'inf', 164709.50,   37),
+            ],
+            }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fit_table_married"/>
+        <field name="date_from" eval="datetime(2018, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_941_fit_table_married_2019" model="hr.rule.parameter.value">
+        <!-- But-not-over, $, % -->
+        <field name="parameter_value">{
+            'weekly': [
+                (     227.00,      0.00,    0),
+                (     600.00,      0.00,   10),
+                (    1745.00,     37.30,   12),
+                (    3465.00,    174.70,   22),
+                (    6409.00,    553.10,   24),
+                (    8077.00,   1259.66,   32),
+                (   12003.00,   1793.42,   35),
+                (      'inf',   3167.52,   37),
+            ],
+            'bi-weekly': [
+                (     454.00,      0.00,    0),
+                (    1200.00,      0.00,   10),
+                (    3490.00,     74.60,   12),
+                (    6931.00,    349.40,   22),
+                (   12817.00,   1106.42,   24),
+                (   16154.00,   2519.06,   32),
+                (   24006.00,   3586.90,   35),
+                (      'inf',   6335.10,   37),
+            ],
+            'semi-monthly': [
+                (     492.00,      0.00,    0),
+                (    1300.00,      0.00,   10),
+                (    3781.00,     80.80,   12),
+                (    7508.00,    378.52,   22),
+                (   13885.00,   1198.46,   24),
+                (   17500.00,   2728.94,   32),
+                (   26006.00,   3885.74,   35),
+                (      'inf',   6862.84,   37),
+            ],
+            'monthly': [
+                (     983.00,      0.00,    0),
+                (    2600.00,      0.00,   10),
+                (    7563.00,    161.70,   12),
+                (   15017.00,    757.26,   22),
+                (   27771.00,   2397.14,   24),
+                (   35000.00,   5458.10,   32),
+                (   52013.00,   7771.38,   35),
+                (      'inf',  13725.93,   37),
+            ],
+            'quarterly': [
+                (    2950.00,      0.00,    0),
+                (    7800.00,      0.00,   10),
+                (   22688.00,    485.00,   12),
+                (   45050.00,   2271.56,   22),
+                (   83313.00,   7191.20,   24),
+                (  105000.00,  16374.32,   32),
+                (  156038.00,  23314.16,   35),
+                (      'inf',  41177.46,   37),
+            ],
+            'semi-annually': [
+                (    5900.00,      0.00,    0),
+                (   15600.00,      0.00,   10),
+                (   45375.00,    970.00,   12),
+                (   90100.00,   4543.00,   22),
+                (  166625.00,  14382.50,   24),
+                (  210000.00,  32748.50,   32),
+                (  312075.00,  46628.50,   35),
+                (      'inf',  82354.75,   37),
+            ],
+            'annually': [
+                (   11800.00,      0.00,    0),
+                (   31200.00,      0.00,   10),
+                (   90750.00,   1940.00,   12),
+                (  180200.00,   9086.00,   22),
+                (  333250.00,  28765.00,   24),
+                (  420000.00,  65497.00,   32),
+                (  624150.00,  93257.00,   35),
+                (      'inf', 164709.50,   37),
+            ],
+            }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fit_table_married"/>
+        <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_941_fit_table_married_2020" model="hr.rule.parameter.value">
+        <!-- Major changes in 2020 -->
+        <!-- Wage Threshold, Base Withholding Amount, Marginal Rate Over Threshold -->
+        <field name="parameter_value">{
+            'standard': [
+                (       0.00,      0.00,   0.00),
+                (   11900.00,      0.00,   0.10),
+                (   31650.00,   1975.00,   0.12),
+                (   92150.00,   9235.00,   0.22),
+                (  182950.00,  29211.00,   0.24),
+                (  338500.00,  66543.00,   0.32),
+                (  426600.00,  94735.00,   0.35),
+                (  633950.00, 167307.50,   0.37),
+            ],
+            'higher': [
+                (       0.00,      0.00,   0.00),
+                (   12400.00,      0.00,   0.10),
+                (   22275.00,    987.50,   0.12),
+                (   52525.00,   4617.50,   0.22),
+                (   97925.00,  14605.50,   0.24),
+                (  175700.00,  33271.50,   0.32),
+                (  219750.00,  47367.50,   0.35),
+                (  323425.00,  83653.75,   0.37),
+            ],
+            }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fit_table_married"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_941_fit_table_hh" model="hr.rule.parameter">
+        <field name="name">Federal 941 FIT Table Head of Household</field>
+        <field name="code">fed_941_fit_table_hh</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_941_fit_table_hh_2020" model="hr.rule.parameter.value">
+        <!-- Major changes in 2020 -->
+        <!-- Wage Threshold, Base Withholding Amount, Marginal Rate Over Threshold -->
+        <field name="parameter_value">{
+            'standard': [
+                (       0.00,      0.00,   0.00),
+                (   10050.00,      0.00,   0.10),
+                (   24150.00,   1410.00,   0.12),
+                (   63750.00,   6162.00,   0.22),
+                (   95550.00,  13158.00,   0.24),
+                (  173350.00,  31830.00,   0.32),
+                (  217400.00,  45926.00,   0.35),
+                (  528450.00, 154793.50,   0.37),
+            ],
+            'higher': [
+                (       0.00,      0.00,   0.00),
+                (    9325.00,      0.00,   0.10),
+                (   16375.00,    705.00,   0.12),
+                (   36175.00,   3081.00,   0.22),
+                (   52075.00,   6579.00,   0.24),
+                (   90975.00,  15915.00,   0.32),
+                (  113000.00,  22963.00,   0.35),
+                (  268525.00,  77396.75,   0.37),
+            ],
+            }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fit_table_hh"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+</odoo>

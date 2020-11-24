@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="hr_contract_view_form_inherit_l10n_us" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='structure_type_id']" position="after">
+                <field name="us_payroll_config_id"
+                       domain="[('employee_id', '=', employee_id)]"
+                       attrs="{'invisible': [('structure_type_id', '!=', %(l10n_us_hr_payroll.structure_type_employee)s)],
+                               'required': [('structure_type_id', '=', %(l10n_us_hr_payroll.structure_type_employee)s)]}"
+                       context="{'default_employee_id': employee_id}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

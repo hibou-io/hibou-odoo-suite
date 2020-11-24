@@ -1,0 +1,1048 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_nj_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US NJ NewJersey SUTA Wage Base</field>
+        <field name="code">us_nj_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nj_suta_wage_base_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">34400.00</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_nj_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">35300.00</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <!-- SUTA -->
+    <record id="rule_parameter_us_nj_suta_rate" model="hr.rule.parameter">
+        <field name="name">US NJ New Jersey Employer Unemployment SUTA Rate</field>
+        <field name="code">us_nj_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nj_suta_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.6825</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_suta_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_nj_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.6825</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_nj_suta_ee_rate" model="hr.rule.parameter">
+        <field name="name">US NJ New Jersey Employee Unemployment SUTA Rate</field>
+        <field name="code">us_nj_suta_ee_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nj_suta_ee_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.3825</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_suta_ee_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_nj_suta_ee_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.3825</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_suta_ee_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <!-- SDI -->
+    <record id="rule_parameter_us_nj_sdi_rate" model="hr.rule.parameter">
+        <field name="name">US NJ New Jersey Employer State Disability Insurance Rate</field>
+        <field name="code">us_nj_sdi_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nj_sdi_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.5</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_sdi_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_nj_sdi_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.5</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_sdi_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_nj_sdi_ee_rate" model="hr.rule.parameter">
+        <field name="name">US NJ New Jersey Employee State Disability Insurance Rate</field>
+        <field name="code">us_nj_sdi_ee_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nj_sdi_ee_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.17</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_sdi_ee_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_nj_sdi_ee_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.26</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_sdi_ee_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <!-- WF -->
+    <record id="rule_parameter_us_nj_wf_rate" model="hr.rule.parameter">
+        <field name="name">US NJ New Jersey Employer Workforce Development Rate</field>
+        <field name="code">us_nj_wf_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nj_wf_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.1175</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_wf_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_nj_wf_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.1175</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_wf_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_nj_wf_ee_rate" model="hr.rule.parameter">
+        <field name="name">US NJ New Jersey Employee Workforce Development Rate</field>
+        <field name="code">us_nj_wf_ee_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nj_wf_ee_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.0425</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_wf_ee_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_nj_wf_ee_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.0425</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_wf_ee_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <!-- FLI -->
+    <record id="rule_parameter_us_nj_fli_rate" model="hr.rule.parameter">
+        <field name="name">US NJ New Jersey Employer Family Leave Insurance Rate</field>
+        <field name="code">us_nj_fli_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nj_fli_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_fli_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_nj_fli_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_fli_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+    
+    <record id="rule_parameter_us_nj_fli_ee_rate" model="hr.rule.parameter">
+        <field name="name">US NJ New Jersey Employee Family Leave Insurance Rate</field>
+        <field name="code">us_nj_fli_ee_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nj_fli_ee_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.08</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_fli_ee_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_nj_fli_ee_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.16</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_fli_ee_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- SIT -->
+    <record id="rule_parameter_us_nj_sit_rate" model="hr.rule.parameter">
+        <field name="name">US NJ NewJersey SIT Rate Table</field>
+        <field name="code">us_nj_sit_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nj_sit_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'A': {
+                    'weekly': (
+                        (  385,    0.00,  1.50),
+                        (  673,    5.77,  2.00),
+                        (  769,   11.54,  3.90),
+                        ( 1442,   15.29,  6.10),
+                        ( 9615,   56.34,  7.00),
+                        (96154,  628.46,  9.90),
+                        ('inf', 9195.77, 11.80),
+                    ),
+                    'bi-weekly': (
+                        (   769,     0.00,  1.50),
+                        (  1346,    12.00,  2.00),
+                        (  1538,    23.00,  3.90),
+                        (  2885,    31.00,  6.10),
+                        ( 19231,   113.00,  7.00),
+                        (192308,  1257.00,  9.90),
+                        ( 'inf', 18392.00, 11.80),
+                    ),
+                    'semi-monthly': (
+                        (   833,     0.00,  1.50),
+                        (  1458,    13.00,  2.00),
+                        (  1667,    25.00,  3.90),
+                        (  3125,    33.00,  6.10),
+                        ( 20833,   122.00,  7.00),
+                        (208333,  1362.00,  9.90),
+                        ( 'inf', 19924.00, 11.80),
+                    ),
+                    'monthly': (
+                        (  1667,     0.00,  1.50),
+                        (  2917,    25.00,  2.00),
+                        (  3333,    50.00,  3.90),
+                        (  6250,    66.00,  6.10),
+                        ( 41667,   244.00,  7.00),
+                        (416667,  2723.00,  9.90),
+                        ( 'inf', 39848.00, 11.80),
+                    ),
+                    'quarterly': (
+                        (   5000,      0.00,  1.50),
+                        (   8750,     75.00,  2.00),
+                        (  10000,    150.00,  3.90),
+                        (  18750,    198.75,  6.10),
+                        ( 125000,    732.50,  7.00),
+                        (1250000,   8170.00,  9.90),
+                        (  'inf', 119545.00, 11.80),
+                    ),
+                    'semi-annual': (
+                        (  10000,      0.00,  1.50),
+                        (  17500,    150.00,  2.00),
+                        (  20000,    300.00,  3.90),
+                        (  37500,    397.50,  6.10),
+                        ( 250000,   1465.00,  7.00),
+                        (2500000,  16340.00,  9.90),
+                        (  'inf', 239090.00, 11.80),
+                    ),
+                    'annual': (
+                        (  20000,      0.00,  1.50),
+                        (  35000,    300.00,  2.00),
+                        (  40000,    600.00,  3.90),
+                        (  75000,    795.00,  6.10),
+                        ( 500000,   2930.00,  7.00),
+                        (5000000,  32680.00,  9.90),
+                        (  'inf', 478180.00, 11.80),
+                    ),
+                },
+                'B': {
+                    'weekly': (
+                        (  385,    0.00,  1.50),
+                        (  962,    5.77,  2.00),
+                        ( 1346,   17.31,  2.70),
+                        ( 1538,   27.69,  3.90),
+                        ( 2885,   35.19,  6.10),
+                        ( 9615,  117.31,  7.00),
+                        (96154,  588.46,  9.90),
+                        ('inf', 9155.77, 11.80),
+                    ),
+                    'bi-weekly': (
+                        (   769,     0.00,  1.50),
+                        (  1923,    12.00,  2.00),
+                        (  2692,    35.00,  2.70),
+                        (  3076,    55.00,  3.90),
+                        (  5769,    70.00,  6.10),
+                        ( 19231,   235.00,  7.00),
+                        (192308,  1177.00,  9.90),
+                        ( 'inf', 18312.00, 11.80),
+                    ),
+                    'semi-monthly': (
+                        (   833,     0.00,  1.50),
+                        (  2083,    12.50,  2.00),
+                        (  2917,    37.50,  2.70),
+                        (  3333,    59.99,  3.90),
+                        (  6250,    76.25,  6.10),
+                        ( 20833,   254.19,  7.00),
+                        (208333,  1275.00,  9.90),
+                        ( 'inf', 19838.00, 11.80),
+                    ),
+                    'monthly': (
+                        (  1667,     0.00,  1.50),
+                        (  4167,    25.00,  2.00),
+                        (  5833,    75.00,  2.70),
+                        (  6667,   120.00,  3.90),
+                        ( 12500,   153.00,  6.10),
+                        ( 41667,   508.00,  7.00),
+                        (416667,  2550.00,  9.90),
+                        ( 'inf', 39675.00, 11.80),
+                    ),
+                    'quarterly': (
+                        (   5000,      0.00,  1.50),
+                        (  12500,     75.00,  2.00),
+                        (  17500,    225.00,  2.70),
+                        (  20000,    360.00,  3.90),
+                        (  37500,    397.50,  6.10),
+                        ( 125000,   1525.00,  7.00),
+                        (1250000,   7650.00,  9.90),
+                        (  'inf', 119025.00, 11.80),
+                    ),
+                    'semi-annual': (
+                        (  10000,      0.00,  1.50),
+                        (  25000,    150.00,  2.00),
+                        (  35000,    450.00,  2.70),
+                        (  40000,    720.00,  3.90),
+                        (  75000,    915.00,  6.10),
+                        ( 250000,   3050.00,  7.00),
+                        (2500000,  15300.00,  9.90),
+                        (  'inf', 238050.00, 11.80),
+                    ),
+                    'annual': (
+                        (  20000,      0.00,  1.50),
+                        (  50000,    300.00,  2.00),
+                        (  70000,    900.00,  2.70),
+                          (80000,   1440.00,  3.90),
+                        ( 150000,   1830.00,  6.10),
+                        ( 500000,   6100.00,  7.00),
+                        (5000000,  30600.00,  9.90),
+                        (  'inf', 476100.00, 11.80),
+                    ),
+                },
+                'C': {
+                    'weekly': (
+                        (  385,    0.00,  1.50),
+                        (  769,    5.77,  2.30),
+                        (  962,   14.62,  2.80),
+                        ( 1154,   20.00,  3.50),
+                        ( 2885,   26.73,  5.60),
+                        ( 9615,  123.65,  6.60),
+                        (96154,  567.88,  9.90),
+                        ('inf', 9135.19, 11.80),
+                    ),
+                    'bi-weekly': (
+                        (   769,     0.00,  1.50),
+                        (  1538,    11.54,  2.30),
+                        (  1923,    29.23,  2.80),
+                        (  2308,    40.00,  3.50),
+                        (  5769,    53.46,  5.60),
+                        ( 19231,   247.31,  6.60),
+                        (192308,  1135.77,  9.90),
+                        ( 'inf', 18270.38, 11.80),
+                    ),
+                    'semi-monthly': (
+                        (   833,     0.00,  1.50),
+                        (  1667,    12.50,  2.30),
+                        (  2083,    31.67,  2.80),
+                        (  2500,    43.33,  3.50),
+                        (  6250,    57.92,  5.60),
+                        ( 20833,   267.92,  6.60),
+                        (208333,  1230.42,  9.90),
+                        ( 'inf', 19792.92, 11.80),
+                    ),
+                    'monthly': (
+                        (  1667,     0.00,  1.50),
+                        (  3333,    25.00,  2.30),
+                        (  4167,    63.33,  2.80),
+                        (  5000,    86.67,  3.50),
+                        ( 12500,   115.83,  5.60),
+                        ( 41667,   535.85,  6.60),
+                        (416667,  2460.83,  9.90),
+                        ( 'inf', 39585.83, 11.80),
+                    ),
+                    'quarterly': (
+                        (   5000,      0.00,  1.50),
+                        (  10000,     75.00,  2.30),
+                        (  12500,    190.00,  2.80),
+                        (  15000,    260.00,  3.50),
+                        (  37500,    347.50,  5.60),
+                        ( 125000,   1607.50,  6.60),
+                        (1250000,   7382.50,  9.90),
+                        (  'inf', 118757.50, 11.80),
+                    ),
+                    'semi-annual': (
+                        (  10000,      0.00,  1.50),
+                        (  20000,    150.00,  2.30),
+                        (  25000,    380.00,  2.80),
+                        (  30000,    520.00,  3.50),
+                        (  75000,    695.00,  5.60),
+                        ( 250000,   3215.00,  6.60),
+                        (2500000,  14765.00,  9.90),
+                        (  'inf', 237515.00, 11.80),
+                    ),
+                    'annual': (
+                        (  20000,      0.00,  1.50),
+                        (  40000,    300.00,  2.30),
+                        (  50000,    760.00,  2.80),
+                        (  60000,   1040.00,  3.50),
+                        ( 150000,   1390.00,  5.60),
+                        ( 500000,   6430.00,  6.60),
+                        (5000000,  29530.00,  9.90),
+                        (  'inf', 475030.00, 11.80),
+                    ),
+                },
+                'D': {
+                    'weekly': (
+                        (   385,    0.00,  1.50),
+                        (   769,    5.77,  2.70),
+                        (   962,   16.15,  3.40),
+                        (  1154,   22.69,  4.30),
+                        (  2885,   30.96,  5.60),
+                        (  9615,  127.88,  6.50),
+                        ( 96154,  565.38,  9.90),
+                        ( 'inf', 9132.69, 11.80),
+                    ),
+                    'bi-weekly': (
+                        (   769,     0.00,  1.50),
+                        (  1538,    11.54,  2.70),
+                        (  1923,    32.31,  3.40),
+                        (  2308,    45.38,  4.30),
+                        (  5769,    61.92,  5.60),
+                        ( 19231,   255.77,  6.50),
+                        (192308,  1130.77,  9.90),
+                        ( 'inf', 18265.38, 11.80),
+                    ),
+                    'semi-monthly': (
+                        (   833,     0.00,  1.50),
+                        (  1667,    12.50,  2.70),
+                        (  2083,    35.00,  3.40),
+                        (  2500,    49.17,  4.30),
+                        (  6250,    67.08,  5.60),
+                        ( 20833,   277.08,  6.50),
+                        (208333,  1225.00,  9.90),
+                        ( 'inf', 19787.50, 11.80),
+                    ),
+                    'monthly': (
+                        (  1667,     0.00,  1.50),
+                        (  3333,    25.00,  2.70),
+                        (  4167,    70.00,  3.40),
+                        (  5000,    98.33,  4.00),
+                        ( 12500,   134.17,  5.60),
+                        ( 41667,   554.17,  6.50),
+                        (416667,  2450.00,  9.90),
+                        ( 'inf', 39575.00, 11.80),
+                    ),
+                    'quarterly': (
+                        (   5000,      0.00,  1.50),
+                        (  10000,     75.00,  2.07),
+                        (  12500,    210.00,  3.40),
+                        (  15000,    295.00,  4.30),
+                        (  37500,    402.50,  5.60),
+                        ( 125000,   1662.50,  6.50),
+                        (1250000,   7350.00,  9.90),
+                        (  'inf', 118725.00, 11.80),
+                    ),
+                    'semi-annual': (
+                        (  10000,      0.00,  1.50),
+                        (  20000,    150.00,  2.70),
+                        (  25000,    420.00,  3.40),
+                        (  30000,    590.00,  4.30),
+                        (  75000,    805.00,  5.60),
+                        ( 250000,   3325.00,  6.50),
+                        (2500000,  14700.00,  9.90),
+                        (  'inf', 237450.00, 11.80),
+                    ),
+                    'annual': (
+                        (  20000,      0.00,  1.50),
+                        (  40000,    300.00,  2.70),
+                        (  50000,    840.00,  3.40),
+                        (  60000,   1180.00,  4.30),
+                        ( 150000,   1610.00,  5.60),
+                        ( 250000,   6650.00,  6.50),
+                        (2500000,  29400.00,  9.90),
+                        (  'inf', 474900.00, 11.80),
+                    ),
+                },
+                'E': {
+                    'weekly': (
+                        (   385,    0.00,  1.50),
+                        (   673,    5.77,  2.00),
+                        (  1923,   11.54,  5.80),
+                        (  9615,   84.04,  6.50),
+                        ( 96154,  584.04,  9.90),
+                        ( 'inf', 9151.35, 11.80),
+                    ),
+                    'bi-weekly': (
+                        (   769,     0.00,  1.50),
+                        (  1346,    12.00,  2.00),
+                        (  3846,    23.00,  5.80),
+                        ( 19231,   168.00,  6.50),
+                        (192308,  1168.00,  9.90),
+                        ( 'inf', 18303.00, 11.80),
+                    ),
+                    'semi-monthly': (
+                        (   833,     0.00,  1.50),
+                        (  1458,    13.00,  2.00),
+                        (  4167,    25.00,  5.80),
+                        ( 20833,   182.00,  6.50),
+                        (208333,  1265.00,  9.90),
+                        ( 'inf', 19828.00, 11.80),
+                    ),
+                    'monthly': (
+                        ( 1667,      0.00,  1.50),
+                        ( 2916,     25.00,  2.00),
+                        ( 8333,     50.00,  5.80),
+                        ( 41667,   364.00,  6.50),
+                        (416667,  2531.00,  9.90),
+                        ( 'inf', 39656.00, 11.80),
+                    ),
+                    'quarterly': (
+                        (   5000,      0.00,  1.50),
+                        (   8750,     75.00,  2.00),
+                        (  25000,    150.00,  5.80),
+                        ( 125000,   1092.50,  6.50),
+                        (1250000,   7592.50,  9.90),
+                        (  'inf', 118967.50, 11.80),
+                    ),
+                    'semi-annual': (
+                        (  10000,      0.00,  1.50),
+                        (  17500,    150.00,  2.00),
+                        (  50000,    300.00,  5.80),
+                        ( 250000,   2185.00,  6.50),
+                        (2500000,  15185.00,  9.90),
+                        (  'inf', 237935.00, 11.80),
+                    ),
+                    'annual': (
+                        (  20000,      0.00,  1.50),
+                        (  35000,    300.00,  2.00),
+                        ( 100000,    600.00,  5.80),
+                        ( 500000,   4370.00,  6.50),
+                        (5000000,  30370.00,  9.90),
+                        (  'inf', 475870.00, 11.80),
+                    ),
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_sit_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- Table from Percentage Method Calculations https://www.state.nj.us/treasury/taxation/pdf/current/njwt.pdf -->
+        <record id="rule_parameter_us_nj_sit_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'A': {
+                    'weekly': (
+                        (  385,    0.00,  1.50),
+                        (  673,    5.77,  2.00),
+                        (  769,   11.54,  3.90),
+                        ( 1442,   15.29,  6.10),
+                        ( 9615,   56.34,  7.00),
+                        (96154,  628.46,  9.90),
+                        ('inf', 9195.77, 11.80),
+                    ),
+                    'bi-weekly': (
+                        (   769,     0.00,  1.50),
+                        (  1346,    12.00,  2.00),
+                        (  1538,    23.00,  3.90),
+                        (  2885,    31.00,  6.10),
+                        ( 19231,   113.00,  7.00),
+                        (192308,  1257.00,  9.90),
+                        ( 'inf', 18392.00, 11.80),
+                    ),
+                    'semi-monthly': (
+                        (   833,     0.00,  1.50),
+                        (  1458,    13.00,  2.00),
+                        (  1667,    25.00,  3.90),
+                        (  3125,    33.00,  6.10),
+                        ( 20833,   122.00,  7.00),
+                        (208333,  1362.00,  9.90),
+                        ( 'inf', 19924.00, 11.80),
+                    ),
+                    'monthly': (
+                        (  1667,     0.00,  1.50),
+                        (  2917,    25.00,  2.00),
+                        (  3333,    50.00,  3.90),
+                        (  6250,    66.00,  6.10),
+                        ( 41667,   244.00,  7.00),
+                        (416667,  2723.00,  9.90),
+                        ( 'inf', 39848.00, 11.80),
+                    ),
+                    'quarterly': (
+                        (   5000,      0.00,  1.50),
+                        (   8750,     75.00,  2.00),
+                        (  10000,    150.00,  3.90),
+                        (  18750,    198.75,  6.10),
+                        ( 125000,    732.50,  7.00),
+                        (1250000,   8170.00,  9.90),
+                        (  'inf', 119545.00, 11.80),
+                    ),
+                    'semi-annual': (
+                        (  10000,      0.00,  1.50),
+                        (  17500,    150.00,  2.00),
+                        (  20000,    300.00,  3.90),
+                        (  37500,    397.50,  6.10),
+                        ( 250000,   1465.00,  7.00),
+                        (2500000,  16340.00,  9.90),
+                        (  'inf', 239090.00, 11.80),
+                    ),
+                    'annual': (
+                        (  20000,      0.00,  1.50),
+                        (  35000,    300.00,  2.00),
+                        (  40000,    600.00,  3.90),
+                        (  75000,    795.00,  6.10),
+                        ( 500000,   2930.00,  7.00),
+                        (5000000,  32680.00,  9.90),
+                        (  'inf', 478180.00, 11.80),
+                    ),
+                },
+                'B': {
+                    'weekly': (
+                        (  385,    0.00,  1.50),
+                        (  962,    5.77,  2.00),
+                        ( 1346,   17.31,  2.70),
+                        ( 1538,   27.69,  3.90),
+                        ( 2885,   35.19,  6.10),
+                        ( 9615,  117.31,  7.00),
+                        (96154,  588.46,  9.90),
+                        ('inf', 9155.77, 11.80),
+                    ),
+                    'bi-weekly': (
+                        (   769,     0.00,  1.50),
+                        (  1923,    12.00,  2.00),
+                        (  2692,    35.00,  2.70),
+                        (  3076,    55.00,  3.90),
+                        (  5769,    70.00,  6.10),
+                        ( 19231,   235.00,  7.00),
+                        (192308,  1177.00,  9.90),
+                        ( 'inf', 18312.00, 11.80),
+                    ),
+                    'semi-monthly': (
+                        (   833,     0.00,  1.50),
+                        (  2083,    12.50,  2.00),
+                        (  2917,    37.50,  2.70),
+                        (  3333,    59.99,  3.90),
+                        (  6250,    76.25,  6.10),
+                        ( 20833,   254.19,  7.00),
+                        (208333,  1275.00,  9.90),
+                        ( 'inf', 19838.00, 11.80),
+                    ),
+                    'monthly': (
+                        (  1667,     0.00,  1.50),
+                        (  4167,    25.00,  2.00),
+                        (  5833,    75.00,  2.70),
+                        (  6667,   120.00,  3.90),
+                        ( 12500,   153.00,  6.10),
+                        ( 41667,   508.00,  7.00),
+                        (416667,  2550.00,  9.90),
+                        ( 'inf', 39675.00, 11.80),
+                    ),
+                    'quarterly': (
+                        (   5000,      0.00,  1.50),
+                        (  12500,     75.00,  2.00),
+                        (  17500,    225.00,  2.70),
+                        (  20000,    360.00,  3.90),
+                        (  37500,    397.50,  6.10),
+                        ( 125000,   1525.00,  7.00),
+                        (1250000,   7650.00,  9.90),
+                        (  'inf', 119025.00, 11.80),
+                    ),
+                    'semi-annual': (
+                        (  10000,      0.00,  1.50),
+                        (  25000,    150.00,  2.00),
+                        (  35000,    450.00,  2.70),
+                        (  40000,    720.00,  3.90),
+                        (  75000,    915.00,  6.10),
+                        ( 250000,   3050.00,  7.00),
+                        (2500000,  15300.00,  9.90),
+                        (  'inf', 238050.00, 11.80),
+                    ),
+                    'annual': (
+                        (  20000,      0.00,  1.50),
+                        (  50000,    300.00,  2.00),
+                        (  70000,    900.00,  2.70),
+                          (80000,   1440.00,  3.90),
+                        ( 150000,   1830.00,  6.10),
+                        ( 500000,   6100.00,  7.00),
+                        (5000000,  30600.00,  9.90),
+                        (  'inf', 476100.00, 11.80),
+                    ),
+                },
+                'C': {
+                    'weekly': (
+                        (  385,    0.00,  1.50),
+                        (  769,    5.77,  2.30),
+                        (  962,   14.62,  2.80),
+                        ( 1154,   20.00,  3.50),
+                        ( 2885,   26.73,  5.60),
+                        ( 9615,  123.65,  6.60),
+                        (96154,  567.88,  9.90),
+                        ('inf', 9135.19, 11.80),
+                    ),
+                    'bi-weekly': (
+                        (   769,     0.00,  1.50),
+                        (  1538,    11.54,  2.30),
+                        (  1923,    29.23,  2.80),
+                        (  2308,    40.00,  3.50),
+                        (  5769,    53.46,  5.60),
+                        ( 19231,   247.31,  6.60),
+                        (192308,  1135.77,  9.90),
+                        ( 'inf', 18270.38, 11.80),
+                    ),
+                    'semi-monthly': (
+                        (   833,     0.00,  1.50),
+                        (  1667,    12.50,  2.30),
+                        (  2083,    31.67,  2.80),
+                        (  2500,    43.33,  3.50),
+                        (  6250,    57.92,  5.60),
+                        ( 20833,   267.92,  6.60),
+                        (208333,  1230.42,  9.90),
+                        ( 'inf', 19792.92, 11.80),
+                    ),
+                    'monthly': (
+                        (  1667,     0.00,  1.50),
+                        (  3333,    25.00,  2.30),
+                        (  4167,    63.33,  2.80),
+                        (  5000,    86.67,  3.50),
+                        ( 12500,   115.83,  5.60),
+                        ( 41667,   535.85,  6.60),
+                        (416667,  2460.83,  9.90),
+                        ( 'inf', 39585.83, 11.80),
+                    ),
+                    'quarterly': (
+                        (   5000,      0.00,  1.50),
+                        (  10000,     75.00,  2.30),
+                        (  12500,    190.00,  2.80),
+                        (  15000,    260.00,  3.50),
+                        (  37500,    347.50,  5.60),
+                        ( 125000,   1607.50,  6.60),
+                        (1250000,   7382.50,  9.90),
+                        (  'inf', 118757.50, 11.80),
+                    ),
+                    'semi-annual': (
+                        (  10000,      0.00,  1.50),
+                        (  20000,    150.00,  2.30),
+                        (  25000,    380.00,  2.80),
+                        (  30000,    520.00,  3.50),
+                        (  75000,    695.00,  5.60),
+                        ( 250000,   3215.00,  6.60),
+                        (2500000,  14765.00,  9.90),
+                        (  'inf', 237515.00, 11.80),
+                    ),
+                    'annual': (
+                        (  20000,      0.00,  1.50),
+                        (  40000,    300.00,  2.30),
+                        (  50000,    760.00,  2.80),
+                        (  60000,   1040.00,  3.50),
+                        ( 150000,   1390.00,  5.60),
+                        ( 500000,   6430.00,  6.60),
+                        (5000000,  29530.00,  9.90),
+                        (  'inf', 475030.00, 11.80),
+                    ),
+                },
+                'D': {
+                    'weekly': (
+                        (   385,    0.00,  1.50),
+                        (   769,    5.77,  2.70),
+                        (   962,   16.15,  3.40),
+                        (  1154,   22.69,  4.30),
+                        (  2885,   30.96,  5.60),
+                        (  9615,  127.88,  6.50),
+                        ( 96154,  565.38,  9.90),
+                        ( 'inf', 9132.69, 11.80),
+                    ),
+                    'bi-weekly': (
+                        (   769,     0.00,  1.50),
+                        (  1538,    11.54,  2.70),
+                        (  1923,    32.31,  3.40),
+                        (  2308,    45.38,  4.30),
+                        (  5769,    61.92,  5.60),
+                        ( 19231,   255.77,  6.50),
+                        (192308,  1130.77,  9.90),
+                        ( 'inf', 18265.38, 11.80),
+                    ),
+                    'semi-monthly': (
+                        (   833,     0.00,  1.50),
+                        (  1667,    12.50,  2.70),
+                        (  2083,    35.00,  3.40),
+                        (  2500,    49.17,  4.30),
+                        (  6250,    67.08,  5.60),
+                        ( 20833,   277.08,  6.50),
+                        (208333,  1225.00,  9.90),
+                        ( 'inf', 19787.50, 11.80),
+                    ),
+                    'monthly': (
+                        (  1667,     0.00,  1.50),
+                        (  3333,    25.00,  2.70),
+                        (  4167,    70.00,  3.40),
+                        (  5000,    98.33,  4.00),
+                        ( 12500,   134.17,  5.60),
+                        ( 41667,   554.17,  6.50),
+                        (416667,  2450.00,  9.90),
+                        ( 'inf', 39575.00, 11.80),
+                    ),
+                    'quarterly': (
+                        (   5000,      0.00,  1.50),
+                        (  10000,     75.00,  2.07),
+                        (  12500,    210.00,  3.40),
+                        (  15000,    295.00,  4.30),
+                        (  37500,    402.50,  5.60),
+                        ( 125000,   1662.50,  6.50),
+                        (1250000,   7350.00,  9.90),
+                        (  'inf', 118725.00, 11.80),
+                    ),
+                    'semi-annual': (
+                        (  10000,      0.00,  1.50),
+                        (  20000,    150.00,  2.70),
+                        (  25000,    420.00,  3.40),
+                        (  30000,    590.00,  4.30),
+                        (  75000,    805.00,  5.60),
+                        ( 250000,   3325.00,  6.50),
+                        (2500000,  14700.00,  9.90),
+                        (  'inf', 237450.00, 11.80),
+                    ),
+                    'annual': (
+                        (  20000,      0.00,  1.50),
+                        (  40000,    300.00,  2.70),
+                        (  50000,    840.00,  3.40),
+                        (  60000,   1180.00,  4.30),
+                        ( 150000,   1610.00,  5.60),
+                        ( 250000,   6650.00,  6.50),
+                        (2500000,  29400.00,  9.90),
+                        (  'inf', 474900.00, 11.80),
+                    ),
+                },
+                'E': {
+                    'weekly': (
+                        (   385,    0.00,  1.50),
+                        (   673,    5.77,  2.00),
+                        (  1923,   11.54,  5.80),
+                        (  9615,   84.04,  6.50),
+                        ( 96154,  584.04,  9.90),
+                        ( 'inf', 9151.35, 11.80),
+                    ),
+                    'bi-weekly': (
+                        (   769,     0.00,  1.50),
+                        (  1346,    12.00,  2.00),
+                        (  3846,    23.00,  5.80),
+                        ( 19231,   168.00,  6.50),
+                        (192308,  1168.00,  9.90),
+                        ( 'inf', 18303.00, 11.80),
+                    ),
+                    'semi-monthly': (
+                        (   833,     0.00,  1.50),
+                        (  1458,    13.00,  2.00),
+                        (  4167,    25.00,  5.80),
+                        ( 20833,   182.00,  6.50),
+                        (208333,  1265.00,  9.90),
+                        ( 'inf', 19828.00, 11.80),
+                    ),
+                    'monthly': (
+                        ( 1667,      0.00,  1.50),
+                        ( 2916,     25.00,  2.00),
+                        ( 8333,     50.00,  5.80),
+                        ( 41667,   364.00,  6.50),
+                        (416667,  2531.00,  9.90),
+                        ( 'inf', 39656.00, 11.80),
+                    ),
+                    'quarterly': (
+                        (   5000,      0.00,  1.50),
+                        (   8750,     75.00,  2.00),
+                        (  25000,    150.00,  5.80),
+                        ( 125000,   1092.50,  6.50),
+                        (1250000,   7592.50,  9.90),
+                        (  'inf', 118967.50, 11.80),
+                    ),
+                    'semi-annual': (
+                        (  10000,      0.00,  1.50),
+                        (  17500,    150.00,  2.00),
+                        (  50000,    300.00,  5.80),
+                        ( 250000,   2185.00,  6.50),
+                        (2500000,  15185.00,  9.90),
+                        (  'inf', 237935.00, 11.80),
+                    ),
+                    'annual': (
+                        (  20000,      0.00,  1.50),
+                        (  35000,    300.00,  2.00),
+                        ( 100000,    600.00,  5.80),
+                        ( 500000,   4370.00,  6.50),
+                        (5000000,  30370.00,  9.90),
+                        (  'inf', 475870.00, 11.80),
+                    ),
+                },
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_sit_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_nj_sit_allowance_rate" model="hr.rule.parameter">
+        <field name="name">US NJ NewJersey SIT Allowance Rate</field>
+        <field name="code">us_nj_sit_allowance_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nj_sit_allowance_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly':                     19.20,
+                'bi-weekly':                  38.40,
+                'semi-monthly':               41.60,
+                'monthly':                    83.30,
+                'quarterly':                 250.00,
+                'semi-annual':               500.00,
+                'annual':                   1000.00,
+                'daily or miscellaneous':      2.70,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_sit_allowance_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- Allownce Value table https://www.state.nj.us/treasury/taxation/pdf/current/njwt.pdf -->
+        <record id="rule_parameter_us_nj_sit_allowance_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly':                     19.20,
+                'bi-weekly':                  38.40,
+                'semi-monthly':               41.60,
+                'monthly':                    83.30,
+                'quarterly':                 250.00,
+                'semi-annual':               500.00,
+                'annual':                   1000.00,
+                'daily or miscellaneous':      2.70,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nj_sit_allowance_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_nj_dor" model="res.partner">
+        <field name="name">US New Jersey - Division of Taxation - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_nj_dor_sit" model="res.partner">
+        <field name="name">US New Jersey - Division of Taxation - Income Tax</field>
+    </record>
+
+    <!-- Rules -->
+    <!-- SUTA -->
+    <record id="hr_payroll_rule_er_us_nj_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US NJ New Jersey State Unemployment</field>
+        <field name="code">ER_US_NJ_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_suta_rate', state_code='NJ')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_suta_rate', state_code='NJ')</field>
+        <field name="partner_id" ref="res_partner_us_nj_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_nj_suta" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_suta"/>
+        <field name="name">EE: US NJ New Jersey State Unemployment</field>
+        <field name="code">EE_US_NJ_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_suta_ee_rate', state_code='NJ')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_suta_ee_rate', state_code='NJ')</field>
+        <field name="partner_id" ref="res_partner_us_nj_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+    
+    <!-- SDI -->
+    <record id="hr_payroll_rule_er_us_nj_sdi" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US NJ New Jersey State Disability Insurance</field>
+        <field name="code">ER_US_NJ_SDI</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_sdi_rate', state_code='NJ')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_sdi_rate', state_code='NJ')</field>
+        <field name="partner_id" ref="res_partner_us_nj_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_nj_sdi" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_suta"/>
+        <field name="name">EE: US NJ New Jersey State Disability Insurance</field>
+        <field name="code">EE_US_NJ_SDI</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_sdi_ee_rate', state_code='NJ')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_sdi_ee_rate', state_code='NJ')</field>
+        <field name="partner_id" ref="res_partner_us_nj_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+    
+    <!-- WF -->
+    <record id="hr_payroll_rule_er_us_nj_wf" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US NJ New Jersey Workforce Development</field>
+        <field name="code">ER_US_NJ_WF</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_wf_rate', state_code='NJ')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_wf_rate', state_code='NJ')</field>
+        <field name="partner_id" ref="res_partner_us_nj_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_nj_wf" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_suta"/>
+        <field name="name">EE: US NJ New Jersey Workforce Development</field>
+        <field name="code">EE_US_NJ_WF</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_wf_ee_rate', state_code='NJ')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_wf_ee_rate', state_code='NJ')</field>
+        <field name="partner_id" ref="res_partner_us_nj_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+    
+    <!-- FLI -->
+    <record id="hr_payroll_rule_er_us_nj_fli" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US NJ New Jersey Family Leave Insurance</field>
+        <field name="code">ER_US_NJ_FLI</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_fli_rate', state_code='NJ')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_fli_rate', state_code='NJ')</field>
+        <field name="partner_id" ref="res_partner_us_nj_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_nj_fli" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_suta"/>
+        <field name="name">EE: US NJ New Jersey Family Leave Insurance</field>
+        <field name="code">EE_US_NJ_FLI</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_fli_ee_rate', state_code='NJ')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nj_suta_wage_base', rate='us_nj_fli_ee_rate', state_code='NJ')</field>
+        <field name="partner_id" ref="res_partner_us_nj_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_nj_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US NJ New Jersey State Income Tax Withholding</field>
+        <field name="code">EE_US_NJ_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = nj_newjersey_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = nj_newjersey_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_nj_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

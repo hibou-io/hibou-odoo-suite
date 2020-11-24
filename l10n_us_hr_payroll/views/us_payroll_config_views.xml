@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="us_payroll_config_tree" model="ir.ui.view">
+        <field name="name">hr.contract.us_payroll_config.tree</field>
+        <field name="model">hr.contract.us_payroll_config</field>
+        <field name="arch" type="xml">
+            <tree string="Employee Payroll Forms">
+                <field name="employee_id"/>
+                <field name="name"/>
+                <field name="state_id"/>
+                <field name="create_date"/>
+                <field name="write_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="us_payroll_config_form" model="ir.ui.view">
+        <field name="name">hr.contract.us_payroll_config.form</field>
+        <field name="model">hr.contract.us_payroll_config</field>
+        <field name="arch" type="xml">
+            <form string="Employee Payroll Forms">
+                <sheet>
+                    <group name="General">
+                        <field name="employee_id"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <group name="federal" string="Federal">
+                            <p colspan="2"><h3>Form 940 - Federal Unemployment</h3></p>
+                            <field name="fed_940_type" string="Federal Unemployment Rate"/>
+                            <p colspan="2"><h3>Form 941 / W4 - Federal Income Tax</h3></p>
+                            <field name="fed_941_fica_exempt" string="FICA Exempt"/>
+                            <field name="fed_941_fit_w4_filing_status" string="Filing Status"/>
+                            <field name="fed_941_fit_w4_allowances" string="Allowances (Old W4)"/>
+                            <field name="fed_941_fit_w4_is_nonresident_alien" string="Is Nonresident Alien"/>
+                            <field name="fed_941_fit_w4_multiple_jobs_higher" string="Multiple Jobs Checked"/>
+                            <field name="fed_941_fit_w4_dependent_credit" string="Dependent Credit"/>
+                            <field name="fed_941_fit_w4_other_income" string="Other Income"/>
+                            <field name="fed_941_fit_w4_deductions" string="Deductions"/>
+                            <field name="fed_941_fit_w4_additional_withholding" string="Additional Withholding"/>
+                            <p colspan="2"><h3>State Information and Extra</h3></p>
+                            <field name="state_id" domain="[('country_id', '=', %(base.us)s)]" options="{'no_create': True}"/>
+                            <field name="workers_comp_ee_code"/>
+                            <field name="workers_comp_er_code"/>
+                        </group>
+
+                        <group name="state_al_alabama" string="AL Alabama" attrs="{'invisible':[('state_id', '!=', %(base.state_us_1)s)]}">
+                            <p colspan="2"><h3>Form A4 - State Income Tax</h3></p>
+                            <field name="al_a4_sit_exemptions" string="Withholding Exemptions 1. 2. 3."/>
+                            <field name="al_a4_sit_dependents" string="Dependents 4."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 5."/>
+                            <field name="state_income_tax_exempt" string="Exempt 6."/>
+                        </group>
+                        <group name="state_ar_arkansas" string="AR Arkansas" attrs="{'invisible':[('state_id', '!=', %(base.state_us_4)s)]}">
+                            <p colspan="2"><h3>Form AR4EC - State Income Tax</h3></p>
+                            <field name="ar_ar4ec_sit_allowances" string="Allowances 3."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 4."/>
+                            <field name="state_income_tax_exempt" string="Exempt 1. 2."/>
+                        </group>
+                        <group name="state_az_arizona" string="AZ Arizona" attrs="{'invisible':[('state_id', '!=', %(base.state_us_3)s)]}">
+                            <p colspan="2"><h3>Form A-4 - State Income Tax</h3></p>
+                            <field name="az_a4_sit_withholding_percentage" string="Withholding Percentage 1."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                        </group>
+                        <group name="state_ca_california" string="CA California" attrs="{'invisible':[('state_id', '!=', %(base.state_us_5)s)]}">
+                            <p colspan="2"><h3>Form W-4 - State Income Tax</h3></p>
+                            <field name="ca_de4_sit_filing_status" string="Filing Status 1(c)."/>
+                            <field name="ca_de4_sit_allowances" string="Allowances 3."/>
+                            <field name="ca_de4_sit_additional_allowances" string="Additional Allowances 4(c)."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                        </group>
+                        <group name="state_co_colorado" string="CO Colorado" attrs="{'invisible':[('state_id', '!=', %(base.state_us_6)s)]}">
+                            <p colspan="2"><h3>Form W-4 - State Income Tax</h3></p>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 1."/>
+                            <field name="state_income_tax_exempt" string="State Exempt"/>
+                        </group>
+                        <group name="state_de_delaware" string="DE Delaware" attrs="{'invisible':[('state_id', '!=', %(base.state_us_8)s)]}">
+                            <p colspan="2"><h3>Form DE W-4 - State Income Tax</h3></p>
+                            <field name="de_w4_sit_filing_status" string="Marital Status 3."/>
+                            <field name="de_w4_sit_dependent" string="Dependents Allowances 4."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 5."/>
+                        </group>
+                        <group name="state_ct_connecticut" string="CT Connecticut" attrs="{'invisible':[('state_id', '!=', %(base.state_us_7)s)]}">
+                            <p colspan="2"><h3>Form CT-W4 - State Income Tax</h3></p>
+                            <field name="ct_w4na_sit_code" string="Withholding Code 1."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                        </group>
+                        <group name="state_fl_florida" string="FL Florida" attrs="{'invisible':[('state_id', '!=', %(base.state_us_10)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                        </group>
+                        <group name="state_ga_georgia" string="GA Georgia" attrs="{'invisible':[('state_id', '!=', %(base.state_us_11)s)]}">
+                            <p colspan="2"><h3>Form G-4 - State Income Tax</h3></p>
+                            <field name="ga_g4_sit_filing_status" string="Marital Status 3."/>
+                            <field name="ga_g4_sit_dependent_allowances" string="Dependent Allowances 4."/>
+                            <field name="ga_g4_sit_additional_allowances" string="Additional Allowances 5."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 6."/>
+                            <field name="state_income_tax_exempt" string="Exempt 8."/>
+                        </group>
+                        <group name="state_hi_hawaii" string="HI Hawaii" attrs="{'invisible':[('state_id', '!=', %(base.state_us_12)s)]}">
+                            <p colspan="2"><h3>Form HI HW-4 - State Income Tax</h3></p>
+                            <field name="hi_hw4_sit_filing_status" string="Marital Status 3."/>
+                            <field name="hi_hw4_sit_allowances" string="Allowances 4."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 5."/>
+                        </group>
+                        <group name="state_ia_iowa" string="IA Iowa" attrs="{'invisible':[('state_id', '!=', %(base.state_us_16)s)]}">
+                            <p colspan="2"><h3>Form IA W-4 - State Income Tax</h3></p>
+                            <field name="ia_w4_sit_allowances" string="Allowances 6."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 7."/>
+                            <field name="state_income_tax_exempt" string="Exempt"/>
+                        </group>
+                        <group name="state_id_idaho" string="ID Idaho" attrs="{'invisible':[('state_id', '!=', %(base.state_us_13)s)]}">
+                            <p colspan="2"><h3>Form ID W-4 - State Income Tax</h3></p>
+                            <field name="id_w4_sit_filing_status" string="Withholding Status A.B.C."/>
+                            <field name="id_w4_sit_allowances" string="Allowances 1."/>
+                        </group>
+                        <group name="state_il_illinois" string="IL Illinois" attrs="{'invisible':[('state_id', '!=', %(base.state_us_14)s)]}">
+                            <p colspan="2"><h3>Form IL-W-4 - State Income Tax</h3></p>
+                            <field name="il_w4_sit_basic_allowances" string="Basic Allowances Step 1."/>
+                            <field name="il_w4_sit_additional_allowances" string="Additional Allowances Step 2."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding"/>
+                        </group>
+                        <group name="state_in_indiana" string="IN Indiana" attrs="{'invisible':[('state_id', '!=', %(base.state_us_15)s)]}">
+                            <p colspan="2"><h3>Form IN WH-4 - State Income Tax</h3></p>
+                            <field name="in_w4_sit_personal_exemption" string="Personal Exemption 5."/>
+                            <field name="in_w4_sit_dependent_exemption" string="Dependent Exemption 6."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional State &amp; County Witholding 7. 8."/>
+                        </group>
+                        <group name="state_ks_kansas" string="KS Kansas" attrs="{'invisible':[('state_id', '!=', %(base.state_us_17)s)]}">
+                            <p colspan="2"><h3>Form KS K-4 - State Income Tax</h3></p>
+                            <field name="ks_k4_sit_filing_status" string="Allowance Rate 3."/>
+                            <field name="ks_k4_sit_allowances" string="Allowances 4."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 5."/>
+                            <field name="state_income_tax_exempt" string="Exempt 6."/>
+                        </group>
+                        <group name="state_ky_kentucky" string="KY Kentucky" attrs="{'invisible':[('state_id', '!=', %(base.state_us_18)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                            <field name="state_income_tax_exempt" string="Exempt"/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding"/>
+                        </group>
+                        <group name="state_la_louisiana" string="LA Louisiana" attrs="{'invisible':[('state_id', '!=', %(base.state_us_19)s)]}">
+                            <p colspan="2"><h3>Form LA L-4 - State Income Tax</h3></p>
+                            <field name="la_l4_sit_filing_status" string="Filing Status 3."/>
+                            <field name="la_l4_sit_exemptions" string="Personal Exemption 6."/>
+                            <field name="la_l4_sit_dependents" string="Dependent Exemption 7."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 8."/>
+                        </group>
+                        <group name="state_me_maine" string="ME Maine" attrs="{'invisible':[('state_id', '!=', %(base.state_us_20)s)]}">
+                            <p colspan="2"><h3>Form W-4ME - State Income Tax</h3></p>
+                            <field name="me_w4me_sit_filing_status" string="Filing Status 3."/>
+                            <field name="me_w4me_sit_allowances" string="Allowances 4."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 5."/>
+                            <field name="state_income_tax_exempt" string="Exempt 6."/>
+                        </group>
+                        <group name="state_mi_michigan" string="MI Michigan" attrs="{'invisible':[('state_id', '!=', %(base.state_us_35)s)]}">
+                            <p colspan="2"><h3>Form MI-W4 - State Income Tax</h3></p>
+                            <field name="mi_w4_sit_exemptions" string="Exemptions 6."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 7."/>
+                            <field name="state_income_tax_exempt" string="Exempt 8."/>
+                        </group>
+                        <group name="state_mn_minnesota" string="MN Minnesota" attrs="{'invisible':[('state_id', '!=', %(base.state_us_36)s)]}">
+                            <p colspan="2"><h3>Form W-4MN - State Income Tax</h3></p>
+                            <field name="mn_w4mn_sit_filing_status" string="Marital Status"/>
+                            <field name="mn_w4mn_sit_allowances" string="Allowances 1."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                        </group>
+                        <group name="state_mo_missouri" string="MO Missouri" attrs="{'invisible':[('state_id', '!=', %(base.state_us_38)s)]}">
+                            <p colspan="2"><h3>Form MO W-4 - State Income Tax</h3></p>
+                            <field name="mo_mow4_sit_filing_status" string="Filing Status 1."/>
+                            <field name="mo_mow4_sit_withholding" string="Reduce Withholding 3."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                        </group>
+                        <group name="state_ms_mississippi" string="MS Mississippi" attrs="{'invisible':[('state_id', '!=', %(base.state_us_37)s)]}">
+                            <p colspan="2"><h3>Form 89-350 - State Income Tax</h3></p>
+                            <field name="ms_89_350_sit_filing_status" string="Marital Status 1. 2. 3. 8."/>
+                            <field name="ms_89_350_sit_exemption_value" string="Exemptions (Total) 6."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 7."/>
+                        </group>
+                        <group name="state_mt_montana" string="MT Montana" attrs="{'invisible':[('state_id', '!=', %(base.state_us_21)s)]}">
+                            <p colspan="2"><h3>Form MT-4 - State Income Tax</h3></p>
+                            <field name="mt_mw4_sit_exempt" string="Exempt"/>
+                            <field name="mt_mw4_sit_exemptions" string="Exemptions"/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding (Box H)"/>
+                        </group>
+                        <group name="state_nc_northcarolina" string="NC North Carolina" attrs="{'invisible':[('state_id', '!=', %(base.state_us_28)s)]}">
+                            <p colspan="2"><h3>Form NC-4 - State Income Tax</h3></p>
+                            <field name="nc_nc4_sit_filing_status" string="Filing Status"/>
+                            <field name="nc_nc4_sit_allowances" string="Allowances 1."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                        </group>
+                        <group name="state_nd_north_dakota" string="ND North Dakota" attrs="{'invisible':[('state_id', '!=', %(base.state_us_29)s)]}">
+                            <p colspan="2"><h3>Form ND W-4 - State Income Tax</h3></p>
+                            <field name="nd_w4_sit_filing_status" string="Filing Status"/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                        </group>
+                        <group name="state_ne_nebraska" string="NE Nebraska" attrs="{'invisible':[('state_id', '!=', %(base.state_us_22)s)]}">
+                            <p colspan="2"><h3>Form NC-4 - State Income Tax</h3></p>
+                            <field name="ne_w4n_sit_filing_status" string="Filing Status"/>
+                            <field name="ne_w4n_sit_allowances" string="Allowances 1."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                            <field name="state_income_tax_exempt" string="Exempt 3."/>
+                        </group>
+                        <group name="state_nh_new_hampshire" string="NH New Hampshire" attrs="{'invisible':[('state_id', '!=', %(base.state_us_24)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                        </group>
+                        <group name="state_nj_newjersey" string="NJ New Jersey" attrs="{'invisible':[('state_id', '!=', %(base.state_us_25)s)]}">
+                            <p colspan="2"><h3>Form NJ-W4 - State Income Tax</h3></p>
+                            <field name="nj_njw4_sit_filing_status" string="Filing Status 2."/>
+                            <field name="nj_njw4_sit_rate_table" string="Rate Table 3."/>
+                            <field name="nj_njw4_sit_allowances" string="Allowances 4."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 5."/>
+                        </group>
+                        <group name="state_nm_new_mexico" string="NM New Mexico" attrs="{'invisible':[('state_id', '!=', %(base.state_us_26)s)]}">
+                            <p colspan="2"><h3>Form NM W-4 - State Income Tax</h3></p>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 7."/>
+                        </group>
+                        <group name="state_nv_nevada" string="NV Nevada" attrs="{'invisible':[('state_id', '!=', %(base.state_us_23)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                        </group>
+                        <group name="state_ny_new_york" string="NY New York" attrs="{'invisible':[('state_id', '!=', %(base.state_us_27)s)]}">
+                            <p colspan="2"><h3>Form NY IT-2104 - State Income Tax</h3></p>
+                            <field name="ny_it2104_sit_filing_status" string="Filing Status"/>
+                            <field name="ny_it2104_sit_allowances" string="Allowances 1.2."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding" help="NY IT-2104 3. 4. 5."/>
+                        </group>
+                        <group name="state_oh_ohio" string="OH Ohio" attrs="{'invisible':[('state_id', '!=', %(base.state_us_30)s)]}">
+                            <p colspan="2"><h3>Form IT-4 - State Income Tax</h3></p>
+                            <field name="state_income_tax_exempt"/>
+                            <field name="oh_it4_sit_exemptions" string="Exemptions"/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding (Line 5)"/>
+                        </group>
+                        <group name="state_ok_oklahoma" string="OK Oklahoma" attrs="{'invisible':[('state_id', '!=', %(base.state_us_31)s)]}">
+                            <p colspan="2"><h3>Form OK-W-4 - State Income Tax</h3></p>
+                            <field name="ok_w4_sit_filing_status" string="Filing Status"/>
+                            <field name="ok_w4_sit_allowances" string="Allowances 1.2.3."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 6."/>
+                            <field name="state_income_tax_exempt" string="Exempt 7."/>
+                        </group>
+                        <group name="state_pa_pennsylvania" string="PA Pennsylvania" attrs="{'invisible':[('state_id', '!=', %(base.state_us_39)s)]}">
+                            <field name="state_income_tax_exempt"/>
+                            <field name="state_income_tax_additional_withholding"/>
+                        </group>
+                        <group name="state_rhode_island" string="RI Rhode Island" attrs="{'invisible':[('state_id', '!=', %(base.state_us_40)s)]}">
+                            <p colspan="2"><h3>Form RI W-4 - State Income Tax</h3></p>
+                            <field name="ri_w4_sit_allowances" string="Allowances 1."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                            <field name="state_income_tax_exempt" string="Exempt 3."/>
+                        </group>
+                        <group name="state_sc_south_carolina" string="SC South Carolina" attrs="{'invisible':[('state_id', '!=', %(base.state_us_41)s)]}">
+                            <p colspan="2"><h3>Form SC W-4 - State Income Tax</h3></p>
+                            <field name="sc_w4_sit_allowances" string="Allowances 5."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 6."/>
+                            <field name="state_income_tax_exempt" string="Exempt 7."/>
+                        </group>
+                        <group name="state_sd_south_dakota" string="SD South Dakota" attrs="{'invisible':[('state_id', '!=', %(base.state_us_42)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                        </group>
+                        <group name="state_tn_tennessee" string="TN Tennessee" attrs="{'invisible':[('state_id', '!=', %(base.state_us_43)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                        </group>
+                        <group name="state_tx_texas" string="TX Texas" attrs="{'invisible':[('state_id', '!=', %(base.state_us_44)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                        </group>
+                        <group name="state_ut_utah" string="UT Utah" attrs="{'invisible':[('state_id', '!=', %(base.state_us_45)s)]}">
+                            <p colspan="2"><h3>Form UT W-4 - State Income Tax</h3></p>
+                            <field name="ut_w4_sit_filing_status" string="Filing Status 1(C)."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 4(C)."/>
+                        </group>
+                        <group name="state_vt_vermont" string="VT Vermont" attrs="{'invisible':[('state_id', '!=', %(base.state_us_46)s)]}">
+                            <p colspan="2"><h3>Form VT W-4VT - State Income Tax</h3></p>
+                            <field name="vt_w4vt_sit_filing_status" string="Filing Status"/>
+                            <field name="vt_w4vt_sit_allowances" string="Allowances 5."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 6."/>
+                            <field name="state_income_tax_exempt" string="Exempt"/>
+                        </group>
+                        <group name="state_va_virginia" string="VA Virginia" attrs="{'invisible':[('state_id', '!=', %(base.state_us_47)s)]}">
+                            <p colspan="2"><h3>Form VA-4/VA-4P - State Income Tax</h3></p>
+                            <field name="va_va4_sit_exemptions" string="Personal Exemptions (Line 1(a))"/>
+                            <field name="va_va4_sit_other_exemptions" string="Age &amp; Blindness Exemptions (Line 1(b))"/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding (Line 2)"/>
+                            <field name="state_income_tax_exempt" string="Exempt (Line 3 or 4)"/>
+                        </group>
+                        <group name="state_wa_washington" string="WA Washington" attrs="{'invisible':[('state_id', '!=', %(base.state_us_48)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                            <p colspan="2">Ensure that your Employee and Employer workers' comp code fields are filled in for WA LNI withholding.</p>
+                        </group>
+                        <group name="state_wv_west_virginia" string="WV West Virginia" attrs="{'invisible':[('state_id', '!=', %(base.state_us_49)s)]}">
+                            <p colspan="2"><h3>Form WV/IT-104 - State Income Tax</h3></p>
+                            <field name="wv_it104_sit_filing_status" string="Filing Status"/>
+                            <field name="wv_it104_sit_exemptions" string="Exemptions 4."/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 6."/>
+                        </group>
+                        <group name="state_wi_wisconsin" string="WI Wisconsin" attrs="{'invisible':[('state_id', '!=', %(base.state_us_50)s)]}">
+                            <p colspan="2"><h3>Form WT-4 - State Income Tax</h3></p>
+                            <field name="wi_wt4_sit_filing_status" string="Filing Status"/>
+                            <field name="wi_wt4_sit_exemptions" string="Exemptions 1.(d)"/>
+                            <field name="state_income_tax_additional_withholding" string="Additional Withholding 2."/>
+                            <field name="state_income_tax_exempt" string="Exempt 3."/>
+                        </group>
+                        <group name="state_wy_wyoming" string="WY Wyoming" attrs="{'invisible':[('state_id', '!=', %(base.state_us_51)s)]}">
+                            <p colspan="2"><h3>No additional fields.</h3></p>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="us_payroll_config_search" model="ir.ui.view">
+        <field name="name">hr.contract.us_payroll_config.search</field>
+        <field name="model">hr.contract.us_payroll_config</field>
+        <field name="arch" type="xml">
+            <search string="Employee Payroll Forms Search">
+                <field name="employee_id"/>
+                <field name="name"/>
+                <field name="state_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="us_payroll_config_action_main" model="ir.actions.act_window">
+        <field name="name">Employee Payroll Forms</field>
+        <field name="res_model">hr.contract.us_payroll_config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>
+                No Forms
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="us_payroll_config_menu_main" name="Payroll Forms"
+              action="us_payroll_config_action_main"
+              sequence="50" parent="hr_payroll.menu_hr_payroll_employees_root"/>
+</odoo>

@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_nm_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US NM New Mexico SUTA Wage Base</field>
+        <field name="code">us_nm_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nm_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">25800.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nm_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_nm_suta_rate" model="hr.rule.parameter">
+        <field name="name">US NM New Mexico SUTA Rate</field>
+        <field name="code">us_nm_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_nm_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nm_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_nm_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US NM New Mexico SIT Tax Rate</field>
+        <field name="code">us_nm_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <!-- Table based on Percentage method from https://s3.amazonaws.com/realFile34821a95-73ca-43e7-b06d-fad20f5183fd/a9bf1098-533b-4a3d-806a-4bf6336af6e4?response-content-disposition=filename%3D%22FYI-104+-+New+Mexico+Withholding+Tax+-+Effective+January+1%2C+2020.pdf%22&response-content-type=application%2Fpdf&AWSAccessKeyId=AKIAJBI25DHBYGD7I7TA&Signature=OK0i%2F7YIRTdSEQHWAC2UY3ukZVI%3D&Expires=1597878297 -->
+        <record id="rule_parameter_us_nm_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single': {
+                    'weekly': (
+                        (  119,  0.00, 0.0),
+                        (  225,  0.00, 1.7),
+                        (  331,  1.80, 3.2),
+                        (  427,  5.18, 4.7),
+                        (  619,  9.70, 4.9),
+                        (  927, 19.13, 4.9),
+                        ( 1369, 34.20, 4.9),
+                        ('inf', 55.88, 4.9),
+                    ),
+                    'bi-weekly': (
+                        (  238,   0.00, 0.0),
+                        (  450,   0.00, 1.7),
+                        (  662,   3.60, 3.2),
+                        (  854,  10.37, 4.7),
+                        ( 1238,  19.40, 4.9),
+                        ( 1854,  38.25, 4.9),
+                        ( 2738,  68.40, 4.9),
+                        ('inf', 111.75, 4.9),
+                    ),
+                    'semi-monthly': (
+                        (  258,   0.00, 0.0),
+                        (  488,   0.00, 1.7),
+                        (  717,   3.90, 3.2),
+                        (  925,  11.23, 4.7),
+                        ( 1342,  21.02, 4.9),
+                        ( 2008,  41.44, 4.9),
+                        ( 2967,  74.10, 4.9),
+                        ('inf', 121.06, 4.9),
+                    ),
+                    'monthly': (
+                        (  517,   0.00, 0.0),
+                        (  975,   0.00, 1.7),
+                        ( 1433,   7.79, 3.2),
+                        ( 1850,  22.46, 4.7),
+                        ( 2683,  42.04, 4.9),
+                        ( 4017,  82.88, 4.9),
+                        ( 5933, 148.21, 4.9),
+                        ('inf', 242.13, 4.9),
+                    ),
+                    'quarterly': (
+                        (  1550,   0.00, 0.0),
+                        (  2925,   0.00, 1.7),
+                        (  4300,  23.38, 3.2),
+                        (  5550,  67.38, 4.7),
+                        (  8050, 126.13, 4.9),
+                        ( 12050, 248.63, 4.9),
+                        ( 17800, 444.63, 4.9),
+                        ( 'inf', 726.38, 4.9),
+                    ),
+                    'semi-annual': (
+                        ( 3100,    0.00, 0.0),
+                        ( 5850,    0.00, 1.7),
+                        ( 8600,   46.75, 3.2),
+                        (11100,  134.75, 4.7),
+                        (16100,  252.25, 4.9),
+                        (24100,  497.25, 4.9),
+                        (35600,  889.25, 4.9),
+                        ('inf', 1452.75, 4.9),
+                    ),
+                    'annually': (
+                        ( 6200,    0.00, 0.0),
+                        (11700,    0.00, 1.7),
+                        (17200,   93.50, 3.2),
+                        (22200,  269.50, 4.7),
+                        (32200,  504.50, 4.9),
+                        (48200,  994.50, 4.9),
+                        (71200, 1778.50, 4.9),
+                        ('inf', 2905.50, 4.9),
+                    ),
+                },
+                'married': {
+                    'weekly': (
+                        (  238,  0.00, 0.0),
+                        (  392,  0.00, 1.7),
+                        (  546,  2.62, 3.2),
+                        (  700,  7.54, 4.7),
+                        ( 1008, 14.77, 4.9),
+                        ( 1469, 29.85, 4.9),
+                        ( 2162, 52.46, 4.9),
+                        ('inf', 86.38, 4.9),
+                    ),
+                    'bi-weekly': (
+                        (  477,   0.00, 0.0),
+                        (  785,   0.00, 1.7),
+                        ( 1092,   5.23, 3.2),
+                        ( 1400,  15.08, 4.7),
+                         (2015,  29.54, 4.9),
+                        ( 2938,  59.69, 4.9),
+                        ( 4323, 104.92, 4.9),
+                        ('inf', 172.77, 4.9),
+                    ),
+                    'semi-monthly': (
+                        (  517,   0.00, 0.0),
+                        (  850,   0.00, 1.7),
+                        ( 1183,   5.67, 3.2),
+                        ( 1517,  16.33, 4.7),
+                        ( 2183,  32.00, 4.9),
+                        ( 3183,  64.67, 4.9),
+                        ( 4683, 113.67, 4.9),
+                        ('inf', 187.17, 4.9),
+                    ),
+                    'monthly': (
+                        ( 1033,   0.00, 0.0),
+                        ( 1700,   0.00, 1.7),
+                        ( 2367,  11.33, 3.2),
+                        ( 3033,  32.67, 4.7),
+                        ( 4367,  64.00, 4.9),
+                        ( 6367, 129.33, 4.9),
+                        ( 9367, 227.33, 4.9),
+                        ('inf', 374.33, 4.9),
+                    ),
+                    'quarterly': (
+                        ( 3100,    0.00, 0.0),
+                        ( 5100,    0.00, 1.7),
+                        ( 7100,   34.00, 3.2),
+                        ( 9100,   98.00, 4.7),
+                        (13100,  192.00, 4.9),
+                        (19100,  388.00, 4.9),
+                        (28100,  682.00, 4.9),
+                        ('inf', 1123.00, 4.9),
+                    ),
+                    'semi-annual': (
+                        ( 6200,    0.00, 0.0),
+                        (10200,    0.00, 1.7),
+                        (14200,   68.00, 3.2),
+                        (18200,  196.00, 4.7),
+                        (26200,  384.00, 4.9),
+                        (38200,  776.00, 4.9),
+                        (56200, 1364.00, 4.9),
+                        ('inf', 2246.00, 4.9),
+                    ),
+                    'annually': (
+                        ( 12400,    0.00, 0.0),
+                        ( 20400,    0.00, 1.7),
+                        ( 28400,  136.00, 3.2),
+                        ( 36400,  392.00, 4.7),
+                        ( 52400,  768.00, 4.9),
+                        ( 76400, 1552.00, 4.9),
+                        (112400, 2728.00, 4.9),
+                        ( 'inf', 4492.00, 4.9),
+                    ),
+                },
+                'married_as_single': {
+                    'weekly': (
+                        (  179,  0.00, 0.0),
+                        (  333,  0.00, 1.7),
+                        (  487,  2.62, 3.2),
+                        (  641,  7.54, 4.7),
+                        (  949, 14.77, 4.9),
+                        ( 1410, 29.85, 4.9),
+                        ( 2102, 52.46, 4.9),
+                        ('inf', 86.38, 4.9),
+                    ),
+                    'bi-weekly': (
+                        (  359,   0.00, 0.0),
+                        (  666,   0.00, 1.7),
+                        (  974,   5.23, 3.2),
+                        ( 1282,  15.08, 4.7),
+                        ( 1897,  29.54, 4.9),
+                        ( 2820,  59.69, 4.9),
+                        ( 4205, 104.92, 4.9),
+                        ('inf', 172.77, 4.9),
+                    ),
+                    'semi-monthly': (
+                        (  389,   0.00, 0.0),
+                        (  722,   0.00, 1.7),
+                        ( 1055,   5.67, 3.2),
+                        ( 1389,  16.33, 4.7),
+                        ( 2055,  32.00, 4.9),
+                        ( 3055,  64.67, 4.9),
+                        ( 4555, 113.67, 4.9),
+                        ('inf', 187.17, 4.9),
+                    ),
+                    'monthly': (
+                        (  777,   0.00, 0.0),
+                        ( 1444,   0.00, 1.7),
+                        ( 2110,  11.33, 3.2),
+                        ( 2777,  32.67, 4.7),
+                        ( 4110,  64.00, 4.9),
+                        ( 6110, 129.33, 4.9),
+                        ( 9110, 227.33, 4.9),
+                        ('inf', 374.33, 4.9),
+                    ),
+                    'quarterly': (
+                        (  2331,    0.00, 0.0),
+                        (  4331,    0.00, 1.7),
+                        (  6331,   34.00, 3.2),
+                        (  8331,   98.00, 4.7),
+                        ( 12331,  192.00, 4.9),
+                        ( 18331,  388.00, 4.9),
+                        ( 27331,  682.00, 4.9),
+                        ( 'inf', 1123.00, 4.9),
+                    ),
+                    'semi-annual': (
+                        (  4663,    0.00, 0.0),
+                        (  8663,    0.00, 1.7),
+                        ( 12663,   68.00, 3.2),
+                        ( 16663,  196.00, 4.7),
+                        ( 24663,  384.00, 4.9),
+                        ( 36663,  776.00, 4.9),
+                        ( 54663, 1364.00, 4.9),
+                        ( 'inf', 2246.00, 4.9),
+                    ),
+                    'annually': (
+                        (  9325,    0.00, 0.0),
+                        ( 17325,    0.00, 1.7),
+                        ( 25325,  136.00, 3.2),
+                        ( 33325,  392.00, 4.7),
+                        ( 49325,  768.00, 4.9),
+                        ( 73325, 1552.00, 4.9),
+                        (109325, 2728.00, 4.9),
+                        ( 'inf', 4492.00, 4.9),
+                    ),
+                }
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_nm_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_nm_dor" model="res.partner">
+        <field name="name">US New Mexico - Department of Workforce Solutions - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_nm_dor_sit" model="res.partner">
+        <field name="name">US New Mexico - Department of Taxation and Revenue - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_nm_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US NM New Mexico State Unemployment</field>
+        <field name="code">ER_US_NM_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nm_suta_wage_base', rate='us_nm_suta_rate', state_code='NM')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_nm_suta_wage_base', rate='us_nm_suta_rate', state_code='NM')</field>
+        <field name="partner_id" ref="res_partner_us_nm_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_nm_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US NM New Mexico State Income Tax Withholding</field>
+        <field name="code">EE_US_NM_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = nm_new_mexico_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = nm_new_mexico_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_nm_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="res_partner_eftps_940" model="res.partner">
+        <field name="name">US Federal 940 - EFTPS</field>
+    </record>
+
+    <record id="hr_payroll_category_er_fed_940" model="hr.salary.rule.category">
+        <field name="name">ER: Federal 940 FUTA</field>
+        <field name="code">ER_US_940_FUTA</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="hr_payroll_rule_er_fed_940" model="hr.salary.rule">
+        <field name="sequence" eval="440"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_fed_940"/>
+        <field name="name">ER: US FUTA Federal Unemployment</field>
+        <field name="code">ER_US_940_FUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = er_us_940_futa(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = er_us_940_futa(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_eftps_940"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+</odoo>

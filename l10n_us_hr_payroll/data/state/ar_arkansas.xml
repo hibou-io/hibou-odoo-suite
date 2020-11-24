@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_ar_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US AR Arkansas SUTA Wage Base</field>
+        <field name="code">us_ar_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ar_suta_wage_base_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">10000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ar_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_ar_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">8000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ar_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_ar_suta_rate" model="hr.rule.parameter">
+        <field name="name">US AR Arkansas SUTA Rate</field>
+        <field name="code">us_ar_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ar_suta_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">3.2</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ar_suta_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_ar_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.9</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ar_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_ar_sit_tax_rate" model="hr.rule.parameter">
+        <field name="name">US AR Arkansas SIT Tax Rate</field>
+        <field name="code">us_ar_sit_tax_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ar_sit_tax_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">[
+                (  4599, 0.0,    0.00),
+                (  9099, 2.0,   91.98),
+                ( 13699, 3.0,  182.97),
+                ( 22599, 3.4,  237.77),
+                ( 37899, 5.0,  421.46),
+                ( 80800, 5.9,  762.55),
+                ( 81800, 6.6, 1243.40),
+                ( 82800, 6.6, 1143.40),
+                ( 84100, 6.6, 1043.40),
+                ( 85200, 6.6,  943.40),
+                ( 86200, 6.6,  843.40),
+                ( 'inf', 6.6,  803.40),
+            ]</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ar_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://www.dfa.arkansas.gov/images/uploads/incomeTaxOffice/whformula.pdf-->
+        <!-- Notover, percentage , minus adjustment  page 1. 3.-->
+        <record id="rule_parameter_us_ar_sit_tax_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">[
+                (  4599, 0.0,    0.00),
+                (  9099, 2.0,   91.98),
+                ( 13699, 3.0,  182.97),
+                ( 22599, 3.4,  237.77),
+                ( 37899, 5.0,  421.46),
+                ( 80800, 5.9,  762.55),
+                ( 81800, 6.6, 1243.40),
+                ( 82800, 6.6, 1143.40),
+                ( 84100, 6.6, 1043.40),
+                ( 85200, 6.6,  943.40),
+                ( 86200, 6.6,  843.40),
+                ( 'inf', 6.6,  803.40),
+            ]</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ar_sit_tax_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_ar_sit_standard_deduction_rate" model="hr.rule.parameter">
+        <field name="name">US AR Arkansas Allowances Rate</field>
+        <field name="code">us_ar_sit_standard_deduction_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_ar_sit_standard_deduction_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">2200.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ar_sit_standard_deduction_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_ar_sit_standard_deduction_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">2200.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ar_sit_standard_deduction_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_ar_dor" model="res.partner">
+        <field name="name">US Arkansas - Department of Workforce Solutions - Unemployment Tax</field>
+    </record>
+
+    <record id="res_partner_us_ar_dor_sit" model="res.partner">
+        <field name="name">US Arkansas - Department of Financial Administration - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_ar_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US AR Arkansas State Unemployment</field>
+        <field name="code">ER_US_AR_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ar_suta_wage_base', rate='us_ar_suta_rate', state_code='AR')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_ar_suta_wage_base', rate='us_ar_suta_rate', state_code='AR')</field>
+        <field name="partner_id" ref="res_partner_us_ar_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_ar_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US AR Arkansas State Income Tax Withholding</field>
+        <field name="code">EE_US_AR_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = ar_arkansas_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = ar_arkansas_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_ar_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>

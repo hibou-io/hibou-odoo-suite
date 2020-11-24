@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wage Base -->
+    <record id="rule_parameter_us_mt_suta_wage_base" model="hr.rule.parameter">
+        <field name="name">US MT Montana SUTA Wage Base</field>
+        <field name="code">us_mt_suta_wage_base</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_mt_suta_wage_base_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">33000.00</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mt_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_mt_suta_wage_base_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">34100.00</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mt_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Rate -->
+    <record id="rule_parameter_us_mt_suta_rate" model="hr.rule.parameter">
+        <field name="name">US MT Montana SUTA Rate (UI)</field>
+        <field name="code">us_mt_suta_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_mt_suta_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.18</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mt_suta_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_mt_suta_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.18</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mt_suta_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_mt_suta_aft_rate" model="hr.rule.parameter">
+        <field name="name">US MT Montana SUTA Administrative Fund Tax Rate</field>
+        <field name="code">us_mt_suta_aft_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_mt_suta_aft_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.13</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mt_suta_aft_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_mt_suta_aft_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.13</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mt_suta_aft_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_mt_sit_rate" model="hr.rule.parameter">
+        <field name="name">US MT Montana SIT Rate Table</field>
+        <field name="code">us_mt_sit_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_mt_sit_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly': (
+                    (    135.00,       0.0,  1.80),
+                    (    288.00,       2.0,  4.40),
+                    (   2308.00,       9.0,  6.00),
+                    (     'inf',     130.0,  6.60),
+                ),
+                'bi-weekly': (
+                    (    269.00,       0.0,  1.80),
+                    (    577.00,       5.0,  4.40),
+                    (   4615.00,      18.0,  6.00),
+                    (     'inf',     261.0,  6.60),
+                ),
+                'semi-monthly': (
+                    (    292.00,       0.0,  1.80),
+                    (    625.00,       5.0,  4.40),
+                    (   5000.00,      20.0,  6.00),
+                    (     'inf',     282.0,  6.60),
+                ),
+                'monthly': (
+                    (    583.00,       0.0,  1.80),
+                    (   1250.00,      11.0,  4.40),
+                    (  10000.00,      40.0,  6.00),
+                    (     'inf',     565.0,  6.60),
+                ),
+                'annually': (
+                    (   7000.00,       0.0,  1.80),
+                    (  15000.00,     126.0,  4.40),
+                    ( 120000.00,     478.0,  6.00),
+                    (     'inf',    6778.0,  6.60),
+                ),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mt_sit_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://app.mt.gov/myrevenue/Endpoint/DownloadPdf?yearId=705 -->
+        <!-- Table Montana Withholding Tax Formula for Computerized Payroll Systems -->
+        <record id="rule_parameter_us_mt_sit_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly': (
+                    (    135.00,       0.0,  1.80),
+                    (    288.00,       2.0,  4.40),
+                    (   2308.00,       9.0,  6.00),
+                    (     'inf',     130.0,  6.60),
+                ),
+                'bi-weekly': (
+                    (    269.00,       0.0,  1.80),
+                    (    577.00,       5.0,  4.40),
+                    (   4615.00,      18.0,  6.00),
+                    (     'inf',     261.0,  6.60),
+                ),
+                'semi-monthly': (
+                    (    292.00,       0.0,  1.80),
+                    (    625.00,       5.0,  4.40),
+                    (   5000.00,      20.0,  6.00),
+                    (     'inf',     282.0,  6.60),
+                ),
+                'monthly': (
+                    (    583.00,       0.0,  1.80),
+                    (   1250.00,      11.0,  4.40),
+                    (  10000.00,      40.0,  6.00),
+                    (     'inf',     565.0,  6.60),
+                ),
+                'annually': (
+                    (   7000.00,       0.0,  1.80),
+                    (  15000.00,     126.0,  4.40),
+                    ( 120000.00,     478.0,  6.00),
+                    (     'inf',    6778.0,  6.60),
+                ),
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mt_sit_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="rule_parameter_us_mt_sit_exemption_rate" model="hr.rule.parameter">
+        <field name="name">US MT Montana SIT Exemption Rate Table</field>
+        <field name="code">us_mt_sit_exemption_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <data noupdate="1">
+        <record id="rule_parameter_us_mt_sit_exemption_rate_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly':         37.0,
+                'bi-weekly':      73.0,
+                'semi-monthly':   79.0,
+                'monthly':       158.0,
+                'annually':     1900.0,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mt_sit_exemption_rate"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <!-- https://app.mt.gov/myrevenue/Endpoint/DownloadPdf?yearId=705 -->
+        <!-- Table Montana Withholding Tax Formula for Computerized Payroll Systems -->
+        <record id="rule_parameter_us_mt_sit_exemption_rate_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'weekly':         37.0,
+                'bi-weekly':      73.0,
+                'semi-monthly':   79.0,
+                'monthly':       158.0,
+                'annually':     1900.0,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mt_sit_exemption_rate"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <!-- Partners and Contribution Registers -->
+    <record id="res_partner_us_mt_dor" model="res.partner">
+        <field name="name">US Montana - Department of Labor &amp; Industries</field>
+    </record>
+
+    <record id="res_partner_us_mt_dor_sit" model="res.partner">
+        <field name="name">US Montana - Department of Revenue - Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_er_us_mt_suta" model="hr.salary.rule">
+        <field name="sequence" eval="450"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US MT Montana State Unemployment (UI-5)</field>
+        <field name="code">ER_US_MT_SUTA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_mt_suta_wage_base', rate='us_mt_suta_rate', state_code='MT')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_mt_suta_wage_base', rate='us_mt_suta_rate', state_code='MT')</field>
+        <field name="partner_id" ref="res_partner_us_mt_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_er_us_mt_suta_aft" model="hr.salary.rule">
+        <field name="sequence" eval="451"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_er_us_suta"/>
+        <field name="name">ER: US MT Montana State Unemployment Administrative Fund Tax (AFT) (UI-5)</field>
+        <field name="code">ER_US_MT_SUTA_AFT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_mt_suta_wage_base', rate='us_mt_suta_aft_rate', state_code='MT')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_mt_suta_wage_base', rate='us_mt_suta_aft_rate', state_code='MT')</field>
+        <field name="partner_id" ref="res_partner_us_mt_dor"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_us_mt_sit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_us_sit"/>
+        <field name="name">EE: US MT Montana State Income Tax Withholding (MW-3)</field>
+        <field name="code">EE_US_MT_SIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = mt_montana_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = mt_montana_state_income_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_us_mt_dor_sit"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>
