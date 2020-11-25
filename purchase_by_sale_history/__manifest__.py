@@ -1,7 +1,7 @@
 {
     'name': 'Purchase by Sale History',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '13.0.1.0.0',
+    'version': '14.0.1.0.0',
     'category': 'Purchases',
     'sequence': 95,
     'summary': 'Fill Purchase Orders by Sales History',
@@ -14,6 +14,7 @@ Adds wizard to Purchase Orders that will fill the purchase order with products b
         'purchase',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'wizard/purchase_by_sale_history_views.xml',
     ],
     'installable': True,
