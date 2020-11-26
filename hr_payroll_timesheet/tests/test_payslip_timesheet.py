@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from odoo.tests import common
 
 
@@ -32,6 +34,19 @@ class TestPayslipTimesheet(common.TransactionCase):
         self.project = self.env['project.project'].create({
             'name': 'Timesheets',
         })
+        self.work_entry_type_leave = self.env['hr.work.entry.type'].create({
+            'name': 'Test PTO',
+            'code': 'TESTPTO',
+            'is_leave': True,
+        })
+        self.leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Paid Time Off',
+            'time_type': 'leave',
+            'allocation_type': 'no',
+            'validity_start': False,
+            'work_entry_type_id': self.work_entry_type_leave.id,
+        })
+
 
     def test_payslip_timesheet(self):
         self.assertTrue(self.contract.paid_hourly_timesheet)
@@ -81,6 +96,7 @@ class TestPayslipTimesheet(common.TransactionCase):
         self.assertTrue(timesheet_line)
         self.assertEqual(timesheet_line.number_of_days, 2.0)
         self.assertEqual(timesheet_line.number_of_hours, 18.0)
+        self.assertEqual(timesheet_line.amount, 18.0 * wage)
 
         # Day 3
         self.env['account.analytic.line'].create({
@@ -181,3 +197,28 @@ class TestPayslipTimesheet(common.TransactionCase):
         self.assertTrue(worktype_line)
         self.assertEqual(worktype_line.number_of_days, 1.0)
         self.assertEqual(worktype_line.number_of_hours, 10.0)
+
+
+    def test_with_leave(self):
+        date_from = '2018-01-10'
+        date_to = '2018-01-11'
+        leave = self.env['hr.leave'].create({
+            'name': 'Test Leave',
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type.id,
+            'date_to': date_to,
+            'date_from': date_from,
+            'number_of_days': 1,
+        })
+        leave.action_validate()
+        self.assertEqual(leave.state, 'validate')
+        self.payslip._onchange_employee()
+        self.assertTrue(self.payslip.contract_id, 'No auto-discovered contract!')
+        self.payslip.compute_sheet()
+        self.assertTrue(self.payslip.worked_days_line_ids)
+
+        leave_line = self.payslip.worked_days_line_ids.filtered(lambda l: l.code == 'TESTPTO')
+        self.assertTrue(leave_line)
+        self.assertEqual(leave_line.number_of_days, 1.0)
+        self.assertEqual(leave_line.number_of_hours, 8.0)
+        self.assertEqual(leave_line.amount, 8.0 * self.test_hourly_wage)

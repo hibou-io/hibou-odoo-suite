@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from collections import defaultdict
 from odoo import api, fields, models, _
 
@@ -53,6 +55,9 @@ class HrPayslip(models.Model):
             # filter out "work calendar lines"
             worked_day_lines = [w for w in worked_day_lines if w['work_entry_type_id'] != original_work_type.id]
 
+        # normalize leaves
+        self._timesheet_normalize_other_work_lines(worked_day_lines)
+
         work_data = self._pre_aggregate_timesheet_data(timesheet_type)
         processed_data = self.aggregate_overtime(work_data)
 
@@ -65,6 +70,16 @@ class HrPayslip(models.Model):
             } for work_type, data in processed_data.items()]
 
         return worked_day_lines
+
+    def _timesheet_normalize_other_work_lines(self, worked_day_line_values):
+        # Modifies the values based on 'wage'
+        unpaid_work_entry_types = self.struct_id.unpaid_work_entry_type_ids
+        for line_vals in worked_day_line_values:
+            work_type = self.env['hr.work.entry.type'].browse(line_vals['work_entry_type_id'])
+            if work_type not in unpaid_work_entry_types:
+                line_vals['amount'] = line_vals.get('number_of_hours', 0.0) * self._wage_for_work_type(work_type)
+            else:
+                line_vals['amount'] = 0.0
 
     def _wage_for_work_type(self, work_type):
         # Override if you pay differently for different work types
