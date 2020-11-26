@@ -151,7 +151,7 @@ class TestOvertime(common.TransactionCase):
 
     def test_10_overtime_aggregation_daily(self):
         self.overtime_rules.hours_per_day = 8.0
-        self.overtime_rules.multiplier_per_day = 1.5
+        self.overtime_rules.multiplier = 1.5
         # 38 hours in 1 week
         work_data = [
             ((2020, 24, 1), [
@@ -286,7 +286,7 @@ class TestOvertime(common.TransactionCase):
             'multiplier': 2.0,
         })
         self.overtime_rules.hours_per_day = 8.0
-        self.overtime_rules.multiplier_per_day = 1.5
+        self.overtime_rules.multiplier = 1.5
         self.work_type_overtime.overtime_type_id = self.overtime_rules2
         self.work_type_overtime.overtime_work_type_id = self.work_type_overtime2
 
@@ -328,7 +328,7 @@ class TestOvertime(common.TransactionCase):
     def test_13_recursive_infinite_trivial(self):
         # recursive should will use a second overtime, but not this time!
         self.overtime_rules.hours_per_day = 8.0
-        self.overtime_rules.multiplier_per_day = 1.5
+        self.overtime_rules.multiplier = 1.5
         self.work_type.overtime_type_id = self.overtime_rules
         # overtime goes to itself
         self.work_type.overtime_work_type_id = self.work_type
@@ -347,7 +347,7 @@ class TestOvertime(common.TransactionCase):
     def test_14_recursive_infinite_loop(self):
         # recursive will use a second overtime, but not this time!
         self.overtime_rules.hours_per_day = 8.0
-        self.overtime_rules.multiplier_per_day = 1.5
+        self.overtime_rules.multiplier = 1.5
         self.work_type_overtime.overtime_type_id = self.overtime_rules
         # overtime goes back to worktype
         self.work_type_overtime.overtime_work_type_id = self.work_type
@@ -366,7 +366,7 @@ class TestOvertime(common.TransactionCase):
     def test_15_override_day_of_week(self):
         iso_date = (2020, 24, 1)
         self.overtime_rules.hours_per_day = 8.0
-        self.overtime_rules.multiplier_per_day = 1.5
+        self.overtime_rules.multiplier = 1.5
         work_data = [
             (iso_date, [
                 (self.work_type, 4.0, None),
@@ -405,7 +405,7 @@ class TestOvertime(common.TransactionCase):
     def test_16_override_date(self):
         iso_date = (2020, 24, 1)
         self.overtime_rules.hours_per_day = 8.0
-        self.overtime_rules.multiplier_per_day = 1.5
+        self.overtime_rules.multiplier = 1.5
         work_data = [
             (iso_date, [
                 (self.work_type, 4.0, None),

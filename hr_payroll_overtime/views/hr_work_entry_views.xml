@@ -87,6 +87,6 @@
 
     <menuitem id="hr_work_entry_overtime_type_menu_main" name="Overtime Rules"
               action="hr_work_entry_overtime_type_action_main"
-              sequence="11" parent="hr_payroll.menu_hr_work_entry_confirguration"/>
+              sequence="11" parent="hr_work_entry_contract.menu_hr_work_entry_confirguration"/>
 
 </odoo>

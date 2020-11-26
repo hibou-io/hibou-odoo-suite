@@ -1,7 +1,7 @@
 {
     'name': 'Payroll Overtime',
     'description': 'Provide mechanisms to calculate overtime.',
-    'version': '13.0.1.0.1',
+    'version': '14.0.1.0.0',
     'website': 'https://hibou.io/',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'license': 'AGPL-3',
