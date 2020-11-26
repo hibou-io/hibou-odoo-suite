@@ -44,4 +44,5 @@ class TestAttendanceWorkType(common.TransactionCase):
         attendance = self.employee._attendance_action_change()
         self.assertEqual(attendance.work_type_id, self.default_work_type)
         self.assertEqual(attendance.work_type_id.attendance_state, 'checked_in')
+        self.assertEqual(self.employee.last_attendance_id, attendance)
         self.assertEqual(self.employee.attendance_state, 'checked_in')
