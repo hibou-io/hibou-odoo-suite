@@ -1,3 +1,4 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
 def migrate(cr, version):
     # pre_init_hook script only runs on install,
