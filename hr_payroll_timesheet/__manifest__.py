@@ -1,10 +1,12 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 {
     'name': 'Timesheets on Payslips',
     'description': 'Get Timesheet hours onto Employee Payslips.',
-    'version': '13.0.1.0.0',
+    'version': '13.0.1.0.1',
     'website': 'https://hibou.io/',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'license': 'AGPL-3',
+    'license': 'OPL-1',
     'category': 'Human Resources',
     'data': [
         'data/hr_payroll_timesheet_data.xml',
@@ -18,6 +20,7 @@
         'hr_payroll',
         'hr_timesheet_work_entry',
         'hr_payroll_overtime',
+        'hibou_professional',
     ],
     'pre_init_hook': 'ts_payroll_pre_init_hook',
 }
