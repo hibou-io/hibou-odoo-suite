@@ -7,7 +7,7 @@ class HrEmployee(models.Model):
 
     attendance_state = fields.Selection(selection_add=[('break', 'Break'), ('lunch', 'Lunch')])
 
-    @api.depends('last_attendance_id.work_type_id')
+    @api.depends('last_attendance_id.work_type_id', 'last_attendance_id.check_in', 'last_attendance_id.check_out', 'last_attendance_id')
     def _compute_attendance_state(self):
         for employee in self:
             att = employee.last_attendance_id.sudo()
