@@ -13,7 +13,7 @@
         'views/resource_calendar_views.xml',
     ],
     'depends': [
-        'hr_payroll',
+        'hr_payroll_hibou',
         'hr_work_entry',
     ],
 }
