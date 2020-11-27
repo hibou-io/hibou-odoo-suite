@@ -1,43 +1,25 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from collections import defaultdict
-from odoo.tests import common
+from odoo.addons.hr_payroll_hibou.tests import common
+from odoo.exceptions import ValidationError
 
 
-class TestUsPayslip(common.TransactionCase):
+class TestUsPayslip(common.TestPayslip):
 
     def setUp(self):
         super().setUp()
         self.test_hourly_wage = 21.5
-        self.employee = self.env.ref('hr.employee_hne')
-        self.contract = self.env['hr.contract'].create({
-            'name': 'Test',
-            'employee_id': self.employee.id,
-            'structure_type_id': self.env.ref('hr_payroll.structure_type_employee').id,
-            'date_start': '2020-01-01',
-            'resource_calendar_id': self.employee.resource_calendar_id.id,
-            'wage': self.test_hourly_wage,
-            'paid_hourly_attendance': True,
-            'state': 'open',
-        })
-        self._setup_attendance(self.employee)
-        self.payslip = self.env['hr.payslip'].create({
-            'name': 'test slip',
-            'employee_id': self.employee.id,
-            'date_from': '2020-01-06',
-            'date_to': '2020-01-19',
-        })
+        self.employee = self._createEmployee()
+        self.contract = self._createContract(self.employee,
+                                             wage=self.test_hourly_wage,
+                                             hourly_wage=self.test_hourly_wage,
+                                             wage_type='hourly',
+                                             paid_hourly_attendance=True)
+
         self.work_entry_type_leave = self.env['hr.work.entry.type'].create({
             'name': 'Test PTO',
             'code': 'TESTPTO',
             'is_leave': True,
-        })
-        self.leave_type = self.env['hr.leave.type'].create({
-            'name': 'Test Paid Time Off',
-            'time_type': 'leave',
-            'allocation_type': 'no',
-            'validity_start': False,
-            'work_entry_type_id': self.work_entry_type_leave.id,
         })
 
     def _setup_attendance(self, employee):
@@ -114,25 +96,15 @@ class TestUsPayslip(common.TransactionCase):
         attendances += last
         return last
 
-    def _getCategories(self):
-        categories = defaultdict(float)
-        for line in self.payslip.line_ids:
-            category_id = line.category_id
-            category_code = line.category_id.code
-            while category_code:
-                categories[category_code] += line.total
-                category_id = category_id.parent_id
-                category_code = category_id.code
-        return categories
-
     def test_attendance_hourly(self):
-        self.payslip._onchange_employee()
+        attn_last = self._setup_attendance(self.employee)
+        self.payslip = self._createPayslip(self.employee, '2020-01-06', '2020-01-19')
         self.assertTrue(self.payslip.contract_id, 'No auto-discovered contract!')
         self.payslip.compute_sheet()
         # 58.97 => 40hr regular, 18.97hr OT
         # 68.4  => 40hr regular, 28.4hr  OT
         # (80 * 21.50) + (47.37 * 21.50 * 1.5) = 3247.6825
-        cats = self._getCategories()
+        cats = self._getCategories(self.payslip)
         self.assertAlmostEqual(cats['BASIC'], 3247.68, 2)
 
         # ensure unlink behavior.
@@ -141,7 +113,7 @@ class TestUsPayslip(common.TransactionCase):
         self.payslip.flush()
         self.payslip._onchange_employee()
         self.payslip.compute_sheet()
-        cats = self._getCategories()
+        cats = self._getCategories(self.payslip)
         self.assertAlmostEqual(cats['BASIC'], 3247.68, 2)
 
         self.payslip.write({'attendance_ids': [(5, 0, 0)]})
@@ -149,25 +121,33 @@ class TestUsPayslip(common.TransactionCase):
         self.payslip.flush()
         self.payslip._onchange_employee()
         self.payslip.compute_sheet()
-        cats = self._getCategories()
+        cats = self._getCategories(self.payslip)
         self.assertAlmostEqual(cats['BASIC'], 3247.68, 2)
+
+        self.process_payslip()
+        self.assertTrue(self.payslip.state not in ('draft', 'verify'))
+        self.assertEqual(self.payslip, attn_last.payslip_id)
+        # can empty, by design you have to be able to do so
+        attn_last.payslip_id = False
+        with self.assertRaises(ValidationError):
+            # cannot re-assign as it is a finished payslip
+            attn_last.payslip_id = self.payslip
 
     def test_with_leave(self):
         date_from = '2020-01-10'
         date_to = '2020-01-11'
-        leave = self.env['hr.leave'].create({
-            'name': 'Test Leave',
-            'employee_id': self.employee.id,
-            'holiday_status_id': self.leave_type.id,
-            'date_to': date_to,
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Doctor Appointment',
             'date_from': date_from,
-            'number_of_days': 1,
+            'date_to': date_to,
+            'resource_id': self.employee.resource_id.id,
+            'calendar_id': self.employee.resource_calendar_id.id,
+            'work_entry_type_id': self.work_entry_type_leave.id,
+            'time_type': 'leave',
         })
-        leave.action_validate()
-        self.assertEqual(leave.state, 'validate')
-        self.payslip._onchange_employee()
-        self.assertTrue(self.payslip.contract_id, 'No auto-discovered contract!')
-        self.payslip.compute_sheet()
+
+        self._setup_attendance(self.employee)
+        self.payslip = self._createPayslip(self.employee, '2020-01-06', '2020-01-19')
         self.assertTrue(self.payslip.worked_days_line_ids)
 
         leave_line = self.payslip.worked_days_line_ids.filtered(lambda l: l.code == 'TESTPTO')
