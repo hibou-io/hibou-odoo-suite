@@ -3,7 +3,7 @@
 {
     'name': 'Attendance on Payslips',
     'description': 'Get Attendence numbers onto Employee Payslips.',
-    'version': '13.0.1.0.1',
+    'version': '14.0.1.0.0',
     'website': 'https://hibou.io/',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'license': 'OPL-1',
@@ -15,8 +15,7 @@
         'views/hr_payslip_views.xml',
     ],
     'depends': [
-        'hr_payroll',
-        'hr_attendance',
+        'hr_payroll_hibou',
         'hr_attendance_work_entry',
         'hr_payroll_overtime',
         'hibou_professional',
