@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Work Entry Type -->
+    <record id="work_input_attendance_overtime" model="hr.work.entry.type">
+        <field name="name">Attendance Overtime</field>
+        <field name="code">ATTN_OT</field>
+    </record>
+
+    <record id="hr_attendance_work_entry.work_input_attendance" model="hr.work.entry.type">
+        <field name="overtime_type_id" ref="hr_payroll_overtime.work_entry_overtime_type"/>
+        <field name="overtime_work_type_id" ref="work_input_attendance_overtime"/>
+    </record>
+
+</odoo>
