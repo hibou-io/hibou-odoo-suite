@@ -17,6 +17,7 @@ class HrPayslip(models.Model):
             payslip.attendance_count = len(payslip.attendance_ids)
 
     def _filter_worked_day_lines_values(self, worked_day_lines_values):
+        worked_day_lines_values = super()._filter_worked_day_lines_values(worked_day_lines_values)
         if self.contract_id.paid_hourly_attendance:
             original_work_type = self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
             if original_work_type:
@@ -42,7 +43,7 @@ class HrPayslip(models.Model):
                 attendance_type = self.struct_id.type_id.default_work_entry_type_id
                 if not attendance_type:
                     # return early, include the "work calendar lines"
-                    return res
+                    return work_data
             work_data = self._pre_aggregate_attendance_data(work_data, attendance_type)
         return work_data
 

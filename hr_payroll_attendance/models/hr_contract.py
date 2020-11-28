@@ -13,4 +13,4 @@ class HrContract(models.Model):
         for contract in self:
             if contract.paid_hourly_attendance:
                 # only allow switch, not automatic switch 'back'
-                self.wage_type = 'hourly'
+                contract.wage_type = 'hourly'
