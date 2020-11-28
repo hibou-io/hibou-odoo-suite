@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="hr_timesheet_line_tree_inherit" model="ir.ui.view">
+        <field name="name">account.analytic.line.tree.hr_timesheet.inherit</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='task_id']" position="after">
+                <field name="employee_id"/>
+                <field name="payslip_id"
+                       domain="[('employee_id', '=', employee_id)]" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_timesheet_line_form_inherit" model="ir.ui.view">
+        <field name="name">account.analytic.line.form.inherit</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='task_id']" position="after">
+                <field name="employee_id"/>
+                <field name="payslip_id"
+                       domain="[('employee_id', '=', employee_id)]" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

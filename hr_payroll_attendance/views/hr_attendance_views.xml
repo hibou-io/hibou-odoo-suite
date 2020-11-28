@@ -8,7 +8,8 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='worked_hours']" position="after">
-                <field name="payslip_id"/>
+                <field name="payslip_id"
+                       domain="[('employee_id', '=', employee_id)]" />
             </xpath>
         </data>
         </field>
