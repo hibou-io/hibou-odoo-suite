@@ -4,10 +4,14 @@ from odoo.addons.hr_payroll_hibou.tests import common
 from odoo.exceptions import ValidationError
 
 
-class TestUsPayslip(common.TestPayslip):
+class TestAttendancePayslip(common.TestPayslip):
 
     def setUp(self):
         super().setUp()
+        self.work_type = self.env.ref('hr_attendance_work_entry.work_input_attendance')
+        self.overtime_rules = self.work_type.overtime_type_id
+        self.overtime_rules.hours_per_day = 0.0
+        self.overtime_rules.multiplier = 1.5
         self.test_hourly_wage = 21.5
         self.employee = self._createEmployee()
         self.contract = self._createContract(self.employee,
