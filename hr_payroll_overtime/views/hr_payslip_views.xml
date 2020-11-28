@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Payslip Form -->
+    <record id="view_hr_payslip_form_inherit" model="ir.ui.view">
+        <field name="name">hr.payslip.form.inherit</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='worked_days_line_ids']/tree/field[@name='number_of_hours']" position="after">
+                <field name="rate"/>
+            </xpath>
+            <xpath expr="//field[@name='worked_days_line_ids']/form//field[@name='number_of_hours']" position="after">
+                <field name="rate"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
