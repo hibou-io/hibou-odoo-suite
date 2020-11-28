@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_contract_form_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+        <field name="arch" type="xml">
+        <data>
+            <!-- existing field `wage_type` is now per-contract -->
+            <xpath expr="//group[@name='main_info_hourly']" position="attributes">
+                <attribute name="attrs">{}</attribute>
+            </xpath>
+            <xpath expr="//group[@name='salary_and_advantages']" position="attributes">
+                <attribute name="string">Period Advantages in Cash</attribute>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+</odoo>

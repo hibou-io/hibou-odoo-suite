@@ -1,17 +1,54 @@
 from collections import defaultdict
-from odoo import models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
 class HRPayslip(models.Model):
     _inherit = 'hr.payslip'
 
-    def aggregate_overtime(self, work_data, day_week_start=None):
+    def _get_worked_day_lines_values(self, domain=None):
+        worked_day_lines_values = super()._get_worked_day_lines_values(domain=domain)
+        return self._process_worked_day_lines_values(worked_day_lines_values, domaian=domain)
+
+    def _process_worked_day_lines_values(self, worked_day_lines_values, domaian=None):
+        if not self.state in ('draft', 'verify'):
+            return worked_day_lines_values
+
+        worked_day_lines_values = self._filter_worked_day_lines_values(worked_day_lines_values)
+        work_data = self._pre_aggregate_work_data()
+        work_data = self._post_aggregate_work_data(work_data)
+        processed_data = self._aggregate_overtime(work_data)
+        worked_day_lines_values += [{
+            'number_of_days': data[0],
+            'number_of_hours': data[1],
+            'rate': data[2],
+            'contract_id': self.contract_id.id,
+            'work_entry_type_id': work_type.id,
+        } for work_type, data in processed_data.items()]
+        return worked_day_lines_values
+
+    def _filter_worked_day_lines_values(self, worked_day_lines_values):
+        # e.g. maybe you want to remove the stock 'WORK100' lines
+        # returns new worked_day_lines_values
+        return worked_day_lines_values
+
+    def _pre_aggregate_work_data(self):
+        # returns dict(iso_date: list(tuple(hr.work.entry.type(), hours, original_record))
+        return defaultdict(list)
+
+    def _post_aggregate_work_data(self, work_data):
+        # takes pre_aggregate data format and converts it.
+        # this is to simplify algorithm and guarantee ordered by iso_date semantics
+        # work_data: dict(iso_date: list(tuple(hr.work.entry.type(), hours, original_record))
+        # returns: list(tuple(iso_date, list(tuple(hr.work.entry.type(), hours, original_record))
+        return [(iso_date, work_data[iso_date]) for iso_date in sorted(work_data.keys())]
+
+    def _aggregate_overtime(self, work_data, day_week_start=None):
         """
 
         :param work_data: list(tuple(iso_date, list(tuple(hr.work.entry.type(), hours, original_record))
         :param day_week_start: day of the week to start (otherwise employee's resource calendar start day of week)
-        :return: dict(hr.work.entry.type(): list(days_worked, hours_worked, ))
+        :return: dict(hr.work.entry.type(): list(days_worked, hours_worked, rate))
         """
         if not day_week_start:
             if self.employee_id.resource_calendar_id.day_week_start:
@@ -105,3 +142,20 @@ class HRPayslip(models.Model):
             working_aggregation[work_type][1] += hours
             day_hours[iso_date] += hours
             week_hours[week] += hours
+
+
+class HrPayslipWorkedDays(models.Model):
+    _inherit = 'hr.payslip.worked_days'
+
+    rate = fields.Float(string='Rate', default=1.0)
+
+    @api.depends('is_paid', 'number_of_hours', 'payslip_id', 'payslip_id.normal_wage', 'payslip_id.sum_worked_hours', 'rate')
+    def _compute_amount(self):
+        for worked_days in self:
+            if not worked_days.contract_id:
+                worked_days.amount = 0
+                continue
+            if worked_days.payslip_id.wage_type == "hourly":
+                worked_days.amount = worked_days.payslip_id.contract_id._get_contract_wage(work_type=worked_days.work_entry_type_id) * worked_days.number_of_hours * worked_days.rate if worked_days.is_paid else 0
+            else:
+                worked_days.amount = worked_days.payslip_id.normal_wage * worked_days.number_of_hours / (worked_days.payslip_id.sum_worked_hours or 1) if worked_days.is_paid else 0

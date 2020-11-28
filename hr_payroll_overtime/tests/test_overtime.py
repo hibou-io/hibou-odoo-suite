@@ -51,7 +51,7 @@ class TestOvertime(common.TransactionCase):
                 (self.work_type, 6.0, None),
             ]),
         ]
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertTrue(self.work_type_overtime not in result_data)
         self.assertEqual(result_data[self.work_type][0], 4)
@@ -63,7 +63,7 @@ class TestOvertime(common.TransactionCase):
                 (self.work_type, 10.0, None),
             ]),
         ]
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertEqual(result_data[self.work_type][0], 5)
         self.assertEqual(result_data[self.work_type][1], 40.0)
@@ -77,7 +77,7 @@ class TestOvertime(common.TransactionCase):
                 (self.work_type, 4.0, None),
             ]),
         ]
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertEqual(result_data[self.work_type][0], 5)
         self.assertEqual(result_data[self.work_type][1], 40.0)
@@ -110,7 +110,7 @@ class TestOvertime(common.TransactionCase):
             work_data.append(data)
             work_data.append(((data[0][0], data[0][1]+1, data[0][2]), data[1]))
 
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertTrue(self.work_type_overtime not in result_data)
         self.assertEqual(result_data[self.work_type][0], 8)
@@ -123,7 +123,7 @@ class TestOvertime(common.TransactionCase):
                 (self.work_type, 6.0, None),
             ]),
         ]
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertEqual(result_data[self.work_type][0], 9)
         self.assertEqual(result_data[self.work_type][1], 78.0)
@@ -137,7 +137,7 @@ class TestOvertime(common.TransactionCase):
                 (self.work_type, 4.0, None),
             ]),
         ]
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertEqual(result_data[self.work_type][0], 9)
         self.assertEqual(result_data[self.work_type][1], 78.0)
@@ -171,7 +171,7 @@ class TestOvertime(common.TransactionCase):
                 (self.work_type, 6.0, None),
             ]),
         ]
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertEqual(result_data[self.work_type][0], 4)
         self.assertEqual(result_data[self.work_type][1], 32.0)
@@ -185,7 +185,7 @@ class TestOvertime(common.TransactionCase):
                 (self.work_type, 10.0, None),
             ]),
         ]
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertEqual(result_data[self.work_type][0], 5)
         self.assertEqual(result_data[self.work_type][1], 40.0)
@@ -199,7 +199,7 @@ class TestOvertime(common.TransactionCase):
                 (self.work_type, 4.0, None),
             ]),
         ]
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertEqual(result_data[self.work_type][0], 5)
         self.assertEqual(result_data[self.work_type][1], 40.0)
@@ -232,7 +232,7 @@ class TestOvertime(common.TransactionCase):
             work_data.append(data)
             work_data.append(((data[0][0], data[0][1]+1, data[0][2]), data[1]))
 
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertTrue(self.work_type_overtime in result_data)
         self.assertEqual(result_data[self.work_type][0], 8)
@@ -247,7 +247,7 @@ class TestOvertime(common.TransactionCase):
                 (self.work_type, 6.0, None),
             ]),
         ]
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertEqual(result_data[self.work_type][0], 9)
         self.assertEqual(result_data[self.work_type][1], 70.0)
@@ -261,7 +261,7 @@ class TestOvertime(common.TransactionCase):
                 (self.work_type, 4.0, None),
             ]),
         ]
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertEqual(result_data[self.work_type][0], 9)
         self.assertEqual(result_data[self.work_type][1], 70.0)
@@ -314,7 +314,7 @@ class TestOvertime(common.TransactionCase):
             ]),
         ]
 
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertEqual(result_data[self.work_type][0], 4)
         self.assertEqual(result_data[self.work_type][1], 32.0)
@@ -342,7 +342,7 @@ class TestOvertime(common.TransactionCase):
         ]
 
         with self.assertRaises(UserError):
-            result_data = self.payslip.aggregate_overtime(work_data)
+            result_data = self.payslip._aggregate_overtime(work_data)
 
     def test_14_recursive_infinite_loop(self):
         # recursive will use a second overtime, but not this time!
@@ -361,7 +361,7 @@ class TestOvertime(common.TransactionCase):
         ]
 
         with self.assertRaises(UserError):
-            result_data = self.payslip.aggregate_overtime(work_data)
+            result_data = self.payslip._aggregate_overtime(work_data)
 
     def test_15_override_day_of_week(self):
         iso_date = (2020, 24, 1)
@@ -374,7 +374,7 @@ class TestOvertime(common.TransactionCase):
             ]),
         ]
 
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertEqual(result_data[self.work_type][0], 1)
         self.assertEqual(result_data[self.work_type][1], 8.0)
@@ -393,7 +393,7 @@ class TestOvertime(common.TransactionCase):
                 'work_type_id': self.work_type_overtime.id,  # Note that this wouldn't be good in practice
             })]
         })
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertEqual(result_data[self.work_type][0], 1)
         self.assertEqual(result_data[self.work_type][1], 8.0)
@@ -413,7 +413,7 @@ class TestOvertime(common.TransactionCase):
             ]),
         ]
 
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertEqual(result_data[self.work_type][0], 1)
         self.assertEqual(result_data[self.work_type][1], 8.0)
@@ -432,7 +432,7 @@ class TestOvertime(common.TransactionCase):
             })]
         })
         self.overtime_rules.flush()
-        result_data = self.payslip.aggregate_overtime(work_data)
+        result_data = self.payslip._aggregate_overtime(work_data)
         self.assertTrue(self.work_type in result_data)
         self.assertEqual(result_data[self.work_type][0], 1)
         self.assertEqual(result_data[self.work_type][1], 8.0)

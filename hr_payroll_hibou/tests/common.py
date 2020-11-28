@@ -10,15 +10,20 @@ from odoo.tools.float_utils import float_round as odoo_float_round
 
 def process_payslip(payslip):
     try:
-        payslip.action_payslip_done()
+        return payslip.action_payslip_done()
     except AttributeError:
         # v9
-        payslip.process_sheet()
+        return payslip.process_sheet()
 
 
 class TestPayslip(common.TransactionCase):
     debug = False
     _logger = getLogger(__name__)
+
+    def process_payslip(self, payslip=None):
+        if not payslip:
+            return process_payslip(self.payslip)
+        return process_payslip(payslip)
 
     def setUp(self):
         super(TestPayslip, self).setUp()
