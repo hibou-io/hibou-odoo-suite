@@ -26,7 +26,7 @@ merge_request:
     GIT_STRATEGY: none
   stage: build
   only:
-    - /(^new\/)|(^mig\/)|(^imp\/)|(^fix\/)/
+    - /(^add\/)|(^new\/)|(^mig\/)|(^imp\/)|(^fix\/)/i
   script:
     - docker pull registry.gitlab.com/hibou-io/hibou-odoo/flow
     - docker tag registry.gitlab.com/hibou-io/hibou-odoo/flow flow
