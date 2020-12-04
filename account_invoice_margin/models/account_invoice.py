@@ -31,10 +31,10 @@ class AccountMoveLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals):
-        line = super(AccountMoveLine, self).create(vals)
-        if 'purchase_price' not in vals[0]:
-            line.product_id_change_margin()
-        return line
+        lines = super(AccountMoveLine, self).create(vals)
+        if vals and 'purchase_price' not in vals[0]:
+            lines.product_id_change_margin()
+        return lines
 
     @api.depends('product_id', 'purchase_price', 'quantity', 'price_unit', 'price_subtotal')
     def _product_margin(self):
