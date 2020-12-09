@@ -54,6 +54,19 @@ class HRPayslip(models.Model):
         :param week_hours: hours worked on iso week already processed
         :return:
         """
+        override = work_type.override_for_iso_date(iso_date)
+        if override:
+            new_work_type = override.work_type_id
+            multiplier = override.multiplier
+            if work_type == new_work_type:
+                # trivial infinite recursion from override
+                raise UserError('Work type "%s" (id %s) must not have itself as its override work type. '
+                                'This occurred due to an override line "%s".' % (
+                                    work_type.name, work_type.id, override.name))
+            # update the work_type on this step.
+            work_type = new_work_type
+            working_aggregation[work_type][2] = multiplier
+
         week = iso_date[1]
         if work_type.overtime_work_type_id and work_type.overtime_type_id:
             ot_h_w = work_type.overtime_type_id.hours_per_week
