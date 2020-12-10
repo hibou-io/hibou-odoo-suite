@@ -16,7 +16,7 @@
                            domain="[('id', '!=', id)]"
                            attrs="{'required': [('overtime_work_type_id', '!=', False)]}" />
 
-                    <field name="override_ids" nolabel="1" colspan="4">
+                    <field name="override_ids" nolabel="1" colspan="2">
                         <tree editable="top">
                             <field name="work_type_id"/>
                             <field name="multiplier"/>
