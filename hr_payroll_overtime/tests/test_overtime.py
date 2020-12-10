@@ -453,3 +453,40 @@ class TestOvertime(common.TransactionCase):
                     'work_type_id': self.work_type_overtime.id,  # Note that this wouldn't be good in practice
                 })]
             })
+
+    def test_18_override_day_of_week_on_work_type(self):
+        iso_date = (2020, 24, 1)
+        iso_date2 = (2020, 24, 2)
+
+        work_data = [
+            (iso_date, [
+                (self.work_type, 4.0, None),
+            ]),
+            (iso_date2, [
+                (self.work_type, 4.0, None),
+            ]),
+        ]
+
+        result_data = self.payslip._aggregate_overtime(work_data)
+        self.assertTrue(self.work_type in result_data)
+        self.assertEqual(result_data[self.work_type][0], 2)
+        self.assertEqual(result_data[self.work_type][1], 8.0)
+
+        # Now lets make an override line
+        test_multiplier = 3.0
+        self.work_type.write({
+            'override_ids': [(0, 0, {
+                'name': 'Day 2 Override',
+                'multiplier': test_multiplier,
+                'day_of_week': str(iso_date[2]),
+                'work_type_id': self.work_type_overtime.id,  # Note that this wouldn't be good in practice
+            })]
+        })
+        result_data = self.payslip._aggregate_overtime(work_data)
+        self.assertTrue(self.work_type in result_data)
+        self.assertEqual(result_data[self.work_type][0], 1)
+        self.assertEqual(result_data[self.work_type][1], 4.0)
+        self.assertTrue(self.work_type_overtime in result_data)
+        self.assertEqual(result_data[self.work_type_overtime][0], 1)
+        self.assertEqual(result_data[self.work_type_overtime][1], 4.0)
+        self.assertEqual(result_data[self.work_type_overtime][2], test_multiplier)
