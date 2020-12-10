@@ -15,6 +15,16 @@
                     <field name="overtime_type_id"
                            domain="[('id', '!=', id)]"
                            attrs="{'required': [('overtime_work_type_id', '!=', False)]}" />
+
+                    <field name="override_ids" nolabel="1" colspan="4">
+                        <tree editable="top">
+                            <field name="work_type_id"/>
+                            <field name="multiplier"/>
+                            <field name="date"/>
+                            <field name="day_of_week"/>
+                            <field name="name"/>
+                        </tree>
+                    </field>
                 </group>
             </xpath>
         </field>
