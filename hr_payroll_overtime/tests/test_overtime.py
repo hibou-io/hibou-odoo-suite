@@ -24,9 +24,11 @@ class TestOvertime(common.TransactionCase):
             'overtime_work_type_id': self.work_type_overtime.id,
         })
         self.employee = self.env.ref('hr.employee_hne')
+        self.contract = self.employee.contract_ids.filtered(lambda l: l.state == 'open')
         self.payslip = self.env['hr.payslip'].create({
             'name': 'test slip',
             'employee_id': self.employee.id,
+            'contract_id': self.contract.id,
             'date_from': '2020-06-11',
             'date_to': '2020-06-15',
         })
@@ -490,3 +492,31 @@ class TestOvertime(common.TransactionCase):
         self.assertEqual(result_data[self.work_type_overtime][0], 1)
         self.assertEqual(result_data[self.work_type_overtime][1], 4.0)
         self.assertEqual(result_data[self.work_type_overtime][2], test_multiplier)
+
+    def test_19_overtime_exempt(self):
+        iso_date = (2020, 24, 1)
+        self.overtime_rules.hours_per_day = 8.0
+        work_data = [
+            (iso_date, [
+                (self.work_type, 4.0, None),
+                (self.work_type, 6.0, None),
+            ]),
+        ]
+
+        result_data = self.payslip._aggregate_overtime(work_data)
+        self.assertTrue(self.work_type in result_data)
+        self.assertEqual(result_data[self.work_type][0], 1)
+        self.assertEqual(result_data[self.work_type][1], 8.0)
+        self.assertTrue(self.work_type_overtime in result_data)
+        self.assertEqual(result_data[self.work_type_overtime][0], 0)
+        self.assertEqual(result_data[self.work_type_overtime][1], 2.0)
+        self.assertEqual(result_data[self.work_type_overtime][2], 1.5)
+
+        self.payslip.contract_id.is_overtime_exempt = True
+        self.assertTrue(self.payslip.contract_id)
+        self.assertTrue(self.payslip.contract_id.is_overtime_exempt)
+        result_data = self.payslip._aggregate_overtime(work_data)
+        self.assertTrue(self.work_type in result_data)
+        self.assertEqual(result_data[self.work_type][0], 1)
+        self.assertEqual(result_data[self.work_type][1], 10.0)
+        self.assertTrue(self.work_type_overtime not in result_data)

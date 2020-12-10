@@ -105,7 +105,7 @@ class HRPayslip(models.Model):
             working_aggregation[work_type][2] = multiplier
 
         week = iso_date[1]
-        if work_type.overtime_work_type_id and work_type.overtime_type_id:
+        if not self.contract_id.is_overtime_exempt and work_type.overtime_work_type_id and work_type.overtime_type_id:
             ot_h_w = work_type.overtime_type_id.hours_per_week
             ot_h_d = work_type.overtime_type_id.hours_per_day
 

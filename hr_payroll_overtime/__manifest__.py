@@ -9,6 +9,7 @@
     'data': [
         'security/ir.model.access.csv',
         'data/overtime_data.xml',
+        'views/hr_contract_views.xml',
         'views/hr_payslip_views.xml',
         'views/hr_work_entry_views.xml',
         'views/resource_calendar_views.xml',
