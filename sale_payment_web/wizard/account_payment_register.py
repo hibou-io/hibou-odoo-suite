@@ -74,7 +74,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _onchange_journal(self):
         active_ids = self._context.get('active_ids')
         if self._context.get('active_model') != 'sale.order' or not active_ids:
-            return super(AccountPaymentRegister, self).default_get(fields)
+            return super(AccountPaymentRegister, self)._onchange_journal()
         journal = self.journal_id
         if journal:
             domain_payment = [('payment_type', '=', 'inbound'), ('id', 'in', journal.inbound_payment_method_ids.ids)]
