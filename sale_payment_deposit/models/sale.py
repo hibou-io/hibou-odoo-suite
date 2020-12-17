@@ -7,7 +7,7 @@ class SaleOrder(models.Model):
 
     amount_total_deposit = fields.Monetary(string='Deposit', compute='_amount_total_deposit')
 
-    @api.depends('amount_total', 'payment_term_id.deposit_percentage')
+    @api.depends('amount_total', 'payment_term_id.deposit_percentage', 'payment_term_id.deposit_flat')
     def _amount_total_deposit(self):
         for order in self:
             percent_deposit = order.amount_total * float(order.payment_term_id.deposit_percentage) / 100.0
