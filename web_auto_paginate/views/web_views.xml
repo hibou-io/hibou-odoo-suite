@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="Web Auto-Paginate Assets" inherit_id="web.assets_backend" priority='15'>
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/web_auto_paginate/static/src/js/action_manager.js"></script>
+        </xpath>
+    </template>
+</odoo>
