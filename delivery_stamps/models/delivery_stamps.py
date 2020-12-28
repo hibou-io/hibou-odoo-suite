@@ -115,8 +115,8 @@ class ProviderStamps(models.Model):
 
         ret_val = service.create_shipping()
         ret_val.ShipDate = date_planned.strftime('%Y-%m-%d') if date_planned else date.today().isoformat()
-        ret_val.FromZIPCode = self.get_shipper_warehouse(order=order).zip
-        ret_val.ToZIPCode = order.partner_shipping_id.zip
+        ret_val.FromZIPCode = self.get_shipper_warehouse(order=order).zip.split('-')[0]
+        ret_val.ToZIPCode = order.partner_shipping_id.zip.split('-')[0]
         ret_val.PackageType = self._stamps_package_type()
         ret_val.ServiceType = self.stamps_service_type
         ret_val.WeightLb = weight
@@ -141,8 +141,8 @@ class ProviderStamps(models.Model):
 
             ret_val = service.create_shipping()
             ret_val.ShipDate = date.today().isoformat()
-            ret_val.FromZIPCode = from_partner.zip
-            ret_val.ToZIPCode = to_partner.zip
+            ret_val.FromZIPCode = from_partner.zip.split('-')[0]
+            ret_val.ToZIPCode = to_partner.zip.split('-')[0]
             ret_val.PackageType = self._stamps_package_type(package=package)
             ret_val.CubicPricing = self._stamps_package_is_cubic_pricing(package=package)
             ret_val.Length = l
@@ -158,8 +158,8 @@ class ProviderStamps(models.Model):
 
             ret_val = service.create_shipping()
             ret_val.ShipDate = date.today().isoformat()
-            ret_val.FromZIPCode = from_partner.zip
-            ret_val.ToZIPCode = to_partner.zip
+            ret_val.FromZIPCode = from_partner.zip.split('-')[0]
+            ret_val.ToZIPCode = to_partner.zip.split('-')[0]
             ret_val.PackageType = self._stamps_package_type()
             ret_val.CubicPricing = self._stamps_package_is_cubic_pricing()
             ret_val.Length = l
@@ -247,6 +247,10 @@ class ProviderStamps(models.Model):
                 from_address.Address2 = from_partner.street2
             from_address.City = from_partner.city
             from_address.State = from_partner.state_id.code
+            from_zip_pieces = from_partner.zip.split('-')
+            from_address.ZIPCode = from_zip_pieces[0]
+            if len(from_zip_pieces) >= 2:
+                from_address.ZIPCodeAddOn = from_zip_pieces[1]
             from_address = service.get_address(from_address).Address
 
             to_address = service.create_address()
@@ -256,6 +260,10 @@ class ProviderStamps(models.Model):
                 to_address.Address2 = to_partner.street2
             to_address.City = to_partner.city
             to_address.State = to_partner.state_id.code
+            to_zip_pieces = to_partner.zip.split('-')
+            to_address.ZIPCode = to_zip_pieces[0]
+            if len(to_zip_pieces) >= 2:
+                to_address.ZIPCodeAddOn = to_zip_pieces[1]
             to_address = service.get_address(to_address).Address
 
             try:
