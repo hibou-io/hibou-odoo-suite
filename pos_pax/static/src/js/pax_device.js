@@ -7,6 +7,7 @@ odoo.define('pos_pax.pax_device', function (require) {
 	// Additions and Fixes:
 	// 2020-11-12 Fixed variable i and ii in getLRC
 	// 2020-11-12 Fixed/added 'fail' mechanisms for XHR
+	// 2020-11-23 Added new DoDebit method
 
 	//HEX TO BASE64
 	function hexToBase64(str) {
@@ -79,7 +80,8 @@ odoo.define('pos_pax.pax_device', function (require) {
 			"Initialize":120*1000,
 			"GetSignature":120*1000,
 			"DoSignature":120*1000,
-			"DoCredit":120*1000
+			"DoCredit":120*1000,
+			"DoDebit":120*1000,
 		},
 
 		//Set ip and port
@@ -150,7 +152,7 @@ odoo.define('pos_pax.pax_device', function (require) {
 							var hex = StringToHex(response).slice(0,len).split(/02|1c/);
 
 							console.log(hex);
-							if(commandType == "DoCredit"){
+							if(commandType == "DoCredit" || commandType == "DoDebit"){
 								var subHex=[], subPacketInfo=[];
 								for(var i=0; i<hex.length; i++){
 									if(hex[i] != ""){
@@ -471,7 +473,108 @@ odoo.define('pos_pax.pax_device', function (require) {
 			this.HttpCommunication('DoCredit',url,function(response){
 				callback(response);
 			},PAX.timeout.DoCredit,fail);
-		}
+		},
+		//DoDebit
+		DoDebit : function(doDebitInfo,callback,fail){
+			var amountInformation,accountInformation,traceInformation,avsInformation,cashierInformation,commercialInformation,motoEcommerce,additionalInformation;
+			var params = [this.mStx.hex,doDebitInfo.command, this.mFS.hex, doDebitInfo.version];
+			params.push(this.mFS.hex);
+			// if(doDebitInfo.transactionType != ''){
+				params.push(doDebitInfo.transactionType);
+			// }
+			params.push(this.mFS.hex);
+			params = this.PushParams(params,"amountInformation",doDebitInfo.amountInformation);
+
+			params.push(this.mFS.hex);
+			params = this.PushParams(params,"accountInformation",doDebitInfo.accountInformation);
+
+			params.push(this.mFS.hex);
+			params = this.PushParams(params,"traceInformation",doDebitInfo.traceInformation);
+
+			// params.push(this.mFS.hex);
+			// params = this.PushParams(params,"avsInformation",doCreditInfo.avsInformation);
+
+			params.push(this.mFS.hex);
+			params = this.PushParams(params,"cashierInformation",doDebitInfo.cashierInformation);
+
+			// params.push(this.mFS.hex);
+			// params = this.PushParams(params,"commercialInformation",doCreditInfo.commercialInformation);
+			//
+			// params.push(this.mFS.hex);
+			// params = this.PushParams(params,"motoEcommerce",doCreditInfo.motoEcommerce);
+
+			params.push(this.mFS.hex);
+			params = this.PushParams(params,"additionalInformation",doDebitInfo.additionalInformation);
+
+			params.push(this.mEtx.hex);
+
+			var lrc = this.getLRC(params);
+
+			console.log(params);
+
+			//prepare for base64 encoding.
+			var command_hex = base64ToHex($.base64.btoa(doDebitInfo.command));
+			var version_hex = base64ToHex($.base64.btoa(doDebitInfo.version));
+			var transactionType_hex = base64ToHex($.base64.btoa(doDebitInfo.transactionType));
+			var amountInformation_hex = base64ToHex($.base64.btoa(doDebitInfo.amountInformation));
+			var accountInformation_hex = base64ToHex($.base64.btoa(doDebitInfo.accountInformation));
+			var traceInformation_hex = base64ToHex($.base64.btoa(doDebitInfo.traceInformation));
+			var avsInformation_hex = base64ToHex($.base64.btoa(doDebitInfo.avsInformation));
+			var cashierInformation_hex = base64ToHex($.base64.btoa(doDebitInfo.cashierInformation));
+			var commercialInformation_hex = base64ToHex($.base64.btoa(doDebitInfo.commercialInformation));
+			var motoEcommerce_hex = base64ToHex($.base64.btoa(doDebitInfo.motoEcommerce));
+			var additionalInformation_hex = base64ToHex($.base64.btoa(doDebitInfo.additionalInformation));
+
+			//var elements = [this.mStx.code, command_hex, this.mFS.code, version_hex, this.mFS.code, uploadFlag_hex, this.mFS.code, timeout, this.mEtx.code, base64ToHex($.base64.btoa(lrc))];
+			var elements = [this.mStx.code];
+			elements.push(command_hex);
+			elements.push(this.mFS.code);
+			elements.push(version_hex);
+			elements.push(this.mFS.code);
+
+			if(transactionType_hex != ''){
+				elements.push(transactionType_hex);
+			}
+			elements.push(this.mFS.code);
+
+			elements = this.AddBase64(elements,"amountInformation",doDebitInfo.amountInformation);
+			elements.push(this.mFS.code);
+			elements = this.AddBase64(elements,"accountInformation",doDebitInfo.accountInformation);
+			elements.push(this.mFS.code);
+			elements = this.AddBase64(elements,"traceInformation",doDebitInfo.traceInformation);
+			// elements.push(this.mFS.code);
+			// elements = this.AddBase64(elements,"avsInformation",doCreditInfo.avsInformation);
+			elements.push(this.mFS.code);
+			elements = this.AddBase64(elements,"cashierInformation",doDebitInfo.cashierInformation);
+			// elements.push(this.mFS.code);
+			// elements = this.AddBase64(elements,"commercialInformation",doCreditInfo.commercialInformation);
+			// elements.push(this.mFS.code);
+			// elements = this.AddBase64(elements,"motoEcommerce",doCreditInfo.motoEcommerce);
+			elements.push(this.mFS.code);
+			elements = this.AddBase64(elements,"additionalInformation",doDebitInfo.additionalInformation);
+
+			elements.push(this.mEtx.code);
+			elements.push(base64ToHex($.base64.btoa(lrc)));
+			console.log("elements");
+			console.log(elements);
+
+			var final_string = elements.join(" ");
+			var final_b64 = hexToBase64(final_string);
+			console.log("LRC: " + lrc);
+			console.log("Base64: " + final_b64);
+
+			// if(customData != ''){
+			// 	final_b64 = hexToBase64(final_string+"&custom_data=<PAX>"+customData+"</PAX>");
+			// }
+
+
+			var url = this.mDestinationIP + '?' + final_b64;
+					console.log("URL: " + url);
+
+			this.HttpCommunication('DoDebit',url,function(response){
+				callback(response);
+			},PAX.timeout.DoDebit,fail);
+		},
 	};
 
 	return PAX;

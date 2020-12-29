@@ -17,9 +17,18 @@ pos_model.PosModel = pos_model.PosModel.extend({
         return online_payment_methods;
     },
     decodePAXResponse: function (data) {
-        if (data[5] == 'ABORTED') {
+        var status = data[5];
+        if (status == 'ABORTED') {
             return {fail: 'Transaction Aborted'};
-        } else if (data[5] == 'OK') {
+        } else if (status == 'DECLINE') {
+            return {fail: 'Transaction Declined or not Allowed'};
+        } else if (status == 'COMM ERROR') {
+            return {fail: 'Communication Error (e.g. could be your CC processor or internet)'}
+        } else if (status == 'DEBIT ONLY, TRY ANOTHER TENDER') {
+            return {fail: 'Card does not support Debit. Use Credit or switch cards.'}
+        } else if (status == 'RECEIVE ERROR') {
+            return {fail: 'Error receiving response. Try again?'}
+        } else if (status == 'OK') {
             return {
                 success: true,
                 approval: data[6][2],
@@ -27,7 +36,11 @@ pos_model.PosModel = pos_model.PosModel.extend({
                 card_num: '***' + data[9][0],
             }
         }
-        return {fail: 'Unknown Response. ' + data};
+        var response = 'Not handled response: ' + status;
+        if (this.debug) {
+            response += ' --------- Debug Data: ' + data;
+        }
+        return {fail: response};
     },
 });
 
@@ -41,6 +54,7 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
         this.pax_card_number = json.pax_card_number;
         this.pax_approval = json.pax_approval;
         this.pax_txn_id = json.pax_txn_id;
+        this.pax_tender_type = json.pax_tender_type;
 
         this.set_credit_card_name();
     },
@@ -51,11 +65,12 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
             pax_card_number: this.pax_card_number,
             pax_approval: this.pax_approval,
             pax_txn_id: this.pax_txn_id,
+            pax_tender_type: this.pax_tender_type,
         });
     },
     set_credit_card_name: function () {
         if (this.pax_card_number) {
-            this.name = this.pax_card_number;
+            this.name = this.pax_card_number + ((this.pax_tender_type == 'debit') ? ' (Debit)' : ' (Credit)');
         }
     },
 });

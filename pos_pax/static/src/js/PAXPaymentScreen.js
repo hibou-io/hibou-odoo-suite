@@ -18,13 +18,18 @@ odoo.define('pos_pax.PAXPaymentScreen', function (require) {
                 // tempting to use 'send-payment-request',
                 // but method implements things that don't seem to exist yet (payment_method.payment_terminal)
                 useListener('pax-send-payment-request', this._sendPAXPaymentRequest);
+                useListener('pax-send-payment-request-debit', this._sendPAXPaymentRequestDebit);
             }
 
             async _sendPAXPaymentRequest({ detail: line }) {
-                this.pax_credit_transaction(line);
+                this.pax_credit_transaction(line, 'credit');
             }
 
-            pax_credit_transaction(line) {
+            async _sendPAXPaymentRequestDebit({ detail: line }) {
+                this.pax_credit_transaction(line, 'debit');
+            }
+
+            pax_credit_transaction(line, tender_type) {
                 var order = this.env.pos.get_order();
 
                 if(this.env.pos.getPAXOnlinePaymentJournals().length === 0) {
@@ -43,7 +48,7 @@ odoo.define('pos_pax.PAXPaymentScreen', function (require) {
                 }
 
                 transaction = {
-                    command: 'T00',
+                    command: (tender_type == 'debit') ? 'T02' : 'T00',
                     version: '1.28',
                     transactionType: transactionType,
                     amountInformation: {
@@ -70,7 +75,7 @@ odoo.define('pos_pax.PAXPaymentScreen', function (require) {
                 });
 
                 PAX.mDestinationIP = self.env.pos.config.pax_endpoint;
-                PAX.DoCredit(transaction, function (response) {
+                PAX[(tender_type == 'debit') ? 'DoDebit' : 'DoCredit'](transaction, function (response) {
                     console.log(response);
                     var parsed_response = self.env.pos.decodePAXResponse(response);
                     if (parsed_response.fail) {
@@ -83,6 +88,7 @@ odoo.define('pos_pax.PAXPaymentScreen', function (require) {
                         line.pax_txn_id = parsed_response.txn_id;
                         line.pax_approval = parsed_response.approval;
                         line.pax_txn_pending = false;
+                        line.pax_tender_type = tender_type;
                         line.set_credit_card_name();
                         order.trigger('change', order);
                         self.render();
@@ -109,7 +115,7 @@ odoo.define('pos_pax.PAXPaymentScreen', function (require) {
                 });
 
                 transaction = {
-                    command: 'T00',
+                    command: (line.pax_tender_type == 'debit') ? 'T02' : 'T00',
                     version: '1.28',
                     transactionType: (line.get_amount() > 0) ? '17' : '18',  // V/SALE, V/RETURN
                     cashierInformation: {
@@ -124,7 +130,7 @@ odoo.define('pos_pax.PAXPaymentScreen', function (require) {
                 }
 
                 PAX.mDestinationIP = self.env.pos.config.pax_endpoint;
-                PAX.DoCredit(transaction, function (response) {
+                PAX[(line.pax_tender_type == 'debit') ? 'DoDebit' : 'DoCredit'](transaction, function (response) {
                     var parsed_response = self.env.pos.decodePAXResponse(response);
                     if (parsed_response.fail) {
                         def.resolve({message: parsed_response.fail})
