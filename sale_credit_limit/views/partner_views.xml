@@ -7,7 +7,10 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='accounting_entries']" position="inside">
-                <field name="credit_limit" widget="monetary" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+                <field name="credit" widget="monetary" attrs="{'invisible': [('parent_id', '!=', False)]}" groups="account.group_account_user"/>
+                <field name="credit_limit" attrs="{'invisible': [('parent_id', '!=', False)]}" groups="account.group_account_user"/>
+                <field name="credit_remaining" widget="monetary" attrs="{'invisible': [('parent_id', '!=', False)]}" groups="account.group_account_user"/>
+                <field name="credit_hold" attrs="{'invisible': [('parent_id', '!=', False)]}" groups="account.group_account_user"/>
             </xpath>
         </field>
     </record>
