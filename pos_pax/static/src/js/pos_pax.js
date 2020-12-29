@@ -28,11 +28,18 @@ pos_model.PosModel = pos_model.PosModel.extend({
     },
 
     decodePAXResponse: function (data) {
-        console.log(data);
-        if (data[5] == 'ABORTED') {
-            console.log('aborted');
+        var status = data[5];
+        if (status == 'ABORTED') {
             return {fail: 'Transaction Aborted'};
-        } else if (data[5] == 'OK') {
+        } else if (status == 'DECLINE') {
+            return {fail: 'Transaction Declined or not Allowed'};
+        } else if (status == 'COMM ERROR') {
+            return {fail: 'Communication Error (e.g. could be your CC processor or internet)'}
+        } else if (status == 'DEBIT ONLY, TRY ANOTHER TENDER') {
+            return {fail: 'Card does not support Debit. Use Credit or switch cards.'}
+        } else if (status == 'RECEIVE ERROR') {
+            return {fail: 'Error receiving response. Try again?'}
+        } else if (status == 'OK') {
             return {
                 success: true,
                 approval: data[6][2],
@@ -40,8 +47,12 @@ pos_model.PosModel = pos_model.PosModel.extend({
                 card_num: '***' + data[9][0],
             }
         }
-        return {fail: 'Unknown Response. ' + data};
-    }
+        var response = 'Not handled response: ' + status;
+        if (this.debug) {
+            response += ' --------- Debug Data: ' + data;
+        }
+        return {fail: response};
+    },
 });
 
 var _paylineproto = pos_model.Paymentline.prototype;
@@ -54,6 +65,7 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
         this.pax_card_number = json.pax_card_number;
         this.pax_approval = json.pax_approval;
         this.pax_txn_id = json.pax_txn_id;
+        this.pax_tender_type = json.pax_tender_type;
 
         this.set_credit_card_name();
     },
@@ -64,11 +76,12 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
             pax_card_number: this.pax_card_number,
             pax_approval: this.pax_approval,
             pax_txn_id: this.pax_txn_id,
+            pax_tender_type: this.pax_tender_type,
         });
     },
     set_credit_card_name: function () {
         if (this.pax_card_number) {
-            this.name = this.pax_card_number;
+            this.name = this.pax_card_number + ((this.pax_tender_type == 'debit') ? ' (Debit)' : ' (Credit)');
         }
     }
 });
@@ -113,7 +126,7 @@ PaymentScreenWidget.include({
     },
 
     // Handler to manage the card reader string
-    pax_credit_transaction: function () {
+    pax_credit_transaction: function (tender_type) {
         var order = this.pos.get_order();
 
         if(this.pos.getPAXOnlinePaymentJournals().length === 0) {
@@ -137,7 +150,7 @@ PaymentScreenWidget.include({
         }
 
         transaction = {
-            command: 'T00',
+            command: (tender_type == 'debit') ? 'T02' : 'T00',
             version: '1.28',
             transactionType: transactionType,
             amountInformation: {
@@ -164,7 +177,7 @@ PaymentScreenWidget.include({
         });
 
         PAX.mDestinationIP = self.pos.config.pax_endpoint;
-        PAX.DoCredit(transaction, function (response) {
+        PAX[(tender_type == 'debit') ? 'DoDebit' : 'DoCredit'](transaction, function (response) {
             console.log(response);
             var parsed_response = self.pos.decodePAXResponse(response);
             if (parsed_response.fail) {
@@ -177,6 +190,7 @@ PaymentScreenWidget.include({
                 pending_line.pax_txn_id = parsed_response.txn_id;
                 pending_line.pax_approval = parsed_response.approval;
                 pending_line.pax_txn_pending = false;
+                pending_line.pax_tender_type = tender_type;
                 pending_line.set_credit_card_name();
                 self.order_changes();
                 self.reset_input();
@@ -211,7 +225,7 @@ PaymentScreenWidget.include({
         });
 
         transaction = {
-            command: 'T00',
+            command: (line.pax_tender_type == 'debit') ? 'T02' : 'T00',
             version: '1.28',
             transactionType: (line.get_amount() > 0) ? '17' : '18',  // V/SALE, V/RETURN
             cashierInformation: {
@@ -226,7 +240,7 @@ PaymentScreenWidget.include({
         }
 
         PAX.mDestinationIP = self.pos.config.pax_endpoint;
-        PAX.DoCredit(transaction, function (response) {
+        PAX[(line.pax_tender_type == 'debit') ? 'DoDebit' : 'DoCredit'](transaction, function (response) {
             var parsed_response = self.pos.decodePAXResponse(response);
             if (parsed_response.fail) {
                 def.resolve({message: parsed_response.fail})
@@ -283,7 +297,7 @@ PaymentScreenWidget.include({
         }
     },
 
-    click_pax_send_transaction: function (id) {
+    click_pax_send_transaction: function (tender_type) {
         var pending_txn_line = this._get_pax_txn_pending_line();
         if (!pending_txn_line) {
             this.gui.show_popup('error',{
@@ -292,14 +306,17 @@ PaymentScreenWidget.include({
             });
             return;
         }
-        this.pax_credit_transaction();
+        this.pax_credit_transaction(tender_type);
     },
 
     render_paymentlines: function() {
         this._super();
         var self = this;
         self.$('.paymentlines-container').on('click', '.pax_send_transaction', function(){
-            self.click_pax_send_transaction();
+            self.click_pax_send_transaction('credit');
+        });
+        self.$('.paymentlines-container').on('click', '.pax_send_transaction_debit', function(){
+            self.click_pax_send_transaction('debit');
         });
     },
 

@@ -20,7 +20,10 @@
           <t t-esc='line.name' />
         </t>
         <t t-else="">
-          <span class="btn btn-small pax_send_transaction">Send</span>
+          <div>
+            <span class="btn btn-small pax_send_transaction">Credit</span>
+            <span class="btn btn-small pax_send_transaction_debit">Debit</span>
+          </div>
         </t>
       </t>
       <t t-if="! line.payment_method.use_payment_terminal == 'pax'">
