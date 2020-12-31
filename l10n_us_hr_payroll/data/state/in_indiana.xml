@@ -7,6 +7,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- unchanged in 2021 - page 64 - https://www.in.gov/dwd/files/Employer_Handbook.pdf -->
         <record id="rule_parameter_us_in_suta_wage_base_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">9500.00</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_in_suta_wage_base"/>
@@ -14,19 +15,21 @@
         </record>
     </data>
 
-    <!-- Rate -->
+    <!-- SUTA Rate -->
     <record id="rule_parameter_us_in_suta_rate" model="hr.rule.parameter">
         <field name="name">US IN Indiana SUTA Rate</field>
         <field name="code">us_in_suta_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- unchanged in 2021 - page 63 - https://www.in.gov/dwd/files/Employer_Handbook.pdf -->
         <record id="rule_parameter_us_in_suta_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">2.5</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_in_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
+
     <!-- state income rate -->
     <record id="rule_parameter_us_in_suta_income_rate" model="hr.rule.parameter">
         <field name="name">US IN Indiana SUTA Income Rate</field>
@@ -34,6 +37,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- unchanged in 2021 - page 2 - https://www.in.gov/dor/files/dn01.pdf -->
         <record id="rule_parameter_us_in_suta_income_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">3.23</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_in_suta_income_rate"/>
@@ -47,6 +51,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- unchanged in 2021 - page 2 Table A - https://www.in.gov/dor/files/dn01.pdf -->
         <record id="rule_parameter_us_in_sit_personal_exemption_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'daily':          (  2.74,   5.48,   8.22,  10.96,  13.70,  16.44),
@@ -66,6 +71,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- unchanged in 2021 - page 2 Table B - https://www.in.gov/dor/files/dn01.pdf -->
         <record id="rule_parameter_us_in_sit_dependent_exemption_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'daily':          (  4.11,   8.22,  12.33,  16.44,  20.55),

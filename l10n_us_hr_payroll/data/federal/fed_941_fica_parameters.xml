@@ -22,6 +22,12 @@
         <field name="rule_parameter_id" ref="rule_parameter_941_fica_ss_wage_base"/>
         <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
     </record>
+    <!-- https://www.ssa.gov/oact/cola/cbb.html -->
+    <record id="rule_parameter_941_fica_ss_wage_base_2021" model="hr.rule.parameter.value">
+        <field name="parameter_value">142800.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_941_fica_ss_wage_base"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
 
     <!-- Rate -->
     <record id="rule_parameter_941_fica_ss_rate" model="hr.rule.parameter">
@@ -29,6 +35,7 @@
         <field name="code">fed_941_fica_ss_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
+    <!-- Unchanged in 2021 https://www.ssa.gov/oact/cola/cbb.html -->
     <record id="rule_parameter_941_fica_ss_rate_2016" model="hr.rule.parameter.value">
         <field name="parameter_value">6.2</field>
         <field name="rule_parameter_id" ref="rule_parameter_941_fica_ss_rate"/>
@@ -42,6 +49,7 @@
         <field name="code">fed_941_fica_m_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
+    <!-- Unchanged in 2021 https://www.irs.gov/taxtopics/tc751 -->
     <record id="rule_parameter_941_fica_m_wage_base_2016" model="hr.rule.parameter.value">
         <field name="parameter_value">"inf"</field>
         <field name="rule_parameter_id" ref="rule_parameter_941_fica_m_wage_base"/>
@@ -54,6 +62,7 @@
         <field name="code">fed_941_fica_m_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
+    <!-- Unchanged in 2021 https://www.irs.gov/taxtopics/tc751 -->
     <record id="rule_parameter_941_fica_m_rate_2016" model="hr.rule.parameter.value">
         <field name="parameter_value">1.45</field>
         <field name="rule_parameter_id" ref="rule_parameter_941_fica_m_rate"/>
@@ -67,6 +76,7 @@
         <field name="code">fed_941_fica_m_add_wage_start</field>
         <field name="country_id" ref="base.us"/>
     </record>
+    <!-- Unchanged in 2021 https://www.irs.gov/taxtopics/tc751 -->
     <record id="rule_parameter_941_fica_m_add_wage_start_2016" model="hr.rule.parameter.value">
         <field name="parameter_value">200000.0</field>
         <field name="rule_parameter_id" ref="rule_parameter_941_fica_m_add_wage_start"/>
@@ -79,6 +89,7 @@
         <field name="code">fed_941_fica_m_add_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
+    <!-- Unchanged in 2021 https://www.irs.gov/taxtopics/tc751 -->
     <record id="rule_parameter_941_fica_m_add_rate_2016" model="hr.rule.parameter.value">
         <field name="parameter_value">0.9</field>
         <field name="rule_parameter_id" ref="rule_parameter_941_fica_m_add_rate"/>

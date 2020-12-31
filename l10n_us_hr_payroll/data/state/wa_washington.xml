@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+    <!-- No Income Tax in Washington https://dor.wa.gov/taxes-rates/income-tax-->
     <!-- Wage Base -->
+    <!--    https://esd.wa.gov/employer-taxes/rates#:~:text=State%20Unemployment%20Taxes%20(SUTA),increasing%20from%20%2452%2C700%20in%202020.-->
     <record id="rule_parameter_us_wa_suta_wage_base" model="hr.rule.parameter">
         <field name="name">US WA Washington SUTA Wage Base</field>
         <field name="code">us_wa_suta_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_wa_suta_wage_base_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">49800.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_wa_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_wa_suta_wage_base_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">52700.00</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_wa_suta_wage_base"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_wa_suta_wage_base_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">56500.00</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_wa_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 
@@ -25,15 +27,16 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_wa_fml_wage_base_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">132900.00</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_wa_fml_wage_base"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
+        <!--        https://paidleave.wa.gov/estimate-your-paid-leave-payments/-->
         <record id="rule_parameter_us_wa_fml_wage_base_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">137700.00</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_wa_fml_wage_base"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_wa_fml_wage_base_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">142800.00</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_wa_fml_wage_base"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 
@@ -43,16 +46,22 @@
         <field name="code">us_wa_suta_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
+    <!--    todo: need to figure out how this was/is calculated-->
     <data noupdate="1">
-        <record id="rule_parameter_us_wa_suta_rate_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">1.18</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_wa_suta_rate"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_wa_suta_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">1.0</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_wa_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <!--        https://esd.wa.gov/employer-taxes/determining-rates-->
+        <!--        At the above link and under the "New Employers" Header:-->
+        <!--        "For 2021, new employers will pay 115 percent of the average rate for all businesses in their respective industries."-->
+        <!--        Under "Average tax rates: "The 2021 average tax rate is 1.88%"-->
+        <!--        (1.88 * 1.15) = 2.16-->
+        <record id="rule_parameter_us_wa_suta_rate_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.16</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_wa_suta_rate"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 
@@ -62,15 +71,16 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_wa_fml_rate_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">0.4</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_wa_fml_rate"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
+        <!--        https://resources.paidleave.wa.gov/premium-calculator-->
         <record id="rule_parameter_us_wa_fml_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">0.4</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_wa_fml_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_wa_fml_rate_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.4</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_wa_fml_rate"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 
@@ -80,15 +90,17 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_wa_fml_rate_ee_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">66.33</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_wa_fml_rate_ee"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_wa_fml_rate_ee_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">66.33</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_wa_fml_rate_ee"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <!--        Bullet 4 in: https://resources.paidleave.wa.gov/premium-calculator-->
+        <!--        "Employers may withhold up to 63.33% of the total premium from an employee."-->
+        <record id="rule_parameter_us_wa_fml_rate_ee_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">66.33</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_wa_fml_rate_ee"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 
@@ -98,15 +110,17 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_wa_fml_rate_er_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">33.67</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_wa_fml_rate_er"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_wa_fml_rate_er_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">33.67</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_wa_fml_rate_er"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <!--        Bullet 4 also says in: https://resources.paidleave.wa.gov/premium-calculator-->
+        <!--        "The employer is responsible for paying the other 36.67%"-->
+        <record id="rule_parameter_us_wa_fml_rate_er_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">33.67</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_wa_fml_rate_er"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 
@@ -133,9 +147,13 @@
         <field name="name">ER: US WA Washington State Unemployment (5208A/B)</field>
         <field name="code">ER_US_WA_SUTA</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_wa_suta_wage_base', rate='us_wa_suta_rate', state_code='WA')</field>
+        <field name="condition_python">result, _ = general_state_unemployment(payslip, categories, worked_days, inputs,
+            wage_base='us_wa_suta_wage_base', rate='us_wa_suta_rate', state_code='WA')
+        </field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories, worked_days, inputs, wage_base='us_wa_suta_wage_base', rate='us_wa_suta_rate', state_code='WA')</field>
+        <field name="amount_python_compute">result, result_rate = general_state_unemployment(payslip, categories,
+            worked_days, inputs, wage_base='us_wa_suta_wage_base', rate='us_wa_suta_rate', state_code='WA')
+        </field>
         <field name="partner_id" ref="res_partner_us_wa_dor"/>
         <field name="appears_on_payslip" eval="False"/>
     </record>
@@ -147,9 +165,12 @@
         <field name="name">ER: US WA Washington State Family Medical Leave</field>
         <field name="code">ER_US_WA_FML</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result, _ = wa_washington_fml_er(payslip, categories, worked_days, inputs)</field>
+        <field name="condition_python">result, _ = wa_washington_fml_er(payslip, categories, worked_days, inputs)
+        </field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result, result_rate = wa_washington_fml_er(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_python_compute">result, result_rate = wa_washington_fml_er(payslip, categories, worked_days,
+            inputs)
+        </field>
         <field name="partner_id" ref="res_partner_us_wa_dor_fml"/>
         <field name="appears_on_payslip" eval="False"/>
     </record>
@@ -161,9 +182,12 @@
         <field name="name">EE: US WA Washington State Family Medical Leave</field>
         <field name="code">EE_US_WA_FML</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result, _ = wa_washington_fml_ee(payslip, categories, worked_days, inputs)</field>
+        <field name="condition_python">result, _ = wa_washington_fml_ee(payslip, categories, worked_days, inputs)
+        </field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result, result_rate = wa_washington_fml_ee(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_python_compute">result, result_rate = wa_washington_fml_ee(payslip, categories, worked_days,
+            inputs)
+        </field>
         <field name="partner_id" ref="res_partner_us_wa_dor_fml"/>
         <field name="appears_on_payslip" eval="True"/>
     </record>
@@ -176,9 +200,11 @@
         <field name="name">ER: US WA Washington State LNI</field>
         <field name="code">ER_US_WA_LNI</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = is_us_state(payslip, 'WA') and payslip.contract_id.us_payroll_config_value('workers_comp_ee_code') and worked_days.WORK100 and worked_days.WORK100.number_of_hours and payslip.rule_parameter(payslip.contract_id.us_payroll_config_value('workers_comp_er_code'))</field>
+        <field name="condition_python">result = is_us_state(payslip, 'WA') and payslip.contract_id.us_payroll_config_value('workers_comp_ee_code') and worked_days.WORK100 and worked_days.WORK100.number_of_hours and payslip.rule_parameter(payslip.contract_id.us_payroll_config_value('workers_comp_er_code')) </field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result, result_rate = worked_days.WORK100.number_of_hours, -payslip.rule_parameter(payslip.contract_id.us_payroll_config_value('workers_comp_er_code'))</field>
+        <field name="amount_python_compute">result, result_rate = worked_days.WORK100.number_of_hours,
+            -payslip.rule_parameter(payslip.contract_id.us_payroll_config_value('workers_comp_er_code'))
+        </field>
         <field name="partner_id" ref="res_partner_us_wa_dor_lni"/>
         <field name="appears_on_payslip" eval="False"/>
     </record>
@@ -192,7 +218,9 @@
         <field name="condition_select">python</field>
         <field name="condition_python">result = is_us_state(payslip, 'WA') and payslip.contract_id.us_payroll_config_value('workers_comp_ee_code') and worked_days.WORK100 and worked_days.WORK100.number_of_hours and payslip.rule_parameter(payslip.contract_id.us_payroll_config_value('workers_comp_ee_code'))</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result, result_rate = worked_days.WORK100.number_of_hours, -payslip.rule_parameter(payslip.contract_id.us_payroll_config_value('workers_comp_ee_code'))</field>
+        <field name="amount_python_compute">result, result_rate = worked_days.WORK100.number_of_hours,
+            -payslip.rule_parameter(payslip.contract_id.us_payroll_config_value('workers_comp_ee_code'))
+        </field>
         <field name="partner_id" ref="res_partner_us_wa_dor_lni"/>
         <field name="appears_on_payslip" eval="True"/>
     </record>
