@@ -12,6 +12,12 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_ok_suta_wage_base"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <!-- https://oklahoma.gov/content/dam/ok/en/omes/documents/car/newsletter/2021RatesAndMaximums.pdf -->
+        <record id="rule_parameter_us_ok_suta_wage_base_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">24000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ok_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
 
     <!-- Rate -->
@@ -26,7 +32,14 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_ok_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <!-- https://oklahoma.gov/content/dam/ok/en/omes/documents/car/newsletter/2021RatesAndMaximums.pdf -->
+        <record id="rule_parameter_us_ok_suta_rate_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ok_suta_rate"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
+
     <!-- table from https://www.ok.gov/tax/documents/2020WHTables.pdf -->
     <record id="rule_parameter_us_ok_sit_allowances_rate" model="hr.rule.parameter">
         <field name="name">US OK Oklahoma Allowances Rate</field>
@@ -34,6 +47,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- Unchanged in 2021 https://www.ok.gov/tax/documents/2021WHTables.pdf -->
         <record id="rule_parameter_us_ok_sit_allowances_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'weekly' :        19.23,
@@ -48,13 +62,15 @@
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
-    <!-- table from https://www.ok.gov/tax/documents/2020WHTables.pdf -->
+
     <record id="rule_parameter_us_ok_sit_tax_rate" model="hr.rule.parameter">
         <field name="name">US OK Oklahoma SIT Tax Rate</field>
         <field name="code">us_ok_sit_tax_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- table from https://www.ok.gov/tax/documents/2020WHTables.pdf -->
+        <!-- Unchanged in 2021 https://www.ok.gov/tax/documents/2021WHTables.pdf -->
         <record id="rule_parameter_us_ok_sit_tax_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'single': {

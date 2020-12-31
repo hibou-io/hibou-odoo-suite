@@ -7,6 +7,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- unchanged in 2021 https://www.dol.ks.gov/employers/tax-rates/2021-tax-rates -->
         <record id="rule_parameter_us_ks_suta_wage_base_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">14000.0</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_ks_suta_wage_base"/>
@@ -21,6 +22,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- unchanged in 2021 https://www.dol.ks.gov/employers/tax-rates/2021-tax-rates -->
         <record id="rule_parameter_us_ks_suta_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">2.7</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_ks_suta_rate"/>
@@ -34,6 +36,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- unchanged from 2020 - page 6 https://www.ksrevenue.org/pdf/kw100.pdf -->
         <record id="rule_parameter_us_ks_sit_allowances_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'weekly' :        43.27,
@@ -55,6 +58,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- unchanged from 2020 - page 18 https://www.ksrevenue.org/pdf/kw100.pdf -->
         <record id="rule_parameter_us_ks_sit_tax_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'single': {
