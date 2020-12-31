@@ -24,6 +24,7 @@ from . import test_us_ca_california_payslip_2019
 from . import test_us_ca_california_payslip_2020
 
 from . import test_us_co_colorado_payslip_2020
+from . import test_us_co_colorado_payslip_2021
 
 from . import test_us_ct_connecticut_payslip_2019
 from . import test_us_ct_connecticut_payslip_2020
