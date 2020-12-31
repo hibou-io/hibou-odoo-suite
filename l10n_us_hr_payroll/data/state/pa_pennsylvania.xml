@@ -7,11 +7,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_pa_suta_wage_base_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">10000.00</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_pa_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
+        <!-- Unchanged for 2021 https://www.uc.pa.gov/employers-uc-services-uc-tax/uc-tax-rates/Pages/Yearly-Tax-Highlights.aspx -->
         <record id="rule_parameter_us_pa_suta_wage_base_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">10000.00</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_pa_suta_wage_base"/>
@@ -26,11 +22,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_pa_suta_rate_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">3.6890</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_pa_suta_rate"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
+        <!-- Unchanged for 2021 https://www.uc.pa.gov/employers-uc-services-uc-tax/uc-tax-rates/Pages/Yearly-Tax-Highlights.aspx -->
         <record id="rule_parameter_us_pa_suta_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">3.6890</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_pa_suta_rate"/>
@@ -44,11 +36,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_pa_suta_ee_rate_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">0.06</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_pa_suta_ee_rate"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
+        <!-- unchanged in 2021 https://www.uc.pa.gov/employers-uc-services-uc-tax/uc-tax-rates/Pages/Yearly-Tax-Highlights.aspx -->
         <record id="rule_parameter_us_pa_suta_ee_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">0.06</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_pa_suta_ee_rate"/>
@@ -62,11 +50,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_pa_sit_rate_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">3.07</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_pa_sit_rate"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
+        <!-- unchanged in 2021 https://www.revenue.pa.gov/GeneralTaxInformation/Tax%20Types%20and%20Information/EmployerWithholding/Pages/default.aspx -->
         <record id="rule_parameter_us_pa_sit_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">3.07</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_pa_sit_rate"/>
