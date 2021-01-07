@@ -8,8 +8,9 @@ class TestUsWAPayslip(TestUsPayslip):
     ###
     #    Taxes and Rates
     ###
-    WA_UNEMP_MAX_WAGE = 49800.0
-    WA_UNEMP_RATE = 1.18
+    WA_UNEMP_MAX_WAGE = 56500.00
+    WA_UNEMP_RATE = 2.16
+    WA_FML_MAX_WAGE = 142800.00
     WA_FML_RATE = 0.4
     WA_FML_RATE_EE = 66.33
     WA_FML_RATE_ER = 33.67
@@ -27,7 +28,7 @@ class TestUsWAPayslip(TestUsPayslip):
             'name': 'Test LNI EE',
             'code': 'test_lni_ee',
             'parameter_version_ids': [(0, 0, {
-                'date_from': date(2019, 1, 1),
+                'date_from': date(2021, 1, 1),
                 'parameter_value': str(self.test_ee_lni * 100),
             })],
         })
@@ -35,13 +36,15 @@ class TestUsWAPayslip(TestUsPayslip):
             'name': 'Test LNI ER',
             'code': 'test_lni_er',
             'parameter_version_ids': [(0, 0, {
-                'date_from': date(2019, 1, 1),
+                'date_from': date(2021, 1, 1),
                 'parameter_value': str(self.test_er_lni * 100),
             })],
         })
 
-    def test_2019_taxes(self):
-        salary = 25000.0
+    def test_2021_taxes(self):
+        self._test_er_suta('WA', self.WA_UNEMP_RATE, date(2021, 1, 1), wage_base=self.WA_UNEMP_MAX_WAGE)
+
+        salary = (self.WA_FML_MAX_WAGE / 2.0) + 1000.0
 
         employee = self._createEmployee()
 
@@ -54,39 +57,34 @@ class TestUsWAPayslip(TestUsPayslip):
         self._log(str(contract.resource_calendar_id) + ' ' + contract.resource_calendar_id.name)
 
 
-        # tax rates
-        wa_unemp = self.WA_UNEMP_RATE / -100.0
-
-        self._log('2019 Washington tax first payslip:')
-        payslip = self._createPayslip(employee, '2019-01-01', '2019-01-31')
+        # Non SUTA
+        self._log('2021 Washington tax first payslip:')
+        payslip = self._createPayslip(employee, '2021-01-01', '2021-01-31')
         hours_in_period = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'WORK100').number_of_hours
-        self.assertAlmostEqual(hours_in_period, 184)  # only asserted to test algorithm
+        self.assertPayrollAlmostEqual(hours_in_period, 169)  # only asserted to test algorithm
         payslip.compute_sheet()
 
-
-        cats = self._getCategories(payslip)
         rules = self._getRules(payslip)
 
-        self.assertPayrollEqual(cats['ER_US_SUTA'], salary * wa_unemp)
-        self.assertPayrollEqual(rules['EE_US_WA_LNI'], -(self.test_ee_lni * hours_in_period))
+        self.assertPayrollAlmostEqual(rules['EE_US_WA_LNI'], -(self.test_ee_lni * hours_in_period))
         self.assertPayrollEqual(rules['ER_US_WA_LNI'], -(self.test_er_lni * hours_in_period))
         # Both of these are known to be within 1 penny
         self.assertPayrollAlmostEqual(rules['EE_US_WA_FML'], -(salary * (self.WA_FML_RATE / 100.0) * (self.WA_FML_RATE_EE / 100.0)))
         self.assertPayrollAlmostEqual(rules['ER_US_WA_FML'], -(salary * (self.WA_FML_RATE / 100.0) * (self.WA_FML_RATE_ER / 100.0)))
-
-        # FML
-
         process_payslip(payslip)
 
-        # Make a new payslip, this one will have maximums
-
-        remaining_wa_unemp_wages = self.WA_UNEMP_MAX_WAGE - salary if (self.WA_UNEMP_MAX_WAGE - 2*salary < salary) \
-            else salary
-
-        self._log('2019 Washington tax second payslip:')
-        payslip = self._createPayslip(employee, '2019-02-01', '2019-02-28')
+        # Second payslip
+        remaining_wage = self.WA_FML_MAX_WAGE - salary
+        payslip = self._createPayslip(employee, '2021-03-01', '2021-03-31')
         payslip.compute_sheet()
+        rules = self._getRules(payslip)
+        self.assertPayrollAlmostEqual(rules['EE_US_WA_FML'], -(remaining_wage * (self.WA_FML_RATE / 100.0) * (self.WA_FML_RATE_EE / 100.0)))
+        self.assertPayrollAlmostEqual(rules['ER_US_WA_FML'], -(remaining_wage * (self.WA_FML_RATE / 100.0) * (self.WA_FML_RATE_ER / 100.0)))
+        process_payslip(payslip)
 
-        cats = self._getCategories(payslip)
-
-        self.assertPayrollEqual(cats['ER_US_SUTA'], remaining_wa_unemp_wages * wa_unemp)
+        # Third payslip
+        payslip = self._createPayslip(employee, '2021-04-01', '2021-04-30')
+        payslip.compute_sheet()
+        rules = self._getRules(payslip)
+        self.assertPayrollAlmostEqual(rules['EE_US_WA_FML'], 0.0)
+        self.assertPayrollAlmostEqual(rules['ER_US_WA_FML'], 0.0)
