@@ -8,6 +8,7 @@
     'complexity': 'expert',
     'depends': [
         'web',
+        # 'stock',  # Only for testing
     ],
     'data': [
         'views/web_views.xml',
