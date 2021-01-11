@@ -1,19 +1,5 @@
 FROM registry.gitlab.com/hibou-io/hibou-odoo/odoo:RELEASE
 
-# All this just for openupgradelib
-USER 0
-RUN set -x; \
-    apt update && apt install -y git \
-    && pip install git+git://github.com/OCA/openupgradelib.git \
-    # Clean Up
-    && apt remove -y git \
-    && apt autoremove -y \
-    && rm -rf /root/.cache \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /tmp/* \
-    ;
-
 USER 104
 COPY --from=registry.gitlab.com/hibou-io/hibou-odoo/flow /flow /flow
 COPY --chown=104 entrypoint.sh /entrypoint.sh
