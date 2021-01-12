@@ -7,8 +7,6 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <!-- https://www.maine.gov/unemployment/employers/ -->
-        <!-- unchanged for 2021 https://www.maine.gov/unemployment/employersfaq/ -->
         <record id="rule_parameter_us_me_suta_wage_base_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">12000.0</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_me_suta_wage_base"/>
@@ -27,13 +25,6 @@
             <field name="parameter_value">1.92</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_me_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-        <!-- https://www.maine.gov/unemployment/employers/ -->
-        <!-- https://www.maine.gov/unemployment/docs/2020/2021taxrate.pdf -->
-        <record id="rule_parameter_us_me_suta_rate_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">2.31</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_me_suta_rate"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
     <!-- table based on https://www.maine.gov/revenue/forms/with/2020/20_WH_Tab&Instructions.pdf step 6.-->
@@ -59,23 +50,6 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_me_sit_tax_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
-        <!-- Bottom of page 6 https://www.maine.gov/revenue/sites/maine.gov.revenue/files/inline-files/21_wh_tab_instr_1.pdf -->
-        <record id="rule_parameter_us_me_sit_tax_rate_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">{
-                'single': (
-                    (  22400,     0,  5.80),
-                    (  53150,  1302,  6.75),
-                    (  'inf',  3374,  7.15),
-                ),
-                'married': (
-                    (  44950,     0,  5.80),
-                    ( 106350,  2607,  6.75),
-                    ( 'inf',   6752,  7.15),
-                ),
-            }</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_me_sit_tax_rate"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
     </data>
     
     <record id="rule_parameter_us_me_sit_standard_deduction_rate" model="hr.rule.parameter">
@@ -98,22 +72,6 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_me_sit_standard_deduction_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
-        <!-- page 6 Step 3 https://www.maine.gov/revenue/sites/maine.gov.revenue/files/inline-files/21_wh_tab_instr_1.pdf -->
-         <record id="rule_parameter_us_me_sit_standard_deduction_rate_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">{
-                'single':   {
-                    ( 83850,   9700),
-                    (158850,  75000),
-                },
-                'married':  {
-                    (167700,  25100),
-                    (317700, 150000),
-                },
-            }</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_me_sit_standard_deduction_rate"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
-
     </data>
     
     <record id="rule_parameter_us_me_sit_personal_exemption_rate" model="hr.rule.parameter">
@@ -122,8 +80,6 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <!-- Page 1 https://www.maine.gov/revenue/sites/maine.gov.revenue/files/inline-files/21_wh_tab_instr_1.pdf -->
-        <!-- Not changed in 2021 -->
         <record id="rule_parameter_us_me_sit_personal_exemption_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">4300</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_me_sit_personal_exemption_rate"/>
