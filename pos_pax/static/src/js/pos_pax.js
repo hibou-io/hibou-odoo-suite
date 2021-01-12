@@ -177,7 +177,7 @@ PaymentScreenWidget.include({
         });
 
         PAX.mDestinationIP = self.pos.config.pax_endpoint;
-        PAX[(tender_type == 'debit') ? 'DoDebit' : 'DoCredit'](transaction, function (response) {
+        PAX[((tender_type == 'debit') ? 'DoDebit' : 'DoCredit')](transaction, function (response) {
             console.log(response);
             var parsed_response = self.pos.decodePAXResponse(response);
             if (parsed_response.fail) {
@@ -240,7 +240,7 @@ PaymentScreenWidget.include({
         }
 
         PAX.mDestinationIP = self.pos.config.pax_endpoint;
-        PAX[(line.pax_tender_type == 'debit') ? 'DoDebit' : 'DoCredit'](transaction, function (response) {
+        PAX[((line.pax_tender_type == 'debit') ? 'DoDebit' : 'DoCredit')](transaction, function (response) {
             var parsed_response = self.pos.decodePAXResponse(response);
             if (parsed_response.fail) {
                 def.resolve({message: parsed_response.fail})
@@ -312,10 +312,10 @@ PaymentScreenWidget.include({
     render_paymentlines: function() {
         this._super();
         var self = this;
-        self.$('.paymentlines-container').on('click', '.pax_send_transaction', function(){
+        self.$('.paymentlines-container .pax_send_transaction').on('click', null, function(){
             self.click_pax_send_transaction('credit');
         });
-        self.$('.paymentlines-container').on('click', '.pax_send_transaction_debit', function(){
+        self.$('.paymentlines-container .pax_send_transaction_debit').on('click', null, function(){
             self.click_pax_send_transaction('debit');
         });
     },
