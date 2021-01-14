@@ -30,7 +30,7 @@ class TestUsSCPayslip(TestUsPayslip):
 
     def test_2021_taxes_example(self):
         self._test_er_suta('SC', self.SC_UNEMP, date(2021, 1, 1), wage_base=self.SC_UNEMP_MAX_WAGE)
-        self._test_sit(750.0, 0.0, False, 3.0, 'weekly', date(2021, 1, 1), 28.73)
+        self._test_sit(750.0, 0.0, False, 3.0, 'weekly', date(2021, 1, 1), 27.57)
         self._test_sit(800.0, 0.0, True, 0.0, 'weekly', date(2021, 1, 1), 0.00)
-        self._test_sit(9000.0, 0.0, False, 0.0, 'monthly', date(2021, 1, 1), 594.61)
-        self._test_sit(5000.0, 10.0, False, 2.0, 'semi-monthly', date(2021, 1, 1), 316.06)
+        self._test_sit(9000.0, 0.0, False, 0.0, 'monthly', date(2021, 1, 1), 591.44)
+        self._test_sit(5000.0, 10.0, False, 2.0, 'semi-monthly', date(2021, 1, 1), 312.90)
