@@ -6,7 +6,7 @@ from .common import TestUsPayslip
 
 class TestUsDEPayslip(TestUsPayslip):
     ###
-    #   2020 Taxes and Rates
+    #   2021 Taxes and Rates
     ###
     DE_UNEMP_MAX_WAGE = 16500.0
     DE_UNEMP = 1.50
@@ -28,9 +28,9 @@ class TestUsDEPayslip(TestUsPayslip):
         self._log('Computed period tax: ' + str(expected_withholding))
         self.assertPayrollEqual(cats.get('EE_US_SIT', 0.0), -expected_withholding)
 
-    def test_2020_taxes_example(self):
-        self._test_er_suta('DE', self.DE_UNEMP, date(2020, 1, 1), wage_base=self.DE_UNEMP_MAX_WAGE)
-        self._test_sit(480.77, 'single', 0.0, 1.0, 'weekly', date(2020, 1, 1), 13.84)
-        self._test_sit(5000.0, 'single', 0.0, 2.0, 'monthly', date(2020, 1, 1), 211.93)
-        self._test_sit(5000.0, 'single', 10.0, 1.0, 'monthly', date(2020, 1, 1), 231.1)
-        self._test_sit(20000.0, 'married', 0.0, 3.0, 'quarterly', date(2020, 1, 1), 876.0)
+    def test_2021_taxes_example(self):
+        self._test_er_suta('DE', self.DE_UNEMP, date(2021, 1, 1), wage_base=self.DE_UNEMP_MAX_WAGE)
+        self._test_sit(480.77, 'single', 0.0, 1.0, 'weekly', date(2021, 1, 1), 13.84)
+        self._test_sit(5000.0, 'single', 0.0, 2.0, 'monthly', date(2021, 1, 1), 211.93)
+        self._test_sit(5000.0, 'single', 10.0, 1.0, 'monthly', date(2021, 1, 1), 231.1)
+        self._test_sit(20000.0, 'married', 0.0, 3.0, 'quarterly', date(2021, 1, 1), 876.0)
