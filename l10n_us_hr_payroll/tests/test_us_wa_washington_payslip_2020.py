@@ -22,6 +22,7 @@ class TestUsWAPayslip(TestUsPayslip):
         #     'rate': 0.1261,
         #     'rate_emp_withhold': 0.05575,
         # })
+        # todo: figure out how the two rates below corralate with ee and er rates above
         self.test_ee_lni = 0.05575  # per 100 hours
         self.test_er_lni = 0.1261  # per 100 hours
         self.parameter_lni_ee = self.env['hr.rule.parameter'].create({

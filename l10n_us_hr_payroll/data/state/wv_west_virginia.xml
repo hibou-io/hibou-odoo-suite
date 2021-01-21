@@ -7,6 +7,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- Unchanged for 2021 https://workforcewv.org/images/files/employers/Employer_Handbook.pdf -->
         <record id="rule_parameter_us_wv_suta_wage_base_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">12000.0</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_wv_suta_wage_base"/>
@@ -21,12 +22,14 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- Unchanged for 2021 https://workforcewv.org/images/files/employers/Employer_Handbook.pdf -->
         <record id="rule_parameter_us_wv_suta_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">2.7</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_wv_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
+
     <!-- Table base on this https://tax.wv.gov/Documents/TaxForms/it100.1a.pdf page 16-->
     <record id="rule_parameter_us_wv_sit_exemption_rate" model="hr.rule.parameter">
         <field name="name">US WV West Virginia Exemption Rate</field>
@@ -34,6 +37,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- Unchanged for 2021 https://tax.wv.gov/Documents/TaxForms/it100.1a.pdf -->
         <record id="rule_parameter_us_wv_sit_exemption_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'weekly' :        38.46,
@@ -53,6 +57,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- Unchanged in 2021 https://tax.wv.gov/Documents/TaxForms/it100.1a.pdf -->
         <record id="rule_parameter_us_wv_sit_tax_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'single': {

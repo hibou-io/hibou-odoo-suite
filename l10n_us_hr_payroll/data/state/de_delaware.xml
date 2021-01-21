@@ -7,6 +7,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- Unchanged in 2021 https://laborfiles.delaware.gov/main/dui/handbook/UI%20Employer%20Handbook.pdf -->
         <record id="rule_parameter_us_de_suta_wage_base_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">16500.0</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_de_suta_wage_base"/>
@@ -21,6 +22,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- Unchanged in 2021 https://laborfiles.delaware.gov/main/dui/handbook/UI%20Employer%20Handbook.pdf -->
         <record id="rule_parameter_us_de_suta_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">1.50</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_de_suta_rate"/>
@@ -34,6 +36,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- Unchanged in 2021 - Section 17 - https://revenue.delaware.gov/employers-guide-withholding-regulations-employers-duties/ -->
         <record id="rule_parameter_us_de_sit_tax_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">[
                 ( 2000,    0.0, 0.00),
@@ -56,6 +59,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- Unchanged in 2021 - Section 15 - https://revenue.delaware.gov/employers-guide-withholding-regulations-employers-duties/ -->
         <record id="rule_parameter_us_de_sit_standard_deduction_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">3250</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_de_sit_standard_deduction_rate"/>
@@ -69,6 +73,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- Unchanged in 2021 - Section 15 - https://revenue.delaware.gov/employers-guide-withholding-regulations-employers-duties/ -->
         <record id="rule_parameter_us_de_sit_personal_exemption_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">110</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_de_sit_personal_exemption_rate"/>
