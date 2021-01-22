@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Payment terms list items for /shop/payment -->
+    <template id="payment_term_items">
+        <t t-set="partner_term" t-value="order.partner_id.property_payment_term_id"/>
+        <!-- Show current partners payment terms -->
+        <t t-if="partner_term and partner_term not in website_terms">
+            <li class="list-group-item">
+                <input t-att-value="partner_term.id"
+                       t-att-data-deposit-percentage="partner_term.deposit_percentage or '0'"
+                       t-att-data-deposit-flat="partner_term.deposit_flat or '0'"
+                       name="payment_term_id"
+                       t-att-id="'payment_term_%i' % partner_term.id"
+                       type="radio"/>
+                <label t-att-for="'payment_term_%i' % partner_term.id"
+                       t-field="partner_term.name"
+                       class="label-optional"/>
+            </li>
+        </t>
+        <!-- Show default option set by account.payment.term boolean -->
+        <li t-foreach="website_terms" t-as="term" class="list-group-item">
+            <input t-att-value="term.id"
+                   t-att-data-deposit-percentage="term.deposit_percentage or '0'"
+                   t-att-data-deposit-flat="term.deposit_flat or '0'"
+                   t-att-id="'payment_term_%i' % term.id"
+                   type="radio"
+                   name="payment_term_id"/>
+            <label t-att-for="'payment_term_%i' % term.id"
+                   t-field="term.name"
+                   class="label-optional"/>
+        </li>
+    </template>
+
+    <!-- Add placeholder for list of payment terms to /shop/payment -->
+    <template id="payment_terms" inherit_id="website_sale.payment" name="Payment Terms Info">
+        <xpath expr="//div[@id='payment_method']" position="before">
+            <t t-set="website_terms" t-value="website.get_payment_terms()" />
+            <t t-if="website_terms and website_sale_order.amount_total &gt; website.payment_deposit_threshold">
+                <t t-call="website_sale_payment_terms.payment_term_success_modal"/>
+                <t t-call="website_sale_payment_terms.payment_term_error_modal"/>
+                <div id="payment_terms">
+                    <h3 class="mb24 mt24">Payment Terms</h3>
+                    <div class="card border-0">
+                        <ul class="list-group">
+                            <t t-call="website_sale_payment_terms.payment_term_items"/>
+                        </ul>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[@id='payment_method']" position="after">
+            <!-- Bypass Validation for users with 0 deposit payment terms -->
+            <div class="mt-3" style="display:none;" id="non_payment_method">
+                <a href="/shop/confirm_without_payment" class="float-right btn btn-primary">
+                    <span>Confirm Order <span class="fa fa-chevron-right"/></span>
+                </a>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Modal to handle success message -->
+    <template id="payment_term_success_modal">
+        <div class="modal fade" id="payment_term_success_modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title text-info">User Agreement</h4>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <i class="fa fa-times"/>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>By clicking Confirm you are agreeing to the payment terms indicated below:</p>
+                        <p class="success-modal-note"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-default"
+                                onclick="accept_payment_terms()"
+                                data-dismiss="modal">Accept
+                        </button>
+                        <button type="button"
+                                class="btn btn-default"
+                                onclick="deny_payment_terms()">Deny
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </template>
+
+    <!-- Modal to handle error message -->
+    <template id="payment_term_error_modal">
+        <div class="modal fade" id="payment_term_error_modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title text-danger">Whoops!</h4>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <i class="fa fa-times"/>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Something Went Wrong. Please contact us to resolve this issue.</p>
+                        <sup class="text-danger">Error Code: DEF-PTM</sup>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </template>
+
+    <!-- Add empty div to calculate amount due today in payment_terms.js -->
+    <template id="amount_due_today" inherit_id="website_sale.total">
+        <xpath expr="//tr[@id='order_total']" position="after">
+            <tr id="order_due_today" t-att-style="'' if website_sale_order.amount_total_deposit else 'display: none;'">
+                <td class="text-right text-info">
+                    <strong>Due Now:</strong>
+                </td>
+                <td class="text-xl-right">
+                    <strong t-field="website_sale_order.amount_total_deposit"
+                            t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+
+    <template id="confirmation" inherit_id="website_sale.confirmation">
+        <xpath expr="//strong[@t-field='order.amount_total']" position="replace">
+            <strong t-esc="payment_tx_id.amount" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}" />
+        </xpath>
+    </template>
+
+    <template id="payment_confirmation_status" inherit_id="website_sale.payment_confirmation_status">
+        <xpath expr="//div[hasclass('oe_website_sale_tx_status')]/div[1]" position="attributes">
+            <attribute name="t-if">payment_tx_id</attribute>
+        </xpath>
+    </template>
+
+</odoo>
