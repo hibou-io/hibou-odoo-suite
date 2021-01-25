@@ -33,9 +33,6 @@ class TestUsMEPayslip(TestUsPayslip):
         # todo: not calculating correctly according to https://www.maine.gov/revenue/sites/maine.gov.revenue/files/inline-files/21_wh_tab_instr_1.pdf
         # See examples on page 7
 
-        import pydevd_pycharm
-        pydevd_pycharm.settrace('192.168.1.134', port=6900, stdoutToServer=True, stderrToServer=True)
-
         self._test_er_suta('ME', self.ME_UNEMP, date(2021, 1, 1), wage_base=self.ME_UNEMP_MAX_WAGE)
         self._test_sit(300.0, 'single', 0.0, False, 2, 'weekly', date(2021, 1, 1), 0.0)
         self._test_sit(1800.0, 'single', 0.0, False, 2, 'bi-weekly', date(2021, 1, 1), 6.00)
