@@ -18,13 +18,13 @@ class TestUsPAPayslip(TestUsPayslip):
         self._test_ee_suta('PA', self.EE_PA_UNEMP, date(2021, 1, 1))
 
         salary = 4166.67
-        wh = -127.90
+        wh = -127.92
         employee = self._createEmployee()
         contract = self._createContract(employee,
                                         wage=salary,
                                         state_id=self.get_us_state('PA'))
 
-        self._log('2019 Pennsylvania tax first payslip:')
+        self._log('2021 Pennsylvania tax first payslip:')
         payslip = self._createPayslip(employee, '2021-01-01', '2021-01-31')
         payslip.compute_sheet()
         cats = self._getCategories(payslip)

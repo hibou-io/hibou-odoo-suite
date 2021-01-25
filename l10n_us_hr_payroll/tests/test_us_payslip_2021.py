@@ -42,6 +42,7 @@ class TestUsPayslip2021(TestUsPayslip):
         self._log('2020 tax last slip')
         payslip = self._createPayslip(employee, '2020-12-01', '2020-12-31')
         self.assertEqual(payslip.contract_id, contract)
+        payslip.compute_sheet()
         self._log(payslip.read())
         process_payslip(payslip)
 
@@ -51,6 +52,8 @@ class TestUsPayslip2021(TestUsPayslip):
 
         self._log('2021 tax first payslip:')
         payslip = self._createPayslip(employee, '2021-01-01', '2021-01-31')
+
+        payslip.compute_sheet()
 
         cats = self._getCategories(payslip)
         rules = self._getRules(payslip)
@@ -71,6 +74,7 @@ class TestUsPayslip2021(TestUsPayslip):
 
         self._log('2021 tax second payslip:')
         payslip = self._createPayslip(employee, '2021-02-01', '2021-02-28')
+        payslip.compute_sheet()
 
         cats = self._getCategories(payslip)
         rules = self._getRules(payslip)
@@ -85,6 +89,7 @@ class TestUsPayslip2021(TestUsPayslip):
         # Make a new payslip, this one will have reached Medicare Additional (employee only)
         self._log('2021 tax third payslip:')
         payslip = self._createPayslip(employee, '2021-03-01', '2021-03-31')
+        payslip.compute_sheet()
 
         cats = self._getCategories(payslip)
         rules = self._getRules(payslip)
@@ -97,6 +102,7 @@ class TestUsPayslip2021(TestUsPayslip):
 
         self._log('2021 tax fourth payslip:')
         payslip = self._createPayslip(employee, '2021-04-01', '2021-04-30')
+        payslip.compute_sheet()
 
         cats = self._getCategories(payslip)
         rules = self._getRules(payslip)

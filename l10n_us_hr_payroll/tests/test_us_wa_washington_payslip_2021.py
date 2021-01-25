@@ -61,7 +61,7 @@ class TestUsWAPayslip(TestUsPayslip):
         self._log('2021 Washington tax first payslip:')
         payslip = self._createPayslip(employee, '2021-01-01', '2021-01-31')
         hours_in_period = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'WORK100').number_of_hours
-        self.assertPayrollAlmostEqual(hours_in_period, 169)  # only asserted to test algorithm
+        self.assertPayrollAlmostEqual(hours_in_period, 168.0)  # only asserted to test algorithm
         payslip.compute_sheet()
 
         rules = self._getRules(payslip)
