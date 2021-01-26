@@ -46,15 +46,15 @@ class TestUsVaPayslip(TestUsPayslip):
                                         va_va4_sit_other_exemptions=va_va4_sit_other_exemptions,
                                         state_id=self.get_us_state('VA'),
                                         )
-        payslip = self._createPayslip(employee, '2020-01-01', '2020-01-31')
+        payslip = self._createPayslip(employee, '2021-01-01', '2021-01-31')
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
         # Instead of PayrollEqual after initial first round of testing.
         self.assertPayrollAlmostEqual(cats.get('EE_US_SIT', 0.0), -expected)
         return payslip
 
-    def test_2020_taxes(self):
-        self._test_er_suta('VA', self.VA_UNEMP, date(2020, 1, 1), wage_base=self.VA_UNEMP_MAX_WAGE)
+    def test_2021_taxes(self):
+        self._test_er_suta('VA', self.VA_UNEMP, date(2021, 1, 1), wage_base=self.VA_UNEMP_MAX_WAGE)
 
         salary = 5000.0
 
