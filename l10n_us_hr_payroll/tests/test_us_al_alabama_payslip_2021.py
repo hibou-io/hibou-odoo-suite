@@ -29,8 +29,8 @@ class TestUsALPayslip(TestUsPayslip):
 
     def test_2021_taxes_example(self):
         self._test_er_suta('AL', self.AL_UNEMP, date(2021, 1, 1), wage_base=self.AL_UNEMP_MAX_WAGE)
-        self._test_sit(10000.0, 'S', False, 0.0, 1.0, 'weekly', date(2021, 1, 1), 349.08)
-        self._test_sit(850.0, 'M', False, 0.0, 2.0, 'weekly', date(2021, 1, 1), 29.98)
-        self._test_sit(5000.0, 'H', False, 0.0, 2.0, 'bi-weekly', date(2021, 1, 1), 191.15)
-        self._test_sit(20000.0, 'MS', False, 2.0, 0, 'monthly', date(2021, 1, 1), 757.6)
+        self._test_sit(10000.0, 'S', False, 0.0, 1.0, 'weekly', date(2021, 1, 1), 349.37)
+        self._test_sit(850.0, 'M', False, 0.0, 2.0, 'weekly', date(2021, 1, 1), 30.00)
+        self._test_sit(5000.0, 'H', False, 0.0, 2.0, 'bi-weekly', date(2021, 1, 1), 191.33)
+        self._test_sit(20000.0, 'MS', False, 2.0, 0, 'monthly', date(2021, 1, 1), 758.86)
         self._test_sit(5500.0, '', True, 2.0, 150, 'weekly', date(2021, 1, 1), 0.00)
