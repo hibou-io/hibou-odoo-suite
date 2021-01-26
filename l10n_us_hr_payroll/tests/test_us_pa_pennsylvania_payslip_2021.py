@@ -18,7 +18,7 @@ class TestUsPAPayslip(TestUsPayslip):
         self._test_ee_suta('PA', self.EE_PA_UNEMP, date(2021, 1, 1))
 
         salary = 4166.67
-        wh = -127.90
+        wh = -127.92
         employee = self._createEmployee()
         contract = self._createContract(employee,
                                         wage=salary,
