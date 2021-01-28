@@ -16,9 +16,9 @@
 [submodule "external/camptocamp-cloud-platform"]
 	path = external/camptocamp-cloud-platform
 	url = https://github.com/hibou-io/camptocamp-cloud-platform
-[submodule "external/hibou-shipbox"]
-	path = external/hibou-shipbox
-	url = https://gitlab.com/hibou-io/hibou-odoo/shipbox.git
 [submodule "external/hibou-oca/queue"]
 	path = external/hibou-oca/queue
 	url = https://github.com/hibou-io/oca-queue.git
+[submodule "external/hiboubox"]
+	path = external/hiboubox
+	url = https://gitlab.com/hibou-io/hibou-odoo/hiboubox.git
