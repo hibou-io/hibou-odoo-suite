@@ -202,8 +202,7 @@
         <field name="condition_select">python</field>
         <field name="condition_python">result = is_us_state(payslip, 'WA') and payslip.contract_id.us_payroll_config_value('workers_comp_ee_code') and worked_days.WORK100 and worked_days.WORK100.number_of_hours and payslip.rule_parameter(payslip.contract_id.us_payroll_config_value('workers_comp_er_code')) </field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result, result_rate = worked_days.WORK100.number_of_hours,
-            -payslip.rule_parameter(payslip.contract_id.us_payroll_config_value('workers_comp_er_code'))
+        <field name="amount_python_compute">result, result_rate = worked_days.WORK100.number_of_hours, -payslip.rule_parameter(payslip.contract_id.us_payroll_config_value('workers_comp_er_code'))
         </field>
         <field name="partner_id" ref="res_partner_us_wa_dor_lni"/>
         <field name="appears_on_payslip" eval="False"/>
@@ -218,8 +217,7 @@
         <field name="condition_select">python</field>
         <field name="condition_python">result = is_us_state(payslip, 'WA') and payslip.contract_id.us_payroll_config_value('workers_comp_ee_code') and worked_days.WORK100 and worked_days.WORK100.number_of_hours and payslip.rule_parameter(payslip.contract_id.us_payroll_config_value('workers_comp_ee_code'))</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result, result_rate = worked_days.WORK100.number_of_hours,
-            -payslip.rule_parameter(payslip.contract_id.us_payroll_config_value('workers_comp_ee_code'))
+        <field name="amount_python_compute">result, result_rate = worked_days.WORK100.number_of_hours, -payslip.rule_parameter(payslip.contract_id.us_payroll_config_value('workers_comp_ee_code'))
         </field>
         <field name="partner_id" ref="res_partner_us_wa_dor_lni"/>
         <field name="appears_on_payslip" eval="True"/>
