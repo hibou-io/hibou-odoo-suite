@@ -29,8 +29,8 @@ class TestUsIAPayslip(TestUsPayslip):
 
     def test_2021_taxes_example(self):
         self._test_er_suta('IA', self.IA_UNEMP, date(2021, 1, 1), wage_base=self.IA_UNEMP_MAX_WAGE)
-        self._test_sit(2100.0, False, 0.0, 3.0, 'bi-weekly', date(2021, 1, 1), 79.13)
+        self._test_sit(2100.0, False, 0.0, 3.0, 'bi-weekly', date(2021, 1, 1), 79.31)
         self._test_sit(3000.0, True, 10.0, 1.0, 'bi-weekly', date(2021, 1, 1), 0.00)
         self._test_sit(300.0, False, 0.0, 1.0, 'weekly', date(2021, 1, 1), 6.14)
-        self._test_sit(5000.0, False, 0.0, 1.0, 'monthly', date(2021, 1, 1), 217.60)
-        self._test_sit(7500.0, False, 10.0, 2.0, 'semi-monthly', date(2021, 1, 1), 420.87)
+        self._test_sit(5000.0, False, 0.0, 1.0, 'monthly', date(2021, 1, 1), 218.06)
+        self._test_sit(7500.0, False, 10.0, 2.0, 'semi-monthly', date(2021, 1, 1), 421.71)
