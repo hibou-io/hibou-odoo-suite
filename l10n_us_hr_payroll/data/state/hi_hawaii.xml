@@ -33,10 +33,10 @@
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
         <!-- https://labor.hawaii.gov/ui/tax-rate-schedule-and-weekly-benefit-amount/ -->
-        <record id="rule_parameter_us_hi_suta_rate_2020" model="hr.rule.parameter.value">
+        <record id="rule_parameter_us_hi_suta_rate_2021" model="hr.rule.parameter.value">
             <field name="parameter_value">5.2</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_hi_suta_rate"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 
