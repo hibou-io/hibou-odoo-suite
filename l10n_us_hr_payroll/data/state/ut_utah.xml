@@ -12,6 +12,12 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_ut_suta_wage_base"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+<!--        https://jobs.utah.gov/UI/Employer/Public/Questions/TaxRates.aspx#:~:text=For%202021%2C%20the%20minimum%20overall,to%20the%20overall%20tax%20rate.-->
+        <record id="rule_parameter_us_ut_suta_wage_base_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">38900.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ut_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
 
     <!-- Rate -->
@@ -26,6 +32,13 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_ut_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+<!--        https://jobs.utah.gov/UI/Employer/Public/Questions/TaxRates.aspx#:~:text=For%202021%2C%20the%20minimum%20overall,to%20the%20overall%20tax%20rate.-->
+<!--        Benefit Ratio(unique to client) X Reserve Factor(1.05% for 2021) + Social Cost(.002)-->
+        <record id="rule_parameter_us_ut_suta_rate_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">0.1052</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ut_suta_rate"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
     
     <record id="rule_parameter_us_ut_tax_rate" model="hr.rule.parameter">
@@ -34,6 +47,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+<!--        rates unchanged in 2021-->
         <record id="rule_parameter_us_ut_tax_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">0.0495</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_ut_tax_rate"/>
@@ -47,6 +61,9 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- Table based on https://tax.utah.gov/forms/pubs/pub-14.pdf -->
+<!--        Note at top of page 12:-->
+<!--        "Note: Use the Single column for taxpayers who file as head-of-household on their federal return." -->
         <record id="rule_parameter_us_ut_sit_allowances_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'single': {
@@ -88,6 +105,8 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+<!--        unchanged in 2021-->
+<!--        see page 9 line 4 and line 5 in schedules https://tax.utah.gov/forms/pubs/pub-14.pdf-->
         <record id="rule_parameter_us_ut_sit_tax_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'single': {
