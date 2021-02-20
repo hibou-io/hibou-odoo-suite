@@ -79,3 +79,8 @@ class OpencartProductTemplateAttributeValue(models.Model):
                                                required=True,
                                                ondelete='cascade')
     product_tmpl_id = fields.Many2one(related='opencart_product_tmpl_id.odoo_id')
+
+    # The regular constraint won't work here because multiple templates can/will have the same attribute id in opencart
+    _sql_constraints = [
+        ('opencart_uniq', 'unique(backend_id, external_id, opencart_product_tmpl_id)', 'A binding already exists for this Opencart ID+Product Template.'),
+    ]
