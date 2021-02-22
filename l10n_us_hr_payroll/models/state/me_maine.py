@@ -38,7 +38,8 @@ def me_maine_state_income_withholding(payslip, categories, worked_days, inputs):
     exemption_amt = allowances * personal_exemption
     last = 0.0
     standard_deduction_amt = 0.0
-    for row in standard_deduction:
+
+    for row in standard_deduction:  #Standard_deduction is a set so looping through without giving it order isn't working
         amt, flat_amt = row
         if taxable_income < 82900:
             standard_deduction_amt = flat_amt

@@ -2,58 +2,52 @@
 <odoo>
     <!-- Wage Base -->
     <data noupdate="1">
-        <record id="rule_parameter_us_wa_suta_wage_base_2019" model="hr.payroll.rate">
-            <field name="name">US WA Washington SUTA Wage Base</field>
-            <field name="code">us_wa_suta_wage_base</field>
-            <field name="parameter_value">49800.0</field>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_wa_suta_wage_base_2020" model="hr.payroll.rate">
             <field name="name">US WA Washington SUTA Wage Base</field>
             <field name="code">us_wa_suta_wage_base</field>
             <field name="parameter_value">52700.00</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <record id="rule_parameter_us_wa_suta_wage_base_2021" model="hr.payroll.rate">
+            <field name="name">US WA Washington SUTA Wage Base</field>
+            <field name="code">us_wa_suta_wage_base</field>
+            <field name="parameter_value">56500.0</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
 
     <data noupdate="1">
-        <record id="rule_parameter_us_wa_fml_wage_base_2019" model="hr.payroll.rate">
-            <field name="name">US WA Washington FML Wage Base</field>
-            <field name="code">us_wa_fml_wage_base</field>
-            <field name="parameter_value">132900.00</field>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_wa_fml_wage_base_2020" model="hr.payroll.rate">
             <field name="name">US WA Washington FML Wage Base</field>
             <field name="code">us_wa_fml_wage_base</field>
             <field name="parameter_value">137700.00</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <record id="rule_parameter_us_wa_fml_wage_base_2021" model="hr.payroll.rate">
+            <field name="name">US WA Washington FML Wage Base</field>
+            <field name="code">us_wa_fml_wage_base</field>
+            <field name="parameter_value">142800.00</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
 
     <!-- Rate -->
     <data noupdate="1">
-        <record id="rule_parameter_us_wa_suta_rate_2019" model="hr.payroll.rate">
-            <field name="name">US WA Washington SUTA Rate</field>
-            <field name="code">us_wa_suta_rate</field>
-            <field name="parameter_value">1.18</field>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_wa_suta_rate_2020" model="hr.payroll.rate">
             <field name="name">US WA Washington SUTA Rate</field>
             <field name="code">us_wa_suta_rate</field>
             <field name="parameter_value">1.0</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <record id="rule_parameter_us_wa_suta_rate_2021" model="hr.payroll.rate">
+            <field name="name">US WA Washington SUTA Rate</field>
+            <field name="code">us_wa_suta_rate</field>
+            <field name="parameter_value">2.16</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
 
     <data noupdate="1">
-        <record id="rule_parameter_us_wa_fml_rate_2019" model="hr.payroll.rate">
-            <field name="name">US WA Washington FML Rate (Total)</field>
-            <field name="code">us_wa_fml_rate</field>
-            <field name="parameter_value">0.4</field>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_wa_fml_rate_2020" model="hr.payroll.rate">
             <field name="name">US WA Washington FML Rate (Total)</field>
             <field name="code">us_wa_fml_rate</field>
@@ -63,32 +57,32 @@
     </data>
 
     <data noupdate="1">
-        <record id="rule_parameter_us_wa_fml_rate_ee_2019" model="hr.payroll.rate">
-            <field name="name">US WA Washington FML Rate (Employee)</field>
-            <field name="code">us_wa_fml_rate_ee</field>
-            <field name="parameter_value">66.33</field>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_wa_fml_rate_ee_2020" model="hr.payroll.rate">
             <field name="name">US WA Washington FML Rate (Employee)</field>
             <field name="code">us_wa_fml_rate_ee</field>
             <field name="parameter_value">66.33</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <record id="rule_parameter_us_wa_fml_rate_ee_2021" model="hr.payroll.rate">
+            <field name="name">US WA Washington FML Rate (Employee)</field>
+            <field name="code">us_wa_fml_rate_ee</field>
+            <field name="parameter_value">63.33</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
 
     <data noupdate="1">
-        <record id="rule_parameter_us_wa_fml_rate_er_2019" model="hr.payroll.rate">
-            <field name="name">US WA Washington FML Rate (Employer)</field>
-            <field name="code">us_wa_fml_rate_er</field>
-            <field name="parameter_value">33.67</field>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_wa_fml_rate_er_2020" model="hr.payroll.rate">
             <field name="name">US WA Washington FML Rate (Employer)</field>
             <field name="code">us_wa_fml_rate_er</field>
             <field name="parameter_value">33.67</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_wa_fml_rate_er_2021" model="hr.payroll.rate">
+            <field name="name">US WA Washington FML Rate (Employer)</field>
+            <field name="code">us_wa_fml_rate_er</field>
+            <field name="parameter_value">36.67</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 

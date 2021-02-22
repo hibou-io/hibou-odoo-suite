@@ -36,6 +36,20 @@
             }</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <record id="rule_parameter_us_ri_sit_exemption_rate_2021" model="hr.payroll.rate">
+            <field name="name">US RI Rhode Island Exemption Rate</field>
+            <field name="code">us_ri_sit_exemption_rate</field>
+            <field name="parameter_value">{
+                'weekly' :        (( 0.00,   19.23), (   4514.42,  0.00)),
+                'bi-weekly' :     (( 0.00,   38.46), (   9028.85,  0.00)),
+                'semi-monthly':   (( 0.00,   41.67), (   9781.25,  0.00)),
+                'monthly' :       (( 0.00,   83.33), (  19562.50,  0.00)),
+                'quarterly' :     (( 0.00,  250.00), (  58687.50,  0.00)),
+                'semi-annually':  (( 0.00,  500.00), ( 117375.00,  0.00)),
+                'annually':       (( 0.00,  1000.0), ( 234750.00,  0.00)),
+            }</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
 
     <data noupdate="1">
@@ -80,6 +94,48 @@
                 ),
             }</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_ri_sit_tax_rate_2021" model="hr.payroll.rate">
+            <field name="name">US RI Rhode Island SIT Tax Rate</field>
+            <field name="code">us_ri_sit_tax_rate</field>
+            <field name="parameter_value">{
+                'weekly': (
+                    ( 1273,   0.00, 3.75),
+                    ( 2895,  47.74, 4.75),
+                    ('inf', 124.79, 5.99),
+                ),
+                'bi-weekly': (
+                    ( 2546,   0.00, 3.75),
+                    ( 5790,  95.48, 4.75),
+                    ('inf', 249.57, 5.99),
+                ),
+                'semi-monthly': (
+                    ( 2758,   0.00, 3.75),
+                    ( 6273, 103.43, 4.75),
+                    ('inf', 270.39, 5.99),
+                ),
+                'monthly': (
+                    ( 5517,   0.00, 3.75),
+                    (12546, 206.89, 4.75),
+                    ('inf', 540.77, 5.99),
+                ),
+                'quarterly': (
+                    (16550,    0.00, 3.75),
+                    (37638,  620.63, 4.75),
+                    ('inf', 1622.31, 5.99),
+                ),
+                'semi-annually': (
+                    (33100,    0.00, 3.75),
+                    (75275, 1241.25, 4.75),
+                    ('inf', 3244.56, 5.99),
+                ),
+                'annually': (
+                    ( 66200,    0.00, 3.75),
+                    (150550, 2482.50, 4.75),
+                    ( 'inf', 6489.13, 5.99),
+                ),
+            }</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 

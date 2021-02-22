@@ -18,6 +18,12 @@
             <field name="parameter_value">1.2</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <record id="rule_parameter_us_nh_suta_rate_2021" model="hr.payroll.rate">
+            <field name="name">US NH New Hampshire SUTA Rate</field>
+            <field name="code">us_nh_suta_rate</field>
+            <field name="parameter_value">2.7</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
 
     <!-- Partners and Contribution Registers -->

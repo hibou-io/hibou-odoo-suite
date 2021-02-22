@@ -18,6 +18,12 @@
             <field name="parameter_value">1.25</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <record id="rule_parameter_us_ne_suta_rate_2021" model="hr.payroll.rate">
+            <field name="name">US NE Nebraska SUTA Rate</field>
+            <field name="code">us_ne_suta_rate</field>
+            <field name="parameter_value">2.5</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
 
     <!-- Table based on Percentage method from https://revenue.nebraska.gov/sites/revenue.nebraska.gov/files/doc/business/2017cir-en_whole.pdf -->
