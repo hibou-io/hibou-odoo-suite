@@ -8,6 +8,12 @@
             <field name="parameter_value">32500.00</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <record id="rule_parameter_us_nv_suta_wage_base_2021" model="hr.payroll.rate">
+            <field name="name">US NV Nevada SUTA Wage Base</field>
+            <field name="code">us_nv_suta_wage_base</field>
+            <field name="parameter_value">33400.00</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
 
     <!-- Rate -->

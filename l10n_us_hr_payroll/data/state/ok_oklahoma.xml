@@ -8,6 +8,12 @@
             <field name="parameter_value">18700.0</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <record id="rule_parameter_us_ok_suta_wage_base_2021" model="hr.payroll.rate">
+            <field name="name">US OK Oklahoma SUTA Wage Base</field>
+            <field name="code">us_ok_suta_wage_base</field>
+            <field name="parameter_value">24000.0</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
 
     <!-- Rate -->
@@ -17,6 +23,12 @@
             <field name="code">us_ok_suta_rate</field>
             <field name="parameter_value">1.5</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_ok_suta_rate_2021" model="hr.payroll.rate">
+            <field name="name">US OK Oklahoma SUTA Rate</field>
+            <field name="code">us_ok_suta_rate</field>
+            <field name="parameter_value">1.0</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
     <!-- table from https://www.ok.gov/tax/documents/2020WHTables.pdf -->

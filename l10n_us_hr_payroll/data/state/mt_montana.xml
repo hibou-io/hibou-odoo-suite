@@ -2,28 +2,22 @@
 <odoo>
     <!-- Wage Base -->
     <data noupdate="1">
-        <record id="rule_parameter_us_mt_suta_wage_base_2019" model="hr.payroll.rate">
-            <field name="name">US MT Montana SUTA Wage Base</field>
-            <field name="code">us_mt_suta_wage_base</field>
-            <field name="parameter_value">33000.00</field>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_mt_suta_wage_base_2020" model="hr.payroll.rate">
             <field name="name">US MT Montana SUTA Wage Base</field>
             <field name="code">us_mt_suta_wage_base</field>
             <field name="parameter_value">34100.00</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <record id="rule_parameter_us_mt_suta_wage_base_2021" model="hr.payroll.rate">
+            <field name="name">US MT Montana SUTA Wage Base</field>
+            <field name="code">us_mt_suta_wage_base</field>
+            <field name="parameter_value">35300.00</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
 
     <!-- Rate -->
     <data noupdate="1">
-        <record id="rule_parameter_us_mt_suta_rate_2019" model="hr.payroll.rate">
-            <field name="name">US MT Montana SUTA Rate (UI)</field>
-            <field name="code">us_mt_suta_rate</field>
-            <field name="parameter_value">1.18</field>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_mt_suta_rate_2020" model="hr.payroll.rate">
             <field name="name">US MT Montana SUTA Rate (UI)</field>
             <field name="code">us_mt_suta_rate</field>
