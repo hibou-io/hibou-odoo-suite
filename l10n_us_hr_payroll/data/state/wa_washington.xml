@@ -98,7 +98,7 @@
         <!--        Bullet 4 in: https://resources.paidleave.wa.gov/premium-calculator-->
         <!--        "Employers may withhold up to 63.33% of the total premium from an employee."-->
         <record id="rule_parameter_us_wa_fml_rate_ee_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">66.33</field>
+            <field name="parameter_value">63.33</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_wa_fml_rate_ee"/>
             <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
@@ -118,7 +118,7 @@
         <!--        Bullet 4 also says in: https://resources.paidleave.wa.gov/premium-calculator-->
         <!--        "The employer is responsible for paying the other 36.67%"-->
         <record id="rule_parameter_us_wa_fml_rate_er_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">33.67</field>
+            <field name="parameter_value">36.67</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_wa_fml_rate_er"/>
             <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
