@@ -20,6 +20,12 @@
         <field name="parameter_value">137700.0</field>
         <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
     </record>
+    <record id="rule_parameter_941_fica_ss_wage_base_2021" model="hr.payroll.rate">
+        <field name="name">Federal 941 FICA Social Security Wage Base</field>
+        <field name="code">fed_941_fica_ss_wage_base</field>
+        <field name="parameter_value">142800.0</field>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
 
     <!-- Rate -->
     <record id="rule_parameter_941_fica_ss_rate_2016" model="hr.payroll.rate">

@@ -7,7 +7,7 @@ class TestSpecial(TestUsPayslip):
         employee = self._createEmployee()
         # so the schedule_pay is now on the Structure...
         contract = self._createContract(employee, wage=salary, schedule_pay='semi-monthly')
-        payslip = self._createPayslip(employee, '2019-01-01', '2019-01-14')
+        payslip = self._createPayslip(employee, '2020-01-01', '2020-01-14')
         payslip.compute_sheet()
 
     def test_payslip_sum_behavior(self):
@@ -27,8 +27,8 @@ class TestSpecial(TestUsPayslip):
             'condition_python': 'result = 1',
             'amount_select': 'code',
             'amount_python_compute': '''
-ytd_category = payslip.sum_category('test_sum_behavior', '2020-01-01', '2021-01-01')
-ytd_rule = payslip.sum('test_sum_behavior', '2020-01-01', '2021-01-01')
+ytd_category = payslip.sum_category('test_sum_behavior', '2021-01-01', '2022-01-01')
+ytd_rule = payslip.sum('test_sum_behavior', '2021-01-01', '2022-01-01')
 result = 0.0
 if ytd_category != ytd_rule:
   # error
@@ -43,7 +43,7 @@ elif ytd_rule == 0.0:
         salary = 80000.0
         employee = self._createEmployee()
         contract = self._createContract(employee, wage=salary, schedule_pay='bi-weekly')
-        payslip = self._createPayslip(employee, '2019-12-30', '2020-01-12')
+        payslip = self._createPayslip(employee, '2020-12-30', '2021-01-12')
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
         self.assertEqual(cats['test_sum_behavior'], 1.0)
@@ -52,7 +52,7 @@ elif ytd_rule == 0.0:
         # Basic date_from behavior.
         self.env['ir.config_parameter'].set_param('hr_payroll.payslip.sum_behavior', 'date_from')
         # The the date_from on the last payslip will not be found
-        payslip = self._createPayslip(employee, '2020-01-13', '2020-01-27')
+        payslip = self._createPayslip(employee, '2021-01-13', '2021-01-27')
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
         self.assertEqual(cats['test_sum_behavior'], 1.0)
@@ -60,7 +60,7 @@ elif ytd_rule == 0.0:
         # date_to behavior.
         self.env['ir.config_parameter'].set_param('hr_payroll.payslip.sum_behavior', 'date_to')
         # The date_to on the last payslip is found
-        payslip = self._createPayslip(employee, '2020-01-13', '2020-01-27')
+        payslip = self._createPayslip(employee, '2021-01-13', '2021-01-27')
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
         self.assertEqual(cats['test_sum_behavior'], 0.0)
@@ -104,14 +104,14 @@ result += payslip.sum_category('ALW', str(year) + '-01-01', str(year+1) + '-01-0
         salary = 80000.0
         employee = self._createEmployee()
         contract = self._createContract(employee, wage=salary, schedule_pay='bi-weekly')
-        payslip = self._createPayslip(employee, '2020-01-01', '2020-01-14')
+        payslip = self._createPayslip(employee, '2021-01-01', '2021-01-14')
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
         rules = self._getRules(payslip)
         self.assertEqual(rules['RECURSION_TEST'], 200.0)
         process_payslip(payslip)
 
-        payslip = self._createPayslip(employee, '2020-01-15', '2020-01-27')
+        payslip = self._createPayslip(employee, '2021-01-15', '2021-01-27')
         payslip.compute_sheet()
         cats = self._getCategories(payslip)
         rules = self._getRules(payslip)
