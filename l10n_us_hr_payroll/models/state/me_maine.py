@@ -1,8 +1,6 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
 from .general import _state_applies, sit_wage
-import logging
-_logger = logging.getLogger(__name__)
 
 
 def me_maine_state_income_withholding(payslip, categories, worked_days, inputs):
@@ -15,23 +13,19 @@ def me_maine_state_income_withholding(payslip, categories, worked_days, inputs):
 
     state_code = 'ME'
     if not _state_applies(payslip, state_code):
-        _logger.warn('state doesnt apply')
         return 0.0, 0.0
 
     # Determine Wage
     wage = sit_wage(payslip, categories)
     if not wage:
-        _logger.warn('no wage')
         return 0.0, 0.0
 
     filing_status = payslip.contract_id.us_payroll_config_value('me_w4me_sit_filing_status')
     if not filing_status:
-        _logger.warn('exempt file status')
         return 0.0, 0.0
 
     exempt = payslip.contract_id.us_payroll_config_value('state_income_tax_exempt')
     if exempt:
-        _logger.warn('generic exemption')
         return 0.0, 0.0
 
     pay_periods = payslip.dict.get_pay_periods_in_year()

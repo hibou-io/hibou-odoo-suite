@@ -12,8 +12,8 @@ class TestUsWAPayslip(TestUsPayslip):
     WA_UNEMP_RATE = 2.16
     WA_FML_MAX_WAGE = 142800.00
     WA_FML_RATE = 0.4
-    WA_FML_RATE_EE = 66.33
-    WA_FML_RATE_ER = 33.67
+    WA_FML_RATE_EE = 63.33
+    WA_FML_RATE_ER = 36.67
 
     def setUp(self):
         super(TestUsWAPayslip, self).setUp()
