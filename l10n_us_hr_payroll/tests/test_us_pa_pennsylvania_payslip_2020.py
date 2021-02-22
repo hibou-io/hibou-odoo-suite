@@ -24,7 +24,7 @@ class TestUsPAPayslip(TestUsPayslip):
                                         wage=salary,
                                         state_id=self.get_us_state('PA'))
 
-        self._log('2019 Pennsylvania tax first payslip:')
+        self._log('2020 Pennsylvania tax first payslip:')
         payslip = self._createPayslip(employee, '2020-01-01', '2020-01-31')
         payslip.compute_sheet()
         cats = self._getCategories(payslip)

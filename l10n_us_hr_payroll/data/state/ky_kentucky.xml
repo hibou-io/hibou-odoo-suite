@@ -8,6 +8,12 @@
             <field name="parameter_value">10800.0</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <record id="rule_parameter_us_ky_suta_wage_base_2021" model="hr.payroll.rate">
+            <field name="name">US KY Kentucky SUTA Wage Base</field>
+            <field name="code">us_ky_suta_wage_base</field>
+            <field name="parameter_value">11100.0</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
 
     <!-- Rate -->
@@ -27,6 +33,12 @@
             <field name="code">us_ky_sit_standard_deduction_rate</field>
             <field name="parameter_value">2650</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_ky_sit_standard_deduction_rate_2021" model="hr.payroll.rate">
+            <field name="name">US KY Kentucky Standard Deduction Rate</field>
+            <field name="code">us_ky_sit_standard_deduction_rate</field>
+            <field name="parameter_value">2690</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 

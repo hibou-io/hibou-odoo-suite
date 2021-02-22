@@ -2,12 +2,6 @@
 <odoo>
     <!-- Wage Base -->
     <data noupdate="1">
-        <record id="rule_parameter_us_pa_suta_wage_base_2019" model="hr.payroll.rate">
-            <field name="name">US PA Pennsylvania SUTA Wage Base (ER)</field>
-            <field name="code">us_pa_suta_wage_base</field>
-            <field name="parameter_value">10000.00</field>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_pa_suta_wage_base_2020" model="hr.payroll.rate">
             <field name="name">US PA Pennsylvania SUTA Wage Base (ER)</field>
             <field name="code">us_pa_suta_wage_base</field>
@@ -18,12 +12,6 @@
 
     <!-- Rate -->
     <data noupdate="1">
-        <record id="rule_parameter_us_pa_suta_rate_2019" model="hr.payroll.rate">
-            <field name="name">US PA Pennsylvania SUTA Rate</field>
-            <field name="code">us_pa_suta_rate</field>
-            <field name="parameter_value">3.6890</field>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_pa_suta_rate_2020" model="hr.payroll.rate">
             <field name="name">US PA Pennsylvania SUTA Rate</field>
             <field name="code">us_pa_suta_rate</field>
@@ -33,12 +21,6 @@
     </data>
 
     <data noupdate="1">
-        <record id="rule_parameter_us_pa_suta_ee_rate_2019" model="hr.payroll.rate">
-            <field name="name">US PA Pennsylvania SUTA Employee Rate</field>
-            <field name="code">us_pa_suta_ee_rate</field>
-            <field name="parameter_value">0.06</field>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_pa_suta_ee_rate_2020" model="hr.payroll.rate">
             <field name="name">US PA Pennsylvania SUTA Employee Rate</field>
             <field name="code">us_pa_suta_ee_rate</field>
@@ -48,12 +30,6 @@
     </data>
 
     <data noupdate="1">
-        <record id="rule_parameter_us_pa_sit_rate_2019" model="hr.payroll.rate">
-            <field name="name">US PA Pennsylvania SIT Rate</field>
-            <field name="code">us_pa_sit_rate</field>
-            <field name="parameter_value">3.07</field>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_pa_sit_rate_2020" model="hr.payroll.rate">
             <field name="name">US PA Pennsylvania SIT Rate</field>
             <field name="code">us_pa_sit_rate</field>
