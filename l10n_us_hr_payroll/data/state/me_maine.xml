@@ -18,6 +18,12 @@
             <field name="parameter_value">1.92</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <record id="rule_parameter_us_me_suta_rate_2021" model="hr.payroll.rate">
+            <field name="name">US ME Maine SUTA Rate</field>
+            <field name="code">us_me_suta_rate</field>
+            <field name="parameter_value">2.31</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
     <!-- table based on https://www.maine.gov/revenue/forms/with/2020/20_WH_Tab&Instructions.pdf step 6.-->
     <data noupdate="1">
@@ -38,6 +44,23 @@
             }</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <record id="rule_parameter_us_me_sit_tax_rate_2021" model="hr.payroll.rate">
+            <field name="name">US ME Maine SIT Tax Rate</field>
+            <field name="code">us_me_sit_tax_rate</field>
+            <field name="parameter_value">{
+                'single': (
+                    (  22450,     0,  5.80),
+                    (  53150,  1302,  6.75),
+                    (  'inf',  3374,  7.15),
+                ),
+                'married': (
+                    (  44950,     0,  5.80),
+                    ( 106350,  2607,  6.75),
+                    ( 'inf',   6752,  7.15),
+                ),
+            }</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
 
     <data noupdate="1">
@@ -55,6 +78,21 @@
                 },
             }</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_me_sit_standard_deduction_rate_2021" model="hr.payroll.rate">
+            <field name="name">US ME Maine Standard Deduction Rate</field>
+            <field name="code">us_me_sit_standard_deduction_rate</field>
+            <field name="parameter_value">{
+                'single':   {
+                    ( 83850,   9700),
+                    (158850,  75000),
+                },
+                'married':  {
+                    (167700,  22250),
+                    (317700, 150000),
+                },
+            }</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 

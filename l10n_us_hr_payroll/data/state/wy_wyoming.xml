@@ -2,17 +2,17 @@
 <odoo>
     <!-- Wage Base -->
     <data noupdate="1">
-        <record id="rule_parameter_us_wy_suta_wage_base_2019" model="hr.payroll.rate">
-            <field name="name">US WY Wyoming SUTA Wage Base</field>
-            <field name="code">us_wy_suta_wage_base</field>
-            <field name="parameter_value">25400.00</field>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_wy_suta_wage_base_2020" model="hr.payroll.rate">
             <field name="name">US WY Wyoming SUTA Wage Base</field>
             <field name="code">us_wy_suta_wage_base</field>
             <field name="parameter_value">26400.00</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_us_wy_suta_wage_base_2021" model="hr.payroll.rate">
+            <field name="name">US WY Wyoming SUTA Wage Base</field>
+            <field name="code">us_wy_suta_wage_base</field>
+            <field name="parameter_value">27300.00</field>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 
