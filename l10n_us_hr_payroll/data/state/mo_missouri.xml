@@ -7,15 +7,16 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_mo_suta_wage_base_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">12000.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_mo_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_mo_suta_wage_base_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">11500.0</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_mo_suta_wage_base"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <!-- https://labor.mo.gov/news/press-releases/missouri-employers-receive-unemployment-tax-rate-reduction-2021#:~:text=Jefferson%20City%2C%20MO%20%E2%80%93%20Effective%20January,as%20of%20January%201%2C%202021. -->
+        <record id="rule_parameter_us_mo_suta_wage_base_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">11000.0</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mo_suta_wage_base"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 
@@ -26,15 +27,17 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_mo_suta_rate_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">2.376</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_mo_suta_rate"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_mo_suta_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">2.376</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_mo_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <!-- https://labor.mo.gov/DES/Employers/tax_rates -->
+        <!-- In "Beginning Tax Rates" section, the last sentence says "or 2.7%, whichever is highest -->
+        <record id="rule_parameter_us_mo_suta_rate_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.7</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mo_suta_rate"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 
@@ -44,22 +47,6 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <!-- https://dor.mo.gov/forms/4282_2019.pdf -->
-        <record id="rule_parameter_us_mo_sit_rate_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">[
-                (1053.0, 1.5),
-                (1053.0, 2.0),
-                (1053.0, 2.5),
-                (1053.0, 3.0),
-                (1053.0, 3.5),
-                (1053.0, 4.0),
-                (1053.0, 4.5),
-                (1053.0, 5.0),
-                ( 'inf', 5.4),
-            ]</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_mo_sit_rate"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <!-- https://dor.mo.gov/forms/4282_2020.pdf -->
         <!-- Income Tax Withholding Percentage Table-->
         <record id="rule_parameter_us_mo_sit_rate_2020" model="hr.rule.parameter.value">
@@ -77,6 +64,24 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_mo_sit_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+
+        <!-- todo: This parameter is to the example not to the rates-->
+        <!-- page 13 https://dor.mo.gov/forms/4282_2021.pdf -->
+        <record id="rule_parameter_us_mo_sit_rate_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">[
+                (1088.0, 1.5),
+                (1088.0, 2.0),
+                (1088.0, 2.5),
+                (1088.0, 3.0),
+                (1088.0, 3.5),
+                (1088.0, 4.0),
+                (1088.0, 4.5),
+                (1088.0, 5.0),
+                ( 'inf', 5.4),
+            ]</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mo_sit_rate"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
 
     <record id="rule_parameter_us_mo_sit_deduction" model="hr.rule.parameter">
@@ -85,16 +90,6 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <!-- https://dor.mo.gov/forms/4282_2019.pdf -->
-        <record id="rule_parameter_us_mo_sit_deduction_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">{
-                'single':             12400.0,
-                'married':            24800.0,
-                'head_of_household':  18650.0,
-            }</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_mo_sit_deduction"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <!-- https://dor.mo.gov/forms/4282_2020.pdf -->
         <!-- 2020 Missouri Withholding Tax Formula Page.12 -->
         <record id="rule_parameter_us_mo_sit_deduction_2020" model="hr.rule.parameter.value">
@@ -105,6 +100,17 @@
             }</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_mo_sit_deduction"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <!-- https://dor.mo.gov/forms/4282_2021.pdf -->
+        <!-- 2020 Missouri Withholding Tax Formula Page.12 -->
+        <record id="rule_parameter_us_mo_sit_deduction_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'single':             12550.0,
+                'married':            25100.0,
+                'head_of_household':  18800.0,
+            }</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_mo_sit_deduction"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 

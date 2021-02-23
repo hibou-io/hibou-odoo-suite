@@ -7,11 +7,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_va_suta_wage_base_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">8000.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_va_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
+        <!-- Unchanged in 2021 https://www.vec.virginia.gov/employers/faqs/Employer-UI-Tax-Questions -->
         <record id="rule_parameter_us_va_suta_wage_base_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">8000.0</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_va_suta_wage_base"/>
@@ -26,17 +22,20 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_va_suta_rate_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">2.51</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_va_suta_rate"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
         <record id="rule_parameter_us_va_suta_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">2.51</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_va_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <!-- https://www.vec.virginia.gov/employers/faqs/Employer-UI-Tax-Questions -->
+        <record id="rule_parameter_us_va_suta_rate_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.5</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_va_suta_rate"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
+
+
     <!-- Table page no 10 based https://www.tax.virginia.gov/sites/default/files/inline-files/Employer%20Withholding%20Instructions.pdf -->
     <record id="rule_parameter_us_va_sit_rate" model="hr.rule.parameter">
         <field name="name">US VA Virginia SIT Rate Table</field>
@@ -44,7 +43,8 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_va_sit_rate_2019" model="hr.rule.parameter.value">
+        <!-- Unchanged in 2021 https://www.business.tax.virginia.gov/calculators/withholding-calculator.cfm -->
+        <record id="rule_parameter_us_va_sit_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">[
                     (      0.00,       0.0,  2.00),
                     (   3000.00,      60.0,  3.00),
@@ -52,7 +52,7 @@
                     (  17000.00,     720.0,  5.75),
                 ]</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_va_sit_rate"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
 
@@ -62,10 +62,11 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_va_sit_exemption_rate_2019" model="hr.rule.parameter.value">
+        <!-- Unchanged in 2021 https://www.business.tax.virginia.gov/calculators/withholding-calculator.cfm -->
+        <record id="rule_parameter_us_va_sit_exemption_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">930.0</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_va_sit_exemption_rate"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
 
@@ -75,10 +76,11 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_va_sit_other_exemption_rate_2019" model="hr.rule.parameter.value">
+        <!-- Unchanged in 2021 https://www.business.tax.virginia.gov/calculators/withholding-calculator.cfm -->
+        <record id="rule_parameter_us_va_sit_other_exemption_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">800.0</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_va_sit_other_exemption_rate"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
 
@@ -88,10 +90,11 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_va_sit_deduction_2019" model="hr.rule.parameter.value">
+        <!-- Unchanged in 2021 https://www.business.tax.virginia.gov/calculators/withholding-calculator.cfm -->
+        <record id="rule_parameter_us_va_sit_deduction_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">4500.0</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_va_sit_deduction"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
     </data>
 

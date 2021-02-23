@@ -22,6 +22,7 @@ class TestUsWAPayslip(TestUsPayslip):
         #     'rate': 0.1261,
         #     'rate_emp_withhold': 0.05575,
         # })
+        # todo: figure out how the two rates below corralate with ee and er rates above
         self.test_ee_lni = 0.05575  # per 100 hours
         self.test_er_lni = 0.1261  # per 100 hours
         self.parameter_lni_ee = self.env['hr.rule.parameter'].create({
@@ -61,7 +62,7 @@ class TestUsWAPayslip(TestUsPayslip):
         self._log('2020 Washington tax first payslip:')
         payslip = self._createPayslip(employee, '2020-01-01', '2020-01-31')
         hours_in_period = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'WORK100').number_of_hours
-        self.assertEqual(hours_in_period, 184)  # only asserted to test algorithm
+        self.assertPayrollAlmostEqual(hours_in_period, 184)  # only asserted to test algorithm
         payslip.compute_sheet()
 
         rules = self._getRules(payslip)
