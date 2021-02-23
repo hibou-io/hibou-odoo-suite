@@ -7,6 +7,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- Same for 2021 https://dol.nebraska.gov/webdocs/Resources/Items/2021%20UI%20Tax%20Rate%20Guide.pdf -->
         <record id="rule_parameter_us_ne_suta_wage_base_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">9000.0</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_ne_suta_wage_base"/>
@@ -26,7 +27,15 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_ne_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <!-- https://dol.nebraska.gov/webdocs/Resources/Items/2021%20UI%20Tax%20Rate%20Guide.pdf -->
+        <!-- Under "Employers Without an Experience Rating "the lesser of the category 12 rate or 2.5%" -->
+        <record id="rule_parameter_us_ne_suta_rate_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">2.5</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_ne_suta_rate"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
     </data>
+
     <!-- Table based on Percentage method from https://revenue.nebraska.gov/sites/revenue.nebraska.gov/files/doc/business/2017cir-en_whole.pdf -->
     <record id="rule_parameter_us_ne_sit_tax_rate" model="hr.rule.parameter">
         <field name="name">US NE Nebraska SIT Tax Rate</field>
@@ -34,6 +43,8 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
+        <!-- unchanged in 2021 https://revenue.nebraska.gov/businesses/nebraska-income-tax-withholding -->
+        <!-- see note "Continue using these tables for 2021 -->
         <record id="rule_parameter_us_ne_sit_tax_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">{
                 'single': {

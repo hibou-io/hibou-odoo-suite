@@ -7,11 +7,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_tx_suta_wage_base_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">9000.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
+        <!-- Unchanged in 2021 https://www.twc.texas.gov/businesses/your-tax-rates -->
         <record id="rule_parameter_us_tx_suta_wage_base_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">9000.0</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_wage_base"/>
@@ -26,11 +22,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_tx_suta_rate_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">2.7</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_rate"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
+        <!-- Unchanged for 2021 https://www.twc.texas.gov/businesses/new-texas-employer-information#newEmployerTaxRateInformation -->
         <record id="rule_parameter_us_tx_suta_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">2.7</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_rate"/>
@@ -44,11 +36,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_tx_suta_oa_rate_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">0.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_oa_rate"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
+        <!-- Unchanged in 2021 https://www.twc.texas.gov/businesses/your-tax-rates#:~:text=The%202020%20Obligation%20Assessment%20Ratio%20(%20OA%20Ratio)%20is%200.00%20percent. -->
         <record id="rule_parameter_us_tx_suta_oa_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">0.0</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_oa_rate"/>
@@ -62,11 +50,7 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <record id="rule_parameter_us_tx_suta_etia_rate_2019" model="hr.rule.parameter.value">
-            <field name="parameter_value">0.1</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_etia_rate"/>
-            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
-        </record>
+        <!-- Unchanged in 2021 https://www.twc.texas.gov/businesses/your-tax-rates#:~:text=The%20fifth%20component%20of%20your,wages%20paid%20by%20an%20employer. -->
         <record id="rule_parameter_us_tx_suta_etia_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">0.1</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_tx_suta_etia_rate"/>

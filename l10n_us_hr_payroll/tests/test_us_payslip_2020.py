@@ -39,16 +39,6 @@ class TestUsPayslip2020(TestUsPayslip):
         contract = self._createContract(employee, wage=salary)
         self._log(contract.read())
 
-        self._log('2019 tax last slip')
-        payslip = self._createPayslip(employee, '2019-12-01', '2019-12-31')
-        self.assertEqual(payslip.contract_id, contract)
-        self._log(payslip.read())
-        process_payslip(payslip)
-
-        # Ensure amounts are there, they shouldn't be added in the next year...
-        cats = self._getCategories(payslip)
-        self.assertTrue(cats['ER_US_940_FUTA'], ' Value should be well above whatever was available that year!')
-
         self._log('2020 tax first payslip:')
         payslip = self._createPayslip(employee, '2020-01-01', '2020-01-31')
 
