@@ -17,7 +17,6 @@ Out of the box, only allows you to generate a login for an 'External User', e.g.
         """,
     'depends': [
         'base',
-        'website',
         'portal',
     ],
     'auto_install': False,

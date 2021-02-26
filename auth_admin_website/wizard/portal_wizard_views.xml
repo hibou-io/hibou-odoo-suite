@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="portal_wizard" model="ir.ui.view">
+        <field name="name">Portal Access Management - Auth Admin Multi-Website</field>
+        <field name="model">portal.wizard</field>
+        <field name="inherit_id" ref="auth_admin.portal_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='force_login_url']" position="before">
+                <field name="website_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
