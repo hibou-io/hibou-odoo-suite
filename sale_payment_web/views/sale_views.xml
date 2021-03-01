@@ -5,6 +5,7 @@
         <field name="name">sale.order.form.inherit</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="groups_id" eval="[(4, ref('group_payment_web'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_draft']" position="after">
                 <button name="action_payment_register" type="object" string="Register Payment"/>
