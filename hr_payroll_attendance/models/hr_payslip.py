@@ -39,6 +39,7 @@ class HrPayslip(models.Model):
             ('employee_id', '=', self.employee_id.id),
             ('check_out', '<=', self.date_to),
             ('payslip_id', '=', False),
+            ('id', 'not in', attendance_to_keep.ids),
         ])
         self.update({'attendance_ids': [(6, 0, attendance_to_keep.ids)]})
 
@@ -87,7 +88,7 @@ class HrPayslip(models.Model):
 
     def _pre_aggregate_attendance_data(self, default_workentrytype):
         worked_attn = defaultdict(list)
-        for attn in self.attendance_ids:
+        for attn in self.attendance_ids.sorted('check_in'):
             if attn.worked_hours:
                 # Avoid in/outs
                 attn_iso = attn.check_in.isocalendar()
