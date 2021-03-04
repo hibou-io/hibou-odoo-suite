@@ -86,7 +86,11 @@ class TestPayslipTimesheet(common.TransactionCase):
             'payslip_id': self.payslip_dummy.id,
         })
 
-        self.payslip._onchange_employee()
+        payslip_form = common.Form(self.env['hr.payslip'])
+        payslip_form.date_from = '2018-01-01'
+        payslip_form.date_to = '2018-01-31'
+        payslip_form.employee_id = self.employee
+        self.payslip = payslip_form.save()
         self.assertTrue(self.payslip.contract_id, 'No auto-discovered contract!')
         wage = self.test_hourly_wage
         self.payslip.compute_sheet()

@@ -39,6 +39,7 @@ class HrPayslip(models.Model):
             ('employee_id', '=', self.employee_id.id),
             ('date', '<=', self.date_to),
             ('payslip_id', '=', False),
+            ('id', 'not in', timesheet_to_keep.ids),
         ])
         self.update({'timesheet_ids': [(6, 0, timesheet_to_keep.ids)]})
 
@@ -87,7 +88,7 @@ class HrPayslip(models.Model):
 
     def _pre_aggregate_timesheet_data(self, default_workentrytype):
         worked_ts = defaultdict(list)
-        for ts in self.timesheet_ids.sorted('id'):
+        for ts in self.timesheet_ids.sorted('date'):
             if ts.unit_amount:
                 ts_iso = ts.date.isocalendar()
                 timesheet_type = ts.work_type_id or default_workentrytype
