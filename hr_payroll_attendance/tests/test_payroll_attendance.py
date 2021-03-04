@@ -126,7 +126,11 @@ class TestUsPayslip(common.TransactionCase):
         return categories
 
     def test_attendance_hourly(self):
-        self.payslip._onchange_employee()
+        payslip_form = common.Form(self.env['hr.payslip'])
+        payslip_form.date_from = '2020-01-06'
+        payslip_form.date_to = '2020-01-19'
+        payslip_form.employee_id = self.employee
+        self.payslip = payslip_form.save()
         self.assertTrue(self.payslip.contract_id, 'No auto-discovered contract!')
         self.payslip.compute_sheet()
         # 58.97 => 40hr regular, 18.97hr OT
