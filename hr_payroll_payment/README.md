@@ -19,6 +19,8 @@ When paying on a batch, a "Batch Payment" will be generated and linked to the wh
 
 Adds Accounting Date field on Batch to use when creating slips with the batch's date.
 
+Adds fiscal position mappings to set a fiscal position on the contract and have payslips map their accounts.
+
 Tested
 ------
 
