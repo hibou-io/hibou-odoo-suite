@@ -13,6 +13,9 @@
                     <field name="payroll_payment_method_refund_id" domain="[('payment_type', '=', 'inbound')]"/>
                 </group>
             </xpath>
+            <xpath expr="//page[@name='bank_account']//field[@name='code']" position="before">
+                <field name="default_account_id" string="Default Account" attrs="{'invisible': [('type', '!=', 'general')]}" />
+            </xpath>
         </field>
     </record>
 </odoo>

@@ -65,7 +65,7 @@ class HrPayslip(models.Model):
     def _payment_values(self, amount):
         values = {
             'payment_reference': self.number,
-            'communication': self.number + ' - ' + self.name,
+            'ref': self.number + ' - ' + self.name,
             'journal_id': self.move_id.journal_id.payroll_payment_journal_id.id,
             'payment_method_id': self.move_id.journal_id.payroll_payment_method_id.id,
             'partner_type': 'supplier',
@@ -82,20 +82,29 @@ class HrPayslip(models.Model):
         return values
 
     def action_register_payment(self):
-        if not all(slip.move_id.journal_id.payroll_payment_journal_id for slip in self):
+        slips = self.filtered(lambda s: s.move_id.state in ('draft', 'posted') and not s.is_paid)
+        if not all(slip.move_id.journal_id.payroll_payment_journal_id for slip in slips):
             raise UserError(_('Payroll Payment journal not configured on the existing entry\'s journal.'))
-        if not all(slip.move_id.journal_id.payroll_payment_method_id for slip in self):
+        if not all(slip.move_id.journal_id.payroll_payment_method_id for slip in slips):
             raise UserError(_('Payroll Payment method not configured on the existing entry\'s journal.'))
 
+        # as of 14, you cannot reconcile to un-posted moves
+        # so if you are paying it, we must assume you want to post any draft entries
+        slip_moves = slips.mapped('move_id')
+        unposted_moves = slip_moves.filtered(lambda m: m.state == 'draft')
+        unposted_moves._post(soft=False)
+
         payments = self.env['account.payment']
-        for slip in self.filtered(lambda s: s.move_id and not s.is_paid):
+        for slip in slips:
             lines_to_pay = slip.move_id.line_ids.filtered(lambda l: l.partner_id == slip.employee_id.address_home_id
                          and l.account_id == slip.employee_id.address_home_id.property_account_payable_id)
             amount = sum(lines_to_pay.mapped('amount_residual'))
+            if not amount:
+                continue
             payment_values = slip._payment_values(amount)
             payment = payments.create(payment_values)
-            payment.post()
-            lines_paid = payment.move_line_ids.filtered(lambda l: l.account_id == slip.employee_id.address_home_id.property_account_payable_id)
+            payment.action_post()
+            lines_paid = payment.line_ids.filtered(lambda l: l.account_id == slip.employee_id.address_home_id.property_account_payable_id)
             lines_to_reconcile = lines_to_pay + lines_paid
             lines_to_reconcile.reconcile()
             payments += payment
@@ -296,10 +305,10 @@ class HrPayslip(models.Model):
 
         # The code below is called if there is an error in the balance between credit and debit sum.
         if float_compare(credit_sum, debit_sum, precision_digits=precision) == -1:
-            acc_id = slip.journal_id.default_credit_account_id.id
+            acc_id = slip.journal_id.default_account_id.id
             if not acc_id:
                 raise UserError(
-                    _('The Expense Journal "%s" has not properly configured the Credit Account!') % (
+                    _('The Expense Journal "%s" has not properly configured the Default Account!') % (
                         slip.journal_id.name))
             existing_adjustment_line = (
                 line_id for line_id in line_ids if line_id['name'] == _('Adjustment Entry')
@@ -321,9 +330,9 @@ class HrPayslip(models.Model):
                 adjust_credit['credit'] = debit_sum - credit_sum
 
         elif float_compare(debit_sum, credit_sum, precision_digits=precision) == -1:
-            acc_id = slip.journal_id.default_debit_account_id.id
+            acc_id = slip.journal_id.default_account_id.id
             if not acc_id:
-                raise UserError(_('The Expense Journal "%s" has not properly configured the Debit Account!') % (
+                raise UserError(_('The Expense Journal "%s" has not properly configured the Default Account!') % (
                     slip.journal_id.name))
             existing_adjustment_line = (
                 line_id for line_id in line_ids if line_id['name'] == _('Adjustment Entry')
@@ -378,10 +387,10 @@ class HrPayslip(models.Model):
 
             # The code below is called if there is an error in the balance between credit and debit sum.
             if float_compare(credit_sum, debit_sum, precision_digits=precision) == -1:
-                acc_id = slip.journal_id.default_credit_account_id.id
+                acc_id = slip.journal_id.default_account_id.id
                 if not acc_id:
                     raise UserError(
-                        _('The Expense Journal "%s" has not properly configured the Credit Account!') % (
+                        _('The Expense Journal "%s" has not properly configured the Default Account!') % (
                             slip.journal_id.name))
                 existing_adjustment_line = (
                     line_id for line_id in line_ids if line_id['name'] == _('Adjustment Entry')
@@ -403,9 +412,9 @@ class HrPayslip(models.Model):
                     adjust_credit['credit'] = debit_sum - credit_sum
 
             elif float_compare(debit_sum, credit_sum, precision_digits=precision) == -1:
-                acc_id = slip.journal_id.default_debit_account_id.id
+                acc_id = slip.journal_id.default_account_id.id
                 if not acc_id:
-                    raise UserError(_('The Expense Journal "%s" has not properly configured the Debit Account!') % (
+                    raise UserError(_('The Expense Journal "%s" has not properly configured the Default Account!') % (
                         slip.journal_id.name))
                 existing_adjustment_line = (
                     line_id for line_id in line_ids if line_id['name'] == _('Adjustment Entry')
@@ -529,10 +538,10 @@ class HrPayslip(models.Model):
 
         # The code below is called if there is an error in the balance between credit and debit sum.
         if float_compare(credit_sum, debit_sum, precision_digits=precision) == -1:
-            acc_id = slip.journal_id.default_credit_account_id.id
+            acc_id = slip.journal_id.default_account_id.id
             if not acc_id:
                 raise UserError(
-                    _('The Expense Journal "%s" has not properly configured the Credit Account!') % (
+                    _('The Expense Journal "%s" has not properly configured the Default Account!') % (
                         slip.journal_id.name))
             existing_adjustment_line = (
                 line_id for line_id in line_ids if line_id['name'] == _('Adjustment Entry')
@@ -554,9 +563,9 @@ class HrPayslip(models.Model):
                 adjust_credit['credit'] = debit_sum - credit_sum
 
         elif float_compare(debit_sum, credit_sum, precision_digits=precision) == -1:
-            acc_id = slip.journal_id.default_debit_account_id.id
+            acc_id = slip.journal_id.default_account_id.id
             if not acc_id:
-                raise UserError(_('The Expense Journal "%s" has not properly configured the Debit Account!') % (
+                raise UserError(_('The Expense Journal "%s" has not properly configured the Default Account!') % (
                     slip.journal_id.name))
             existing_adjustment_line = (
                 line_id for line_id in line_ids if line_id['name'] == _('Adjustment Entry')

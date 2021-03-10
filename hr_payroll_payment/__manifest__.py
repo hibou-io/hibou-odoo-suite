@@ -3,7 +3,7 @@
 {
     'name': 'Payroll Payments',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '13.0.1.1.0',
+    'version': '14.0.1.0.0',
     'category': 'Human Resources',
     'sequence': 95,
     'summary': 'Register payments for Payroll Payslips',
@@ -13,7 +13,7 @@ Pay your Payroll
 
 Hibou's Payroll Payments modifies, and abstracts, the way that the accounting for payslips is generated.
 
-In stock Odoo 13, journal entries are grouped by account and name, but has no linking to partners.
+In stock Odoo 14, journal entries are grouped by account and name, but has no linking to partners.
 
 On the Payroll Journal, you can now select optional journal entry creation with the options:
 
@@ -29,6 +29,8 @@ When paying on a batch, a "Batch Payment" will be generated and linked to the wh
 
 Adds Accounting Date field on Batch to use when creating slips with the batch's date.
 
+Adds fiscal position mappings to set a fiscal position on the contract and have payslips map their accounts.
+
 Tested
 ------
 
@@ -41,7 +43,6 @@ Passes original Payroll Accounting tests and additional ones for gouping behavio
         'hibou_professional',
     ],
     'data': [
-        #'wizard/hr_payroll_register_payment_views.xml',
         'views/account_views.xml',
         'views/hr_payslip_views.xml',
     ],
