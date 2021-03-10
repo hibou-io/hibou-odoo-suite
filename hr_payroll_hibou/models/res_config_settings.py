@@ -7,6 +7,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     # TODO We need MORE here...
+    module_hr_payroll_payment = fields.Boolean(string='Payments & Advanced Accounting')
     module_hr_payroll_attendance = fields.Boolean(string='Attendance Entries & Overtime')
     module_hr_payroll_timesheet = fields.Boolean(string='Timesheet Entries & Overtime')
     module_l10n_us_hr_payroll = fields.Boolean(string='USA Payroll')
