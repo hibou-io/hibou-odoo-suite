@@ -9,7 +9,7 @@ from logging import getLogger
 _logger = getLogger(__name__)
 
 
-def admin_auth_generate_login(env, user):
+def admin_auth_generate_login(env, user, base_url=None):
     """
     Generates a URL to allow the current user to login as the portal user.
 
@@ -29,7 +29,7 @@ def admin_auth_generate_login(env, user):
     key = str(config.search([('key', '=', 'database.secret')], limit=1).value)
     h = hmac.new(key.encode(), (u + e + o).encode(), sha256)
 
-    base_url = str(config.search([('key', '=', 'web.base.url')], limit=1).value)
+    base_url = base_url or str(config.search([('key', '=', 'web.base.url')], limit=1).value)
 
     _logger.warn('login url for user id: ' + u + ' original user id: ' + o)
 
