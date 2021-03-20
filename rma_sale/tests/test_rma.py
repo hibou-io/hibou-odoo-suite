@@ -166,7 +166,7 @@ class TestRMASale(TestRMA):
 
         # Existing lot cannot be re-used.
         with self.assertRaises(ValidationError):
-            rma2.in_picking_id.action_done()
+            rma2.in_picking_id.button_validate()
         
         # RMA cannot be completed because the inbound picking state is confirmed
         with self.assertRaises(UserError):
@@ -290,8 +290,8 @@ class TestRMASale(TestRMA):
         self.assertEqual(sale_line.price_unit, so_line.price_unit)
 
         # Invoices do not have their anglo-saxon cost lines until they post
-        order_invoice.post()
-        rma_invoice.post()
+        order_invoice._post(soft=False)
+        rma_invoice._post(soft=False)
 
         # Find the return to vendor RMA
         rtv_rma = self.env['rma.rma'].search([('parent_id', '=', rma.id)])
