@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <template id="portal_my_rma_inherit" inherit_id="rma.portal_my_rma">
+        <xpath expr="//th[hasclass('rma-state')]" position="before">
+            <th class="rma-sale">
+                <t t-if="groupby == 'sale'">
+                    <em class="font-weight-normal text-muted">RMAs for sale:</em>
+                    <span t-field="rmas[0].sale_order_id"/>
+                </t>
+                <t t-else="">
+                    <span>Sale Order</span>
+                </t>
+            </th>
+        </xpath>
+        <xpath expr="//td[hasclass('rma-state')]" position="before">
+            <td class="rma-sale">
+                <span t-if="groupby != 'sale'" t-field="rma.sale_order_id"/>
+            </td>
+        </xpath>
+    </template>
+
     <template id="portal_my_rma_rma_inherit" inherit_id="rma.portal_my_rma_rma">
         <xpath expr="//div[hasclass('rma-details')]" position="inside">
             <div t-if="rma.sale_order_id" class="mb8">
