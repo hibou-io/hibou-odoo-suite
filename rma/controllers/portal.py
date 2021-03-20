@@ -1,12 +1,66 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from collections import OrderedDict
+from operator import itemgetter
 
 from odoo import http, fields
-from odoo.exceptions import AccessError, MissingError, ValidationError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.http import request
+from odoo.tools import groupby as groupbyelem
 from odoo.tools.translate import _
 from odoo.addons.portal.controllers.portal import pager as portal_pager, CustomerPortal
+
+
+def rma_portal_searchbar_sortings():
+    # Override to add more sorting
+    return {
+        'date': {'label': _('Newest'), 'order': 'create_date desc, id desc'},
+        'name': {'label': _('Name'), 'order': 'name asc, id asc'},
+    }
+
+
+def rma_portal_searchbar_filters():
+    # Override to add more filters
+    return {
+        'all': {'label': _('All'), 'domain': [('state', 'in', ['draft', 'confirmed', 'done', 'cancel'])]},
+        'draft': {'label': _('Draft'), 'domain': [('state', '=', 'draft')]},
+        'confirmed': {'label': _('Confirmed'), 'domain': [('state', '=', 'confirmed')]},
+        'cancel': {'label': _('Cancelled'), 'domain': [('state', '=', 'cancel')]},
+        'done': {'label': _('Done'), 'domain': [('state', '=', 'done')]},
+    }
+
+
+def rma_portal_searchbar_inputs():
+    # Override to add more search fields
+    return {
+        'name': {'input': 'name', 'label': _('Search in Name')},
+        'all': {'input': 'all', 'label': _('Search in All')},
+    }
+
+
+def rma_portal_searchbar_groupby():
+    # Override to add more options for grouping
+    return {
+        'none': {'input': 'none', 'label': _('None')},
+        'state': {'input': 'state', 'label': _('State')},
+        'template': {'input': 'template', 'label': _('Type')},
+    }
+
+
+def rma_portal_search_domain(search_in, search):
+    # Override if you added search inputs
+    search_domain = []
+    if search_in in ('name', 'all'):
+        search_domain.append(('name', 'ilike', search))
+    return search_domain
+
+
+def rma_portal_group_rmas(rmas, groupby):
+    # Override to check groupby and perform a different grouping
+    if groupby == 'state':
+        return [request.env['rma.rma'].concat(*g) for k, g in groupbyelem(rmas, itemgetter('state'))]
+    if groupby == 'template':
+        return [request.env['rma.rma'].concat(*g) for k, g in groupbyelem(rmas, itemgetter('template_id'))]
+    return [rmas]
 
 
 class CustomerPortal(CustomerPortal):
@@ -25,72 +79,58 @@ class CustomerPortal(CustomerPortal):
         return self._get_page_view_values(rma, access_token, values, 'my_rma_history', True, **kwargs)
 
     @http.route(['/my/rma', '/my/rma/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_rma(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
+    def portal_my_rma(self, page=1, date_begin=None, date_end=None, sortby='date', filterby='all', groupby='none', search_in='all', search=None, **kw):
         values = self._prepare_portal_layout_values()
-        RMA = request.env['rma.rma']
 
-        domain = []
-        fields = ['name', 'create_date']
+        searchbar_sortings = rma_portal_searchbar_sortings()
+        searchbar_filters = rma_portal_searchbar_filters()
+        searchbar_inputs = rma_portal_searchbar_inputs()
+        searchbar_groupby = rma_portal_searchbar_groupby()
 
-        archive_groups = self._get_archive_groups('rma.rma', domain, fields)
+        if sortby not in searchbar_sortings:
+            raise UserError(_("Unknown sorting option."))
+        order = searchbar_sortings[sortby]['order']
+
+        if filterby not in searchbar_filters:
+            raise UserError(_("Unknown filter option."))
+        domain = searchbar_filters[filterby]['domain']
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
-        searchbar_sortings = {
-            'date': {'label': _('Newest'), 'order': 'create_date desc, id desc'},
-            'name': {'label': _('Name'), 'order': 'name asc, id asc'},
-        }
-        # default sort by value
-        if not sortby:
-            sortby = 'date'
-        order = searchbar_sortings[sortby]['order']
+        if search_in and search:
+            domain += rma_portal_search_domain(search_in, search)
 
-        searchbar_filters = {
-            'all': {'label': _('All'), 'domain': [('state', 'in', ['draft', 'confirmed', 'done', 'cancel'])]},
-            'draft': {'label': _('Draft'), 'domain': [('state', '=', 'draft')]},
-            'purchase': {'label': _('Confirmed'), 'domain': [('state', '=', 'confirmed')]},
-            'cancel': {'label': _('Cancelled'), 'domain': [('state', '=', 'cancel')]},
-            'done': {'label': _('Done'), 'domain': [('state', '=', 'done')]},
-        }
-        # default filter by value
-        if not filterby:
-            filterby = 'all'
-        domain += searchbar_filters[filterby]['domain']
-
-        # count for pager
-        rma_count = RMA.search_count(domain)
-        # make pager
+        RMA = request.env['rma.rma']
+        rma_count = len(RMA.search(domain))
         pager = portal_pager(
             url="/my/rma",
-            url_args={'date_begin': date_begin, 'date_end': date_end},
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'search_in': search_in, 'search': search},
             total=rma_count,
             page=page,
             step=self._items_per_page
         )
-        # search the rmas to display, according to the pager data
-        rmas = RMA.search(
-            domain,
-            order=order,
-            limit=self._items_per_page,
-            offset=pager['offset']
-        )
+        rmas = RMA.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
         request.session['my_rma_history'] = rmas.ids[:100]
 
         rma_templates = request.env['rma.template'].sudo().search([('portal_ok', '=', True)])
 
+        grouped_rmas = rma_portal_group_rmas(rmas, groupby)
         values.update({
-            'request': request,
-            'date': date_begin,
-            'rma_list': rmas,
             'rma_templates': rma_templates,
+            'date': date_begin,
+            'grouped_rmas': grouped_rmas,
             'page_name': 'rma',
-            'pager': pager,
-            'archive_groups': archive_groups,
-            'searchbar_sortings': searchbar_sortings,
-            'sortby': sortby,
-            'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
-            'filterby': filterby,
             'default_url': '/my/rma',
+            'pager': pager,
+            'searchbar_sortings': searchbar_sortings,
+            'searchbar_filters': searchbar_filters,
+            'searchbar_inputs': searchbar_inputs,
+            'searchbar_groupby': searchbar_groupby,
+            'sortby': sortby,
+            'groupby': groupby,
+            'search_in': search_in,
+            'search': search,
+            'filterby': filterby,
         })
         return request.render("rma.portal_my_rma", values)
 
