@@ -10,6 +10,6 @@ def ts_work_type_pre_init_hook(cr):
     from installing.
     """
     cr.execute("UPDATE hr_work_entry_type "
-               "SET code = 'TS-PRE-INSTALL' "
+               "SET code = 'TS-PRE-INSTALL-14' "
                "WHERE code = 'TS';"
                )
