@@ -10,6 +10,6 @@ def attn_payroll_pre_init_hook(cr):
     from installing.
     """
     cr.execute("UPDATE hr_work_entry_type "
-               "SET code = 'ATTN_OT-PRE-INSTALL' "
+               "SET code = 'ATTN_OT-PRE-INSTALL-14' "
                "WHERE code = 'ATTN_OT';"
                )
