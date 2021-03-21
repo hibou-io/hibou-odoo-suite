@@ -3,7 +3,6 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html)
 
 import io
-import base64
 import logging
 from minio import Minio
 from minio.error import NoSuchKey
@@ -73,7 +72,7 @@ class MinioAttachment(models.Model):
             bucket = self._get_minio_bucket(client, name=s3uri.bucket())
             try:
                 response = client.get_object(bucket, s3uri.item())
-                return base64.b64encode(response.read())
+                return response.read()
             except NoSuchKey:
                 _logger.info('attachment "%s" missing from remote object storage', (fname, ))
             return ''
