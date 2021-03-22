@@ -1,3 +1,4 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
 from odoo.addons.sale_exception.tests.test_sale_exception import TestSaleException
 
@@ -8,10 +9,7 @@ class TestSaleCreditException(TestSaleException):
         super(TestSaleCreditException, self).setUp()
 
     def test_sale_order_credit_limit_exception(self):
-        admin_user = self.env.ref('base.user_admin')
         self.sale_exception_confirm = self.env['sale.exception.confirm']
-        exception = self.env.ref('sale_credit_limit.excep_sale_credit_limit').with_user(admin_user)
-        exception.active = True
         partner = self.env.ref('base.res_partner_12')
         partner.credit_limit = 100.00
         p = self.env.ref('product.product_product_25_product_template')

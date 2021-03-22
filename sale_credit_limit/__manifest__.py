@@ -1,10 +1,10 @@
 {
     'name': 'Sale Credit Limit',
     'summary': 'Uses credit limit on Partners to warn salespeople if they are over their limit.',
-    'version': '14.0.1.0.0',
+    'version': '14.0.1.0.1',
     'author': "Hibou Corp.",
     'category': 'Sale',
-    'license': 'AGPL-3',
+    'license': 'OPL-1',
     'complexity': 'expert',
     'images': [],
     'website': "https://hibou.io",

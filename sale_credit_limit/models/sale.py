@@ -1,8 +1,18 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from odoo import api, models, tools
+from odoo.tools.safe_eval import datetime as wrapped_datetime
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
+
+    # We need a way to be able to create a 'today' date to compare
+    @api.model
+    def _exception_rule_eval_context(self, rec):
+        res = super(SaleOrder, self)._exception_rule_eval_context(rec)
+        res["datetime"] = wrapped_datetime
+        return res
 
     @api.onchange('partner_invoice_id')
     def _onchange_partner_invoice_id(self):
