@@ -42,4 +42,5 @@ Depending on Device and processor support, this integration can handle:
     ],
     'installable': True,
     'auto_install': False,
+    'license': 'OPL-1',
 }
