@@ -22,4 +22,7 @@
 [submodule "external/hiboubox"]
 	path = external/hiboubox
 	url = https://gitlab.com/hibou-io/hibou-odoo/hiboubox.git
+[submodule "external/hibou-oca/e-commerce"]
+	path = external/hibou-oca/e-commerce
+	url = https://github.com/hibou-io/oca-e-commerce.git
 
