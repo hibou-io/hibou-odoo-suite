@@ -1,5 +1,6 @@
 import time
 from odoo import fields, models
+from odoo.tools.safe_eval import safe_eval
 
 
 class ExceptionRule(models.Model):
@@ -24,8 +25,11 @@ class SaleOrder(models.Model):
             # Locals() can be used instead of defined params, but can also cause buggy behavior on return
             params = {'sale': self, 'exception': ex, 'time': time}
             try:
-                exec(ex.code, globals(), params)
-                if 'failed' in params:
+                safe_eval(ex.code,
+                          params,
+                          mode='exec',
+                          nocopy=True)  # nocopy allows to return 'result'
+                if params.get('failed', False):
                     desc = ex.website_description or ex.description
                     message = {'title': ex.name, 'description': desc}
                     reasons.append(message)
