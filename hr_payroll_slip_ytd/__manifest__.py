@@ -1,7 +1,7 @@
 {
     'name': 'Payroll Report Year to Date',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '12.0.1.1.0',
+    'version': '13.0.1.1.0',
     'category': 'Human Resources',
     'sequence': 95,
     'summary': 'Show YTD computations on Payslip Report',
