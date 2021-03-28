@@ -25,7 +25,7 @@ class TestCheckSOExceptions(TransactionCase):
             'order_line': [(0, 0, {
                 'product_id': self.sale_product.id,
                 'product_uom_qty': 1.0,
-                'price_unit': 50.0,  # Set lower than 100.0 to trigger the exception
+                'price_unit': 50.0,
             })],
         })
 
