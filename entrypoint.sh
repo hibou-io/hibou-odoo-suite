@@ -69,4 +69,4 @@ case "$1" in
         exec "$@"
 esac
 
-exit 1
+# notably do not exit 1 as we can complete a job like a backup
