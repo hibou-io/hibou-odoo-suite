@@ -1,7 +1,7 @@
 {
     'name': 'Sale Exception Portal',
     'summary': 'Display sale exceptions on customer portal',
-    'version': '13.0.1.0.0',
+    'version': '14.0.1.0.0',
     'author': "Hibou Corp.",
     'category': 'Sale',
     'license': 'AGPL-3',

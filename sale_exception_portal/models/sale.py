@@ -1,6 +1,4 @@
-import time
 from odoo import fields, models
-from odoo.tools.safe_eval import safe_eval
 
 
 class ExceptionRule(models.Model):
@@ -13,27 +11,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     def _check_sale_order_exceptions(self):
-        so_exceptions = self.env['exception.rule'].search([('active', '=', True),
-                                                           ('model', '=', 'sale.order'),
-                                                           ('exception_type', '=', 'by_py_code')])
-
-        reasons = []
-
-        for ex in so_exceptions:
-            # Globals won't expose modules used in exception rules python code.
-            # They will have to be manually passed through params. ex [time]
-            # Locals() can be used instead of defined params, but can also cause buggy behavior on return
-            params = {'sale': self, 'exception': ex, 'time': time}
-            try:
-                safe_eval(ex.code,
-                          params,
-                          mode='exec',
-                          nocopy=True)  # nocopy allows to return 'result'
-                if params.get('failed', False):
-                    desc = ex.website_description or ex.description
-                    message = {'title': ex.name, 'description': desc}
-                    reasons.append(message)
-            except:
-                pass
-
+        exception_ids = self.detect_exceptions()
+        exceptions = self.env['exception.rule'].browse(exception_ids)
+        reasons = [{'title': ex.name, 'description': ex.website_description or ex.description} for ex in exceptions]
         return reasons
