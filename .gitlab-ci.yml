@@ -11,6 +11,7 @@ variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   CONTAINER_IMAGE: registry.gitlab.com/hibou-io/hibou-odoo/suite
+  DOCKERHUB_IMAGE: hibou/hibou-odoo-suite
   GITLAB_BASE_URL: https://gitlab.com
   ENTERPRISE_PROJECT_ID: 10004796
 
@@ -54,6 +55,10 @@ release:
     - docker run -v "${PWD}/.local:/dest" flow self-install /dest
     - cd .local/flow
     - ./entrypoint.sh docker-release $CONTAINER_IMAGE:$IMAGE_TAG $CONTAINER_IMAGE:$IMAGE_TAG_DATE
+    - docker login -u "${DOCKERHUB_USERNAME}" -p "${DOCKERHUB_PASSWORD}"
+    - docker tag $CONTAINER_IMAGE:$IMAGE_TAG $DOCKERHUB_IMAGE:$IMAGE_TAG
+    - docker push $DOCKERHUB_IMAGE:$IMAGE_TAG
+    - ./entrypoint.sh docker-release $DOCKERHUB_IMAGE:$IMAGE_TAG $DOCKERHUB_IMAGE:$IMAGE_TAG_DATE
   only:
     - /^\d+\.\d+$/
 
