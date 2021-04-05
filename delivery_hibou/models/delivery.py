@@ -19,7 +19,7 @@ class DeliveryCarrier(models.Model):
         value = 0.0
         if order:
             if order.order_line:
-                value = sum(order.order_line.filtered(lambda l: l.type != 'service').mapped('price_subtotal'))
+                value = sum(order.order_line.filtered(lambda l: l.product_id.type != 'service').mapped('price_subtotal'))
             else:
                 return value
         if picking:
