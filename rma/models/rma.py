@@ -302,6 +302,8 @@ class RMA(models.Model):
                                            ['stock_picking_id'], ['stock_picking_id'])
                 if rma_data:
                     rma.stock_picking_rma_count = rma_data[0]['stock_picking_id_count']
+                else:
+                    rma.stock_picking_rma_count = 0.0
             else:
                 rma.stock_picking_rma_count = 0.0
 
