@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class StockPicking(models.Model):
@@ -11,6 +12,10 @@ class StockPicking(models.Model):
             ('no', 'No'),
         ], string='Require Insurance', default='auto',
         help='If your carrier supports it, auto should be calculated off of the "Automatic Insurance Value" field.')
+
+    @api.multi
+    def button_test_rate_multi(self):
+        raise UserError(str(self.carrier_id.rate_shipment_multi(picking=self)))
 
     @api.one
     @api.depends('move_lines.priority', 'carrier_id')
