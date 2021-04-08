@@ -23,10 +23,10 @@ class HrPayslip(models.Model):
         if not self.input_line_ids.filtered(lambda line: line.input_type_id == commission_type):
             self.commission_payment_ids.write({'payslip_id': False})
 
-    @api.onchange('employee_id', 'struct_id', 'contract_id', 'date_from', 'date_to')
-    def _onchange_employee(self):
-        res = super()._onchange_employee()
-        if self.state == 'draft':
+    @api.onchange('employee_id', 'date_from', 'date_to', 'contract_id')
+    def onchange_employee(self):
+        res = super().onchange_employee()
+        if self.state == 'draft' and self.contract_id:
             self.commission_payment_ids = self.env['hr.commission.payment'].search([
                 ('employee_id', '=', self.employee_id.id),
                 ('pay_in_payslip', '=', True),
@@ -36,19 +36,19 @@ class HrPayslip(models.Model):
 
     @api.onchange('commission_payment_ids')
     def _onchange_commission_payment_ids(self):
-        commission_type = self.env.ref('hr_payroll_commission.commission_other_input', raise_if_not_found=False)
-        if not commission_type:
-            return
+        commission_code = 'COMMISSION'
 
         total = sum(self.commission_payment_ids.mapped('commission_amount'))
         if not total:
             return
 
-        lines_to_keep = self.input_line_ids.filtered(lambda x: x.input_type_id != commission_type)
+        lines_to_keep = self.input_line_ids.filtered(lambda x: x.code != commission_code)
         input_lines_vals = [(5, 0, 0)] + [(4, line.id, False) for line in lines_to_keep]
         input_lines_vals.append((0, 0, {
             'amount': total,
-            'input_type_id': commission_type.id,
+            'name': 'Commissions',
+            'code': commission_code,
+            'contract_id': self.contract_id.id,
         }))
         self.update({'input_line_ids': input_lines_vals})
 

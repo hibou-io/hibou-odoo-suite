@@ -13,8 +13,11 @@ result = inputs.COMMISSION.amount if inputs.COMMISSION else 0
         <field name="code">COMMISSION</field>
         <field name="category_id" ref="hr_payroll.BASIC"/>
         <field name="name">Commissions</field>
-        <field name="sequence" eval="190"/>
-        <field name="struct_id" ref="hr_payroll.structure_002"/>
+        <field name="sequence" eval="90"/>
+    </record>
+
+    <record id="hr_payroll.structure_base" model="hr.payroll.structure">
+        <field eval="[(4, ref('hr_salary_rule_commission'), 0)]" name="rule_ids"/>
     </record>
 
 </odoo>
