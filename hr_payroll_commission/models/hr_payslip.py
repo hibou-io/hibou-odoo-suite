@@ -19,8 +19,8 @@ class HrPayslip(models.Model):
 
     @api.onchange('input_line_ids')
     def _onchange_input_line_ids(self):
-        commission_type = self.env.ref('hr_payroll_commission.commission_other_input', raise_if_not_found=False)
-        if not self.input_line_ids.filtered(lambda line: line.input_type_id == commission_type):
+        commission_code = 'COMMISSION'
+        if not self.input_line_ids.filtered(lambda line: line.code == commission_code):
             self.commission_payment_ids.write({'payslip_id': False})
 
     @api.onchange('employee_id', 'date_from', 'date_to', 'contract_id')
