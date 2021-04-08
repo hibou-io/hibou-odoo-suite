@@ -5,6 +5,11 @@ from odoo.tests import common
 
 class TestCommission(common.TransactionCase):
 
+    def setUp(self):
+        super().setUp()
+        self.user = self.browse_ref('base.user_demo')
+        self.employee = self.browse_ref('hr.employee_qdp')  # This is the employee associated with above user.
+
     def _createUser(self):
         return self.env['res.users'].create({
             'name': 'Coach',
@@ -23,6 +28,12 @@ class TestCommission(common.TransactionCase):
         })
 
     def _createContract(self, employee, commission_rate, admin_commission_rate=0.0):
+        other_contracts = self.env['hr.contract'].search([('employee_id', '=', employee.id)])
+        if other_contracts:
+            # couldn't get the demo contract to not be used if it is
+            # installed e.g. by payroll...
+            # tried, state->cancel + employee.invalidate_cache() etc.
+            other_contracts.unlink()
         return self.env['hr.contract'].create({
             'date_start': '2016-01-01',
             'date_end': '2030-12-31',
@@ -47,8 +58,8 @@ class TestCommission(common.TransactionCase):
 
         coach = self._createEmployee(self.browse_ref('base.user_root'))
         coach_contract = self._createContract(coach, 12.0, admin_commission_rate=2.0)
-        user = self.browse_ref('base.user_demo')
-        emp = self.browse_ref('hr.employee_qdp')  # This is the employee associated with above user.
+        user = self.user
+        emp = self.employee
         emp.address_home_id = user.partner_id  # Important field for payables.
         emp.coach_id = coach
 
@@ -62,9 +73,12 @@ class TestCommission(common.TransactionCase):
         inv.action_invoice_open()  # validate
         self.assertEqual(inv.state, 'open')
         self.assertTrue(inv.commission_ids, 'Commissions not created when invoice is validated.')
+        self.assertTrue(inv.amount_for_commission())
 
         user_commission = inv.commission_ids.filtered(lambda c: c.employee_id.id == emp.id)
         self.assertEqual(len(user_commission), 1, 'Incorrect commission count %d (expect 1)' % len(user_commission))
+        self.assertTrue(user_commission.rate)
+        self.assertTrue(user_commission.amount)
         self.assertEqual(user_commission.state, 'draft', 'Commission is not draft.')
         self.assertFalse(user_commission.move_id, 'Commission has existing journal entry.')
 
