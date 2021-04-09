@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_stock_delivery_planner" model="ir.ui.view">
+        <field name="name">view.stock.delivery.planner</field>
+        <field name="model">stock.delivery.planner</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="plan_option_ids">
+                    <tree decoration-success="days_different &lt; 0.0" decoration-danger="days_different &gt; 0.0">
+                        <field name="carrier_id"/>
+                        <field name="date_planned"/>
+                        <field name="requested_date"/>
+                        <field name="transit_days"/>
+                        <field name="sale_requested_date"/>
+                        <field name="days_different"/>
+                        <field name="price"/>
+                        <button class="eo_highlight"
+                                name="select_plan"
+                                string="Select"
+                                type="object" />
+                    </tree>
+                </field>
+            </form>
+        </field>
+    </record>
+</odoo>
