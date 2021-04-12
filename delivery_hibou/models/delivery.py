@@ -174,7 +174,7 @@ class DeliveryCarrier(models.Model):
                        'error_message': a string containing an error message,
                        'warning_message': a string containing a warning message,
                        'date_planned': a datetime for when the shipment is supposed to leave,
-                       'requested_date': a datetime for when the shipment is supposed to arrive,
+                       'date_delivered': a datetime for when the shipment is supposed to arrive,
                        'transit_days': a Float for how many days it takes in transit,
                        'service_code': a string that represents the service level/agreement,
                        }

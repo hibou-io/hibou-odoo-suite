@@ -1,15 +1,20 @@
 import suds
 from odoo.addons.delivery_ups.models.ups_request import UPSRequest
+import logging
+_logger = logging.getLogger(__name__)
 
 SUDS_VERSION = suds.__version__
 
 
 def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from, ship_to, packaging_type, service_type,
-                       saturday_delivery, cod_info, date_planned=False):
+                               saturday_delivery, cod_info, date_planned=False, multi=False):
     client = self._set_client(self.rate_wsdl, 'Rate', 'RateRequest')
 
     request = client.factory.create('ns0:RequestType')
-    request.RequestOption = 'Rate'
+    if multi:
+        request.RequestOption = 'Shop'
+    else:
+        request.RequestOption = 'Rate'
 
     classification = client.factory.create('ns2:CodeDescriptionType')
     classification.Code = '00'  # Get rates for the shipper account
@@ -60,10 +65,11 @@ def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from
     if not ship_to.commercial_partner_id.is_company:
         shipment.ShipTo.Address.ResidentialAddressIndicator = suds.null()
 
-    shipment.Service.Code = service_type or ''
-    shipment.Service.Description = 'Service Code'
-    if service_type == "96":
-        shipment.NumOfPieces = int(shipment_info.get('total_qty'))
+    if not multi:
+        shipment.Service.Code = service_type or ''
+        shipment.Service.Description = 'Service Code'
+        if service_type == "96":
+            shipment.NumOfPieces = int(shipment_info.get('total_qty'))
 
     if saturday_delivery:
         shipment.ShipmentServiceOptions.SaturdayDeliveryIndicator = saturday_delivery
@@ -78,23 +84,45 @@ def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from
 
         # Check if ProcessRate is not success then return reason for that
         if response.Response.ResponseStatus.Code != "1":
-            return self.get_error_message(response.Response.ResponseStatus.Code,
-                                          response.Response.ResponseStatus.Description)
+            error_message = self.get_error_message(response.Response.ResponseStatus.Code,
+                                                   response.Response.ResponseStatus.Description)
+            if multi:
+                return [error_message]
+            return error_message
 
-        result = {}
-        result['currency_code'] = response.RatedShipment[0].TotalCharges.CurrencyCode
+        if not multi:
+            result = {}
+            result['currency_code'] = response.RatedShipment[0].TotalCharges.CurrencyCode
 
-        # Some users are qualified to receive negotiated rates
-        negotiated_rate = 'NegotiatedRateCharges' in response.RatedShipment[0] and response.RatedShipment[
-            0].NegotiatedRateCharges.TotalCharge.MonetaryValue or None
+            # Some users are qualified to receive negotiated rates
+            negotiated_rate = 'NegotiatedRateCharges' in response.RatedShipment[0] and response.RatedShipment[
+                0].NegotiatedRateCharges.TotalCharge.MonetaryValue or None
 
-        result['price'] = negotiated_rate or response.RatedShipment[0].TotalCharges.MonetaryValue
+            result['price'] = negotiated_rate or response.RatedShipment[0].TotalCharges.MonetaryValue
 
-        # Hibou Delivery
-        if hasattr(response.RatedShipment[0], 'GuaranteedDelivery') and hasattr(response.RatedShipment[0].GuaranteedDelivery, 'BusinessDaysInTransit'):
-            result['transit_days'] = int(response.RatedShipment[0].GuaranteedDelivery.BusinessDaysInTransit)
-        # End
+            # Hibou Delivery
+            if hasattr(response.RatedShipment[0], 'GuaranteedDelivery') and hasattr(response.RatedShipment[0].GuaranteedDelivery, 'BusinessDaysInTransit'):
+                result['transit_days'] = int(response.RatedShipment[0].GuaranteedDelivery.BusinessDaysInTransit)
+            # End
+        else:
+            result = []
+            for rated_shipment in response.RatedShipment:
+                rate = {}
+                rate['currency_code'] = rated_shipment.TotalCharges.CurrencyCode
 
+                # Some users are qualified to receive negotiated rates
+                negotiated_rate = 'NegotiatedRateCharges' in rated_shipment and response.RatedShipment[
+                    0].NegotiatedRateCharges.TotalCharge.MonetaryValue or None
+
+                rate['price'] = negotiated_rate or rated_shipment.TotalCharges.MonetaryValue
+
+                # Hibou Delivery
+                if hasattr(rated_shipment, 'GuaranteedDelivery') and hasattr(
+                        rated_shipment.GuaranteedDelivery, 'BusinessDaysInTransit'):
+                    rate['transit_days'] = int(rated_shipment.GuaranteedDelivery.BusinessDaysInTransit)
+                # End
+                rate['service_code'] = rated_shipment.Service.Code
+                result.append(rate)
         return result
 
     except suds.WebFault as e:
@@ -102,11 +130,17 @@ def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from
         prefix = ''
         if SUDS_VERSION >= "0.6":
             prefix = '/Envelope/Body/Fault'
-        return self.get_error_message(
+        error_message = self.get_error_message(
             e.document.childAtPath(prefix + '/detail/Errors/ErrorDetail/PrimaryErrorCode/Code').getText(),
             e.document.childAtPath(prefix + '/detail/Errors/ErrorDetail/PrimaryErrorCode/Description').getText())
+        if multi:
+            return [error_message]
+        return error_message
     except IOError as e:
-        return self.get_error_message('0', 'UPS Server Not Found:\n%s' % e)
+        error_message = self.get_error_message('0', 'UPS Server Not Found:\n%s' % e)
+        if multi:
+            return [error_message]
+        return error_message
 
 
 UPSRequest.get_shipping_price = patched_get_shipping_price
