@@ -1,6 +1,6 @@
 from odoo import api, fields, models, tools
-# import logging
-# _logger = logging.getLogger(__name__)
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class StockDeliveryPlanner(models.TransientModel):
@@ -20,6 +20,8 @@ class StockDeliveryPlanner(models.TransientModel):
 
         for carrier in base_carriers:
             rates = carrier.rate_shipment_multi(picking=planner.picking_id)
+            for rate in filter(lambda r: not r.get('success'), rates):
+                _logger.warning(rate.get('error_message'))
             for rate in filter(lambda r: r.get('success'), rates):
                 rate = self.calculate_delivery_window(rate)
                 planner.plan_option_ids |= planner.plan_option_ids.create({
