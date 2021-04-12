@@ -1,4 +1,6 @@
 from odoo import api, fields, models, tools
+# import logging
+# _logger = logging.getLogger(__name__)
 
 
 class StockDeliveryPlanner(models.TransientModel):
@@ -52,9 +54,9 @@ class StockDeliveryOption(models.TransientModel):
     carrier_id = fields.Many2one('delivery.carrier', 'Delivery Method')
     price = fields.Float('Shipping Price')
     date_planned = fields.Datetime('Planned Date')
-    requested_date = fields.Datetime('Sale Order Delivery Date')
+    requested_date = fields.Datetime('Expected Delivery Date')
     transit_days = fields.Integer('Transit Days')
-    sale_requested_date = fields.Datetime('Expected Date', related='plan_id.picking_id.sale_id.requested_date')
+    sale_requested_date = fields.Datetime('Sale Order Delivery Date', related='plan_id.picking_id.sale_id.requested_date')
     days_different = fields.Float('Days Different', compute='_compute_days_different')  # use carrier calendar
 
     @api.multi
@@ -66,7 +68,7 @@ class StockDeliveryOption(models.TransientModel):
     @api.depends('requested_date', 'sale_requested_date', 'carrier_id')
     def _compute_days_different(self):
         for option in self:
-            if option.requested_date.date() == option.sale_requested_date.date():
+            if not option.requested_date or not option.sale_requested_date or option.requested_date.date() == option.sale_requested_date.date():
                 option.days_different = 0
             elif option.requested_date < option.sale_requested_date:
                 option.days_different = -1 * option.carrier_id.calculate_transit_days(option.requested_date, option.sale_requested_date)
