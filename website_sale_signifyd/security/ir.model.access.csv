@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+manage_signifyd_connector,manage_signifyd_connector,model_signifyd_connector,base.group_erp_manager,1,1,1,1
+access_signifyd_connector,access_signifyd_connector,model_signifyd_connector,base.group_user,1,1,1,0
+public_signifyd_connector,public_signifyd_connector,model_signifyd_connector,base.group_public,1,1,1,0
+portal_signifyd_connector,portal_signifyd_connector,model_signifyd_connector,base.group_portal,1,1,1,0
+manage_signifyd_case,manage_signifyd_case,model_signifyd_case,base.group_erp_manager,1,1,1,1
+access_signifyd_case,access_signifyd_case,model_signifyd_case,base.group_user,1,1,1,0
+public_signifyd_case,public_signifyd_case,model_signifyd_case,base.group_public,1,1,1,0
+portal_signifyd_case,portal_signifyd_case,model_signifyd_case,base.group_portal,1,1,1,0
