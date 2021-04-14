@@ -1,56 +1,59 @@
-from odoo.addons.hr_expense.tests.test_expenses import TestAccountEntry
+from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.exceptions import ValidationError
+from odoo.tests import Form, tagged
 
 
-class TestCheckVendor(TestAccountEntry):
+@tagged('-at_install', 'post_install')
+class TestCheckVendor(TestExpenseCommon):
 
-    def setUp(self):
-        super(TestCheckVendor, self).setUp()
-        self.vendor_id = self.env.ref('base.res_partner_3')
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super(TestCheckVendor, cls).setUpClass(chart_template_ref=chart_template_ref)
+        cls.vendor_id = cls.env.ref('base.res_partner_3')
+        cls.tax = cls.env['account.tax'].create({
+            'name': 'Expense 10%',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'price_include': True,
+        })
 
     def test_journal_entry_vendor(self):
-        expense = self.env['hr.expense.sheet'].create({
-            'name': 'Expense for John Smith',
-            'employee_id': self.employee.id,
-        })
-        expense_line = self.env['hr.expense'].create({
-            'name': 'Car Travel Expenses',
-            'employee_id': self.employee.id,
-            'product_id': self.product_expense.id,
-            'unit_amount': 700.00,
-            'tax_ids': [(6, 0, [self.tax.id])],
-            'sheet_id': expense.id,
-            'analytic_account_id': self.analytic_account.id,
-        })
-        expense.payment_mode = 'company_account'
-        expense_line.payment_mode = 'company_account'
-        expense_line._onchange_product_id()
+        expense_form = Form(self.env['hr.expense'])
+        expense_form.name = 'Car Travel Expenses'
+        expense_form.employee_id = self.expense_employee
+        expense_form.product_id = self.product_a
+        expense_form.unit_amount = 700.00
+        expense_form.tax_ids.clear()
+        expense_form.tax_ids.add(self.tax)
+        expense_form.analytic_account_id = self.analytic_account_1
+        expense_form.payment_mode = 'company_account'
+        expense = expense_form.save()
 
-        # State should default to draft
-        self.assertEquals(expense.state, 'draft', 'Expense should be created in Draft state')
-        # Submitted to Manager
-        expense.action_submit_sheet()
-        self.assertEquals(expense.state, 'submit', 'Expense is not in Reported state')
+        action_submit_expenses = expense.action_submit_expenses()
+        expense_sheet = self.env[action_submit_expenses['res_model']].browse(action_submit_expenses['res_id'])
+
+        self.assertEqual(expense_sheet.state, 'submit', 'Expense is not in Submitted state')
         # Approve
-        expense.approve_expense_sheets()
-        self.assertEquals(expense.state, 'approve', 'Expense is not in Approved state')
+        expense_sheet.approve_expense_sheets()
+        self.assertEqual(expense_sheet.state, 'approve', 'Expense is not in Approved state')
         # Create Expense Entries
         with self.assertRaises(ValidationError):
-            expense.action_sheet_move_create()
+            expense_sheet.action_sheet_move_create()
 
-        expense_line.vendor_id = self.vendor_id
-        expense.action_sheet_move_create()
-        self.assertEquals(expense.state, 'done')
-        self.assertTrue(expense.account_move_id.id, 'Expense Journal Entry is not created')
+        expense.vendor_id = self.vendor_id
+        expense_sheet.action_sheet_move_create()
+        self.assertEqual(expense_sheet.state, 'done')
+        self.assertTrue(expense_sheet.account_move_id.id, 'Expense Journal Entry is not created')
 
-        # [(line.debit, line.credit, line.tax_line_id.id) for line in self.expense.expense_line_ids.account_move_id.line_ids]
-        # should git this result [(0.0, 700.0, False), (63.64, 0.0, 179), (636.36, 0.0, False)]
-        for line in expense.account_move_id.line_ids:
+        # [(line.debit, line.credit, line.tax_line_id.id) for line in expense_sheet.account_move_id.line_ids]
+        # should get this result [(0.0, 700.0, False), (63.64, 0.0, 179), (636.36, 0.0, False)]
+        for line in expense_sheet.account_move_id.line_ids:
             if line.credit:
                 self.assertEqual(line.partner_id, self.vendor_id)
-                self.assertAlmostEquals(line.credit, 700.00)
+                self.assertAlmostEqual(line.credit, 700.00)
             else:
                 if not line.tax_line_id == self.tax:
-                    self.assertAlmostEquals(line.debit, 636.36)
+                    self.assertAlmostEqual(line.debit, 636.36)
                 else:
-                    self.assertAlmostEquals(line.debit, 63.64)
+                    self.assertAlmostEqual(line.debit, 63.64)
