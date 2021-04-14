@@ -123,6 +123,28 @@ class ProviderStamps(models.Model):
         ret_val.ContentType = 'Merchandise'
         return ret_val
 
+    def _get_stamps_shipping_multi(self, service, date_planned, order=False, picking=False):
+        if order:
+            weight = sum([(line.product_id.weight * line.product_qty) for line in order.order_line]) or 0.0
+        else:
+            weight = picking.shipping_weight
+        weight = self._stamps_convert_weight(weight)
+
+        shipper = self.get_shipper_warehouse(order=order, picking=picking)
+        recipient = self.get_recipient(order=order, picking=picking)
+
+        if not all((shipper.zip, recipient.zip)):
+            raise ValidationError('Stamps needs ZIP. From: ' + str(shipper.zip) + ' To: ' + str(recipient.zip))
+
+        ret_val = service.create_shipping()
+        ret_val.ShipDate = date_planned.strftime('%Y-%m-%d') if date_planned else date.today().isoformat()
+        ret_val.FromZIPCode = shipper.zip.split('-')[0]
+        ret_val.ToZIPCode = recipient.zip.split('-')[0]
+        ret_val.PackageType = self._stamps_package_type()
+        ret_val.WeightLb = weight
+        ret_val.ContentType = 'Merchandise'
+        return ret_val
+
     def _stamps_get_addresses_for_picking(self, picking):
         company = self.get_shipper_company(picking=picking)
         from_ = self.get_shipper_warehouse(picking=picking)
@@ -336,3 +358,63 @@ class ProviderStamps(models.Model):
                            'carrier_price': 0.0})
         except WebFault as e:
             raise ValidationError(e)
+
+    def stamps_rate_shipment_multi(self, order=None, picking=None):
+        self.ensure_one()
+        date_planned = fields.Datetime.now()
+        if self.env.context.get('date_planned'):
+            date_planned = self.env.context.get('date_planned')
+        res = []
+        service = self._get_stamps_service()
+        shipping = self._get_stamps_shipping_multi(service, date_planned, order=order, picking=picking)
+        rates = service.get_rates(shipping)
+        for rate in rates:
+            price = float(rate.Amount)
+            if order:
+                currency = order.currency_id
+            else:
+                currency = picking.sale_id.currency_id if picking.sale_id else picking.company_id.currency_id
+            if currency.name != 'USD':
+                quote_currency = self.env['res.currency'].search([('name', '=', 'USD')], limit=1)
+                price = quote_currency.compute(rate.Amount, currency)
+
+            delivery_days = rate.DeliverDays
+            if delivery_days.find('-') >= 0:
+                delivery_days = delivery_days.split('-')
+                transit_days = int(delivery_days[-1])
+            else:
+                transit_days = int(delivery_days)
+            date_delivered = None
+            if transit_days > 0:
+                date_delivered = self.calculate_date_delivered(date_planned, transit_days)
+            service_code = rate.ServiceType
+            carrier = self.stamps_find_delivery_carrier_for_service(service_code)
+            if carrier:
+                res.append({
+                    'carrier': carrier,
+                    'success': True,
+                    'price': price,
+                    'error_message': False,
+                    'warning_message': False,
+                    'transit_days': transit_days,
+                    'date_delivered': date_delivered,
+                    'date_planned': date_planned,
+                    'service_code': service_code,
+                })
+        if not res:
+            res.append({
+                'success': False,
+                'price': 0.0,
+                'error_message': 'No valid rates returned from Stamps.com',
+                'warning_message': False
+            })
+        return res
+
+    def stamps_find_delivery_carrier_for_service(self, service_code):
+        if self.stamps_service_type == service_code:
+            return self
+        # arbitrary decision, lets find the same user name
+        carrier = self.search([('stamps_username', '=', self.stamps_username),
+                               ('stamps_service_type', '=', service_code)
+                               ], limit=1)
+        return carrier
