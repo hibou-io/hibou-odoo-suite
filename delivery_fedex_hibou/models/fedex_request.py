@@ -2,8 +2,6 @@ import suds
 from datetime import datetime
 from copy import deepcopy
 from odoo.addons.delivery_fedex.models import fedex_request
-import logging
-_logger = logging.getLogger(__name__)
 
 STATECODE_REQUIRED_COUNTRIES = fedex_request.STATECODE_REQUIRED_COUNTRIES
 
@@ -187,7 +185,6 @@ class FedexRequest(fedex_request.FedexRequest):
                                                          Version=self.VersionId,
                                                          RequestedShipment=self.RequestedShipment,
                                                          ReturnTransitAndCommit=True)  # New ReturnTransitAndCommit for CommitDetails in response
-            # _logger.warn(self.response)
 
             if (self.response.HighestSeverity != 'ERROR' and self.response.HighestSeverity != 'FAILURE'):
                 if not getattr(self.response, "RateReplyDetails", False):
@@ -212,16 +209,13 @@ class FedexRequest(fedex_request.FedexRequest):
                         formatted_response['transit_days'] = transit_days
                 else:
                     for rate_reply_detail in self.response.RateReplyDetails:
-                        _logger.warn('iterated RateReplyDetail: ' + str(rate_reply_detail))
                         res = deepcopy(formatted_response)
                         res['service_code'] = rate_reply_detail.ServiceType
                         for rating in rate_reply_detail.RatedShipmentDetails:
                             res['price'][rating.ShipmentRateDetail.TotalNetFedExCharge.Currency] = rating.ShipmentRateDetail.TotalNetFedExCharge.Amount
-                            _logger.warn('  inside rating iteration res: ' + str(res))
                         if len(rate_reply_detail.RatedShipmentDetails) == 1:
                             if 'CurrencyExchangeRate' in rate_reply_detail.RatedShipmentDetails[0].ShipmentRateDetail:
                                 res['price'][rate_reply_detail.RatedShipmentDetails[0].ShipmentRateDetail.CurrencyExchangeRate.FromCurrency] = rate_reply_detail.RatedShipmentDetails[0].ShipmentRateDetail.TotalNetFedExCharge.Amount / rate_reply_detail.RatedShipmentDetails[0].ShipmentRateDetail.CurrencyExchangeRate.Rate
-                        _logger.warn('end rate ' + str(res))
                         # Hibou Delivery Planning
                         if hasattr(rate_reply_detail, 'DeliveryTimestamp') and rate_reply_detail.DeliveryTimestamp:
                             res['date_delivered'] = rate_reply_detail.DeliveryTimestamp
