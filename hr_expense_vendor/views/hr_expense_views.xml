@@ -6,8 +6,7 @@
         <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='expense_line_ids']/tree/field[@name='name']" position="after">
-                <field name="vendor_id" domain="[('supplier', '=', True)]"
-                       context="{'default_supplier': True}" groups="account.group_account_user"/>
+                <field name="vendor_id" context="{'res_partner_search_mode': 'supplier'}" groups="account.group_account_user"/>
             </xpath>
         </field>
     </record>
