@@ -9,7 +9,7 @@ class StockPicking(models.Model):
 
     def action_view_signifyd_case(self):
         self.ensure_one()
-        form_id = self.env.ref('gcl_signifyd_connector.signifyd_case_form_view').id
+        form_id = self.env.ref('website_sale_signifyd.signifyd_case_form_view').id
         context = {'create': False, 'delete': False, 'id': self.sale_id.signifyd_case_id.id}
         return {
             'type': 'ir.actions.act_window',
