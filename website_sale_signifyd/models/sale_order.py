@@ -5,13 +5,13 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     signifyd_case_id = fields.Many2one('signifyd.case', readonly=1)
-    singifyd_score = fields.Float(related='signifyd_case_id.score', readonly=1)
-    signifyd_disposition_status = fields.Selection(related='signifyd_case_id.guarantee_disposition', tracking=True)
+    singifyd_score = fields.Float(related='signifyd_case_id.score')
+    signifyd_disposition_status = fields.Selection(related='signifyd_case_id.guarantee_disposition')
 
     def action_view_signifyd_case(self):
         self.ensure_one()
-        form_id = self.env.ref('gcl_signifyd_connector.signifyd_case_form_view').id
-        context = {'create': False, 'delete': False, 'id': self.signifyd_case_id.id}
+        form_id = self.env.ref('website_sale_signifyd.signifyd_case_form_view').id
+        context = {'create': False, 'delete': False}
         return {
             'type': 'ir.actions.act_window',
             'name': 'Signifyd Case',

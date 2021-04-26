@@ -9,7 +9,7 @@ class SignifydCase(models.Model):
     _name = 'signifyd.case'
     _description = 'Stores Signifyd case information on orders.'
 
-    order_id = fields.Many2one('sale.order')
+    order_id = fields.Many2one('sale.order', required=True)
     partner_id = fields.Many2one('res.partner')
     case_id = fields.Char(string='Case ID')
     uuid = fields.Char(string='Unique ID')
@@ -57,19 +57,22 @@ class SignifydCase(models.Model):
                 self.signifyd_url = ''
 
     def write(self, vals):
+        original_disposition = {c: c.guarantee_disposition for c in self}
         res = super(SignifydCase, self).write(vals)
         disposition = vals.get('guarantee_disposition')
-        if disposition:
-            self.order_id.message_post(body=_('Signifyd Updated Record to %s' % vals['guarantee_disposition']),
-                                       subtype='gcl_signifyd_connector.disposition_change')
+        for case in self:
+            if case.order_id and original_disposition[case] != disposition:
+                self.order_id.message_post(body=_('Signifyd Updated Record to %s' % vals['guarantee_disposition']),
+                                           subtype='website_sale_signifyd.disposition_change')
         return res
 
     @api.model
     def post_case(self, values):
-        signifyd = self.env['signifyd.connector']
+        signifyd = self.env['signifyd.connector']  # TODO HOW, this shouldn't be a singleton
         headers = signifyd.get_headers()
         data = json.dumps(values, indent=4, sort_keys=True, default=str)
 
+        # TODO this should be in `signifyd.connector`
         r = requests.post(
             signifyd.API_URL + '/cases',
             headers=headers,
@@ -79,6 +82,7 @@ class SignifydCase(models.Model):
 
     @api.model
     def get_case(self):
+        # TODO See above....
         signifyd = self.env['signifyd.connector']
         headers = signifyd.get_headers()
         r = requests.get(
@@ -89,6 +93,7 @@ class SignifydCase(models.Model):
 
     @api.model
     def request_guarantee(self, *args):
+        # TODO See above....
         signifyd = self.env['signifyd.connector']
         headers = signifyd.get_headers()
         values = json.dumps({"caseId": self.case_id})

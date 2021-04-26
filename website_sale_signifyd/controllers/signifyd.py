@@ -18,9 +18,11 @@ class SignifydWebhooks(Controller):
                 if case.guarantee_requested and not case.guarantee_eligible:
                     # Only alert Signifyd to stop trying if we have at least tried once already
                     return Response({'response': 'success'}, status=200, mimetype='application/json')
+                # TODO what would the return case be here?
             except:
                 # Signifyd API will try again up to 15 times if a non-2** code is returned
                 return Response({'response': 'failed'}, status=500, mimetype='application/json')
+        # TODO what would the return case be here?
 
     @route(['/cases/update'], type='json', auth='public', methods=['POST'], csrf=False)
     def case_update(self, *args, **post):
@@ -34,3 +36,4 @@ class SignifydWebhooks(Controller):
         if case and outcome == 'DECLINED':
             for user in request.env.company.signifyd_connector_id.notify_user_ids:
                 case.sudo().create_notification(user, outcome)
+        # TODO any return result?

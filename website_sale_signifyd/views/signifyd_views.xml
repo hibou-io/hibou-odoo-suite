@@ -67,7 +67,7 @@
         <field name="name">Signifyd Case Information</field>
         <field name="res_model">signifyd.case</field>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="gcl_signifyd_connector.signifyd_case_form_view"/>
+        <field name="view_id" ref="website_sale_signifyd.signifyd_case_form_view"/>
     </record>
 
     <record id="signifyd_connector_form_view" model="ir.ui.view">
