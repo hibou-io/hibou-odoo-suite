@@ -76,6 +76,17 @@ class OpencartBackend(models.Model):
     so_require_product_setup = fields.Boolean(string='SO Require Product Setup',
                                               help='Prevents SO from being confirmed (failed queue job), if one or more products has an open checkpoint.')
 
+    scheduler_order_import_running = fields.Boolean(string='Auctomatic Sale Order Import is Running',
+                                                    compute='_compute_scheduler_order_import_running',
+                                                    compute_sudo=True)
+    scheduler_order_import = fields.Boolean(string='Automatic Sale Order Import',
+                                            help='Individual stores should also be enabled for import.')
+
+    def _compute_scheduler_order_import_running(self):
+        sched_action = self.env.ref('connector_opencart.ir_cron_import_sale_orders', raise_if_not_found=False)
+        for backend in self:
+            backend.scheduler_order_import_running = bool(sched_action.active)
+
     @contextmanager
     @api.multi
     def work_on(self, model_name, **kwargs):
@@ -124,6 +135,7 @@ class OpencartBackend(models.Model):
             ('base_url', '!=', False),
             ('restadmin_token', '!=', False),
             ('import_orders_after_id', '!=', False),
+            ('scheduler_order_import', '=', True),
         ])
         return backends.import_sale_orders()
 
@@ -140,6 +152,3 @@ class OpencartBackend(models.Model):
                 backend,
                 filters={'after_id': after_id}
             )
-            # TODO !!!!!
-            # cannot update the ID because we don't know what Ids would be returned.
-            # this MUST be updated by the SO importer.

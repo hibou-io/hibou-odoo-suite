@@ -1,14 +1,18 @@
 # © 2019 Hibou Corp.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from copy import deepcopy, copy
+from copy import copy
 from html import unescape
+import logging
 
 from odoo import fields, _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 from odoo.exceptions import ValidationError
 from odoo.addons.queue_job.exception import RetryableJobError
+
+
+_logger = logging.getLogger(__name__)
 
 
 class SaleOrderBatchImporter(Component):
@@ -24,10 +28,13 @@ class SaleOrderBatchImporter(Component):
             }
         if store_id is not None:
             store_binder = self.binder_for('opencart.store')
-            store = store_binder.to_internal(store_id)
-            user = store.sudo().warehouse_id.company_id.user_tech_id
+            store = store_binder.to_internal(store_id).sudo()
+            if not store.enable_order_import:
+                _logger.warning('Store (%s) is not enabled for Sale Order import (%s).' % (store.name, external_id))
+                return
+            user = store.warehouse_id.company_id.user_tech_id
             if user and user != self.env.user:
-                # Note that this is a component, which has an env through it's 'colletion'
+                # Note that this is a component, which has an env through it's 'collection'
                 # however, when importing the 'model' is actually what runs the delayed job
                 env = self.env(user=user)
                 self.collection.env = env

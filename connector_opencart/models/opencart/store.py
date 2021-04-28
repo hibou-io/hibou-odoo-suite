@@ -52,6 +52,8 @@ class OpencartStore(models.Model):
     )
     coupon_product_id = fields.Many2one(comodel_name='product.product', string='Coupon Product',
                                         help='Product to represent coupon discounts.')
+    enable_order_import = fields.Boolean(string='Enable Sale Order Import', default=True,
+                                         help='If not enabled, then stores will be skipped during order imiport.')
 
 
 class OpencartStoreAdapter(Component):
