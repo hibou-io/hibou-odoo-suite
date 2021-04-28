@@ -34,6 +34,14 @@
                             <field name="fiscal_position_id"/>
                             <field name="team_id"/>
                             <field name="sale_prefix"/>
+                            <field name="scheduler_order_import_running" invisible="1" />
+                            <field name="scheduler_order_import"/>
+                            <p attrs="{'invisible': [('scheduler_order_import_running', '=', True)]}" class="text-danger" colspan="2">
+                                The automatic scheduler is not currently enabled.
+                            </p>
+                            <p attrs="{'invisible': [('scheduler_order_import_running', '=', False)]}" class="text-success" colspan="2">
+                                The automatic scheduler is enabled.
+                            </p>
                         </group>
                         <group name="product_configuration" string="Product Defaults">
                             <field name="product_categ_id"/>
@@ -128,6 +136,7 @@
                     </h1>
                     <group name="main_configuration" string="Override Configuration">
                         <group name="order_configuration" string="Order Defaults">
+                            <field name="enable_order_import" />
                             <field name="warehouse_id"/>
                             <field name="analytic_account_id"/>
                             <field name="fiscal_position_id"/>
