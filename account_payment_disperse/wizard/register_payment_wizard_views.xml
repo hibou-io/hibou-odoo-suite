@@ -1,28 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="view_account_payment_from_invoices_inherited" model="ir.ui.view">
-        <field name="name">account.register.payments.wizard.inherited</field>
-        <field name="model">account.register.payments</field>
-        <field name="inherit_id" ref="account.view_account_payment_from_invoices"/>
+    <record id="view_account_payment_form_multi_inherit" model="ir.ui.view">
+        <field name="name">account.payment.form.multi.inherit</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_form_multi"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='amount']" position="attributes">
-                <attribute name="attrs">{'readonly': [('multi', '=', True), ('is_manual_disperse', '!=', True)]}</attribute>
-            </xpath>
-            <xpath expr="//field[@name='payment_method_code']" position="after">
+            <xpath expr="//field[@name='payment_date']" position="after">
                 <field name="is_manual_disperse"/>
-            </xpath>
-            <xpath expr="//group[3]" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', ('payment_difference', '=', 0.0), ('is_manual_disperse', '=', True)]}</attribute>
+                <field name="amount" invisible="1" />
             </xpath>
             <xpath expr="//form/group[1]" position="after">
                 <group name="invoice_lines" attrs="{'invisible': [('is_manual_disperse', '=', False)]}">
-                    <group>
-                        <button type="object" name="action_fill_residual"
-                                string="Fill with Remaining" class="btn-default"/>
-                        <button type="object" name="action_fill_residual_due"
-                                string="Fill with Due" class="btn-default"/>
-                    </group>
-                    <field name="invoice_line_ids" nolabel="1">
+                    <field name="payment_invoice_ids" nolabel="1">
                         <tree editable="bottom" create="false">
                             <field name="wizard_id" invisible="1"/>
                             <field name="partner_id" readonly="1"/>
@@ -31,16 +20,25 @@
                             <field name="residual_due" readonly="1" sum="Total Due"/>
                             <field name="amount" sum="Total Amount"/>
                             <field name="difference" readonly="1" sum="Total Difference"/>
-                            <field name="writeoff_acc_id"/>
+                            <field name="close_balance"/>
                         </tree>
                     </field>
                 </group>
                 <group name="invoice_totals" attrs="{'invisible': [('is_manual_disperse', '=', False)]}">
                     <group>
-                        <field name="writeoff_journal_id"/>
+                        <field name="requires_writeoff_account" invisible="1"/>
+                        <field name="writeoff_account_id" attrs="{'required': [('requires_writeoff_account', '=', True)]}" />
                         <field name="due_date_cutoff"/>
+                        <field name="due_date_behavior"/>
+                        <button type="object" name="action_fill_residual"
+                                string="Fill with Remaining" class="btn-primary"/>
+                        <button type="object" name="action_fill_residual_due"
+                                string="Fill with Due" class="btn-primary"/>
                     </group>
-                    <group/>
+                    <group>
+                        <button type="object" name="action_toggle_close_balance"
+                                string="Toggle Close Balance" class="btn-primary"/>
+                    </group>
                 </group>
             </xpath>
         </field>

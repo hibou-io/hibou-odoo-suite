@@ -1,7 +1,10 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 {
     'name': 'Payment Disperse',
-    'version': '12.0.1.0.0',
-    'author': 'Hibou Corp. <hello@hibou.io>',
+    'version': '13.0.1.0.0',
+    'author': 'Hibou Corp.',
+    'license': 'OPL-1',
     'category': 'Accounting',
     'summary': 'Pay multiple invoices with one Payment',
     'description': """
