@@ -164,7 +164,7 @@ class AccountRegisterPaymentsInvoiceLine(models.TransientModel):
                 for move_line in invoice.line_ids.filtered(lambda r: (
                         not r.reconciled
                         and r.account_id.internal_type in ('payable', 'receivable')
-                        and r.date_maturity <= cutoff_date
+                        and (not r.date_maturity or r.date_maturity <= cutoff_date)
                         )):
                     amount = move_line.debit - move_line.credit
                     total_amount += amount
