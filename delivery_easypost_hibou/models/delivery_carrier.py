@@ -1,13 +1,16 @@
 import requests
-from odoo import models, _
+from odoo import fields, models, _
 from odoo.exceptions import UserError
 from odoo.addons.delivery_easypost.models.easypost_request import EasypostRequest
-import logging
-_logger = logging.getLogger(__name__)
 
 
 class DeliveryCarrier(models.Model):
     _inherit = 'delivery.carrier'
+
+    easypost_return_method = fields.Selection([
+        ('ep', 'EasyPost Return'),
+        ('swap', 'Swap Addresses')
+    ], string='Return Method', default='ep')
 
     def easypost_send_shipping(self, pickings):
         """ It creates an easypost order and buy it with the selected rate on
@@ -22,9 +25,14 @@ class DeliveryCarrier(models.Model):
         ep = EasypostRequest(self.sudo().easypost_production_api_key if self.prod_environment else self.sudo().easypost_test_api_key, self.log_xml)
         for picking in pickings:
             # Call Hibou delivery method to get picking type
-            is_return = superself._classify_picking(picking) in ('in', 'dropship_in',)
-            result = ep.send_shipping(self, picking.partner_id, picking.picking_type_id.warehouse_id.partner_id,
-                                      picking=picking, is_return=is_return)
+            if superself.easypost_return_method == 'ep':
+                is_return = superself._classify_picking(picking) in ('in', 'dropship_in',)
+                result = ep.send_shipping(self, picking.partner_id, picking.picking_type_id.warehouse_id.partner_id,
+                                          picking=picking, is_return=is_return)
+            else:
+                shipper = superself.get_shipper_warehouse(picking=picking)
+                recipient = superself.get_recipient(picking=picking)
+                result = ep.send_shipping(self, recipient, shipper, picking=picking)
             if result.get('error_message'):
                 raise UserError(_(result['error_message']))
             rate = result.get('rate')
