@@ -10,6 +10,7 @@
         'delivery_hibou',
     ],
     'data': [
+        'views/delivery_carrier_views.xml',
     ],
     'demo': [
     ],
