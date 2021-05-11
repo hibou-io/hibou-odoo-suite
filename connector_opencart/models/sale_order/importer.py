@@ -230,6 +230,9 @@ class SaleOrderImporter(Component):
             elif key == 'country_id':
                 if value != partner.country_id.id:
                     return False
+            elif bool(value) and isinstance(value, str):
+                if value.lower() != str(getattr(partner, key)).lower():
+                    return False
             elif bool(value) and value != getattr(partner, key):
                 return False
         return True
