@@ -285,7 +285,7 @@ class SaleOrderImporter(Component):
     def _import_addresses(self):
         partner_values = self._get_partner_values()
         partners = self.env['res.partner'].search([
-            ('email', '=', partner_values['email']),
+            ('email', '=ilike', partner_values['email']),
             '|', ('active', '=', False), ('active', '=', True),
         ], order='active DESC, id ASC')
 
