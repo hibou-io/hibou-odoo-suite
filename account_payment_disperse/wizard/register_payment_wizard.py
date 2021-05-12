@@ -159,7 +159,7 @@ class AccountRegisterPaymentsInvoiceLine(models.TransientModel):
             due_behavior = line.wizard_id.due_date_behavior
             total_amount = 0.0
             total_reconciled = 0.0
-            # TODO partial reconcile will need sign check
+
             if due_behavior == 'due':
                 for move_line in invoice.line_ids.filtered(lambda r: (
                         not r.reconciled
@@ -169,7 +169,7 @@ class AccountRegisterPaymentsInvoiceLine(models.TransientModel):
                     amount = move_line.debit - move_line.credit
                     total_amount += amount
                     for partial_line in move_line.matched_debit_ids:
-                        total_reconciled += partial_line.amount
+                        total_reconciled -= partial_line.amount
                     for partial_line in move_line.matched_credit_ids:
                         total_reconciled += partial_line.amount
             else:
@@ -182,13 +182,12 @@ class AccountRegisterPaymentsInvoiceLine(models.TransientModel):
                     amount = move_line.debit - move_line.credit
                     total_amount += amount
                     for partial_line in move_line.matched_debit_ids:
-                        total_reconciled += partial_line.amount
+                        total_reconciled -= partial_line.amount
                     for partial_line in move_line.matched_credit_ids:
                         total_reconciled += partial_line.amount
             values = {
                 'residual': residual,
                 'residual_due': sign * (total_amount - total_reconciled),
-                # 'difference': sign * ((line.amount or 0.0) - residual),
                 'difference': (line.amount or 0.0) - residual,
                 'partner_id': invoice.partner_id.id,
             }
