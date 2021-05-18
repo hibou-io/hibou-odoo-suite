@@ -49,7 +49,10 @@ class ProviderStamps(models.Model):
     stamps_password = fields.Char(string='Stamps.com Password', groups='base.group_system')
 
     stamps_service_type = fields.Selection([('US-FC', 'First-Class'),
+                                            ('US-FCI', 'First-Class International'),
                                             ('US-PM', 'Priority'),
+                                            ('US-PMI', 'Priority Mail International'),
+                                            ('US-EMI', ' Priority Mail Express International'),
                                             ],
                                            required=True, string="Service Type", default="US-PM")
     stamps_default_packaging_id = fields.Many2one('product.packaging', string='Default Package Type')
@@ -265,6 +268,22 @@ class ProviderStamps(models.Model):
             if len(to_zip_pieces) >= 2:
                 to_address.ZIPCodeAddOn = to_zip_pieces[1]
             to_address = service.get_address(to_address).Address
+
+#This is where the customs information goes
+            customs = service.create_customs()
+            customs.Description = "Merchandise"
+
+#This is where the customs lines go; need one line per product line in the package. Should create an array using
+# create_array_of_customs_lines for all lines in the package. Note that anything currently filled in is the field
+#name on the product and that CountryOfOrigin is not an existing field on products (may need added for implementation).
+            customs_line = service.create_customs_lines()
+            customs_line.Quantity = qty_done
+            customs_line.Value = lst_price
+            customs_line.WeightLb =
+            customs_line.WeightOz =
+            customs_line.HSTariffNumber = hs_code
+            customs_line.CountryOfOrigin =
+            customs_line.sku = default_code
 
             try:
                 for txn_id, shipping in shippings:
