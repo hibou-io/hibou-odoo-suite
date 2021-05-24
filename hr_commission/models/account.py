@@ -39,10 +39,11 @@ class AccountInvoice(models.Model):
         return res
 
     def amount_for_commission(self):
-        # TODO Should toggle in Config Params
         if hasattr(self, 'margin') and self.company_id.commission_amount_type == 'on_invoice_margin':
             sign = -1 if self.type in ['in_refund', 'out_refund'] else 1
             return self.margin * sign
+        elif self.company_id.commission_amount_type == 'on_invoice_untaxed':
+            return self.amount_untaxed_invoice_signed
         return self.amount_total_company_signed
 
     @api.multi
