@@ -15,4 +15,5 @@ class ResCompany(models.Model):
     commission_amount_type = fields.Selection([
         ('on_invoice_margin', 'On Invoice Margin'),
         ('on_invoice_total', 'On Invoice Total'),
+        ('on_invoice_untaxed', 'On Invoice Total Tax Excluded'),
     ], string='Commission Base', default='on_invoice_margin')
