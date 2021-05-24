@@ -85,7 +85,7 @@ class Commission(models.Model):
                 amount = 0.0
             commission.amount = amount
 
-
+    @api.model
     def create(self, values):
         res = super(Commission, self).create(values)
         res._compute_amount()
