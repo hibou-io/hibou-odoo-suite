@@ -45,12 +45,7 @@ class TestCAPayslip(common.TestPayslip):
     def get_providence(self):
         pass
 
-    def get_ca_cpp_canada_pension_plan_withholding(self):
-        _logger.warning(f'self.rpp_withdrawal_per_check = {str(self.rpp_withdrawal_per_check)}  --------------------------------')
-        if self.rpp_withdrawal_per_check > 0:
-            return self.rpp_withdrawal_per_check
-        else:
-            return 0.0
+
 
     # def get_ca_state(self, code, cache={}):
     #     country_key = 'CA_COUNTRY'

@@ -36,9 +36,9 @@
         <field name="name">EE: CA Canada Pension Plan</field>
         <field name="code">EE_CA_CPP</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = ca_cpp_canada_pension_plan_withholding(payslip)</field>
+        <field name="condition_python">result, _ = ca_cpp_canada_pension_plan_withholding(payslip, categories)</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = ca_cpp_canada_pension_plan_withholding(payslip)</field>
+        <field name="amount_python_compute">result, result_rate = ca_cpp_canada_pension_plan_withholding(payslip, categories)</field>
         <field name="partner_id" ref="res_partner_ca_cpp"/>
         <field name="appears_on_payslip" eval="True"/>
     </record>

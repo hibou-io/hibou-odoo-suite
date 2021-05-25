@@ -3,6 +3,7 @@
 from odoo import api, fields, models
 
 from .federal.ca_fit import ca_fit_federal_income_tax_withholding
+from .federal.ca_cpp import ca_cpp_canada_pension_plan_withholding
 
 
 class HRPayslip(models.Model):
@@ -25,6 +26,7 @@ class HRPayslip(models.Model):
         res = super()._get_base_local_dict()
         res.update({
             'ca_fit_federal_income_tax_withholding': ca_fit_federal_income_tax_withholding,
+            'ca_cpp_canada_pension_plan_withholding': ca_cpp_canada_pension_plan_withholding,
         })
         return res
 
