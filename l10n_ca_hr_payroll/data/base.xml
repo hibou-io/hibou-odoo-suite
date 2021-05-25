@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="ca_structure_type_employee" model="hr.payroll.structure.type">
+        <field name="name">Canada Employee</field>
+        <field name="default_resource_calendar_id" ref="resource.resource_calendar_std"/>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+
+    <record id="hr_ca_payroll_structure" model="hr.payroll.structure">
+        <field name="name">Canada Employee Standard</field>
+        <field name="country_id" ref="base.ca"/>
+        <field name="type_id" ref="l10n_ca_hr_payroll.ca_structure_type_employee"/>
+        <field name="unpaid_work_entry_type_ids" eval="[
+            (4, ref('hr_work_entry_contract.work_entry_type_unpaid_leave')),
+            ]"/>
+    </record>
+
+    <record id="l10n_ca_hr_payroll.ca_structure_type_employee" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_ca_payroll_structure"/>
+    </record>
+
+
+    <!-- Included in Gross Remuneration -->
+
+    <record id="hr_payroll_category_basic_ca_salary" model="hr.salary.rule.category">
+        <field name="name">Wages: Salary</field>
+        <field name="code">SALARY</field>
+        <field name="parent_id" ref="hr_payroll.BASIC"/>
+    </record>
+
+    <record id="hr_payroll_category_basic_ca_overtime" model="hr.salary.rule.category">
+        <field name="name">Wages: Overtime</field>
+        <field name="code">OVERTIME</field>
+        <field name="parent_id" ref="hr_payroll.BASIC"/>
+    </record>
+
+    <record id="hr_payroll_category_basic_ca_pension_income" model="hr.salary.rule.category">
+        <field name="name">Wages: Pension Income</field>
+        <field name="code">PENSION</field>
+        <field name="parent_id" ref="hr_payroll.BASIC"/>
+    </record>
+
+    <record id="hr_payroll_category_basic_ca_taxable_benefits" model="hr.salary.rule.category">
+        <field name="name">Wages: Taxable Benefits</field>
+        <field name="code">TAXED_BENEFITS</field>
+        <field name="parent_id" ref="hr_payroll.BASIC"/>
+    </record>
+
+
+    <!-- Excluded from Gross Remuneration-->
+    <record id="hr_payroll_category_alw_ca_bonus" model="hr.salary.rule.category">
+        <field name="name">Wages: Bonus</field>
+        <field name="code">BONUS</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+
+    <record id="hr_payroll_category_alw_ca_retro_pay_increase" model="hr.salary.rule.category">
+        <field name="name">Wages: Retroactive Pay Increase</field>
+        <field name="code">RETRO_PAY</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+
+    <record id="hr_payroll_category_alw_ca_nonperiodic_payment" model="hr.salary.rule.category">
+        <field name="name">Wages: Non-Periodic Payments</field>
+        <field name="code">NON-PERIOD</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+
+
+    <!-- Employee Contributed Deductions -->
+    <record id="hr_payroll_category_ded_ca_rpp" model="hr.salary.rule.category">
+        <field name="name">Deduction: Registerd Pension Plan</field>
+        <field name="code">DED_RPP</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_category_ded_ca_rrsp" model="hr.salary.rule.category">
+        <field name="name">Deduction: Registerd Retirement Savings Plan</field>
+        <field name="code">DED_RRSP</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_category_ded_ca_prpp" model="hr.salary.rule.category">
+        <field name="name">Deduction: Pooled Registered Pension Plan</field>
+        <field name="code">DED_RPP</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_category_ded_ca_rca" model="hr.salary.rule.category">
+        <field name="name">Deduction: Retirement Compensation Arrangement</field>
+        <field name="code">DED_RCA</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_category_ded_ca_alimony_pre_1997" model="hr.salary.rule.category">
+        <field name="name">Deduction: Alimony Before May 5th, 1997</field>
+        <field name="code">DED_ALIMONY_PRE_1997</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_category_ded_ca_maintenance_pre_1997" model="hr.salary.rule.category">
+        <field name="name">Deduction: Maintenance Before May 5th, 1997</field>
+        <field name="code">DED_ALIMONY_PRE_1997</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_category_ded_ca_union_dues" model="hr.salary.rule.category">
+        <field name="name">Deduction: Union Dues</field>
+        <field name="code">DED_UNION_DUES</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_category_ded_ca_prescribed_zone" model="hr.salary.rule.category">
+        <field name="name">Deduction: Living In Prescribed Zone</field>
+        <field name="code">DED_PRESCRIBED_ZONE</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_category_ded_ca_employee_requested" model="hr.salary.rule.category">
+        <field name="name">Deduction: Employee Requested</field>
+        <field name="code">DED_EMPLOYEE_REQUESTED</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_category_ded_ca_td1" model="hr.salary.rule.category">
+        <field name="name">Deduction: TD1 Deductions</field>
+        <field name="code">DED_TD1</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_category_ded_ca_td1" model="hr.salary.rule.category">
+        <field name="name">Deduction: TD1 Deductions</field>
+        <field name="code">DED_TD1</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+
+
+<!--    rules for canada-->
+<!--    BASIC-->
+    <!--    included in gross remuneration-->
+        <!--    salary-->
+        <!--    wages-->
+        <!--    overtime-->
+        <!--    pension_income-->
+        <!--    qualified_pension_income-->
+        <!--    taxable_benefits-->
+
+    <!--    not included in gross remuneration-->
+        <!--    bonuses-->
+        <!--    retroactive_pay_increase-->
+        <!--    nonperiodic_payments-->
+
+<!--    DED-->
+<!--        employee contributions-->
+    <!--        rpp registered pension plan-->
+    <!--        rrsp registered retirement savings plan-->
+    <!--        prpp pooled registered pension plan-->
+    <!--        rca retirement compensation arrangement-->
+
+
+</odoo>
