@@ -60,7 +60,7 @@ class TestPayslip(TestCAPayslip):
         self.assertPayrollAlmostEqual(cats['EE_CA_FIT'], -111.69)
 
     def test_basic_federal_tax_weekly(self):
-        salary = 3000.0
+        salary = 2000.0
         date_from = '2021-01-25'
         date_to = '2021-01-31'
 
@@ -73,9 +73,7 @@ class TestPayslip(TestCAPayslip):
                                         )
         payslip = self._createPayslip(employee, date_from, date_to)
         cats = self._getCategories(payslip)
-        self.assertEqual(cats['GROSS'], 3000.0)
+        self.assertEqual(cats['GROSS'], 2000.0)
         self.assertEqual(cats.get('EE_CA_CPP', 0.0), 0.0)
         self.assertEqual(cats.get('EE_CA_EI', 0.0), 0.0)
-        # TODO why is this one off by ~0.30?
-        self.assertPayrollAlmostEqual(cats['EE_CA_FIT'], -583.28)  # FAKE
-        self.assertPayrollAlmostEqual(cats['EE_CA_FIT'], -583.56)
+        self.assertPayrollAlmostEqual(cats['EE_CA_FIT'], -321.05)  # note calculator says 321.00

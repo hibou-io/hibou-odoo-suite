@@ -62,5 +62,6 @@ def ca_fit_federal_income_tax_withholding(payslip, categories, worked_days, inpu
     T1 = T3 - LCF
     T = (T1 / P) + L
     if T > 0.0:
+        T = round(T, 2)
         return A, -(T / A * 100.0)
     return 0.0, 0.0
