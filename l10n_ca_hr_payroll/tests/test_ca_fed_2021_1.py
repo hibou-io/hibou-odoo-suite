@@ -24,7 +24,7 @@ class TestPayslip(TestCAPayslip):
         contract = self._createContract(employee,
                                         wage=salary,
                                         is_cpp_exempt=True,
-                                        if_ei_exempt=True,
+                                        is_ei_exempt=True,
                                         )
 
         self._log('2021 tax first payslip:')
@@ -50,7 +50,7 @@ class TestPayslip(TestCAPayslip):
         contract = self._createContract(employee,
                                         wage=salary,
                                         is_cpp_exempt=True,
-                                        if_ei_exempt=True,
+                                        is_ei_exempt=True,
                                         )
         payslip = self._createPayslip(employee, date_from, date_to)
         cats = self._getCategories(payslip)
@@ -68,7 +68,7 @@ class TestPayslip(TestCAPayslip):
         contract = self._createContract(employee,
                                         wage=salary,
                                         is_cpp_exempt=True,
-                                        if_ei_exempt=True,
+                                        is_ei_exempt=True,
                                         schedule_pay='weekly'
                                         )
         payslip = self._createPayslip(employee, date_from, date_to)
@@ -77,3 +77,43 @@ class TestPayslip(TestCAPayslip):
         self.assertEqual(cats.get('EE_CA_CPP', 0.0), 0.0)
         self.assertEqual(cats.get('EE_CA_EI', 0.0), 0.0)
         self.assertPayrollAlmostEqual(cats['EE_CA_FIT'], -321.05)  # note calculator says 321.00
+
+    def test_low_wage_additional(self):
+        salary = 1000.0
+        date_from = '2021-01-01'
+        date_to = '2021-01-31'
+        test_additional = 100.0
+
+        employee = self._createEmployee()
+        contract = self._createContract(employee,
+                                        wage=salary,
+                                        is_cpp_exempt=True,
+                                        is_ei_exempt=True,
+                                        fed_td1_additional=test_additional,
+                                        )
+
+        payslip = self._createPayslip(employee, date_from, date_to)
+        cats = self._getCategories(payslip)
+        self.assertEqual(cats['GROSS'], 1000.0)
+        self.assertEqual(cats.get('EE_CA_CPP', 0.0), 0.0)
+        self.assertEqual(cats.get('EE_CA_EI', 0.0), 0.0)
+        self.assertEqual(cats['EE_CA_FIT'], -test_additional)
+
+    def test_basic_ei(self):
+        salary = 7000.0
+        date_from = '2021-01-01'
+        date_to = '2021-01-31'
+
+        employee = self._createEmployee()
+        contract = self._createContract(employee,
+                                        wage=salary,
+                                        is_cpp_exempt=True,
+                                        is_ei_exempt=False
+                                        )
+
+        payslip = self._createPayslip(employee, date_from, date_to)
+        cats = self._getCategories(payslip)
+        self.assertEqual(cats['GROSS'], 7000.0)
+        self.assertEqual(cats.get('EE_CA_CPP', 0.0), 0.0)
+        self.assertAlmostEqual(cats['EE_CA_EI'], -110.60)
+        self.assertPayrollAlmostEqual(cats['EE_CA_FIT'], -1010.90)

@@ -24,7 +24,7 @@ def ca_fit_federal_income_tax_withholding(payslip, categories, worked_days, inpu
     A = _compute_annual_taxable_income(payslip, categories)
     # If the result is negative, T = L.
     if A <= 0.0 and L:
-        return -L, 1.0
+        return -L, 100.0
     elif A <= 0.0:
         return 0.0, 0.0
 
@@ -47,10 +47,10 @@ def ca_fit_federal_income_tax_withholding(payslip, categories, worked_days, inpu
 
     K2 = 0.0
     if not payslip.contract_id.ca_payroll_config_value('is_cpp_exempt'):
-        C = categories.EE_CA_CPP
+        C = -categories.EE_CA_CPP
         K2 += 0.15 * min(P * C, 3166.45)  # min because we can only have up to
     if not payslip.contract_id.ca_payroll_config_value('is_ei_exempt'):
-        EI = categories.EE_CA_EI
+        EI = -categories.EE_CA_EI
         K2 += 0.15 * min(P * EI, 889.54)
     K3 = 0.0  # medical
     CEA = 1257.0  # TODO this is an indexed parameter
@@ -60,6 +60,9 @@ def ca_fit_federal_income_tax_withholding(payslip, categories, worked_days, inpu
 
     LCF = min(750.0, 0.15 * 0.0)  # 0.0 => amount deducted or withheld during the year for the acquisition by the employee of approved shares of the capital stock of a prescribed labour-sponsored venture capital corporation
     T1 = T3 - LCF
+    if T1 < 0.0:
+        T1 = 0.0
+
     T = (T1 / P) + L
     if T > 0.0:
         T = round(T, 2)

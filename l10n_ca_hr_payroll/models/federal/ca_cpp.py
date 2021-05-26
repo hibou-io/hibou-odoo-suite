@@ -1,5 +1,11 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
+
+def ca_cpp(payslip, categories, worked_days, inputs):
+    if payslip.contract_id.ca_payroll_config_value('is_cpp_exempt'):
+        return 0.0, 0.0
+    return 0.0, 0.0
+
 # from odoo import fields
 # from datetime import datetime, timedelta
 # import logging
