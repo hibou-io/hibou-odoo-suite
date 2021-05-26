@@ -47,12 +47,12 @@ class ExpenseChangeWizard(models.TransientModel):
     def _affect_analytic_change(self, old_analytic_id):
         expenses_to_affect = self._find_expenses_to_write_analytic(old_analytic_id)
         if expenses_to_affect:
-            prev_state = expenses_to_affect.state
-            expenses_to_affect.state = "draft"
+            prev_state = self.expense_id.sheet_id.state
+            self.expense_id.sheet_id.write({'state': 'draft'})
             expenses_to_affect.write({'analytic_account_id': self.analytic_account_id.id})
 
             lines_to_affect = self.expense_id.sheet_id.account_move_id \
                 .line_ids.filtered(lambda l: l.analytic_account_id.id == old_analytic_id and l.debit)
             lines_to_affect.write({'analytic_account_id': self.analytic_account_id.id})
             lines_to_affect.create_analytic_lines()
-            expenses_to_affect.state = prev_state
+            self.expense_id.sheet_id.write({'state': prev_state})
