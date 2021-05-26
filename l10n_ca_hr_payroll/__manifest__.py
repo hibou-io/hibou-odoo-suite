@@ -3,24 +3,24 @@
 {
     'name': 'Canada - Payroll',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '14.0.2020.0.0',
+    'version': '14.0.2021.0.0',
     'category': 'Payroll Localization',
     'depends': [
         'hr_payroll_hibou',
     ],
     'description': """
 Canada - Payroll Rules.
-=========================================
+=======================
 
     """,
 
     'data': [
+        'security/ir.model.access.csv',
         'data/base.xml',
         'data/federal.xml',
         'data/ca_cpp.xml',
-        'security/ir.model.access.csv',
         # 'views/hr_contract_views.xml',
-        # 'views/us_payroll_config_views.xml',
+        # 'views/ca_payroll_config_views.xml',
     ],
     'demo': [
     ],
