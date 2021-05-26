@@ -29,6 +29,7 @@ class SaleLineChangeOrder(models.TransientModel):
 
 class SaleLineChangeOrderLine(models.TransientModel):
     _name = 'sale.line.change.order.line'
+    _description = 'Sale Line Change Order Line'
 
     change_order_id = fields.Many2one('sale.line.change.order')
     sale_line_id = fields.Many2one('sale.order.line', string='Sale Line')
