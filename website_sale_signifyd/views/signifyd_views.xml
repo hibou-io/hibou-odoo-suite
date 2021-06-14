@@ -26,14 +26,7 @@
                                 attrs="{'invisible': [('score', '&gt;', 300)]}">
                             <field string="Score" name="score" widget="statinfo"/>
                         </button>
-                        <button class="oe_stat_button text-success"
-                                icon="fa-share-square-o"
-                                type="object"
-                                name="action_request_guarantee"
-                                string="Request Guarantee"
-                                attrs="{'invisible': [ '|', ('guarantee_eligible', '=', False), ('guarantee_requested', '=', True)]}">
 
-                        </button>
                     </div>
                     <div class="oe_title">
                         <h1>
@@ -50,8 +43,6 @@
                             <field name="status"/>
                             <field name="order_outcome"/>
                             <field name="review_disposition"/>
-                            <field name="guarantee_eligible"/>
-                            <field name="guarantee_requested"/>
                             <field name="guarantee_disposition"/>
                             <field name="disposition_reason"/>
                         </group>
@@ -79,6 +70,9 @@
                     <button name="action_register_webhooks" type="object"
                             string="Register Webhooks" class="oe_highlight"
                             attrs="{'invisible': [('webhooks_registered', '=', True)]}"/>
+                    <button name="action_register_webhooks" type="object"
+                            string="Re-register Webhooks"
+                            attrs="{'invisible': [('webhooks_registered', '=', False)]}"/>
                 </header>
                 <sheet>
 
@@ -124,5 +118,30 @@
             </form>
         </field>
     </record>
+
+    <record id="signifyd_connector_tree_view" model="ir.ui.view">
+        <field name="name">signifyd.tree.view</field>
+        <field name="model">signifyd.connector</field>
+        <field name="arch" type="xml">
+            <tree string="Signifyd Connectors">
+                <field name="name"/>
+                <field name="test_mode"/>
+                <field name="webhooks_registered"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_signifyd_connector" model="ir.actions.act_window">
+        <field name="name">Signifyd Connectors</field>
+        <field name="res_model">signifyd.connector</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        name="Signifyd"
+        parent="website.menu_website_global_configuration"
+        action="action_signifyd_connector"
+        id="menu_action_signifyd_connector"
+        sequence="10" />
 
 </odoo>

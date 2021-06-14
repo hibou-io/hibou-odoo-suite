@@ -1,5 +1,5 @@
 from odoo import fields, models
-
+from odoo.exceptions import UserError
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
@@ -9,6 +9,8 @@ class StockPicking(models.Model):
 
     def action_view_signifyd_case(self):
         self.ensure_one()
+        if not self.singifyd_case_id:
+            raise UserError('No Signifyd Case')
         form_id = self.env.ref('website_sale_signifyd.signifyd_case_form_view').id
         context = {'create': False, 'delete': False, 'id': self.sale_id.signifyd_case_id.id}
         return {
