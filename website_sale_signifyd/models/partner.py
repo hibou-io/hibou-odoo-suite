@@ -8,6 +8,7 @@ class ResPartner(models.Model):
     signifyd_case_count = fields.Integer(compute='_compute_signifyd_stats', string='Signifyd Cases')
     signifyd_average_score = fields.Float(compute='_compute_signifyd_stats', string='Signifyd Score')
 
+    @api.depends('signifyd_case_ids')
     def _compute_signifyd_stats(self):
         for record in self:
             cases = record.signifyd_case_ids

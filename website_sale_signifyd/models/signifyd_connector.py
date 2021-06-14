@@ -12,56 +12,65 @@ class SignifydConnector(models.Model):
 
     name = fields.Char(string='Connector Name')
     test_mode = fields.Boolean(string='Test Mode')
-    user_key = fields.Char(string='Username')
+    user_key = fields.Char(string='Team/Username')
     secret_key = fields.Char(string='API Key')
-    user_key_test = fields.Char(string='TEST Username')
+    user_key_test = fields.Char(string='TEST Team/Username')
     secret_key_test = fields.Char(string='TEST API Key')
-    open_so_cap = fields.Integer(string='Cap requests at:')
     webhooks_registered = fields.Boolean(string='Successfully Registered Webhooks')
-    notify_user_ids = fields.Many2many('res.users', string='Receive event notifications')
+    notify_user_ids = fields.Many2many('res.users', string='Receive decline notifications')
 
+    # TODO ideally this would be a regular constant
+    # however other entities currently use this by reference
     API_URL = 'https://api.signifyd.com/v2'
 
     def get_headers(self):
+        self.ensure_one()
         # Check for prod or test mode
-        signifyd = self.env.company.signifyd_connector_id
-        if not signifyd:
-            return False
-
-        if signifyd.test_mode:
-            api_key = signifyd.secret_key_test
+        if self.test_mode:
+            api_key = self.secret_key_test
         else:
-            api_key = signifyd.secret_key
+            api_key = self.secret_key
 
-        b64_auth_key = b64encode(api_key.encode('utf-8'))
+        b64_auth_key = b64encode(api_key.encode()).decode().replace('=', '')
 
         headers = {
-            'Authorization': 'Basic ' + str(b64_auth_key, 'utf-8').replace('=', ''),
+            'Authorization': 'Basic ' + b64_auth_key,
             'Content-Type': 'application/json',
         }
 
         return headers
 
     def register_webhooks(self):
+        self.ensure_one()
         headers = self.get_headers()
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        # This should come from the website...
+        # we may need a better way to link the connector to the website.
+        base_url = None
+        website = self.env['website'].search([('signifyd_connector_id', '=', self.id)], limit=1)
+        if website and website.domain:
+            base_url = website.domain
+            if base_url.find('://') <= 0:  # documentation says if no protocol use http
+                base_url = 'http://' + base_url
+        if not base_url:
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         values = {
             "webhooks": [
-                {
-                    "event": "CASE_CREATION",
-                    "url": base_url + "/cases/creation"
-                },
+                # Given we are creating the cases, we do not need to know about it
+                # {
+                #     "event": "CASE_CREATION",
+                #     "url": base_url + "/signifyd/cases/update"
+                # },
                 {
                     "event": "CASE_RESCORE",
-                    "url": base_url + "/cases/update"
+                    "url": base_url + "/signifyd/cases/update"
                 },
                 {
                     "event": "CASE_REVIEW",
-                    "url": base_url + "/cases/update"
+                    "url": base_url + "/signifyd/cases/update"
                 },
                 {
                     "event": "GUARANTEE_COMPLETION",
-                    "url": base_url + "/cases/update"
+                    "url": base_url + "/signifyd/cases/update"
                 },
             ]
         }
@@ -75,7 +84,6 @@ class SignifydConnector(models.Model):
         return r
 
     def action_register_webhooks(self):
-
         notification = {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -96,11 +104,11 @@ class SignifydConnector(models.Model):
         else:
             notification['params']['type'] = 'danger'
             notification['params']['message'] = res.content.decode('utf-8')
+            self.webhooks_registered = False
             return notification
 
     def process_post_values(self, post):
         # Construct dict from request data for endpoints
-        guarantee_eligible = post.get('guaranteeEligible')
         uuid = post.get('uuid')
         case_id = post.get('caseId')
         team_name = post.get('teamName')
@@ -117,7 +125,6 @@ class SignifydConnector(models.Model):
         values = {}
 
         # Validate that the order and case match the request
-        values.update({'guarantee_eligible': guarantee_eligible}) if guarantee_eligible else ''
         values.update({'uuid': uuid}) if uuid else ''
         values.update({'team_name': team_name}) if team_name else ''
         values.update({'team_id': team_id}) if team_id else ''

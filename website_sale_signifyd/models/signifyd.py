@@ -42,97 +42,77 @@ class SignifydCase(models.Model):
         ('CANCELED', 'Canceled'),
     ], string='Guarantee Status')
     disposition_reason = fields.Char('Disposition Reason')
-    guarantee_eligible = fields.Boolean('Eligible for Guarantee')
-    guarantee_requested = fields.Boolean('Requested Guarantee')
     score = fields.Float(string='Transaction Score')
     adjusted_score = fields.Float(string='Adjusted Score')
     signifyd_url = fields.Char('Signifyd.com', compute='_compute_signifyd_url')
+
+    def _get_connector(self):
+        return self.order_id.website_id.signifyd_connector_id
 
     @api.model
     def _compute_signifyd_url(self):
         for record in self:
             if record.case_id:
-                self.signifyd_url = 'https://app.signifyd.com/cases/%s' % record.case_id
+                self.signifyd_url = 'https://app.signifyd.com/cases/%s' % (record.case_id, )
             else:
                 self.signifyd_url = ''
 
     def write(self, vals):
         original_disposition = {c: c.guarantee_disposition for c in self}
         res = super(SignifydCase, self).write(vals)
-        disposition = vals.get('guarantee_disposition')
-        for case in self:
-            if case.order_id and original_disposition[case] != disposition:
-                self.order_id.message_post(body=_('Signifyd Updated Record to %s' % vals['guarantee_disposition']),
-                                           subtype='website_sale_signifyd.disposition_change')
+        disposition = vals.get('guarantee_disposition', False)
+        for case in self.filtered(lambda c: c.order_id and original_disposition[c] != disposition):
+            case.order_id.message_post(body=_('Signifyd Updated Record to %s' % disposition),
+                                       subtype='website_sale_signifyd.disposition_change')
         return res
 
     @api.model
-    def post_case(self, values):
-        signifyd = self.env['signifyd.connector']  # TODO HOW, this shouldn't be a singleton
-        headers = signifyd.get_headers()
+    def post_case(self, connector, values):
+        headers = connector.get_headers()
         data = json.dumps(values, indent=4, sort_keys=True, default=str)
 
         # TODO this should be in `signifyd.connector`
         r = requests.post(
-            signifyd.API_URL + '/cases',
+            connector.API_URL + '/cases',
             headers=headers,
             data=data,
         )
         return r.json()
 
-    @api.model
     def get_case(self):
-        # TODO See above....
-        signifyd = self.env['signifyd.connector']
-        headers = signifyd.get_headers()
+        self.ensure_one()
+        if not self.case_id:
+            raise UserError('Case not represented in Signifyd.')
+        connector = self._get_connector()
+        headers = connector.get_headers()
         r = requests.get(
-            signifyd.API_URL + '/cases/' + str(self.case_id),
+            connector.API_URL + '/cases/' + str(self.case_id),
             headers=headers
         )
         return r.json()
-
-    @api.model
-    def request_guarantee(self, *args):
-        # TODO See above....
-        signifyd = self.env['signifyd.connector']
-        headers = signifyd.get_headers()
-        values = json.dumps({"caseId": self.case_id})
-        r = requests.post(
-            signifyd.API_URL + '/async/guarantees',
-            headers=headers,
-            data=values,
-        )
-
-        if 200 <= r.status_code < 300:
-            self.write({'guarantee_requested': True})
-        else:
-            msg = r.content.decode("utf-8")
-            raise UserError(_(msg))
-
-    def action_request_guarantee(self):
-        for record in self:
-            record.request_guarantee()
 
     def action_force_update_case(self):
         for record in self:
             record.update_case_info()
 
-    @api.model
     def update_case_info(self, vals=None):
+        self.ensure_one()
+        if not self.case_id:
+            raise UserError('Case not represented in Signifyd.')
         if not vals:
             case = self.get_case()
             case_id = case.get('caseId')
-            team_id = case.get('teamId')
-            team_name = case.get('teamName')
-            uuid = case.get('uuid')
-            status = case.get('status')
-            review_disposition = case.get('reviewDisposition')
-            order_outcome = case.get('orderOutcome')
-            guarantee_disposition = case.get('guaranteeDisposition')
-            adjusted_score = case.get('adjustedScore')
-            score = case.get('score')
-            guarantee_eligible = case.get('guaranteeEligible')
-            # order_id = case.get('orderId')
+            if not case_id:
+                raise ValueError('Signifyd Case has no ID?')
+            team_id = case.get('teamId', self.team_id)
+            team_name = case.get('teamName', self.team_name)
+            uuid = case.get('uuid', self.uuid)
+            status = case.get('status', self.status)
+            review_disposition = case.get('reviewDisposition', self.review_disposition)
+            order_outcome = case.get('orderOutcome', self.order_outcome)
+            guarantee_disposition = case.get('guaranteeDisposition', self.guarantee_disposition)
+            adjusted_score = case.get('adjustedScore', self.adjusted_score)
+            score = case.get('score', self.score)
 
             vals = {
                 'case_id': case_id,
@@ -145,13 +125,13 @@ class SignifydCase(models.Model):
                 'adjusted_score': adjusted_score,
                 'guarantee_disposition': guarantee_disposition,
                 'score': score,
-                'guarantee_eligible': guarantee_eligible,
-                'last_update': dt.now(),
+                'last_update': dt.now(),  # why not just use
             }
 
         outcome = vals.get('guarantee_disposition')
         if outcome == 'DECLINED':
-            for user in self.env.company.signifyd_connector_id.notify_user_ids:
+            connector = self._get_connector()
+            for user in connector.notify_user_ids:
                 self.create_notification(user, outcome)
 
         self.write(vals)
@@ -163,6 +143,6 @@ class SignifydCase(models.Model):
             'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
             'user_id': user.id,
             'res_id': self.order_id.id,
-            'res_model_id': self.env['ir.model']._get('sale.order').id,
+            'res_model_id': self.env['ir.model']._get(self.order_id._name).id,
         }
         self.env['mail.activity'].create(vals)
