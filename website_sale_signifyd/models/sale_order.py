@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.http import request
@@ -28,9 +30,12 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         res = super().action_confirm()
-        for sale in self.filtered(lambda so: so.state in ('sale', 'done') and not so.signifyd_case_id):
+        for sale in self.filtered(lambda so: so._should_post_signifyd()):
             _case = sale.post_signifyd_case()
         return res
+
+    def _should_post_signifyd(self):
+        return self.state in ('sale', 'done') and not self.signifyd_case_id
 
     def post_signifyd_case(self):
         if not self.website_id.signifyd_connector_id:

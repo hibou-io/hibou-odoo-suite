@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 import requests
 from datetime import datetime as dt
 from base64 import b64encode
