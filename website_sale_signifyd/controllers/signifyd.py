@@ -2,7 +2,7 @@
 
 import json
 from odoo.http import Controller, request, route
-from odoo.exceptions import MissingError
+from werkzeug.exceptions import NotFound
 
 
 class SignifydWebhooks(Controller):
@@ -22,7 +22,7 @@ class SignifydWebhooks(Controller):
         if case_id == 1:
             # Special case when verifying webhook.
             return {'response': 'success'}
-        raise MissingError('CaseId: %s Cannot be found.' % (case_id, ))
+        raise NotFound('CaseId: %s Cannot be found.' % (case_id,))
 
     def _get_case(self, case_id):
         return request.env['signifyd.case'].sudo().search([('case_id', '=', case_id)], limit=1)
