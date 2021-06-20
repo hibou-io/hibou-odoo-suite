@@ -8,3 +8,11 @@
 [submodule "external/camptocamp-cloud-platform"]
 	path = external/camptocamp-cloud-platform
 	url = https://github.com/hibou-io/camptocamp-cloud-platform.git
+[submodule "external/hibou-oca/server-brand"]
+	path = external/hibou-oca/server-brand
+	url = https://github.com/hibou-io/oca-server-brand.git
+	branch = 14.0
+[submodule "external/hibou-oca/social"]
+	path = external/hibou-oca/social
+	url = https://github.com/hibou-io/oca-social.git
+	branch = 14.0
