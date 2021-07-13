@@ -2,6 +2,27 @@
 
 set -e
 
+#    DEV_MODE=exclusive
+#      Will start the Theia IDE in the foreground, you can then start Odoo from a terminal.
+#    DEV_MODE=1
+#      Will start the Theia IDE in the background, regular Odoo commands will still work.
+#      Note that in Theia you can re-start Odoo e.g.
+#        `kill -s SIGHUP 1` to reload/restart Odoo
+#        `kill -s SIGQUIT 1` to cause Odoo to dump stacktrace in standard out
+#      Note that with Odoo running in the foreground, killing Odoo will kill the container.
+#    DEV_MODE=
+#      Unset to not use Theia at all.
+
+# setup development IDE
+if [ "$DEV_MODE" == "exclusive" ]
+then
+    exec node /opt/theia/src-gen/backend/main.js /opt/odoo --hostname=0.0.0.0
+elif [ "$DEV_MODE" != "" ]
+then
+    node /opt/theia/src-gen/backend/main.js /opt/odoo --hostname=0.0.0.0 &
+fi
+
+
 # set the postgres database host, port, user and password according to the environment
 # and pass them as arguments to the odoo process if not present in the config file
 : ${HOST:=${DB_PORT_5432_TCP_ADDR:='db'}}
