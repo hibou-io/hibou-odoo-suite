@@ -288,7 +288,7 @@ class SaleOrderImporter(Component):
     def _import_addresses(self):
         partner_values = self._get_partner_values()
         # If they only buy services, then the shipping details will be empty
-        if not partner_values['name'] == 'Undefined':
+        if partner_values.get('name', 'Undefined') == 'Undefined':
             partner_values = self._get_partner_values(info_string='payment_')
 
         partners = self.env['res.partner'].search([
