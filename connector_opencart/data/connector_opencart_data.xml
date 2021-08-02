@@ -32,4 +32,9 @@ Check your taxes and fiscal positions configuration and correct them if necessar
         </record>
 
     </data>
+
+    <record id="group_order_comment_review" model="res.groups">
+        <field name="name">Opencart Order Comment Reviewer</field>
+    </record>
+
 </odoo>
