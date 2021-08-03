@@ -65,7 +65,7 @@ class DeliveryFedex(models.Model):
     def _get_fedex_recipient_is_residential(self, partner):
         if self.fedex_service_type.find('HOME') >= 0:
             return True
-        return not partner.is_company
+        return not (partner.is_company or partner.parent_id.is_company)
 
     """
     Overrides to use Hibou Delivery methods to get shipper etc. and to add 'transit_days' to result.
