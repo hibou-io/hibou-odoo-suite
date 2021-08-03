@@ -61,6 +61,7 @@ class SaleOrderImportMapper(Component):
 
     direct = [('order_id', 'external_id'),
               ('store_id', 'store_id'),
+              ('comment', 'note'),
               ]
 
     children = [('products', 'opencart_order_line_ids', 'opencart.sale.order.line'),
@@ -367,11 +368,28 @@ class SaleOrderImporter(Component):
             **kwargs
         )
 
+    def _order_comment_review(self, binding):
+        review_group = self.env.ref('connector_opencart.group_order_comment_review', raise_if_not_found=False)
+        if review_group and binding.note:
+            activity_type = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)
+            activity_type_id = activity_type.id if activity_type else False
+            for user in review_group.users:
+                self.env['mail.activity'].create({
+                    'activity_type_id': activity_type_id,
+                    'summary': 'Order Comment Review',
+                    'note': '<p>' + binding.note + '</p>',  # field is HTML, note is expected to be escaped
+                    'user_id': user.id,
+                    'res_id': binding.odoo_id.id,
+                    'res_model_id': self.env.ref('sale.model_sale_order').id,
+                })
+
     def _create(self, data):
         binding = super(SaleOrderImporter, self)._create(data)
         # Without this, it won't map taxes with the fiscal position.
         if binding.fiscal_position_id:
             binding.odoo_id._compute_tax_id()
+
+        self._order_comment_review(binding)
 
         return binding
 
