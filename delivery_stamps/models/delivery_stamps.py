@@ -334,7 +334,11 @@ class ProviderStamps(models.Model):
                                     }
                                 product_values[quant.product_id]['quantity'] += quant.quantity
                                 product_values[quant.product_id]['value'] += quant.quantity * quant.product_id.lst_price
-
+                            
+                            # Note that Stamps will not allow you to use the scale weight if it is not equal
+                            # to the sum of the customs lines.
+                            # Thus we sum the line
+                            new_total_weight = 0.0
                             customs_lines = []
                             for product, values in product_values.items():
                                 customs_line = service.create_customs_lines()
@@ -342,13 +346,16 @@ class ProviderStamps(models.Model):
                                 customs_line.Quantity = values['quantity']
                                 customs_total += round(values['value'], 2)
                                 customs_line.Value = round(values['value'], 2)
-                                customs_line.WeightLb = self._stamps_convert_weight(product.weight * values['quantity'])
+                                line_weight = round(self._stamps_convert_weight(product.weight * values['quantity']), 2)
+                                customs_line.WeightLb = line_weight
+                                new_total_weight += line_weight
                                 customs_line.HSTariffNumber = product.hs_code or ''
                                 # customs_line.CountryOfOrigin =
                                 customs_line.sku = product.default_code or ''
                                 customs_lines.append(customs_line)
                             customs.CustomsLines.CustomsLine = customs_lines
                             shipping.DeclaredValue = round(customs_total, 2)
+                            shipping.WeightLb = round(new_total_weight, 2)
 
                         label = service.get_label(shipping,
                                                   transaction_id=txn_id, image_type=self.stamps_image_type,
