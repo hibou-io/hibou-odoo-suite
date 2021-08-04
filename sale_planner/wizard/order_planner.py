@@ -730,7 +730,7 @@ class SaleOrderMakePlan(models.TransientModel):
         return max_requested_date
 
     def _get_max_transit_days(self, sub_options):
-        return max(wh_option.get('transit_days', 0) for wh_option in sub_options.values())
+        return max((wh_option.get('transit_days', 0) or 0) for wh_option in sub_options.values())
 
     def _generate_shipping_carrier_option(self, base_option, order_fake, carrier):
         # some carriers look at the order carrier_id
