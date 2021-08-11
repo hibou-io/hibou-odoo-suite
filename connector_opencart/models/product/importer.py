@@ -17,8 +17,7 @@ class ProductImportMapper(Component):
         name = record.get('product_description', [{}])[0].get('name', record.get('id'))
         return {'name': unescape(name)}
 
-    # TODO more fields like pricing....
-
+    @only_create
     @mapping
     def product_type(self, record):
         return {'type': 'product' if record.get('shipping') else 'service'}
