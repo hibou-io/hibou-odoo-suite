@@ -20,6 +20,11 @@ class ProductImportMapper(Component):
     @only_create
     @mapping
     def product_type(self, record):
+        # why this check if @only_create?
+        # well because we would turn the binding create into a very real product.template.write
+        existing_product = self.existing_product(record)
+        if existing_product and existing_product.get('odoo_id'):
+            return {'type': self.env['product.template'].browse(existing_product['odoo_id']).type}
         return {'type': 'product' if record.get('shipping') else 'service'}
 
     @mapping
