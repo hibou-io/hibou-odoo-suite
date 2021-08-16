@@ -1,3 +1,4 @@
+import hashlib
 from datetime import date
 from logging import getLogger
 from urllib.request import urlopen
@@ -169,6 +170,10 @@ class ProviderStamps(models.Model):
         res = service.get_address(address).Address
         return res
 
+    def _stamps_hash_partner(self, partner):
+        to_hash = ''.join(f[1] if isinstance(f, tuple) else str(f) for f in partner.read(['name', 'street', 'street2', 'city', 'country_id', 'state_id', 'zip', 'phone', 'email'])[0].values())
+        return hashlib.sha1(to_hash.encode()).hexdigest()
+
     def _stamps_get_shippings_for_picking(self, service, picking):
         ret = []
         company, from_partner, to_partner = self._stamps_get_addresses_for_picking(picking)
@@ -191,7 +196,7 @@ class ProviderStamps(models.Model):
             ret_val.ServiceType = self.stamps_service_type
             ret_val.WeightLb = weight
             ret_val.ContentType = self._stamps_content_type(package=package)
-            ret.append((package.name + ret_val.ShipDate + str(ret_val.WeightLb), ret_val))
+            ret.append((package.name + ret_val.ShipDate + str(ret_val.WeightLb) + self._stamps_hash_partner(to_partner), ret_val))
         if not ret:
             weight = self._stamps_convert_weight(picking.shipping_weight)
             l, w, h = self._stamps_package_dimensions()
@@ -208,7 +213,7 @@ class ProviderStamps(models.Model):
             ret_val.ServiceType = self.stamps_service_type
             ret_val.WeightLb = weight
             ret_val.ContentType = self._stamps_content_type()
-            ret.append((picking.name + ret_val.ShipDate + str(ret_val.WeightLb), ret_val))
+            ret.append((picking.name + ret_val.ShipDate + str(ret_val.WeightLb) + self._stamps_hash_partner(to_partner), ret_val))
 
         return ret
 
@@ -327,13 +332,21 @@ class ProviderStamps(models.Model):
                             # Note multiple packages will result in all product being on customs form.
                             # Recommended to ship one customs international package at a time.
                             for quant in picking.mapped('package_ids.quant_ids'):
-                                if quant.product_id not in product_values:
-                                    product_values[quant.product_id] = {
+                                # Customs should have the price for the destination but we may not be able
+                                # to rely on the price from the SO (e.g. kit BoM)
+                                product = quant.product_id
+                                quantity = quant.quantity
+                                price = product.lst_price
+                                if to_partner.property_product_pricelist:
+                                    # Note the quantity is used for the price, but it is per unit
+                                    price = to_partner.property_product_pricelist.get_product_price(product, quantity, to_partner)
+                                if product not in product_values:
+                                    product_values[product] = {
                                         'quantity': 0.0,
                                         'value': 0.0,
                                     }
-                                product_values[quant.product_id]['quantity'] += quant.quantity
-                                product_values[quant.product_id]['value'] += quant.quantity * quant.product_id.lst_price
+                                product_values[product]['quantity'] += quantity
+                                product_values[product]['value'] += price * quantity
                             
                             # Note that Stamps will not allow you to use the scale weight if it is not equal
                             # to the sum of the customs lines.
