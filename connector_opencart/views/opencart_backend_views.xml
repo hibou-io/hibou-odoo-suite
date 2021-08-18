@@ -23,6 +23,7 @@
                                 <group colspan="4" col="4">
                                     <field name="base_url"/>
                                     <field name="restadmin_token" password="1"/>
+                                    <field name="server_offset_hours"/>
                                 </group>
                             </page>
                         </notebook>
@@ -70,12 +71,8 @@
                                 in the menu 'Connectors > Checkpoint'.
                             </p>
                             <group name="import_since">
-                                <div>
-                                    <label for="import_orders_after_id" string="Import sale orders after Order ID" class="oe_inline"/>
-                                    <field name="import_orders_after_id"
-                                        class="oe_inline"
-                                        nolabel="1"/>
-                                </div>
+                                <field name="import_orders_after_date"/>
+                                <field name="import_orders_after_id"/>
                                 <button name="import_sale_orders"
                                     type="object"
                                     class="oe_highlight"
@@ -97,6 +94,7 @@
             <tree string="Opencart Backend">
                 <field name="name"/>
                 <field name="import_orders_after_id"/>
+                <field name="import_orders_after_date"/>
             </tree>
         </field>
     </record>

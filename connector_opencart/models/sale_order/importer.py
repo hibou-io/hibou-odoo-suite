@@ -51,7 +51,11 @@ class SaleOrderBatchImporter(Component):
             self._import_record(ids[0], ids[1])
         if external_ids:
             last_id = list(sorted(external_ids, key=lambda i: i[0]))[-1][0]
-            self.backend_record.import_orders_after_id = last_id
+            last_date = list(sorted(external_ids, key=lambda i: i[2]))[-1][2]
+            self.backend_record.write({
+                'import_orders_after_id': last_id,
+                'import_orders_after_date': self.backend_record.date_to_odoo(last_date),
+            })
 
 
 class SaleOrderImportMapper(Component):
@@ -133,7 +137,10 @@ class SaleOrderImportMapper(Component):
 
     @mapping
     def date_order(self, record):
-        return {'date_order': record.get('date_added', fields.Datetime.now())}
+        date_added = record.get('date_added')
+        if date_added:
+            date_added = self.backend_record.date_to_odoo(date_added)
+        return {'date_order': date_added or fields.Datetime.now()}
 
     @mapping
     def fiscal_position_id(self, record):
