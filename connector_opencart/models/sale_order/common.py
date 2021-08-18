@@ -96,7 +96,12 @@ class SaleOrderAdapter(Component):
 
     def search(self, filters=None):
         api_instance = self.api_instance
-        orders_response = api_instance.orders.all(id_larger_than=filters.get('after_id'))
+        api_filters = {}
+        if 'after_id' in filters:
+            api_filters['id_larger_than'] = filters['after_id']
+        if 'modified_from' in filters:
+            api_filters['modified_from'] = filters['modified_from']
+        orders_response = api_instance.orders.all(**api_filters)
         if 'error' in orders_response and orders_response['error']:
             raise ValidationError(str(orders_response))
 
@@ -105,7 +110,7 @@ class SaleOrderAdapter(Component):
 
         orders = orders_response['data']
         # Note that `store_id is None` is checked as it may not be in the output.
-        return map(lambda o: (o['order_id'], o.get('store_id', None)), orders)
+        return map(lambda o: (o['order_id'], o.get('store_id', None), o.get('date_modified') or o.get('date_added')), orders)
 
     def read(self, id):
         api_instance = self.api_instance
