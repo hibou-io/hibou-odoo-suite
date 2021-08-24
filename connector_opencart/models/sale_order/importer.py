@@ -26,6 +26,13 @@ class SaleOrderBatchImporter(Component):
                 'max_retries': 0,
                 'priority': 5,
             }
+        # It is very likely that we already have this order because we may have just uploaded a tracking number
+        # We want to avoid creating queue jobs for orders already imported.
+        order_binder = self.binder_for('opencart.sale.order')
+        order = order_binder.to_internal(external_id)
+        if order:
+            _logger.warning('Order (%s) already imported.' % (order.name, ))
+            return
         if store_id is not None:
             store_binder = self.binder_for('opencart.store')
             store = store_binder.to_internal(store_id).sudo()
@@ -48,10 +55,15 @@ class SaleOrderBatchImporter(Component):
             filters = {}
         external_ids = list(self.backend_adapter.search(filters))
         for ids in external_ids:
+            _logger.debug('run._import_record for %s' % (ids, ))
             self._import_record(ids[0], ids[1])
         if external_ids:
             last_id = list(sorted(external_ids, key=lambda i: i[0]))[-1][0]
-            self.backend_record.import_orders_after_id = last_id
+            last_date = list(sorted(external_ids, key=lambda i: i[2]))[-1][2]
+            self.backend_record.write({
+                'import_orders_after_id': last_id,
+                'import_orders_after_date': self.backend_record.date_to_odoo(last_date),
+            })
 
 
 class SaleOrderImportMapper(Component):
@@ -133,7 +145,10 @@ class SaleOrderImportMapper(Component):
 
     @mapping
     def date_order(self, record):
-        return {'date_order': record.get('date_added', fields.Datetime.now())}
+        date_added = record.get('date_added')
+        if date_added:
+            date_added = self.backend_record.date_to_odoo(date_added)
+        return {'date_order': date_added or fields.Datetime.now()}
 
     @mapping
     def fiscal_position_id(self, record):

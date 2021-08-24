@@ -4,6 +4,7 @@
 
 from logging import getLogger
 from contextlib import contextmanager
+from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -69,8 +70,17 @@ class OpencartBackend(models.Model):
     product_categ_id = fields.Many2one(comodel_name='product.category', string='Product Category',
                                        help='Default product category for newly created products.')
 
+    # renamed, and not used when searching orders anymore
     import_orders_after_id = fields.Integer(
-        string='Import sale orders after id',
+        string='Highest Order ID',
+    )
+    # Note that Opencart may not return timestamps in UTC
+    import_orders_after_date = fields.Datetime(
+        string='Import Orders Modified After',
+    )
+    server_offset_hours = fields.Float(
+        string='Opencart Server Timezone Offset',
+        help='E.g. US Pacific is -8.0, the important thing is to either not change this during DST or to adjust the import_orders_after_date field at the same time.',
     )
 
     so_require_product_setup = fields.Boolean(string='SO Require Product Setup',
@@ -134,14 +144,16 @@ class OpencartBackend(models.Model):
         backends = self.search([
             ('base_url', '!=', False),
             ('restadmin_token', '!=', False),
-            ('import_orders_after_id', '!=', False),
+            ('import_orders_after_date', '!=', False),
             ('scheduler_order_import', '=', True),
         ])
         return backends.import_sale_orders()
 
     @api.multi
     def import_sale_orders(self):
-        self._import_after_id('opencart.sale.order', 'import_orders_after_id')
+        # self._import_after_id('opencart.sale.order', 'import_orders_after_id')
+        # import_orders_after_date
+        self._import_sale_orders_after_date()
         return True
 
     @api.multi
@@ -152,3 +164,28 @@ class OpencartBackend(models.Model):
                 backend,
                 filters={'after_id': after_id}
             )
+
+    @api.multi
+    def _import_sale_orders_after_date(self):
+        for backend in self:
+            date = backend.date_to_opencart(backend.import_orders_after_date)
+            date = str(date).replace(' ', 'T')
+            self.env['opencart.sale.order'].with_delay().import_batch(
+                backend,
+                filters={'modified_from': date}
+            )
+
+    def date_to_opencart(self, date):
+        # date provided should be UTC and will be converted to Opencart's dates
+        return self._date_plus_hours(date, self.server_offset_hours or 0)
+
+    def date_to_odoo(self, date):
+        # date provided should be in Opencart's TZ, converted to UTC
+        return self._date_plus_hours(date, -(self.server_offset_hours or 0))
+
+    def _date_plus_hours(self, date, hours):
+        if not hours:
+            return date
+        if isinstance(date, str):
+            date = fields.Datetime.from_string(date)
+        return date + timedelta(hours=self.server_offset_hours)

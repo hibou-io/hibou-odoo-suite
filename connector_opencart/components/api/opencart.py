@@ -4,6 +4,7 @@
 import requests
 from urllib.parse import urlencode
 from json import loads, dumps
+from json.decoder import JSONDecodeError
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -52,7 +53,10 @@ class Opencart:
         elif method == 'PUT' or method == 'POST':
             result_text = self.session.put(url, data=body, headers=headers).text
         _logger.debug('raw_text: ' + str(result_text))
-        return loads(result_text)
+        try:
+            return loads(result_text)
+        except JSONDecodeError:
+            return {}
 
 
 class Resource:
@@ -75,10 +79,12 @@ class Orders(Resource):
 
     path = 'orders'
 
-    def all(self, id_larger_than=None):
+    def all(self, id_larger_than=None, modified_from=None):
         url = self.url
         if id_larger_than:
             url += '/id_larger_than/%s' % id_larger_than
+        if modified_from:
+            url += '/modified_from/%s' % modified_from
         return self.connection.send_request(method='GET', url=url)
 
     def get(self, id):
@@ -96,7 +102,6 @@ class Orders(Resource):
                 tracking_comment,
             ))
         return res
-
 
     def cancel(self, id):
         url = self.connection.base_url + ('order_status/%s' % id)
