@@ -26,6 +26,13 @@ class SaleOrderBatchImporter(Component):
                 'max_retries': 0,
                 'priority': 5,
             }
+        # It is very likely that we already have this order because we may have just uploaded a tracking number
+        # We want to avoid creating queue jobs for orders already imported.
+        order_binder = self.binder_for('opencart.sale.order')
+        order = order_binder.to_internal(external_id)
+        if order:
+            _logger.warning('Order (%s) already imported.' % (order.name, ))
+            return
         if store_id is not None:
             store_binder = self.binder_for('opencart.store')
             store = store_binder.to_internal(store_id).sudo()
@@ -48,6 +55,7 @@ class SaleOrderBatchImporter(Component):
             filters = {}
         external_ids = list(self.backend_adapter.search(filters))
         for ids in external_ids:
+            _logger.debug('run._import_record for %s' % (ids, ))
             self._import_record(ids[0], ids[1])
         if external_ids:
             last_id = list(sorted(external_ids, key=lambda i: i[0]))[-1][0]
