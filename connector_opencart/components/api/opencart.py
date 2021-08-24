@@ -84,8 +84,7 @@ class Orders(Resource):
         if id_larger_than:
             url += '/id_larger_than/%s' % id_larger_than
         if modified_from:
-            # TODO remove details if it gets into main route
-            url += 'details/modified_from/%s' % modified_from
+            url += '/modified_from/%s' % modified_from
         return self.connection.send_request(method='GET', url=url)
 
     def get(self, id):
