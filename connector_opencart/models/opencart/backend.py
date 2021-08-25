@@ -62,7 +62,6 @@ class OpencartBackend(models.Model):
              "order 36071 in Opencart, will be named 'OC-36071' "
              "in Odoo.",
     )
-    # payment_mode_id = fields.Many2one(comodel_name='account.payment.mode', string="Payment Mode")
     coupon_product_id = fields.Many2one(comodel_name='product.product', string='Coupon Product',
                                         help='Product to represent coupon discounts.')
 
@@ -151,8 +150,6 @@ class OpencartBackend(models.Model):
 
     @api.multi
     def import_sale_orders(self):
-        # self._import_after_id('opencart.sale.order', 'import_orders_after_id')
-        # import_orders_after_date
         self._import_sale_orders_after_date()
         return True
 
@@ -188,4 +185,4 @@ class OpencartBackend(models.Model):
             return date
         if isinstance(date, str):
             date = fields.Datetime.from_string(date)
-        return date + timedelta(hours=self.server_offset_hours)
+        return date + timedelta(hours=hours)
