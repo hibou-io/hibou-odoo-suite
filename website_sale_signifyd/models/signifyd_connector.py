@@ -12,10 +12,10 @@ class SignifydConnector(models.Model):
     _name = 'signifyd.connector'
     _description = 'Interact with Signifyd API'
 
-    name = fields.Char(string='Connector Name')
+    name = fields.Char(string='Connector Name', required=True)
     test_mode = fields.Boolean(string='Test Mode')
-    user_key = fields.Char(string='Team/Username')
-    secret_key = fields.Char(string='API Key')
+    user_key = fields.Char(string='Team/Username', required=True)
+    secret_key = fields.Char(string='API Key', required=True)
     user_key_test = fields.Char(string='TEST Team/Username')
     secret_key_test = fields.Char(string='TEST API Key')
     webhooks_registered = fields.Boolean(string='Successfully Registered Webhooks')
@@ -106,6 +106,12 @@ class SignifydConnector(models.Model):
         else:
             notification['params']['type'] = 'danger'
             notification['params']['message'] = res.content.decode('utf-8')
+            try:
+                # trying to make a better error, not be exhaustive with error handling.
+                object = json.loads(notification['params']['message'])
+                notification['params']['message'] = '\n'.join([e[0] for e in (object.get('errors') or {}).values()])
+            except:
+                pass
             self.webhooks_registered = False
             return notification
 

@@ -65,7 +65,7 @@ class SignifydCase(models.Model):
         disposition = vals.get('guarantee_disposition', False)
         for case in self.filtered(lambda c: c.order_id and original_disposition[c] != disposition):
             case.order_id.message_post(body=_('Signifyd Updated Record to %s' % disposition),
-                                       subtype='website_sale_signifyd.disposition_change')
+                                       subtype_xmlid='website_sale_signifyd.disposition_change')
         return res
 
     @api.model
