@@ -13,11 +13,11 @@
         'sale_timesheet',
     ],
     'data': [
+        'views/timesheet_views.xml',
+        'views/work_entry_views.xml',
     ],
     'demo': [
         'data/hr_timesheet_work_entry_demo.xml',
-        'views/timesheet_views.xml',
-        'views/work_entry_views.xml',
     ],
     'installable': True,
     'auto_install': True,
