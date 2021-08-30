@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="hr_timesheet_work_entry.work_input_timesheet_internal" model="hr.work.entry.type">
+        <field name="timesheet_billing_rate" eval="0.0"/>
+    </record>
+
+    <record id="work_input_timesheet_double" model="hr.work.entry.type">
+        <field name="name">Double Time</field>
+        <field name="code">TS_DOUBLE</field>
+        <field name="allow_timesheet" eval="True"/>
+        <field name="timesheet_billing_rate" eval="2.0"/>
+    </record>
+
+</odoo>
