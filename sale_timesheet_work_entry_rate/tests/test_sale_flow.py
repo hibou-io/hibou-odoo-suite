@@ -17,9 +17,11 @@ class TestSaleFlow(TestProjectBilling):
         # create a task
         task = Task.with_context(default_project_id=self.project_task_rate.id).create({
             'name': 'first task',
+            'partner_id': self.partner_customer_usd.id,
         })
         task._onchange_project()
 
+        self.assertEqual(task.billable_type, 'task_rate', "Task in project 'task rate' should be billed at task rate")
         self.assertEqual(task.sale_line_id, self.project_task_rate.sale_line_id, "Task created in a project billed on 'task rate' should be linked to a SOL of the project")
         self.assertEqual(task.partner_id, task.project_id.partner_id, "Task created in a project billed on 'employee rate' should have the same customer as the one from the project")
 
@@ -40,6 +42,8 @@ class TestSaleFlow(TestProjectBilling):
             'parent_id': task.id,
         })
 
+        self.assertEqual(subtask.billable_type, 'task_rate', "Subtask in a non billable project with a so line set is task rate billable")
+        self.assertEqual(subtask.project_id.billable_type, 'no', "The subtask project is non billable even if the subtask is")
         self.assertEqual(subtask.partner_id, subtask.parent_id.partner_id, "Subtask should have the same customer as the one from their mother")
 
         # log timesheet on subtask
@@ -52,7 +56,7 @@ class TestSaleFlow(TestProjectBilling):
         })
 
         self.assertEqual(subtask.project_id, timesheet2.project_id, "The timesheet is in the subtask project")
-        self.assertFalse(timesheet2.so_line, "The timesheet should not be linked to SOL as it's a non billable project")
+        self.assertEqual(timesheet2.so_line, subtask.sale_line_id, "The timesheet should be linked to SOL as the task even in a non billable project")
 
         # move task and subtask into task rate project
         task.write({
@@ -64,9 +68,11 @@ class TestSaleFlow(TestProjectBilling):
         })
         subtask._onchange_project()
 
+        self.assertEqual(task.billable_type, 'employee_rate', "Task moved in project 'employee rate' should be billed at employee rate")
         self.assertFalse(task.sale_line_id, "Task moved in a employee rate billable project have empty so line")
         self.assertEqual(task.partner_id, task.project_id.partner_id, "Task created in a project billed on 'employee rate' should have the same customer as the one from the project")
 
+        self.assertEqual(subtask.billable_type, 'employee_rate', "subtask moved in project 'employee rate' should be billed at employee rate")
         self.assertFalse(subtask.sale_line_id, "Subask moved in a employee rate billable project have empty so line")
         self.assertEqual(subtask.partner_id, task.project_id.partner_id, "Subask created in a project billed on 'employee rate' should have the same customer as the one from the project")
 
