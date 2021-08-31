@@ -5,11 +5,13 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='timesheet_ids']" position="attributes">
-                <attribute name="context">{'default_project_id': project_id, 'default_task_id': active_id}</attribute>
-            </xpath>
             <xpath expr="//field[@name='timesheet_ids']/tree" position="attributes">
                 <attribute name="editable"/>
+            </xpath>
+            <xpath expr="//field[@name='timesheet_ids']/form//field[@name='name']" position="attributes">
+              <attribute name="widget">text</attribute>
+              <attribute name="placeholder">Describe your activity (you can use markdown)</attribute>
+              <attribute name="colspan">4</attribute>
             </xpath>
         </field>
     </record>
