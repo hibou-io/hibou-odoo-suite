@@ -5,31 +5,13 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='timesheet_ids']" position="attributes">
-                <attribute name="context">{'default_project_id': project_id, 'default_task_id': active_id}</attribute>
-            </xpath>
             <xpath expr="//field[@name='timesheet_ids']/tree" position="attributes">
                 <attribute name="editable"/>
             </xpath>
-            <xpath expr="//field[@name='timesheet_ids']" position="inside">
-                <form>
-                    <sheet>
-                        <group>
-                            <group>
-                                <field name="company_id" invisible="1"/>
-                                <field name="project_id" invisible="1"/>
-                                <field name="task_id" invisible="1"/>
-                                <field name="user_id" invisible="1" groups="hr_timesheet.group_timesheet_manager"/>
-                                <field name="employee_id" groups="hr_timesheet.group_timesheet_manager"/>
-                            </group>
-                            <group>
-                                <field name="date"/>
-                                <field name="unit_amount" string="Time Spent" widget="float_time"/>
-                            </group>
-                        </group>
-                        <field name="name" nolabel="1" widget="text" placeholder="Describe your activity (you can use markdown)" colspan="4"/>
-                    </sheet>
-                </form>
+            <xpath expr="//field[@name='timesheet_ids']/form//field[@name='name']" position="attributes">
+              <attribute name="widget">text</attribute>
+              <attribute name="placeholder">Describe your activity (you can use markdown)</attribute>
+              <attribute name="colspan">4</attribute>
             </xpath>
         </field>
     </record>
