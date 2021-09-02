@@ -41,8 +41,13 @@ class SaleOrderLine(models.Model):
         for item in data:
             if not item['product_uom_id']:
                 continue
-            if not item['work_type_id']:
-                continue
+            work_type_rate = False
+            if item['work_type_id']:
+                work_type_rate = work_type_map.get(item['work_type_id'][0]).timesheet_billing_rate
+            if work_type_rate is False:
+                # unset field should be 1.0 by default, you CAN set it to 0.0 if you'd like.
+                work_type_rate = 1.0
+
             so_line_id = item['so_line'][0]
             so_line = lines_map[so_line_id]
             result.setdefault(so_line_id, 0.0)
@@ -52,8 +57,7 @@ class SaleOrderLine(models.Model):
             else:
                 qty = item['unit_amount']
 
-            work = work_type_map.get(item['work_type_id'][0])
-            qty *= work.timesheet_billing_rate or 0.0
+            qty *= work_type_rate
             result[so_line_id] += qty
 
         return result
