@@ -94,3 +94,19 @@ class TestSaleFlow(TestProjectBilling):
             'work_type_id': double_rate_work_entry_type.id,
         })
         self.assertEqual(task.sale_line_id.qty_delivered, 150.0)
+
+        # Ensure that a created timesheet WITHOUT a work entry type behaves
+        # the same as it would have before this module (e.g. for historic reasons)
+        timesheet2.write({
+            'work_type_id': False,
+        })
+        self.assertEqual(task.sale_line_id.qty_delivered, 150.0)
+
+        # Ensure we can bill zero even with above default.
+        zero_rate_work_entry_type = self.env.ref('sale_timesheet_work_entry_rate.work_input_timesheet_free')
+        self.assertEqual(zero_rate_work_entry_type.timesheet_billing_rate, 0.0)
+
+        timesheet2.write({
+            'work_type_id': zero_rate_work_entry_type.id,
+        })
+        self.assertEqual(task.sale_line_id.qty_delivered, 100.0)

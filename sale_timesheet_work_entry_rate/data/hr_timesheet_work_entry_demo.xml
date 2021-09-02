@@ -12,4 +12,11 @@
         <field name="timesheet_billing_rate" eval="2.0"/>
     </record>
 
+    <record id="work_input_timesheet_free" model="hr.work.entry.type">
+        <field name="name">Non-Productive Time</field>
+        <field name="code">TS_NON_PRODUCTIVE</field>
+        <field name="allow_timesheet" eval="True"/>
+        <field name="timesheet_billing_rate" eval="0.0"/>
+    </record>
+
 </odoo>
