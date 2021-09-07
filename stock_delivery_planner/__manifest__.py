@@ -14,22 +14,13 @@ Re-rate deliveries at packing time to find lowest-priced delivery method that st
 
 """,
     'depends': [
-        # 'sale_sourced_by_line',
-        # 'base_geolocalize',
-        # 'delivery',
-        # 'resource',
         'delivery_hibou',
         'sale_planner',
         'stock',
     ],
     'data': [
-        # 'security/ir.model.access.csv',
-        # 'wizard/order_planner_views.xml',
-        # 'views/sale.xml',
         'views/stock_views.xml',
         'wizard/stock_delivery_planner_views.xml',
-        # 'views/delivery.xml',
-        # 'views/product.xml',
     ],
     'auto_install': False,
     'installable': True,
