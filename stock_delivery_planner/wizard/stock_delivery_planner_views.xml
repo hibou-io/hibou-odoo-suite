@@ -7,7 +7,8 @@
         <field name="arch" type="xml">
             <form>
                 <field name="plan_option_ids">
-                    <tree decoration-success="days_different &lt; 0.0" decoration-danger="days_different &gt; 0.0">
+                    <tree decoration-success="days_different &lt; 0.0" decoration-danger="days_different &gt; 0.0"
+                          create="false" edit="false" delete="false">
                         <field name="carrier_id"/>
                         <field name="date_planned"/>
                         <field name="requested_date"/>
