@@ -3,8 +3,6 @@ from datetime import datetime
 from copy import deepcopy
 from odoo.addons.delivery_fedex.models import fedex_request
 from odoo.tools import remove_accents
-import logging
-_logger = logging.getLogger(__name__)
 
 STATECODE_REQUIRED_COUNTRIES = fedex_request.STATECODE_REQUIRED_COUNTRIES
 
