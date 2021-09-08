@@ -1,4 +1,6 @@
 from zeep.exceptions import Fault
+from datetime import datetime
+from copy import deepcopy
 from odoo.addons.delivery_fedex.models import fedex_request
 from odoo.tools import remove_accents
 import logging
@@ -143,14 +145,38 @@ class FedexRequest(fedex_request.FedexRequest):
         Payor.ResponsibleParty.AccountNumber = shipping_charges_payment_account
         self.RequestedShipment.ShippingChargesPayment.Payor = Payor
 
+    def shipment_request(self, dropoff_type, service_type, packaging_type, overall_weight_unit, saturday_delivery, ship_timestamp=None):
+        self.RequestedShipment = self.factory.RequestedShipment()
+        self.RequestedShipment.SpecialServicesRequested = self.factory.ShipmentSpecialServicesRequested()
+        self.RequestedShipment.ShipTimestamp = ship_timestamp or datetime.now()
+        self.RequestedShipment.DropoffType = dropoff_type
+        self.RequestedShipment.ServiceType = service_type
+        self.RequestedShipment.PackagingType = packaging_type
+        # Resuest estimation of duties and taxes for international shipping
+        if service_type in ['INTERNATIONAL_ECONOMY', 'INTERNATIONAL_PRIORITY']:
+            self.RequestedShipment.EdtRequestType = 'ALL'
+        else:
+            self.RequestedShipment.EdtRequestType = 'NONE'
+        self.RequestedShipment.PackageCount = 0
+        self.RequestedShipment.TotalWeight = self.factory.Weight()
+        self.RequestedShipment.TotalWeight.Units = overall_weight_unit
+        self.RequestedShipment.TotalWeight.Value = 0
+        self.listCommodities = []
+        if saturday_delivery:
+            timestamp_day = self.RequestedShipment.ShipTimestamp.strftime("%A")
+            if (service_type == 'FEDEX_2_DAY' and timestamp_day == 'Thursday') or (service_type in ['PRIORITY_OVERNIGHT', 'FIRST_OVERNIGHT', 'INTERNATIONAL_PRIORITY'] and timestamp_day == 'Friday'):
+                self.RequestedShipment.SpecialServicesRequested.SpecialServiceTypes.append('SATURDAY_DELIVERY')
+
     # Rating stuff
 
-    def rate(self, date_planned=None):
+    def rate(self, date_planned=None, multi=False):
         """
         Response will contain 'transit_days' key with number of days.
         :param date_planned: Planned Outgoing shipment. Used to have FedEx tell us how long it will take for the package to arrive.
         :return:
         """
+        if multi:
+            multi_result = []
         if date_planned:
             self.RequestedShipment.ShipTimestamp = date_planned
 
@@ -169,22 +195,43 @@ class FedexRequest(fedex_request.FedexRequest):
             if (self.response.HighestSeverity != 'ERROR' and self.response.HighestSeverity != 'FAILURE'):
                 if not getattr(self.response, "RateReplyDetails", False):
                     raise Exception("No rating found")
-                for rating in self.response.RateReplyDetails[0].RatedShipmentDetails:
-                    formatted_response['price'][rating.ShipmentRateDetail.TotalNetFedExCharge.Currency] = float(rating.ShipmentRateDetail.TotalNetFedExCharge.Amount)
-                if len(self.response.RateReplyDetails[0].RatedShipmentDetails) == 1:
-                    if 'CurrencyExchangeRate' in self.response.RateReplyDetails[0].RatedShipmentDetails[0].ShipmentRateDetail and self.response.RateReplyDetails[0].RatedShipmentDetails[0].ShipmentRateDetail['CurrencyExchangeRate']:
-                        formatted_response['price'][self.response.RateReplyDetails[0].RatedShipmentDetails[0].ShipmentRateDetail.CurrencyExchangeRate.FromCurrency] = float(self.response.RateReplyDetails[0].RatedShipmentDetails[0].ShipmentRateDetail.TotalNetFedExCharge.Amount) / float(self.response.RateReplyDetails[0].RatedShipmentDetails[0].ShipmentRateDetail.CurrencyExchangeRate.Rate)
+                if not multi:
+                    for rating in self.response.RateReplyDetails[0].RatedShipmentDetails:
+                        formatted_response['price'][rating.ShipmentRateDetail.TotalNetFedExCharge.Currency] = float(rating.ShipmentRateDetail.TotalNetFedExCharge.Amount)
+                    if len(self.response.RateReplyDetails[0].RatedShipmentDetails) == 1:
+                        if 'CurrencyExchangeRate' in self.response.RateReplyDetails[0].RatedShipmentDetails[0].ShipmentRateDetail and self.response.RateReplyDetails[0].RatedShipmentDetails[0].ShipmentRateDetail['CurrencyExchangeRate']:
+                            formatted_response['price'][self.response.RateReplyDetails[0].RatedShipmentDetails[0].ShipmentRateDetail.CurrencyExchangeRate.FromCurrency] = float(self.response.RateReplyDetails[0].RatedShipmentDetails[0].ShipmentRateDetail.TotalNetFedExCharge.Amount) / float(self.response.RateReplyDetails[0].RatedShipmentDetails[0].ShipmentRateDetail.CurrencyExchangeRate.Rate)
 
-                # Hibou Delivery Planning
-                if hasattr(self.response.RateReplyDetails[0], 'DeliveryTimestamp') and self.response.RateReplyDetails[0].DeliveryTimestamp:
-                    formatted_response['date_delivered'] = self.response.RateReplyDetails[0].DeliveryTimestamp
-                elif hasattr(self.response.RateReplyDetails[0], 'CommitDetails') and hasattr(self.response.RateReplyDetails[0].CommitDetails[0], 'CommitTimestamp'):
-                    formatted_response['date_delivered'] = self.response.RateReplyDetails[0].CommitDetails[0].CommitTimestamp
-                    formatted_response['transit_days'] = self._service_transit_days.get(self.response.RateReplyDetails[0].CommitDetails[0].ServiceType, 0)
-                elif hasattr(self.response.RateReplyDetails[0], 'CommitDetails') and hasattr(self.response.RateReplyDetails[0].CommitDetails[0], 'TransitTime'):
-                    transit_days = self.response.RateReplyDetails[0].CommitDetails[0].TransitTime
-                    transit_days = self._transit_days.get(transit_days, 0)
-                    formatted_response['transit_days'] = transit_days
+                    # Hibou Delivery Planning
+                    if hasattr(self.response.RateReplyDetails[0], 'DeliveryTimestamp') and self.response.RateReplyDetails[0].DeliveryTimestamp:
+                        formatted_response['date_delivered'] = self.response.RateReplyDetails[0].DeliveryTimestamp
+                    elif hasattr(self.response.RateReplyDetails[0], 'CommitDetails') and hasattr(self.response.RateReplyDetails[0].CommitDetails[0], 'CommitTimestamp'):
+                        formatted_response['date_delivered'] = self.response.RateReplyDetails[0].CommitDetails[0].CommitTimestamp
+                        formatted_response['transit_days'] = self._service_transit_days.get(self.response.RateReplyDetails[0].CommitDetails[0].ServiceType, 0)
+                    elif hasattr(self.response.RateReplyDetails[0], 'CommitDetails') and hasattr(self.response.RateReplyDetails[0].CommitDetails[0], 'TransitTime'):
+                        transit_days = self.response.RateReplyDetails[0].CommitDetails[0].TransitTime
+                        transit_days = self._transit_days.get(transit_days, 0)
+                        formatted_response['transit_days'] = transit_days
+                else:
+                    for rate_reply_detail in self.response.RateReplyDetails:
+                        res = deepcopy(formatted_response)
+                        res['service_code'] = rate_reply_detail.ServiceType
+                        for rating in rate_reply_detail.RatedShipmentDetails:
+                            res['price'][rating.ShipmentRateDetail.TotalNetFedExCharge.Currency] = float(rating.ShipmentRateDetail.TotalNetFedExCharge.Amount)
+                        if len(rate_reply_detail.RatedShipmentDetails) == 1:
+                            if 'CurrencyExchangeRate' in rate_reply_detail.RatedShipmentDetails[0].ShipmentRateDetail and rate_reply_detail.RatedShipmentDetails[0].ShipmentRateDetail['CurrencyExchangeRate']:
+                                res['price'][rate_reply_detail.RatedShipmentDetails[0].ShipmentRateDetail.CurrencyExchangeRate.FromCurrency] = float(rate_reply_detail.RatedShipmentDetails[0].ShipmentRateDetail.TotalNetFedExCharge.Amount) / float(rate_reply_detail.RatedShipmentDetails[0].ShipmentRateDetail.CurrencyExchangeRate.Rate)
+                        # Hibou Delivery Planning
+                        if hasattr(rate_reply_detail, 'DeliveryTimestamp') and rate_reply_detail.DeliveryTimestamp:
+                            res['date_delivered'] = rate_reply_detail.DeliveryTimestamp
+                        elif hasattr(rate_reply_detail, 'CommitDetails') and hasattr(rate_reply_detail.CommitDetails[0], 'CommitTimestamp'):
+                            res['date_delivered'] = rate_reply_detail.CommitDetails[0].CommitTimestamp
+                            res['transit_days'] = self._service_transit_days.get(rate_reply_detail.CommitDetails[0].ServiceType, 0)
+                        elif hasattr(rate_reply_detail, 'CommitDetails') and hasattr(rate_reply_detail.CommitDetails[0], 'TransitTime'):
+                            transit_days = rate_reply_detail.CommitDetails[0].TransitTime
+                            transit_days = self._transit_days.get(transit_days, 0)
+                            res['transit_days'] = transit_days
+                        multi_result.append(res)
             else:
                 errors_message = '\n'.join([("%s: %s" % (n.Code, n.Message)) for n in self.response.Notifications if (n.Severity == 'ERROR' or n.Severity == 'FAILURE')])
                 formatted_response['errors_message'] = errors_message
@@ -200,4 +247,6 @@ class FedexRequest(fedex_request.FedexRequest):
         except Exception as e:
             formatted_response['errors_message'] = e.args[0]
 
+        if multi:
+            return multi_result
         return formatted_response
