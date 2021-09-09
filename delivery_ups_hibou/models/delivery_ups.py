@@ -52,7 +52,7 @@ class ProviderUPS(models.Model):
         packages = []
         total_qty = 0
         total_weight = 0
-        for line in order.order_line.filtered(lambda line: not line.is_delivery):
+        for line in order.order_line.filtered(lambda line: not line.is_delivery and not line.display_type):
             total_qty += line.product_uom_qty
             total_weight += line.product_id.weight * line.product_qty
 
@@ -180,15 +180,17 @@ class ProviderUPS(models.Model):
                 raise UserError(check_value)
 
             package_type = picking.package_ids and picking.package_ids[0].packaging_id.shipper_package_code or self.ups_default_packaging_id.shipper_package_code
-            result = srm.send_shipping(
+            srm.send_shipping(
                 shipment_info=shipment_info, packages=packages, shipper=shipper_company, ship_from=shipper_warehouse,
-                ship_to=recipient, packaging_type=package_type, service_type=ups_service_type, label_file_type=self.ups_label_file_type, ups_carrier_account=ups_carrier_account,
-                saturday_delivery=picking.carrier_id.ups_saturday_delivery, cod_info=cod_info)
+                ship_to=recipient, packaging_type=package_type, service_type=ups_service_type, duty_payment=picking.carrier_id.ups_duty_payment,
+                label_file_type=self.ups_label_file_type, ups_carrier_account=ups_carrier_account, saturday_delivery=picking.carrier_id.ups_saturday_delivery,
+                cod_info=cod_info)
+            result = srm.process_shipment()
             if result.get('error_message'):
-                raise UserError(result['error_message'])
+                raise UserError(result['error_message'].__str__())
 
             order = picking.sale_id
-            company = order.company_id or picking.company_id or self.env.user.company_id
+            company = order.company_id or picking.company_id or self.env.company
             currency_order = picking.sale_id.currency_id
             if not currency_order:
                 currency_order = picking.company_id.currency_id
@@ -217,6 +219,8 @@ class ProviderUPS(models.Model):
                 'exact_price': price,
                 'tracking_number': carrier_tracking_ref}
             res = res + [shipping_data]
+            if self.return_label_on_delivery:
+                self.ups_get_return_label(picking)
         return res
 
     def ups_rate_shipment_multi(self, order=None, picking=None):

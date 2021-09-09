@@ -1,41 +1,41 @@
-import suds
+from zeep.exceptions import Fault
 from odoo.addons.delivery_ups.models.ups_request import UPSRequest
 import logging
 _logger = logging.getLogger(__name__)
-
-SUDS_VERSION = suds.__version__
 
 
 def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from, ship_to, packaging_type, service_type,
                                saturday_delivery, cod_info, date_planned=False, multi=False):
     client = self._set_client(self.rate_wsdl, 'Rate', 'RateRequest')
-
-    request = client.factory.create('ns0:RequestType')
+    service = self._set_service(client, 'Rate')
+    request = self.factory_ns3.RequestType()
     if multi:
         request.RequestOption = 'Shop'
     else:
         request.RequestOption = 'Rate'
 
-    classification = client.factory.create('ns2:CodeDescriptionType')
+    classification = self.factory_ns2.CodeDescriptionType()
     classification.Code = '00'  # Get rates for the shipper account
     classification.Description = 'Get rates for the shipper account'
 
-    namespace = 'ns2'
-    shipment = client.factory.create('{}:ShipmentType'.format(namespace))
+    request_type = "rating"
+    shipment = self.factory_ns2.ShipmentType()
 
     # Hibou Delivery
     if date_planned:
         if not isinstance(date_planned, str):
             date_planned = str(date_planned)
-        shipment.DeliveryTimeInformation = client.factory.create('{}:TimeInTransitRequestType'.format(namespace))
-        shipment.DeliveryTimeInformation.Pickup = client.factory.create('{}:PickupType'.format(namespace))
+        shipment.DeliveryTimeInformation = self.factory_ns2.TimeInTransitRequestType()
+        shipment.DeliveryTimeInformation.Pickup = self.factory_ns2.PickupType()
         shipment.DeliveryTimeInformation.Pickup.Date = date_planned.split(' ')[0]
     # End
 
-    for package in self.set_package_detail(client, packages, packaging_type, namespace, ship_from, ship_to, cod_info):
+    for package in self.set_package_detail(client, packages, packaging_type, ship_from, ship_to, cod_info, request_type):
         shipment.Package.append(package)
 
+    shipment.Shipper = self.factory_ns2.ShipperType()
     shipment.Shipper.Name = shipper.name or ''
+    shipment.Shipper.Address = self.factory_ns2.AddressType()
     shipment.Shipper.Address.AddressLine = [shipper.street or '', shipper.street2 or '']
     shipment.Shipper.Address.City = shipper.city or ''
     shipment.Shipper.Address.PostalCode = shipper.zip or ''
@@ -45,7 +45,9 @@ def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from
     shipment.Shipper.ShipperNumber = self.shipper_number or ''
     # shipment.Shipper.Phone.Number = shipper.phone or ''
 
+    shipment.ShipFrom = self.factory_ns2.ShipFromType()
     shipment.ShipFrom.Name = ship_from.name or ''
+    shipment.ShipFrom.Address = self.factory_ns2.AddressType()
     shipment.ShipFrom.Address.AddressLine = [ship_from.street or '', ship_from.street2 or '']
     shipment.ShipFrom.Address.City = ship_from.city or ''
     shipment.ShipFrom.Address.PostalCode = ship_from.zip or ''
@@ -54,7 +56,9 @@ def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from
         shipment.ShipFrom.Address.StateProvinceCode = ship_from.state_id.code or ''
     # shipment.ShipFrom.Phone.Number = ship_from.phone or ''
 
+    shipment.ShipTo = self.factory_ns2.ShipToType()
     shipment.ShipTo.Name = ship_to.name or ''
+    shipment.ShipTo.Address = self.factory_ns2.AddressType()
     shipment.ShipTo.Address.AddressLine = [ship_to.street or '', ship_to.street2 or '']
     shipment.ShipTo.Address.City = ship_to.city or ''
     shipment.ShipTo.Address.PostalCode = ship_to.zip or ''
@@ -63,19 +67,22 @@ def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from
         shipment.ShipTo.Address.StateProvinceCode = ship_to.state_id.code or ''
     # shipment.ShipTo.Phone.Number = ship_to.phone or ''
     if not ship_to.commercial_partner_id.is_company:
-        shipment.ShipTo.Address.ResidentialAddressIndicator = suds.null()
+        shipment.ShipTo.Address.ResidentialAddressIndicator = None
 
     if not multi:
+        shipment.Service = self.factory_ns2.CodeDescriptionType()
         shipment.Service.Code = service_type or ''
         shipment.Service.Description = 'Service Code'
         if service_type == "96":
             shipment.NumOfPieces = int(shipment_info.get('total_qty'))
 
     if saturday_delivery:
+        shipment.ShipmentServiceOptions = self.factory_ns2.ShipmentServiceOptionsType()
         shipment.ShipmentServiceOptions.SaturdayDeliveryIndicator = saturday_delivery
     else:
         shipment.ShipmentServiceOptions = ''
 
+    shipment.ShipmentRatingOptions = self.factory_ns2.ShipmentRatingOptionsType()
     shipment.ShipmentRatingOptions.NegotiatedRatesIndicator = 1
 
     try:
@@ -84,21 +91,23 @@ def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from
 
         # Check if ProcessRate is not success then return reason for that
         if response.Response.ResponseStatus.Code != "1":
-            error_message = self.get_error_message(response.Response.ResponseStatus.Code,
-                                                   response.Response.ResponseStatus.Description)
+            error_message = self.get_error_message(response.Response.ResponseStatus.Code, response.Response.ResponseStatus.Description)
             if multi:
                 return [error_message]
             return error_message
 
         if not multi:
-            result = {}
-            result['currency_code'] = response.RatedShipment[0].TotalCharges.CurrencyCode
+            rate = response.RatedShipment[0]
+            charge = rate.TotalCharges
 
             # Some users are qualified to receive negotiated rates
-            negotiated_rate = 'NegotiatedRateCharges' in response.RatedShipment[0] and response.RatedShipment[
-                0].NegotiatedRateCharges.TotalCharge.MonetaryValue or None
+            if 'NegotiatedRateCharges' in rate and rate.NegotiatedRateCharges and rate.NegotiatedRateCharges.TotalCharge.MonetaryValue:
+                charge = rate.NegotiatedRateCharges.TotalCharge
 
-            result['price'] = negotiated_rate or response.RatedShipment[0].TotalCharges.MonetaryValue
+            result = {
+                'currency_code': charge.CurrencyCode,
+                'price': charge.MonetaryValue,
+            }
 
             # Hibou Delivery
             if hasattr(response.RatedShipment[0], 'GuaranteedDelivery') and hasattr(response.RatedShipment[0].GuaranteedDelivery, 'BusinessDaysInTransit'):
@@ -106,33 +115,30 @@ def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from
             # End
         else:
             result = []
-            for rated_shipment in response.RatedShipment:
-                rate = {}
-                rate['currency_code'] = rated_shipment.TotalCharges.CurrencyCode
+            for rate in response.RatedShipment:
+                charge = rate.TotalCharges
 
                 # Some users are qualified to receive negotiated rates
-                negotiated_rate = 'NegotiatedRateCharges' in rated_shipment and response.RatedShipment[
-                    0].NegotiatedRateCharges.TotalCharge.MonetaryValue or None
+                if 'NegotiatedRateCharges' in rate and rate.NegotiatedRateCharges and rate.NegotiatedRateCharges.TotalCharge.MonetaryValue:
+                    charge = rate.NegotiatedRateCharges.TotalCharge
 
-                rate['price'] = negotiated_rate or rated_shipment.TotalCharges.MonetaryValue
+                rated_shipment = {
+                    'currency_code': charge.CurrencyCode,
+                    'price': charge.MonetaryValue,
+                }
 
                 # Hibou Delivery
-                if hasattr(rated_shipment, 'GuaranteedDelivery') and hasattr(
-                        rated_shipment.GuaranteedDelivery, 'BusinessDaysInTransit'):
-                    rate['transit_days'] = int(rated_shipment.GuaranteedDelivery.BusinessDaysInTransit)
+                if hasattr(response.RatedShipment[0], 'GuaranteedDelivery') and hasattr(
+                        response.RatedShipment[0].GuaranteedDelivery, 'BusinessDaysInTransit'):
+                    rated_shipment['transit_days'] = int(response.RatedShipment[0].GuaranteedDelivery.BusinessDaysInTransit)
                 # End
-                rate['service_code'] = rated_shipment.Service.Code
-                result.append(rate)
+                result.append(rated_shipment)
         return result
 
-    except suds.WebFault as e:
-        # childAtPath behaviour is changing at version 0.6
-        prefix = ''
-        if SUDS_VERSION >= "0.6":
-            prefix = '/Envelope/Body/Fault'
-        error_message = self.get_error_message(
-            e.document.childAtPath(prefix + '/detail/Errors/ErrorDetail/PrimaryErrorCode/Code').getText(),
-            e.document.childAtPath(prefix + '/detail/Errors/ErrorDetail/PrimaryErrorCode/Description').getText())
+    except Fault as e:
+        code = e.detail.xpath("//err:PrimaryErrorCode/err:Code", namespaces=self.ns)[0].text
+        description = e.detail.xpath("//err:PrimaryErrorCode/err:Description", namespaces=self.ns)[0].text
+        error_message = self.get_error_message(code, description)
         if multi:
             return [error_message]
         return error_message
