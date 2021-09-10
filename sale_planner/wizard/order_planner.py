@@ -250,15 +250,14 @@ class SaleOrderMakePlan(models.TransientModel):
 
     @api.model
     def create(self, values):
-        planner = super(SaleOrderMakePlan, self).create(values)
-
-        for option_vals in self.generate_order_options(planner.order_id):
+        order = self.env['sale.order'].browse(values['order_id'])
+        for option_vals in self.generate_order_options(order):
             if type(option_vals) != dict:
                 continue
-            option_vals['plan_id'] = planner.id
-            planner.planning_option_ids |= self.env['sale.order.planning.option'].create(option_vals)
-
-        return planner
+            if not values.get('planning_option_ids'):
+                values['planning_option_ids'] = []
+            values['planning_option_ids'].append((0, 0, option_vals))
+        return super(SaleOrderMakePlan, self).create(values)
 
     def _fake_order(self, order):
         return FakeSaleOrder(**{
@@ -632,6 +631,7 @@ class SaleOrderMakePlan(models.TransientModel):
     def _next_warehouse_shipping_date(self, warehouse):
         if warehouse.shipping_calendar_id:
             return warehouse.shipping_calendar_id.plan_days_end(0, fields.Datetime.now(), compute_leaves=True)
+        _logger.error('Shipping calendar not found for warehouse: %d, %s' % (warehouse.id, warehouse.name))
         return False
 
     @api.model
