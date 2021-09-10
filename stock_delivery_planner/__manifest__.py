@@ -1,7 +1,7 @@
 {
     'name': 'Stock Delivery Planner',
     'summary': 'Get rates and choose carrier for delivery.',
-    'version': '12.0.1.0.0',
+    'version': '13.0.1.0.0',
     'author': "Hibou Corp.",
     'category': 'Warehouse',
     'license': 'AGPL-3',
