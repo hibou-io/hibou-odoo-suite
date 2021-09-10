@@ -567,7 +567,7 @@ class DeliveryFedex(models.Model):
                     sequence_number=sequence,
                     # po_number=po_number,
                     # dept_number=dept_number,
-                    ref=('%s-%d' % (order_name, sequence)),
+                    reference=('%s-%d' % (order_name, sequence)),
                     insurance=insurance_value
                 )
 
