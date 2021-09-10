@@ -1,11 +1,10 @@
-from odoo import api, fields, models, tools, _
+from odoo import fields, models, tools, _
 from odoo.exceptions import UserError
 
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    @api.multi
     def action_plan_delivery(self):
         context = dict(self.env.context or {})
         planner_model = self.env['stock.delivery.planner']

@@ -61,7 +61,6 @@ class StockDeliveryOption(models.TransientModel):
     sale_requested_date = fields.Datetime('Sale Order Delivery Date', related='plan_id.picking_id.sale_id.requested_date')
     days_different = fields.Float('Days Different', compute='_compute_days_different')  # use carrier calendar
 
-    @api.multi
     def select_plan(self):
         for option in self.filtered('carrier_id'):
             option.plan_id.picking_id.carrier_id = option.carrier_id
