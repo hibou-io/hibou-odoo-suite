@@ -1,4 +1,5 @@
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
+from odoo.tools import safe_eval
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -16,7 +17,7 @@ class StockDeliveryPlanner(models.TransientModel):
         base_carriers = self.env['delivery.carrier']
         carrier_domain = self.env['ir.config_parameter'].sudo().get_param('stock.delivery.planner.carrier_domain')
         if carrier_domain:
-            base_carriers = base_carriers.search(tools.safe_eval(carrier_domain))
+            base_carriers = base_carriers.search(safe_eval.safe_eval(carrier_domain))
 
         for carrier in base_carriers:
             rates = carrier.rate_shipment_multi(picking=planner.picking_id)
