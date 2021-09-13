@@ -1,4 +1,5 @@
 import logging
+import pytz
 from odoo import fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.delivery_fedex.models.delivery_fedex import _convert_curr_iso_fdx
@@ -200,11 +201,15 @@ class DeliveryFedex(models.Model):
                     'error_message': _('Error:\n%s') % request['errors_message'],
                     'warning_message': False}
 
+        date_delivered = request.get('date_delivered', False)
+        if date_delivered:
+            tz = pytz.timezone(self.delivery_calendar_id.tz)
+            date_delivered = tz.localize(date_delivered).astimezone(pytz.utc).replace(tzinfo=None)
         return {'success': True,
                 'price': price,
                 'error_message': False,
                 'transit_days': request.get('transit_days', False),
-                'date_delivered': request.get('date_delivered', False),
+                'date_delivered': date_delivered,
                 'warning_message': _('Warning:\n%s') % warnings if warnings else False}
 
     """
@@ -633,12 +638,16 @@ class DeliveryFedex(models.Model):
             service_code = request['service_code']
             carrier = self.fedex_find_delivery_carrier_for_service(service_code)
             if carrier:
+                date_delivered = request.get('date_delivered', False)
+                if date_delivered:
+                    tz = pytz.timezone(self.delivery_calendar_id.tz)
+                    date_delivered = tz.localize(date_delivered).astimezone(pytz.utc).replace(tzinfo=None)
                 result.append({'carrier': carrier,
                                'success': True,
                                'price': price,
                                'error_message': False,
                                'transit_days': request.get('transit_days', False),
-                               'date_delivered': request.get('date_delivered', False),
+                               'date_delivered': date_delivered,
                                'date_planned': date_planned,
                                'warning_message': _('Warning:\n%s') % warnings if warnings else False,
                                'service_code': request['service_code'],
