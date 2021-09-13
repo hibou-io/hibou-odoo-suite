@@ -131,7 +131,7 @@ class DeliveryFedex(models.Model):
                     package_code=pkg.shipper_package_code,
                     package_height=pkg.height,
                     package_width=pkg.width,
-                    package_length=pkg.length,
+                    package_length=pkg.packaging_length,
                     sequence_number=sequence,
                     mode='rating',
                 )
@@ -142,7 +142,7 @@ class DeliveryFedex(models.Model):
                     package_code=pkg.shipper_package_code,
                     package_height=pkg.height,
                     package_width=pkg.width,
-                    package_length=pkg.length,
+                    package_length=pkg.packaging_length,
                     sequence_number=total_package,
                     mode='rating',
                 )
@@ -153,7 +153,7 @@ class DeliveryFedex(models.Model):
                 package_code=pkg.shipper_package_code,
                 package_height=pkg.height,
                 package_width=pkg.width,
-                package_length=pkg.length,
+                package_length=pkg.packaging_length,
                 mode='rating',
             )
             srm.set_master_package(weight_value, 1)
@@ -319,7 +319,7 @@ class DeliveryFedex(models.Model):
                         package_code=packaging.shipper_package_code,
                         package_height=packaging.height,
                         package_width=packaging.width,
-                        package_length=packaging.length,
+                        package_length=packaging.packaging_length,
                         sequence_number=sequence,
                         po_number=po_number,
                         dept_number=dept_number,
@@ -400,7 +400,7 @@ class DeliveryFedex(models.Model):
                     package_code=packaging.shipper_package_code,
                     package_height=packaging.height,
                     package_width=packaging.width,
-                    package_length=packaging.length,
+                    package_length=packaging.packaging_length,
                     po_number=po_number,
                     dept_number=dept_number,
                     # reference=picking.display_name,
@@ -531,7 +531,7 @@ class DeliveryFedex(models.Model):
                     package_code=pkg.shipper_package_code,
                     package_height=pkg.height,
                     package_width=pkg.width,
-                    package_length=pkg.length,
+                    package_length=pkg.packaging_length,
                     sequence_number=sequence,
                     mode='rating',
                 )
@@ -542,7 +542,7 @@ class DeliveryFedex(models.Model):
                     package_code=pkg.shipper_package_code,
                     package_height=pkg.height,
                     package_width=pkg.width,
-                    package_length=pkg.length,
+                    package_length=pkg.packaging_length,
                     sequence_number=total_package,
                     mode='rating',
                 )
@@ -553,7 +553,7 @@ class DeliveryFedex(models.Model):
                 package_code=pkg.shipper_package_code,
                 package_height=pkg.height,
                 package_width=pkg.width,
-                package_length=pkg.length,
+                package_length=pkg.packaging_length,
                 mode='rating',
             )
             srm.set_master_package(weight_value, 1)
@@ -568,7 +568,7 @@ class DeliveryFedex(models.Model):
                     package_code=packaging.shipper_package_code,
                     package_height=packaging.height,
                     package_width=packaging.width,
-                    package_length=packaging.length,
+                    package_length=packaging.packaging_length,
                     sequence_number=sequence,
                     # po_number=po_number,
                     # dept_number=dept_number,
