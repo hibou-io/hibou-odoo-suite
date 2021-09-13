@@ -157,3 +157,45 @@ class DeliveryCarrier(models.Model):
 
     def _get_recipient_out(self, picking):
         return picking.partner_id
+
+    # -------------------------- #
+    # API for external providers #
+    # -------------------------- #
+    def rate_shipment_multi(self, order=None, picking=None):
+        ''' Compute the price of the order shipment
+
+        :param order: record of sale.order or None
+        :param picking: record of stock.picking or None
+        :return list: dict: {
+                       'carrier': delivery.carrier(),
+                       'success': boolean,
+                       'price': a float,
+                       'error_message': a string containing an error message,
+                       'warning_message': a string containing a warning message,
+                       'date_planned': a datetime for when the shipment is supposed to leave,
+                       'date_delivered': a datetime for when the shipment is supposed to arrive,
+                       'transit_days': a Float for how many days it takes in transit,
+                       'service_code': a string that represents the service level/agreement,
+                       }
+
+        e.g. self == delivery.carrier(5, 6)
+        then return might be:
+        [
+            {'carrier': delivery.carrier(5), 'price': 10.50, 'service_code': 'GROUND_HOME_DELIVERY', ...},
+            {'carrier': delivery.carrier(7), 'price': 12.99, 'service_code': 'FEDEX_EXPRESS_SAVER', ...},  # NEW!
+            {'carrier': delivery.carrier(6), 'price': 8.0, 'service_code': 'USPS_PRI', ...},
+        ]
+        '''
+        self.ensure_one()
+
+        if picking:
+            self = self.with_context(date_planned=fields.Datetime.now())
+        else:
+            self = self.with_context(date_planned=(order.date_planned or fields.Datetime.now()))
+
+        res = []
+        for carrier in self:
+            if hasattr(carrier, '%s_rate_shipment_multi' % self.delivery_type):
+                carrier_rates = getattr(carrier, '%s_rate_shipment_multi' % carrier.delivery_type)(order=order, picking=picking)
+                res += carrier_rates
+        return res
