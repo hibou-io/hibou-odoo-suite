@@ -4,43 +4,44 @@ from odoo.tests.common import Form, TransactionCase
 
 class TestStockDeliveryPlanner(TransactionCase):
     def setUp(self):
+        """
+        NOTE: demo Fedex credentials may not work. Test credentials may not return all service types.
+        Configuring production credentials may be necessary for this test to run.
+        """
         super(TestStockDeliveryPlanner, self).setUp()
         try:
-            self.fedex_delivery = self.browse_ref('delivery_fedex.delivery_carrier_fedex_us')
+            self.fedex_ground = self.browse_ref('delivery_fedex.delivery_carrier_fedex_us')
         except ValueError:
             self.skipTest('FedEx Shipping Connector demo data is required to run this test.')
         self.env['ir.config_parameter'].sudo().set_param('sale.order.planner.carrier_domain',
-                                                         "[('id', 'in', (%d,))]" % self.fedex_delivery.id)
+                                                         "[('id', 'in', (%d,))]" % self.fedex_ground.id)
         self.env['ir.config_parameter'].sudo().set_param('stock.delivery.planner.carrier_domain',
-                                                         "[('id', 'in', (%d,))]" % self.fedex_delivery.id)
+                                                         "[('id', 'in', (%d,))]" % self.fedex_ground.id)
         # Does it make sense to set default package in fedex_rate_shipment_multi
         # instead of relying on a correctly configured delivery method?
         self.fedex_package = self.browse_ref('delivery_fedex.fedex_packaging_FEDEX_25KG_BOX')
         self.default_package = self.browse_ref('delivery_fedex.fedex_packaging_YOUR_PACKAGING')
-        self.fedex_delivery.fedex_default_packaging_id = self.default_package
-        # PRIORITY_OVERNIGHT might not be available depending on time of day?
-        self.fedex_delivery.fedex_service_type = 'GROUND_HOME_DELIVERY'
-        self.fedex_delivery_express = self.fedex_delivery.fedex_find_delivery_carrier_for_service('FEDEX_EXPRESS_SAVER')
-        if self.fedex_delivery_express:
-            self.fedex_delivery_express.fedex_default_packaging_id = self.default_package
-        else:
-            self.fedex_delivery_express = self.fedex_delivery.copy()
-            self.fedex_delivery_express.name = 'Test FedEx Delivery'
-            self.fedex_delivery_express.fedex_service_type = 'FEDEX_EXPRESS_SAVER'
+        self.fedex_ground.fedex_default_packaging_id = self.default_package
+        self.fedex_ground.fedex_service_type = 'FEDEX_GROUND'
+        
+        self.fedex_2_day = self.fedex_ground.copy()
+        self.fedex_2_day.name = 'Test FedEx Delivery'
+        self.fedex_2_day.fedex_service_type = 'FEDEX_2_DAY'
 
         delivery_calendar = self.env['resource.calendar'].create({
             'name': 'Test Delivery Calendar',
             'tz': 'US/Central',
             'attendance_ids': [
-                (0, 0, {'name': 'Monday', 'dayofweek': '0', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Tuesday', 'dayofweek': '1', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Wednesday', 'dayofweek': '2', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Thursday', 'dayofweek': '3', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
-                (0, 0, {'name': 'Friday', 'dayofweek': '4', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday', 'dayofweek': '0', 'hour_from': 0, 'hour_to': 23.99, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday', 'dayofweek': '1', 'hour_from': 0, 'hour_to': 23.99, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday', 'dayofweek': '2', 'hour_from': 0, 'hour_to': 23.99, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday', 'dayofweek': '3', 'hour_from': 0, 'hour_to': 23.99, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday', 'dayofweek': '4', 'hour_from': 0, 'hour_to': 23.99, 'day_period': 'morning'}),
             ],
         })
-        self.fedex_delivery.delivery_calendar_id = delivery_calendar
-        self.fedex_delivery_express.delivery_calendar_id = delivery_calendar
+        self.fedex_ground.delivery_calendar_id = delivery_calendar
+        self.fedex_2_day.delivery_calendar_id = delivery_calendar
+        self.env['stock.warehouse'].search([]).write({'shipping_calendar_id': delivery_calendar.id})
 
         # needs a valid address for sender and recipient
         self.country_usa = self.env['res.country'].search([('name', '=', 'United States')], limit=1)
@@ -60,6 +61,7 @@ class TestStockDeliveryPlanner(TransactionCase):
             'state_id': self.state_wa.id,
             'zip': '98270',
             'country_id': self.country_usa.id,
+            'is_company': True,
             # 'partner_latitude': 48.05636,
             # 'partner_longitude': -122.14922,
             'customer': True,
@@ -90,7 +92,7 @@ class TestStockDeliveryPlanner(TransactionCase):
 
         order_plan_action = self.sale_order.action_planorder()
         order_plan = self.env[order_plan_action['res_model']].browse(order_plan_action['res_id'])
-        order_plan.planning_option_ids.filtered(lambda o: o.carrier_id == self.fedex_delivery).select_plan()
+        order_plan.planning_option_ids.filtered(lambda o: o.carrier_id == self.fedex_ground).select_plan()
 
         self.sale_order.action_confirm()
         self.picking = self.sale_order.picking_ids
@@ -102,7 +104,7 @@ class TestStockDeliveryPlanner(TransactionCase):
         grp_pack = self.env.ref('stock.group_tracking_lot')
         self.env.user.write({'groups_id': [(4, grp_pack.id)]})
 
-        self.assertEqual(self.picking.carrier_id, self.fedex_delivery, 'Carrier did not carry over to Delivery Order')
+        self.assertEqual(self.picking.carrier_id, self.fedex_ground, 'Carrier did not carry over to Delivery Order')
         self.assertEqual(self.picking.weight, 5.0)
         self.assertEqual(self.picking.shipping_weight, 0.0)
 
@@ -120,14 +122,16 @@ class TestStockDeliveryPlanner(TransactionCase):
         self.assertEqual(planner.picking_id, self.picking)
         self.assertGreater(len(planner.plan_option_ids), 1)
 
-        plan_option = planner.plan_option_ids.filtered(lambda o: o.carrier_id == self.fedex_delivery_express)
+        plan_option = planner.plan_option_ids.filtered(lambda o: o.carrier_id == self.fedex_2_day)
         self.assertEqual(len(plan_option), 1)
         self.assertGreater(plan_option.price, 0.0)
         self.assertEqual(plan_option.date_planned.date(), fields.Date().today())
         self.assertTrue(plan_option.requested_date)
-        self.assertEqual(plan_option.transit_days, 3)
+        self.assertEqual(plan_option.transit_days, 2)
         self.assertEqual(plan_option.sale_requested_date, self.sale_order.requested_date)
-        self.assertEqual(plan_option.days_different, 2)
+        # Order Planner expects to ship tomorrow: we are shipping a day early and using
+        # 2-day shipping instead of 3, giving us 2 days difference
+        self.assertEqual(plan_option.days_different, -2.0)
 
         plan_option.select_plan()
-        self.assertEqual(self.picking.carrier_id, self.fedex_delivery_express)
+        self.assertEqual(self.picking.carrier_id, self.fedex_2_day)
