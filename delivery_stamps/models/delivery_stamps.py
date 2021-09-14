@@ -1,3 +1,4 @@
+import hashlib
 from datetime import date
 from logging import getLogger
 from urllib.request import urlopen
@@ -31,7 +32,13 @@ STAMPS_PACKAGE_TYPES = [
     'Regional Rate Box C',
 ]
 
+STAMPS_CONTENT_TYPES = {
+    'Letter': 'Document',
+    'Postcard': 'Document',
+}
+
 STAMPS_INTEGRATION_ID = 'f62cb4f0-aa07-4701-a1dd-f0e7c853ed3c'
+
 
 class ProductPackaging(models.Model):
     _inherit = 'product.packaging'
@@ -49,7 +56,10 @@ class ProviderStamps(models.Model):
     stamps_password = fields.Char(string='Stamps.com Password', groups='base.group_system')
 
     stamps_service_type = fields.Selection([('US-FC', 'First-Class'),
+                                            ('US-FCI', 'First-Class International'),
                                             ('US-PM', 'Priority'),
+                                            ('US-PMI', 'Priority Mail International'),
+                                            ('US-EMI', ' Priority Mail Express International'),
                                             ],
                                            required=True, string="Service Type", default="US-PM")
     stamps_default_packaging_id = fields.Many2one('product.packaging', string='Default Package Type')
@@ -67,11 +77,20 @@ class ProviderStamps(models.Model):
                                           ('BZpl', 'BZPL'),
                                           ],
                                          required=True, string="Image Type", default="Pdf")
+    stamps_addon_sc = fields.Boolean(string='Add Signature Confirmation')
+    stamps_addon_dc = fields.Boolean(string='Add Delivery Confirmation')
+    stamps_addon_hp = fields.Boolean(string='Add Hidden Postage')
 
     def _stamps_package_type(self, package=None):
         if not package:
             return self.stamps_default_packaging_id.shipper_package_code
         return package.packaging_id.shipper_package_code if package.packaging_id.shipper_package_code in STAMPS_PACKAGE_TYPES else 'Package'
+
+    def _stamps_content_type(self, package=None):
+        package_type = self._stamps_package_type(package=package)
+        if package_type in STAMPS_CONTENT_TYPES:
+            return STAMPS_CONTENT_TYPES[package_type]
+        return 'Merchandise'
 
     def _stamps_package_is_cubic_pricing(self, package=None):
         if not package:
@@ -115,12 +134,13 @@ class ProviderStamps(models.Model):
 
         ret_val = service.create_shipping()
         ret_val.ShipDate = date_planned.strftime('%Y-%m-%d') if date_planned else date.today().isoformat()
-        ret_val.FromZIPCode = self.get_shipper_warehouse(order=order).zip.split('-')[0]
-        ret_val.ToZIPCode = order.partner_shipping_id.zip.split('-')[0]
+        shipper_partner = self.get_shipper_warehouse(order=order)
+        ret_val.From = self._stamps_address(service, shipper_partner)
+        ret_val.To = self._stamps_address(service, order.partner_shipping_id)
         ret_val.PackageType = self._stamps_package_type()
         ret_val.ServiceType = self.stamps_service_type
         ret_val.WeightLb = weight
-        ret_val.ContentType = 'Merchandise'
+        ret_val.ContentType = self._stamps_content_type()
         return ret_val
 
     def _get_stamps_shipping_multi(self, service, date_planned, order=False, picking=False):
@@ -151,11 +171,36 @@ class ProviderStamps(models.Model):
         to = self.get_recipient(picking=picking)
         return company, from_, to
 
+    def _stamps_address(self, service, partner):
+        address = service.create_address()
+        if not partner.name or len(partner.name) < 2:
+            raise ValidationError('Partner (%s) name must be more than 2 characters.' % (partner, ))
+        address.FullName = partner.name
+        address.Address1 = partner.street
+        if partner.street2:
+            address.Address2 = partner.street2
+        address.City = partner.city
+        address.State = partner.state_id.code
+        if partner.country_id.code == 'US':
+            zip_pieces = partner.zip.split('-')
+            address.ZIPCode = zip_pieces[0]
+            if len(zip_pieces) >= 2:
+                address.ZIPCodeAddOn = zip_pieces[1]
+        else:
+            address.PostalCode = partner.zip or ''
+        address.Country = partner.country_id.code
+        res = service.get_address(address).Address
+        return res
+
+    def _stamps_hash_partner(self, partner):
+        to_hash = ''.join(f[1] if isinstance(f, tuple) else str(f) for f in partner.read(['name', 'street', 'street2', 'city', 'country_id', 'state_id', 'zip', 'phone', 'email'])[0].values())
+        return hashlib.sha1(to_hash.encode()).hexdigest()
+
     def _stamps_get_shippings_for_picking(self, service, picking):
         ret = []
         company, from_partner, to_partner = self._stamps_get_addresses_for_picking(picking)
         if not all((from_partner.zip, to_partner.zip)):
-            raise ValidationError('Stamps needs ZIP. From: ' + str(from_partner.zip) + ' To: ' + str(to_partner.zip))
+            raise ValidationError('Stamps needs ZIP/PostalCode. From: ' + str(from_partner.zip) + ' To: ' + str(to_partner.zip))
 
         for package in picking.package_ids:
             weight = self._stamps_convert_weight(package.shipping_weight)
@@ -163,8 +208,8 @@ class ProviderStamps(models.Model):
 
             ret_val = service.create_shipping()
             ret_val.ShipDate = date.today().isoformat()
-            ret_val.FromZIPCode = from_partner.zip.split('-')[0]
-            ret_val.ToZIPCode = to_partner.zip.split('-')[0]
+            ret_val.From = self._stamps_address(service, from_partner)
+            ret_val.To = self._stamps_address(service, to_partner)
             ret_val.PackageType = self._stamps_package_type(package=package)
             ret_val.CubicPricing = self._stamps_package_is_cubic_pricing(package=package)
             ret_val.Length = l
@@ -172,16 +217,16 @@ class ProviderStamps(models.Model):
             ret_val.Height = h
             ret_val.ServiceType = self.stamps_service_type
             ret_val.WeightLb = weight
-            ret_val.ContentType = 'Merchandise'
-            ret.append((package.name + ret_val.ShipDate + str(ret_val.WeightLb), ret_val))
+            ret_val.ContentType = self._stamps_content_type(package=package)
+            ret.append((package.name + ret_val.ShipDate + str(ret_val.WeightLb) + self._stamps_hash_partner(to_partner), ret_val))
         if not ret:
             weight = self._stamps_convert_weight(picking.shipping_weight)
             l, w, h = self._stamps_package_dimensions()
 
             ret_val = service.create_shipping()
             ret_val.ShipDate = date.today().isoformat()
-            ret_val.FromZIPCode = from_partner.zip.split('-')[0]
-            ret_val.ToZIPCode = to_partner.zip.split('-')[0]
+            ret_val.From = self._stamps_address(service, from_partner)
+            ret_val.To = self._stamps_address(service, to_partner)
             ret_val.PackageType = self._stamps_package_type()
             ret_val.CubicPricing = self._stamps_package_is_cubic_pricing()
             ret_val.Length = l
@@ -189,8 +234,8 @@ class ProviderStamps(models.Model):
             ret_val.Height = h
             ret_val.ServiceType = self.stamps_service_type
             ret_val.WeightLb = weight
-            ret_val.ContentType = 'Merchandise'
-            ret.append((picking.name + ret_val.ShipDate + str(ret_val.WeightLb), ret_val))
+            ret_val.ContentType = self._stamps_content_type()
+            ret.append((picking.name + ret_val.ShipDate + str(ret_val.WeightLb) + self._stamps_hash_partner(to_partner), ret_val))
 
         return ret
 
@@ -252,6 +297,9 @@ class ProviderStamps(models.Model):
             return result
         return result
 
+    def _stamps_needs_customs(self, from_partner, to_partner):
+        return from_partner.country_id.code != to_partner.country_id.code
+
     def stamps_send_shipping(self, pickings):
         res = []
         service = self._get_stamps_service()
@@ -262,31 +310,9 @@ class ProviderStamps(models.Model):
             shippings = self._stamps_get_shippings_for_picking(service, picking)
             company, from_partner, to_partner = self._stamps_get_addresses_for_picking(picking)
 
-            from_address = service.create_address()
-            from_address.FullName = company.name
-            from_address.Address1 = from_partner.street
-            if from_partner.street2:
-                from_address.Address2 = from_partner.street2
-            from_address.City = from_partner.city
-            from_address.State = from_partner.state_id.code
-            from_zip_pieces = from_partner.zip.split('-')
-            from_address.ZIPCode = from_zip_pieces[0]
-            if len(from_zip_pieces) >= 2:
-                from_address.ZIPCodeAddOn = from_zip_pieces[1]
-            from_address = service.get_address(from_address).Address
-
-            to_address = service.create_address()
-            to_address.FullName = to_partner.name
-            to_address.Address1 = to_partner.street
-            if to_partner.street2:
-                to_address.Address2 = to_partner.street2
-            to_address.City = to_partner.city
-            to_address.State = to_partner.state_id.code
-            to_zip_pieces = to_partner.zip.split('-')
-            to_address.ZIPCode = to_zip_pieces[0]
-            if len(to_zip_pieces) >= 2:
-                to_address.ZIPCodeAddOn = to_zip_pieces[1]
-            to_address = service.get_address(to_address).Address
+            customs = None
+            if self._stamps_needs_customs(from_partner, to_partner):
+                customs = service.create_customs()
 
             try:
                 for txn_id, shipping in shippings:
@@ -298,20 +324,78 @@ class ProviderStamps(models.Model):
                         shipping.DeliverDays = rate.DeliverDays
                         if hasattr(rate, 'DimWeighting'):
                             shipping.DimWeighting = rate.DimWeighting
-                        shipping.Zone = rate.Zone
                         shipping.RateCategory = rate.RateCategory
-                        shipping.ToState = rate.ToState
-                        add_on = service.create_add_on()
-                        add_on.AddOnType = 'US-A-DC'
-                        add_on2 = service.create_add_on()
-                        add_on2.AddOnType = 'SC-A-HP'
-                        shipping.AddOns.AddOnV15 = [add_on, add_on2]
+                        # shipping.ToState = rate.ToState
+                        addons = []
+                        if self.stamps_addon_sc:
+                            add_on = service.create_add_on()
+                            add_on.AddOnType = 'US-A-SC'
+                            addons.append(add_on)
+                        if self.stamps_addon_dc:
+                            add_on = service.create_add_on()
+                            add_on.AddOnType = 'US-A-DC'
+                            addons.append(add_on)
+                        if self.stamps_addon_hp:
+                            add_on = service.create_add_on()
+                            add_on.AddOnType = 'SC-A-HP'
+                            addons.append(add_on)
+                        shipping.AddOns.AddOnV17 = addons
+
                         extended_postage_info = service.create_extended_postage_info()
                         if self.is_amazon(picking=picking):
                             extended_postage_info.bridgeProfileType = 'Amazon MWS'
-                        label = service.get_label(from_address, to_address, shipping,
+
+                        if customs:
+                            customs.ContentType = shipping.ContentType
+                            if not picking.package_ids:
+                                raise ValidationError('Cannot use customs without packing items to ship first.')
+                            customs_total = 0.0
+                            product_values = {}
+                            # Note multiple packages will result in all product being on customs form.
+                            # Recommended to ship one customs international package at a time.
+                            for quant in picking.mapped('package_ids.quant_ids'):
+                                # Customs should have the price for the destination but we may not be able
+                                # to rely on the price from the SO (e.g. kit BoM)
+                                product = quant.product_id
+                                quantity = quant.quantity
+                                price = product.lst_price
+                                if to_partner.property_product_pricelist:
+                                    # Note the quantity is used for the price, but it is per unit
+                                    price = to_partner.property_product_pricelist.get_product_price(product, quantity, to_partner)
+                                if product not in product_values:
+                                    product_values[product] = {
+                                        'quantity': 0.0,
+                                        'value': 0.0,
+                                    }
+                                product_values[product]['quantity'] += quantity
+                                product_values[product]['value'] += price * quantity
+                            
+                            # Note that Stamps will not allow you to use the scale weight if it is not equal
+                            # to the sum of the customs lines.
+                            # Thus we sum the line
+                            new_total_weight = 0.0
+                            customs_lines = []
+                            for product, values in product_values.items():
+                                customs_line = service.create_customs_lines()
+                                customs_line.Description = product.name
+                                customs_line.Quantity = values['quantity']
+                                customs_total += round(values['value'], 2)
+                                customs_line.Value = round(values['value'], 2)
+                                line_weight = round(self._stamps_convert_weight(product.weight * values['quantity']), 2)
+                                customs_line.WeightLb = line_weight
+                                new_total_weight += line_weight
+                                customs_line.HSTariffNumber = product.hs_code or ''
+                                # customs_line.CountryOfOrigin =
+                                customs_line.sku = product.default_code or ''
+                                customs_lines.append(customs_line)
+                            customs.CustomsLines.CustomsLine = customs_lines
+                            shipping.DeclaredValue = round(customs_total, 2)
+                            shipping.WeightLb = round(new_total_weight, 2)
+
+                        label = service.get_label(shipping,
                                                   transaction_id=txn_id, image_type=self.stamps_image_type,
-                                                  extended_postage_info=extended_postage_info)
+                                                  extended_postage_info=extended_postage_info,
+                                                  customs=customs)
                         package_labels.append((txn_id, label))
             except WebFault as e:
                 _logger.warn(e)
@@ -335,9 +419,13 @@ class ProviderStamps(models.Model):
                     carrier_price += float(label.Rate.Amount)
                     url = label.URL
 
-                    response = urlopen(url)
-                    attachment = response.read()
-                    picking.message_post(body=body, attachments=[('LabelStamps-%s.%s' % (label.TrackingNumber, self.stamps_image_type), attachment)])
+                    url_spaces = url.split(' ')
+                    attachments = []
+                    for i, url in enumerate(url_spaces, 1):
+                        response = urlopen(url)
+                        attachment = response.read()
+                        attachments.append(('LabelStamps-%s-%s.%s' % (label.TrackingNumber, i, self.stamps_image_type), attachment))
+                    picking.message_post(body=body, attachments=attachments)
                 shipping_data = {'exact_price': carrier_price, 'tracking_number': ','.join(tracking_numbers)}
                 res = res + [shipping_data]
         return res
@@ -352,7 +440,9 @@ class ProviderStamps(models.Model):
     def stamps_cancel_shipment(self, picking):
         service = self._get_stamps_service()
         try:
-            service.remove_label(picking.carrier_tracking_ref)
+            all_tracking = picking.carrier_tracking_ref
+            for tracking in all_tracking.split(','):
+                service.remove_label(tracking.strip())
             picking.message_post(body=_(u'Shipment N° %s has been cancelled' % picking.carrier_tracking_ref))
             picking.write({'carrier_tracking_ref': '',
                            'carrier_price': 0.0})
