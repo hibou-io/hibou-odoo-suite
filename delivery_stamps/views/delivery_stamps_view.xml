@@ -32,7 +32,7 @@
         <field name="model">product.packaging</field>
         <field name="inherit_id" ref="delivery.product_packaging_delivery_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='length']" position='after'>
+            <xpath expr="//field[@name='barcode']" position='before'>
                 <field name="stamps_cubic_pricing"/>
             </xpath>
         </field>
