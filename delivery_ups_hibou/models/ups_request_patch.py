@@ -128,10 +128,10 @@ def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from
                 }
 
                 # Hibou Delivery
-                if hasattr(response.RatedShipment[0], 'GuaranteedDelivery') and hasattr(
-                        response.RatedShipment[0].GuaranteedDelivery, 'BusinessDaysInTransit'):
-                    rated_shipment['transit_days'] = int(response.RatedShipment[0].GuaranteedDelivery.BusinessDaysInTransit)
+                if hasattr(rate, 'GuaranteedDelivery') and hasattr(rate.GuaranteedDelivery, 'BusinessDaysInTransit'):
+                    rated_shipment['transit_days'] = int(rate.GuaranteedDelivery.BusinessDaysInTransit)
                 # End
+                rated_shipment['service_code'] = rate.Service.Code
                 result.append(rated_shipment)
         return result
 
