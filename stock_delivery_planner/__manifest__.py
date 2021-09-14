@@ -19,6 +19,7 @@ Re-rate deliveries at packing time to find lowest-priced delivery method that st
         'stock',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/stock_views.xml',
         'wizard/stock_delivery_planner_views.xml',
     ],
