@@ -145,12 +145,12 @@ class StampsService(BaseService):
     def create_add_on(self):
         """Create a new add-on object.
         """
-        return self.create("AddOnV15")
+        return self.create("AddOnV17")
 
     def create_customs(self):
         """Create a new customs object.
         """
-        return self.create("CustomsV3")
+        return self.create("CustomsV7")
 
     def create_array_of_customs_lines(self):
         """Create a new array of customs objects.
@@ -188,7 +188,7 @@ class StampsService(BaseService):
     def create_shipping(self):
         """Create a new shipping object.
         """
-        return self.create("RateV31")
+        return self.create("RateV40")
 
     def get_address(self, address):
         """Get a shipping address.
@@ -202,7 +202,7 @@ class StampsService(BaseService):
         """
         return self.call("GetAccountInfo")
 
-    def get_label(self, from_address, to_address, rate, transaction_id, image_type=None,
+    def get_label(self, rate, transaction_id, image_type=None,
             customs=None, sample=False, extended_postage_info=False):
         """Get a shipping label.
 
@@ -215,7 +215,7 @@ class StampsService(BaseService):
         :param sample: Default ``False``. Get a sample label without postage.
         """
         return self.call("CreateIndicium", IntegratorTxID=transaction_id,
-                Rate=rate, From=from_address, To=to_address, ImageType=image_type, Customs=customs,
+                Rate=rate, ImageType=image_type, Customs=customs,
                 SampleOnly=sample, ExtendedPostageInfo=extended_postage_info)
 
     def get_postage_status(self, transaction_id):
