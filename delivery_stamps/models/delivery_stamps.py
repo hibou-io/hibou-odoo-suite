@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 import hashlib
 from datetime import date
 from logging import getLogger
@@ -158,8 +160,8 @@ class ProviderStamps(models.Model):
 
         ret_val = service.create_shipping()
         ret_val.ShipDate = date_planned.strftime('%Y-%m-%d') if date_planned else date.today().isoformat()
-        ret_val.FromZIPCode = shipper.zip.split('-')[0]
-        ret_val.ToZIPCode = recipient.zip.split('-')[0]
+        ret_val.From = self._stamps_address(service, shipper)
+        ret_val.To = self._stamps_address(service, recipient)
         ret_val.PackageType = self._stamps_package_type()
         ret_val.WeightLb = weight
         ret_val.ContentType = 'Merchandise'
