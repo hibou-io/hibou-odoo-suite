@@ -52,7 +52,8 @@ class ProductPackaging(models.Model):
 class ProviderStamps(models.Model):
     _inherit = 'delivery.carrier'
 
-    delivery_type = fields.Selection(selection_add=[('stamps', 'Stamps.com (USPS)')])
+    delivery_type = fields.Selection(selection_add=[('stamps', 'Stamps.com (USPS)')],
+                                     ondelete={'stamps': 'set default'})
 
     stamps_username = fields.Char(string='Stamps.com Username', groups='base.group_system')
     stamps_password = fields.Char(string='Stamps.com Password', groups='base.group_system')
@@ -104,7 +105,8 @@ class ProviderStamps(models.Model):
             package_type = self.stamps_default_packaging_id
         else:
             package_type = package.packaging_id
-        return package_type.length, package_type.width, package_type.height
+        # TODO should convert to inches if it is not already
+        return package_type.packaging_length, package_type.width, package_type.height
 
     def _get_stamps_service(self):
         sudoself = self.sudo()
