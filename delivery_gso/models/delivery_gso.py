@@ -7,6 +7,8 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
 from .requests_gso import GSORequest
+import logging
+_logger = logging.getLogger(__name__)
 
 GSO_TZ = 'PST8PDT'
 
@@ -319,3 +321,88 @@ class ProviderGSO(models.Model):
         for _ in pickings:
             res.append('https://www.gso.com/Tracking')
         return res
+
+    def gso_rate_shipment_multi(self, order=None, picking=None):
+        sudoself = self.sudo()
+        service = sudoself._get_gso_service()
+        from_ = sudoself.get_shipper_warehouse(order=order, picking=picking)
+        to = sudoself.get_recipient(order=order, picking=picking)
+        address_type = 'B' if bool(to.is_company or to.parent_id.is_company) else 'R'
+
+        if order:
+            est_weight_value = self._gso_convert_weight(
+                sum([(line.product_id.weight * line.product_uom_qty) for line in order.order_line]) or 0.0)
+        else:
+            est_weight_value = self._gso_convert_weight(picking.shipping_weight)
+
+        date_planned = fields.Datetime.now()
+        if self.env.context.get('date_planned'):
+            date_planned = self.env.context.get('date_planned')
+
+        ship_date_utc = fields.Datetime.from_string(date_planned if date_planned else fields.Datetime.now())
+        ship_date_utc = ship_date_utc.replace(tzinfo=pytz.utc)
+        ship_date_gso = ship_date_utc.astimezone(pytz.timezone(GSO_TZ))
+        ship_date_gso = fields.Datetime.to_string(ship_date_gso)
+
+        if picking and picking.package_ids:
+            package_dimensions = self._gso_get_package_dimensions(package=picking.package_ids[0])
+        else:
+            package_dimensions = self._gso_get_package_dimensions()
+
+        request_body = {
+            'AccountNumber': sudoself.gso_account_number,
+            'OriginZip': from_.zip,
+            'DestinationZip': to.zip,
+            'ShipDate': ship_date_gso,
+            'PackageDimension': package_dimensions,
+            'PackageWeight': est_weight_value,
+            'DeliveryAddressType': address_type,
+        }
+
+        try:
+            result = service.get_rates_and_transit_time(request_body)
+            # _logger.warn('GSO result:\n%s' % result)
+        except HTTPError as e:
+            _logger.error(e)
+            return [{
+                'success': False,
+                'price': 0.0,
+                'error_message': _('GSO web service returned an error.'),
+                'warning_message': False,
+            }]
+
+        # delivery = list(filter(lambda d: d['ServiceCode'] == sudoself.gso_service_type, result['DeliveryServiceTypes']))
+        # if delivery:
+        rates = []
+        for delivery in result['DeliveryServiceTypes']:
+            delivery_date_gso = delivery['DeliveryDate'].replace('T', ' ')
+            delivery_date_gso = fields.Datetime.from_string(delivery_date_gso)
+            delivery_date_gso = delivery_date_gso.replace(tzinfo=pytz.timezone(GSO_TZ))
+            delivery_date_utc = delivery_date_gso.astimezone(pytz.utc)
+            delivery_date_utc = fields.Datetime.to_string(delivery_date_utc)
+            price = delivery.get('ShipmentCharges', {}).get('TotalCharge', 0.0)
+
+            carrier = self.gso_find_delivery_carrier_for_service(delivery['ServiceCode'])
+            if carrier:
+                rates.append({
+                    'carrier': carrier,
+                    'success': True,
+                    'price': price,
+                    'error_message': False,
+                    'warning_message': _('TotalCharge not found.') if price == 0.0 else False,
+                    'date_planned': date_planned,
+                    'date_delivered': delivery_date_utc,
+                    'transit_days': False,
+                    'service_code': delivery['ServiceCode'],
+                })
+
+        return rates
+
+    def gso_find_delivery_carrier_for_service(self, service_code):
+        if self.gso_service_type == service_code:
+            return self
+        # arbitrary decision, lets find the same account number
+        carrier = self.search([('gso_account_number', '=', self.gso_account_number),
+                               ('gso_service_type', '=', service_code)
+                               ], limit=1)
+        return carrier
