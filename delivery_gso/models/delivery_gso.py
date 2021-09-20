@@ -1,5 +1,6 @@
 import pytz
 from math import ceil
+from base64 import b64decode
 from requests import HTTPError
 from hashlib import sha1
 
@@ -11,6 +12,13 @@ import logging
 _logger = logging.getLogger(__name__)
 
 GSO_TZ = 'PST8PDT'
+
+
+def inline_b64decode(data):
+    try:
+        return b64decode(data)
+    except:
+        return ''
 
 
 class ProductPackaging(models.Model):
@@ -228,7 +236,7 @@ class ProviderGSO(models.Model):
                     raise ValidationError(e)
 
             # Handle results
-            trackings = [l[0] for l in labels['thermal']] + [l(0) for l in labels['paper']]
+            trackings = [l[0] for l in labels['thermal']] + [l[0] for l in labels['paper']]
             carrier_tracking_ref = ','.join(trackings)
 
             logmessage = _("Shipment created into GSO<br/>"
@@ -237,7 +245,8 @@ class ProviderGSO(models.Model):
             if labels['thermal']:
                 attachments += [('LabelGSO-%s.zpl' % (l[0], ), l[1]) for l in labels['thermal']]
             if labels['paper']:
-                attachments += [('LabelGSO-%s.pdf' % (l[0], ), l[1]) for l in labels['thermal']]
+                # paper labels re-encoded base64
+                attachments += [('LabelGSO-%s.png' % (l[0], ), inline_b64decode(l[1])) for l in labels['paper']]
             picking.message_post(body=logmessage, attachments=attachments)
             shipping_data = {'exact_price': cost,
                              'tracking_number': carrier_tracking_ref}
