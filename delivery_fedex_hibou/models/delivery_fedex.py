@@ -558,9 +558,28 @@ class DeliveryFedex(models.Model):
             )
             srm.set_master_package(weight_value, 1)
         else:
-            for sequence, package in enumerate(picking.package_ids, start=1):
-                package_weight = self._fedex_convert_weight(package.shipping_weight, self.fedex_weight_unit)
-                packaging = package.packaging_id
+            if picking.package_ids:
+                for sequence, package in enumerate(picking.package_ids, start=1):
+                    package_weight = self._fedex_convert_weight(package.shipping_weight, self.fedex_weight_unit)
+                    packaging = package.packaging_id
+
+                    srm.add_package(
+                        package_weight,
+                        mode='rating',
+                        package_code=packaging.shipper_package_code,
+                        package_height=packaging.height,
+                        package_width=packaging.width,
+                        package_length=packaging.packaging_length,
+                        sequence_number=sequence,
+                        # po_number=po_number,
+                        # dept_number=dept_number,
+                        reference=('%s-%d' % (order_name, sequence)),
+                        insurance=insurance_value
+                    )
+            else:
+                # deliver all together...
+                package_weight = self._fedex_convert_weight(picking.shipping_weight or picking.weight, self.fedex_weight_unit)
+                packaging = self.fedex_default_packaging_id
 
                 srm.add_package(
                     package_weight,
@@ -569,10 +588,10 @@ class DeliveryFedex(models.Model):
                     package_height=packaging.height,
                     package_width=packaging.width,
                     package_length=packaging.packaging_length,
-                    sequence_number=sequence,
+                    sequence_number=1,
                     # po_number=po_number,
                     # dept_number=dept_number,
-                    reference=('%s-%d' % (order_name, sequence)),
+                    reference=('%s-%d' % (order_name, 1)),
                     insurance=insurance_value
                 )
 
