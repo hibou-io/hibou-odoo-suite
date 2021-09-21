@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <button name="action_plan_delivery" type="object" string="Plan Shipment" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+                <button name="action_plan_delivery" type="object" string="Plan Shipment" class="oe_highlight" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
             </xpath>
         </field>
     </record>
