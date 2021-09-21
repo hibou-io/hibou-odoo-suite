@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from zeep.exceptions import Fault
 from odoo.addons.delivery_ups.models.ups_request import UPSRequest
 import logging
