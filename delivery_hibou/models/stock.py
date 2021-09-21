@@ -17,11 +17,11 @@ class StockQuantPackage(models.Model):
 
     def send_to_shipper(self):
         picking = self._get_active_picking()
-        picking.send_to_shipper(packages=self)
+        picking.with_context(packages=self).send_to_shipper()
 
     def cancel_shipment(self):
         picking = self._get_active_picking()
-        picking.cancel_shipment(packages=self)
+        picking.with_context(packages=self).cancel_shipment()
 
 
 class StockPicking(models.Model):
@@ -83,7 +83,8 @@ class StockPicking(models.Model):
             picking.carrier_tracking_ref = picking.package_carrier_tracking_ref
 
     # Override to send to specific packaging carriers
-    def send_to_shipper(self, packages=None):
+    def send_to_shipper(self):
+        packages = self._context.get('packages')
         self.ensure_one()
         if not packages:
             packages = self.package_ids
@@ -130,7 +131,8 @@ class StockPicking(models.Model):
         self._add_delivery_cost_to_so()
 
     # Override to provide per-package versions...
-    def cancel_shipment(self, packages=None):
+    def cancel_shipment(self):
+        packages = self._context.get('packages')
         pickings_with_package_tracking = self.filtered(lambda p: p.package_carrier_tracking_ref)
         for picking in pickings_with_package_tracking:
             if packages:
