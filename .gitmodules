@@ -20,3 +20,6 @@
 	path = external/hibou-oca/queue
 	url = https://github.com/hibou-io/oca-queue.git
 	branch = 14.0
+[submodule "external/hiboubox"]
+	path = external/hiboubox
+	url = https://gitlab.com/hibou-io/hibou-odoo/hiboubox.git
