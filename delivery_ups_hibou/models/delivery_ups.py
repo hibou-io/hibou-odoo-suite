@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.delivery_ups.models.ups_request import UPSRequest, Package
@@ -223,7 +225,17 @@ class ProviderUPS(models.Model):
                 self.ups_get_return_label(picking)
         return res
 
-    def ups_rate_shipment_multi(self, order=None, picking=None):
+    def ups_rate_shipment_multi(self, order=None, picking=None, packages=None):
+        if not packages:
+            return self._ups_rate_shipment_multi_package(order=order, picking=picking)
+        else:
+            rates = []
+            for package in packages:
+                rates += self._ups_rate_shipment_multi_package(order=order, picking=picking, package=package)
+            return rates
+
+    def _ups_rate_shipment_multi_package(self, order=None, picking=None, package=None):
+        # TODO package here is ignored, it should not be (UPS is not multi-rating capable until we can get rates for a single package)
         superself = self.sudo()
         srm = UPSRequest(self.log_xml, superself.ups_username, superself.ups_passwd, superself.ups_shipper_number, superself.ups_access_number, self.prod_environment)
         ResCurrency = self.env['res.currency']
