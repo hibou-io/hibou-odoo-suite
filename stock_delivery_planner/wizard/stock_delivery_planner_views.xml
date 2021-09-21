@@ -13,6 +13,7 @@
                               decoration-danger="days_different &gt; 0.0 and not selection"
                               decoration-info="selection == 'selected'"
                               decoration-muted="selection == 'deselected'"
+                              default_order="package_id, price"
                               create="false" edit="false" delete="false">
                             <field name="package_id"/>
                             <field name="carrier_id"/>
