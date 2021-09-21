@@ -147,11 +147,13 @@ class ProviderStamps(models.Model):
         ret_val.ContentType = self._stamps_content_type()
         return ret_val
 
-    def _get_stamps_shipping_multi(self, service, date_planned, order=False, picking=False):
+    def _get_stamps_shipping_multi(self, service, date_planned, order=False, picking=False, package=False):
         if order:
             weight = sum([(line.product_id.weight * line.product_qty) for line in order.order_line]) or 0.0
-        else:
+        elif not package:
             weight = picking.shipping_weight
+        else:
+            weight = package.shipping_weight or package.weight
         weight = self._stamps_convert_weight(weight)
 
         shipper = self.get_shipper_warehouse(order=order, picking=picking)
@@ -164,7 +166,7 @@ class ProviderStamps(models.Model):
         ret_val.ShipDate = date_planned.strftime('%Y-%m-%d') if date_planned else date.today().isoformat()
         ret_val.From = self._stamps_address(service, shipper)
         ret_val.To = self._stamps_address(service, recipient)
-        ret_val.PackageType = self._stamps_package_type()
+        ret_val.PackageType = self._stamps_package_type(package=package)
         ret_val.WeightLb = weight
         ret_val.ContentType = 'Merchandise'
         return ret_val
@@ -206,7 +208,13 @@ class ProviderStamps(models.Model):
         if not all((from_partner.zip, to_partner.zip)):
             raise ValidationError('Stamps needs ZIP/PostalCode. From: ' + str(from_partner.zip) + ' To: ' + str(to_partner.zip))
 
-        for package in picking.package_ids:
+        picking_packages = picking.package_ids
+        package_carriers = picking_packages.mapped('carrier_id')
+        if package_carriers:
+            # only ship ours
+            picking_packages = picking_packages.filtered(lambda p: p.carrier_id == self and not p.carrier_tracking_ref)
+
+        for package in picking_packages:
             weight = self._stamps_convert_weight(package.shipping_weight)
             l, w, h = self._stamps_package_dimensions(package=package)
 
@@ -223,7 +231,7 @@ class ProviderStamps(models.Model):
             ret_val.WeightLb = weight
             ret_val.ContentType = self._stamps_content_type(package=package)
             ret.append((package.name + ret_val.ShipDate + str(ret_val.WeightLb) + self._stamps_hash_partner(to_partner), ret_val))
-        if not ret:
+        if not ret and not package_carriers:
             weight = self._stamps_convert_weight(picking.shipping_weight)
             l, w, h = self._stamps_package_dimensions()
 
@@ -312,6 +320,8 @@ class ProviderStamps(models.Model):
             package_labels = []
 
             shippings = self._stamps_get_shippings_for_picking(service, picking)
+            if not shippings:
+                continue
             company, from_partner, to_partner = self._stamps_get_addresses_for_picking(picking)
 
             customs = None
@@ -453,14 +463,23 @@ class ProviderStamps(models.Model):
         except WebFault as e:
             raise ValidationError(e)
 
-    def stamps_rate_shipment_multi(self, order=None, picking=None):
+    def stamps_rate_shipment_multi(self, order=None, picking=None, packages=None):
+        if not packages:
+            return self._stamps_rate_shipment_multi_package(order=order, picking=picking)
+        else:
+            rates = []
+            for package in packages:
+                rates += self._stamps_rate_shipment_multi_package(order=order, picking=picking, package=package)
+            return rates
+
+    def _stamps_rate_shipment_multi_package(self, order=None, picking=None, package=None):
         self.ensure_one()
         date_planned = fields.Datetime.now()
         if self.env.context.get('date_planned'):
             date_planned = self.env.context.get('date_planned')
         res = []
         service = self._get_stamps_service()
-        shipping = self._get_stamps_shipping_multi(service, date_planned, order=order, picking=picking)
+        shipping = self._get_stamps_shipping_multi(service, date_planned, order=order, picking=picking, package=package)
         rates = service.get_rates(shipping)
         for rate in rates:
             price = float(rate.Amount)
@@ -486,6 +505,7 @@ class ProviderStamps(models.Model):
             if carrier:
                 res.append({
                     'carrier': carrier,
+                    'package': package or self.env['stock.quant.package'].browse(),
                     'success': True,
                     'price': price,
                     'error_message': False,
