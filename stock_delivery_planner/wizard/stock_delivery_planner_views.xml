@@ -6,22 +6,34 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form>
-                <field name="plan_option_ids">
-                    <tree decoration-success="days_different &lt; 0.0" decoration-danger="days_different &gt; 0.0"
-                          create="false" edit="false" delete="false">
-                        <field name="carrier_id"/>
-                        <field name="date_planned"/>
-                        <field name="requested_date"/>
-                        <field name="transit_days"/>
-                        <field name="sale_requested_date"/>
-                        <field name="days_different"/>
-                        <field name="price"/>
-                        <button class="eo_highlight"
-                                name="select_plan"
-                                string="Select"
-                                type="object" />
-                    </tree>
-                </field>
+                <field name="packages_planned" invisible="1" />
+                <group>
+                    <field name="plan_option_ids" nolabel="1" >
+                        <tree decoration-success="days_different &lt; 0.0 and not selection"
+                              decoration-danger="days_different &gt; 0.0 and not selection"
+                              decoration-info="selection == 'selected'"
+                              decoration-muted="selection == 'deselected'"
+                              create="false" edit="false" delete="false">
+                            <field name="package_id"/>
+                            <field name="carrier_id"/>
+                            <field name="date_planned" invisible="1"/>
+                            <field name="requested_date"/>
+                            <field name="transit_days"/>
+                            <field name="sale_requested_date"/>
+                            <field name="days_different"/>
+                            <field name="price"/>
+                            <field name="selection" invisible="1" />
+                            <button class="eo_highlight"
+                                    name="select_plan"
+                                    string="Select"
+                                    type="object" />
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button type="object" name="action_plan" string="Plan" class="btn-primary" attrs="{'invisible': [('packages_planned', '=', False)]}"/>
+                    <button string="Discard" special="cancel" class="btn-secondary"/>
+                </footer>
             </form>
         </field>
     </record>
