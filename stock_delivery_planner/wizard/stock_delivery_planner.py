@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from odoo import api, fields, models, _
 from odoo.tools import safe_eval
 import logging
@@ -25,9 +27,13 @@ class StockDeliveryPlanner(models.TransientModel):
         planner = super(StockDeliveryPlanner, self).create(values)
 
         base_carriers = self.env['delivery.carrier']
-        carrier_domain = self.env['ir.config_parameter'].sudo().get_param('stock.delivery.planner.carrier_domain')
-        if carrier_domain:
-            base_carriers = base_carriers.search(safe_eval.safe_eval(carrier_domain))
+        carrier_ids = self.env['ir.config_parameter'].sudo().get_param('stock.delivery.planner.carrier_ids.%s' % (self.env.company.id, ))
+        if carrier_ids:
+            try:
+                carrier_ids = [int(c) for c in carrier_ids.split(',')]
+                base_carriers = base_carriers.browse(carrier_ids)
+            except:
+                pass
 
         for carrier in base_carriers:
             rates = carrier.rate_shipment_multi(picking=planner.picking_id)
