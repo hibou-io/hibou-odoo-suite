@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from odoo import fields
 from odoo.tests.common import Form, TransactionCase
 
@@ -15,8 +17,8 @@ class TestStockDeliveryPlanner(TransactionCase):
             self.skipTest('FedEx Shipping Connector demo data is required to run this test.')
         self.env['ir.config_parameter'].sudo().set_param('sale.order.planner.carrier_domain',
                                                          "[('id', 'in', (%d,))]" % self.fedex_ground.id)
-        self.env['ir.config_parameter'].sudo().set_param('stock.delivery.planner.carrier_domain',
-                                                         "[('id', 'in', (%d,))]" % self.fedex_ground.id)
+        self.env['ir.config_parameter'].sudo().set_param('stock.delivery.planner.carrier_ids.%s' % (self.env.company.id, ),
+                                                         "%d" % self.fedex_ground.id)
         # Does it make sense to set default package in fedex_rate_shipment_multi
         # instead of relying on a correctly configured delivery method?
         self.fedex_package = self.browse_ref('delivery_fedex.fedex_packaging_FEDEX_25KG_BOX')

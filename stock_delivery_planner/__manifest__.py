@@ -1,10 +1,10 @@
 {
     'name': 'Stock Delivery Planner',
     'summary': 'Get rates and choose carrier for delivery.',
-    'version': '14.0.1.1.0',
+    'version': '14.0.1.1.1',
     'author': "Hibou Corp.",
     'category': 'Warehouse',
-    'license': 'AGPL-3',
+    'license': 'OPL-1',
     'website': "https://hibou.io",
     'description': """
 Stock Delivery Planner
@@ -20,6 +20,7 @@ Re-rate deliveries at packing time to find lowest-priced delivery method that st
     ],
     'data': [
         'security/ir.model.access.csv',
+        'views/res_config_settings_views.xml',
         'views/stock_views.xml',
         'wizard/stock_delivery_planner_views.xml',
     ],
