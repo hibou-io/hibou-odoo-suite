@@ -79,6 +79,11 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_oh_sit_multiplier"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <record id="rule_parameter_us_oh_sit_multiplier_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">1.001</field>
+            <field name="rule_parameter_id" ref="rule_parameter_us_oh_sit_multiplier"/>
+            <field name="date_from" eval="datetime(2029, 9, 1).date()"/>
+        </record>
     </data>
 
     <!-- Partners and Contribution Registers -->
