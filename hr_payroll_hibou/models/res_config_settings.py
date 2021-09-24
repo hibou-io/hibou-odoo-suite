@@ -10,6 +10,7 @@ class ResConfigSettings(models.TransientModel):
     module_hr_payroll_payment = fields.Boolean(string='Payments & Advanced Accounting')
     module_hr_payroll_attendance = fields.Boolean(string='Attendance Entries & Overtime')
     module_hr_payroll_timesheet = fields.Boolean(string='Timesheet Entries & Overtime')
+    module_hr_payroll_commission = fields.Boolean(string='Commission')
     module_l10n_us_hr_payroll = fields.Boolean(string='USA Payroll')
     module_l10n_us_hr_payroll_401k = fields.Boolean(string='USA Payroll 401k')
 
