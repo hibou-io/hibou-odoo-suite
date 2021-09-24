@@ -56,6 +56,12 @@
             <field name="parameter_value">1.032</field>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
+        <record id="rule_parameter_us_oh_sit_multiplier_2021" model="hr.payroll.rate">
+            <field name="name">US OH Ohio SIT Multiplier Value</field>
+            <field name="code">us_oh_sit_multiplier</field>
+            <field name="parameter_value">1.001</field>
+            <field name="date_from" eval="datetime(2021, 9, 1).date()"/>
+        </record>
     </data>
 
     <!-- Partners and Contribution Registers -->
