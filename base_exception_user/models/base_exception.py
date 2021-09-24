@@ -22,3 +22,5 @@ class BaseException(models.AbstractModel):
                         for e in rec.exception_ids
                     ]
                 )
+            else:
+                rec.exceptions_summary = False
