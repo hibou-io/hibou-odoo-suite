@@ -3,7 +3,7 @@
 {
     'name': 'Commissions in Payslips',
     'author': 'Hibou Corp.',
-    'version': '13.0.1.0.0',
+    'version': '14.0.1.0.0',
     'license': 'OPL-1',
     'category': 'Accounting/Commissions',
     'sequence': 95,
