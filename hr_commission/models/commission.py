@@ -212,7 +212,7 @@ class Commission(models.Model):
                     }),
                 ],
             })
-            move.post()
+            move._post()
             commission.write({'state': 'done', 'move_id': move.id})
         return True
 
