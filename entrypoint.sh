@@ -12,14 +12,24 @@ set -e
 #      Note that with Odoo running in the foreground, killing Odoo will kill the container.
 #    DEV_MODE=
 #      Unset to not use Theia at all.
+#    
+#    DEV_MODE_PATH=/opt/odoo/addons
+#      To change the path to start Theia in, useful to get git working.
+
+if [ "$DEV_MODE_PATH" == "" ]
+then
+   export DEV_MODE_PATH=/opt/odoo
+fi
 
 # setup development IDE
 if [ "$DEV_MODE" == "exclusive" ]
 then
-    exec node /opt/theia/src-gen/backend/main.js /opt/odoo --hostname=0.0.0.0
+    cd /opt/theia
+    exec node /opt/theia/src-gen/backend/main.js $DEV_MODE_PATH --hostname=0.0.0.0
 elif [ "$DEV_MODE" != "" ]
 then
-    node /opt/theia/src-gen/backend/main.js /opt/odoo --hostname=0.0.0.0 &
+    cd /opt/theia
+    node /opt/theia/src-gen/backend/main.js $DEV_MODE_PATH --hostname=0.0.0.0 &
 fi
 
 
