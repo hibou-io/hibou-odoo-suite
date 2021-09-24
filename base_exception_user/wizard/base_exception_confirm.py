@@ -16,7 +16,7 @@ class ExceptionRuleConfirm(models.AbstractModel):
     def action_confirm(self):
         if self.ignore and 'message_ids' in self.related_model_id:
             exceptions_summary = '<ul>%s</ul>' % ''.join(
-                ['<li>%s: <i>%s</i></li>' % tuple(map(html.escape, (e.name, e.description))) for e in
+                ['<li>%s: <i>%s</i></li>' % tuple(map(html.escape, (e.name, e.description or ''))) for e in
                  self.exception_ids])
             msg = '<p><strong>Exceptions ignored:</strong></p>' + exceptions_summary
             self.related_model_id.message_post(body=msg)
