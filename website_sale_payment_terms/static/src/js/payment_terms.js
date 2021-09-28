@@ -137,14 +137,17 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
          * @private
          */
         _acceptPaymentTerms: function () {
-            $('#o_payment_form_pay').prop('disabled', false);
+            var $payButton = $('#o_payment_form_pay');
+            var disabledReasons = $payButton.data('disabled_reasons') || {};
+            disabledReasons.payment_terms_selection = false;
+            $payButton.data('disabled_reasons', disabledReasons);
+            $payButton.prop('disabled', _.contains($payButton.data('disabled_reasons'), true));
         },
 
         /*
          * @private
          */
         _denyPaymentTerms: function () {
-            $('#o_payment_form_pay').prop('disabled', true);
             window.location = '/shop/reject_term_agreement';
         },
     });
