@@ -77,12 +77,12 @@
                     <div class="modal-footer">
                         <button type="button"
                                 class="btn btn-default"
-                                onclick="accept_payment_terms()"
+                                id="btn_accept_payment_terms"
                                 data-dismiss="modal">Accept
                         </button>
                         <button type="button"
                                 class="btn btn-default"
-                                onclick="deny_payment_terms()">Deny
+                                id="btn_deny_payment_terms">Deny
                         </button>
                     </div>
                 </div>
