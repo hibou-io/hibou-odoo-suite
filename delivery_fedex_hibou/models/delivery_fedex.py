@@ -202,7 +202,7 @@ class DeliveryFedex(models.Model):
                     'warning_message': False}
 
         date_delivered = request.get('date_delivered', False)
-        if date_delivered:
+        if date_delivered and 'delivery_calendar_id' in self and self.delivery_calendar_id.tz:
             tz = pytz.timezone(self.delivery_calendar_id.tz)
             date_delivered = tz.localize(date_delivered).astimezone(pytz.utc).replace(tzinfo=None)
         return {'success': True,
