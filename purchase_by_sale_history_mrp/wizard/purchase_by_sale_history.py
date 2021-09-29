@@ -34,6 +34,10 @@ class PurchaseBySaleHistory(models.TransientModel):
                     raise UserError('You cannot have two identical finished goods being created '
                                     'from different ratios/BoMs. Finished Product ID: %s' % (pid, ))
                 product_ids_dict[pid] = {'ratio': ratio}
+            if not product_ids_dict:
+                # this indicates that the BOM is for a product.template without any product variants
+                # if there are no variants, then it couldn't have been sold
+                return 0.0
 
             history = self._sale_history(product_ids_dict.keys())
             products = product_model.browse(product_ids_dict.keys())
