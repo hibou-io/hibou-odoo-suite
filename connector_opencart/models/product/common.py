@@ -18,6 +18,8 @@ class OpencartProductTemplate(models.Model):
                                                    string='Opencart Product Attribute Values')
 
     def opencart_sale_get_combination(self, options, reentry=False):
+        if not options:
+            return self.odoo_id.product_variant_id
         selected_attribute_values = self.env['product.template.attribute.value']
         for option in options:
             product_option_value_id = str(option['product_option_value_id'])
