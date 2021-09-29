@@ -443,9 +443,8 @@ class SaleOrderLineImportMapper(Component):
         product_id = record['product_id']
         binder = self.binder_for('opencart.product.template')
         # do not unwrap, because it would be a product.template, but I need a specific variant
-        opencart_product_template = binder.to_internal(product_id, unwrap=False)
-        if record.get('option'):
-            product = opencart_product_template.opencart_sale_get_combination(record.get('option'))
-        else:
-            product = opencart_product_template.odoo_id.product_variant_id
+        # connector bindings are found with `active_test=False` but that also means computed fields
+        # like `product.template.product_variant_id` could find different products because of archived variants
+        opencart_product_template = binder.to_internal(product_id, unwrap=False).with_context(active_test=True)
+        product = opencart_product_template.opencart_sale_get_combination(record.get('option'))
         return {'product_id': product.id, 'product_uom': product.uom_id.id}
