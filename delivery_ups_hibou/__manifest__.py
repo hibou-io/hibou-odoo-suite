@@ -1,9 +1,9 @@
 {
     'name': 'Hibou UPS Shipping',
-    'version': '12.0.1.0.0',
+    'version': '12.0.1.1.0',
     'category': 'Stock',
     'author': "Hibou Corp.",
-    'license': 'AGPL-3',
+    'license': 'OPL-1',
     'website': 'https://hibou.io/',
     'depends': [
         'delivery_ups',
