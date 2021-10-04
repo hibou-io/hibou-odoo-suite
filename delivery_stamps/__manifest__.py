@@ -1,7 +1,9 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 {
     'name': 'Stamps.com (USPS) Shipping',
     'summary': 'Send your shippings through Stamps.com and track them online.',
-    'version': '11.0.2.0.0',
+    'version': '11.0.2.1.1',
     'author': "Hibou Corp.",
     'category': 'Warehouse',
     'license': 'OPL-1',
@@ -15,7 +17,6 @@ Send your shippings through Stamps.com and track them online.
 
 """,
     'depends': [
-        'delivery',
         'delivery_hibou',
     ],
     'demo': [],
