@@ -1,10 +1,10 @@
 {
     'name': 'Stamps.com (USPS) Shipping',
     'summary': 'Send your shippings through Stamps.com and track them online.',
-    'version': '11.0.1.0.0',
+    'version': '11.0.2.0.0',
     'author': "Hibou Corp.",
     'category': 'Warehouse',
-    'license': 'AGPL-3',
+    'license': 'OPL-1',
     'images': [],
     'website': "https://hibou.io",
     'description': """
