@@ -494,7 +494,7 @@ class DeliveryFedex(models.Model):
         else:
             is_india = picking.partner_id.country_id.code == 'IN' and picking.company_id.partner_id.country_id.code == 'IN'
             order_currency = picking.sale_id.currency_id if picking.sale_id else picking.company_id.currency_id
-            est_weight_value = package.shipping_weight or package.weight
+            est_weight_value = self._fedex_convert_weight(package.shipping_weight or package.weight)
             weight_value = self._fedex_convert_weight(est_weight_value, self.fedex_weight_unit)
 
 
