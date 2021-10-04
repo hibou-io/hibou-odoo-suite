@@ -384,7 +384,7 @@ class ProviderGSO(models.Model):
         elif not package:
             est_weight_value = self._gso_convert_weight(picking.shipping_weight)
         else:
-            est_weight_value = package.shipping_weight or package.weight
+            est_weight_value = self._gso_convert_weight(package.shipping_weight or package.weight)
 
         request_body = {
             'AccountNumber': sudoself.gso_account_number,
