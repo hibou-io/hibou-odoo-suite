@@ -599,7 +599,7 @@ class DeliveryFedex(models.Model):
                     sequence_number=1,
                     # po_number=po_number,
                     # dept_number=dept_number,
-                    reference=('%s-%d' % (order_name, 1)),
+                    ref=('%s-%d' % (order_name, 1)),
                     insurance=insurance_value
                 )
             else:
