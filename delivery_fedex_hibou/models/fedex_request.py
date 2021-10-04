@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 import suds
 from odoo.addons.delivery_fedex.models import fedex_request
 from pprint import pformat
