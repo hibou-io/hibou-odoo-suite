@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from odoo import fields
 from odoo.tests.common import Form, TransactionCase
 
@@ -15,8 +17,8 @@ class TestStockDeliveryPlanner(TransactionCase):
             self.skipTest('FedEx Shipping Connector demo data is required to run this test.')
         self.env['ir.config_parameter'].sudo().set_param('sale.order.planner.carrier_domain',
                                                          "[('id', 'in', (%d,))]" % self.fedex_ground.id)
-        self.env['ir.config_parameter'].sudo().set_param('stock.delivery.planner.carrier_domain',
-                                                         "[('id', 'in', (%d,))]" % self.fedex_ground.id)
+        self.env['ir.config_parameter'].sudo().set_param('stock.delivery.planner.carrier_ids.%s' % (self.env.company.id, ),
+                                                         "%d" % self.fedex_ground.id)
         # Does it make sense to set default package in fedex_rate_shipment_multi
         # instead of relying on a correctly configured delivery method?
         self.fedex_package = self.browse_ref('delivery_fedex.fedex_packaging_FEDEX_25KG_BOX')
@@ -114,11 +116,11 @@ class TestStockDeliveryPlanner(TransactionCase):
         self.assertEqual(self.picking.shipping_weight, 0.0)
 
         self.picking.move_line_ids.filtered(lambda ml: ml.product_id == self.product).qty_done = 5.0
-        packing_action = self.picking.put_in_pack()
+        packing_action = self.picking.action_put_in_pack()
         packing_wizard = Form(self.env[packing_action['res_model']].with_context(packing_action['context']))
         packing_wizard.delivery_packaging_id = self.fedex_package
         choose_delivery_package = packing_wizard.save()
-        choose_delivery_package.put_in_pack()
+        choose_delivery_package.action_put_in_pack()
         self.assertEqual(self.picking.shipping_weight, 5.0)
 
         action = self.picking.action_plan_delivery()
