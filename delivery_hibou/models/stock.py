@@ -112,7 +112,7 @@ class StockPicking(models.Model):
                 res = res[0]
                 if carrier.free_over and self.sale_id and self.sale_id._compute_amount_total_without_delivery() >= carrier.amount:
                     res['exact_price'] = 0.0
-                carrier_price = res['exact_price'] * (1.0 + (self.carrier_id.margin / 100.0))
+                carrier_price = float(res['exact_price']) * (1.0 + (self.carrier_id.margin / 100.0))
                 carrier_prices.append(carrier_price)
                 tracking_number = ''
                 if res['tracking_number']:
