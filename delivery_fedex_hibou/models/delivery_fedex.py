@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 import logging
 import pytz
 from odoo import fields, models, tools, _
@@ -226,6 +228,15 @@ class DeliveryFedex(models.Model):
             srm = FedexRequest(self.log_xml, request_type="shipping", prod_environment=self.prod_environment)
             superself = self.sudo()
 
+            picking_packages = picking.package_ids
+            package_carriers = picking_packages.mapped('carrier_id')
+            if package_carriers:
+                # only ship ours
+                picking_packages = picking_packages.filtered(lambda p: p.carrier_id == self and not p.carrier_tracking_ref)
+
+            if package_carriers and not picking_packages:
+                continue
+
             shipper_company = superself.get_shipper_company(picking=picking)
             shipper_warehouse = superself.get_shipper_warehouse(picking=picking)
             recipient = superself.get_recipient(picking=picking)
@@ -243,7 +254,7 @@ class DeliveryFedex(models.Model):
             # Not the actual reference.  Using `shipment_name` during `add_package` calls.
             srm.transaction_detail(picking.id)
 
-            package_type = picking.package_ids and picking.package_ids[0].packaging_id.shipper_package_code or self.fedex_default_packaging_id.shipper_package_code
+            package_type = picking_packages and picking_packages[0].packaging_id.shipper_package_code or self.fedex_default_packaging_id.shipper_package_code
             srm.shipment_request(self.fedex_droppoff_type, self.fedex_service_type, package_type, self.fedex_weight_unit, self.fedex_saturday_delivery)
             srm.set_currency(_convert_curr_iso_fdx(picking.company_id.currency_id.name))
             srm.set_shipper(shipper_company, shipper_warehouse)
@@ -284,7 +295,7 @@ class DeliveryFedex(models.Model):
                 srm.customs_value(_convert_curr_iso_fdx(commodity_currency.name), total_commodities_amount, "NON_DOCUMENTS")
                 srm.duties_payment(shipper_warehouse.partner_id.country_id.code, acc_number)
 
-            package_count = len(picking.package_ids) or 1
+            package_count = len(picking_packages) or 1
 
             # For india picking courier is not accepted without this details in label.
             po_number = dept_number = False
@@ -312,16 +323,17 @@ class DeliveryFedex(models.Model):
                 package_labels = []
                 carrier_tracking_ref = ""
 
-                for sequence, package in enumerate(picking.package_ids, start=1):
+                for sequence, package in enumerate(picking_packages, start=1):
 
                     package_weight = self._fedex_convert_weight(package.shipping_weight, self.fedex_weight_unit)
                     packaging = package.packaging_id
+                    packaging_code = packaging.shipper_package_code if (packaging.package_carrier_type == 'fedex' and packaging.shipper_package_code) else self.fedex_default_packaging_id.shipper_package_code
 
                     # Hibou Delivery
                     # Add more details to package.
                     srm._add_package(
                         package_weight,
-                        package_code=packaging.shipper_package_code,
+                        package_code=packaging_code,
                         package_height=packaging.height,
                         package_width=packaging.width,
                         package_length=packaging.length,
@@ -398,12 +410,11 @@ class DeliveryFedex(models.Model):
             # One package #
             ###############
             elif package_count == 1:
-                packaging = picking.package_ids[:1].packaging_id or picking.carrier_id.fedex_default_packaging_id
-                # Hibou Delivery
-                # Add more details to package.
+                packaging = picking_packages[:1].packaging_id or self.fedex_default_packaging_id
+                packaging_code = packaging.shipper_package_code if packaging.package_carrier_type == 'fedex' else self.fedex_default_packaging_id.shipper_package_code
                 srm._add_package(
                     net_weight,
-                    package_code=packaging.shipper_package_code,
+                    package_code=packaging_code,
                     package_height=packaging.height,
                     package_width=packaging.width,
                     package_length=packaging.length,
@@ -460,21 +471,33 @@ class DeliveryFedex(models.Model):
 
         return res
 
-    def fedex_rate_shipment_multi(self, order=None, picking=None):
+    def fedex_rate_shipment_multi(self, order=None, picking=None, packages=None):
+        if not packages:
+            return self._fedex_rate_shipment_multi_package(order=order, picking=picking)
+        else:
+            rates = []
+            for package in packages:
+                rates += self._fedex_rate_shipment_multi_package(order=order, picking=picking, package=package)
+            return rates
+
+    def _fedex_rate_shipment_multi_package(self, order=None, picking=None, package=None):
         if order:
             max_weight = self._fedex_convert_weight(self.fedex_default_packaging_id.max_weight, self.fedex_weight_unit)
             is_india = order.partner_shipping_id.country_id.code == 'IN' and order.company_id.partner_id.country_id.code == 'IN'
             est_weight_value = sum([(line.product_id.weight * line.product_uom_qty) for line in order.order_line]) or 0.0
             weight_value = self._fedex_convert_weight(est_weight_value, self.fedex_weight_unit)
             order_currency = order.currency_id
-        else:
-            # max_weight = self._fedex_convert_weight(self.fedex_default_packaging_id.max_weight, self.fedex_weight_unit)
+        elif not package:
             is_india = picking.partner_id.country_id.code == 'IN' and picking.company_id.partner_id.country_id.code == 'IN'
-            # TODO must be per-package eventually
-            # theoretically just sum of all packages weights, but the rating itself will also need to change...
             est_weight_value = sum([(line.product_id.weight * (line.qty_done or line.product_uom_qty)) for line in picking.move_line_ids]) or 0.0
             weight_value = self._fedex_convert_weight(est_weight_value, self.fedex_weight_unit)
             order_currency = picking.sale_id.currency_id if picking.sale_id else picking.company_id.currency_id
+        else:
+            is_india = picking.partner_id.country_id.code == 'IN' and picking.company_id.partner_id.country_id.code == 'IN'
+            order_currency = picking.sale_id.currency_id if picking.sale_id else picking.company_id.currency_id
+            est_weight_value = package.shipping_weight or package.weight
+            weight_value = self._fedex_convert_weight(est_weight_value, self.fedex_weight_unit)
+
 
         price = 0.0
 
@@ -561,9 +584,28 @@ class DeliveryFedex(models.Model):
             )
             srm.set_master_package(weight_value, 1)
         else:
-            for sequence, package in enumerate(picking.package_ids, start=1):
-                package_weight = self._fedex_convert_weight(package.shipping_weight, self.fedex_weight_unit)
+            if package:
+                package_weight = self._fedex_convert_weight(package.shipping_weight or package.weight, self.fedex_weight_unit)
                 packaging = package.packaging_id
+                package_code = package.packaging_id.shipper_package_code if packaging.package_carrier_type == 'fedex' else self.fedex_default_packaging_id.shipper_package_code
+
+                srm.add_package(
+                    package_weight,
+                    mode='rating',
+                    package_code=package_code,
+                    package_height=packaging.height,
+                    package_width=packaging.width,
+                    package_length=packaging.length,
+                    sequence_number=1,
+                    # po_number=po_number,
+                    # dept_number=dept_number,
+                    reference=('%s-%d' % (order_name, 1)),
+                    insurance=insurance_value
+                )
+            else:
+                # deliver all together...
+                package_weight = self._fedex_convert_weight(picking.shipping_weight or picking.weight, self.fedex_weight_unit)
+                packaging = self.fedex_default_packaging_id
 
                 srm.add_package(
                     package_weight,
@@ -572,10 +614,10 @@ class DeliveryFedex(models.Model):
                     package_height=packaging.height,
                     package_width=packaging.width,
                     package_length=packaging.length,
-                    sequence_number=sequence,
+                    sequence_number=1,
                     # po_number=po_number,
                     # dept_number=dept_number,
-                    ref=('%s-%d' % (order_name, sequence)),
+                    ref=('%s-%d' % (order_name, 1)),
                     insurance=insurance_value
                 )
 
@@ -646,6 +688,7 @@ class DeliveryFedex(models.Model):
                     tz = pytz.timezone(self.delivery_calendar_id.tz)
                     date_delivered = tz.localize(date_delivered).astimezone(pytz.utc).replace(tzinfo=None)
                 result.append({'carrier': carrier,
+                               'package': package or self.env['stock.quant.package'].browse(),
                                'success': True,
                                'price': price,
                                'error_message': False,

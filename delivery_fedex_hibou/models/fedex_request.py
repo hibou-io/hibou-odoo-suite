@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 import suds
 from datetime import datetime
 from copy import deepcopy
