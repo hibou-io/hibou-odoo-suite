@@ -273,7 +273,7 @@ class ProviderGSO(models.Model):
             }
             for tracking in picking.carrier_tracking_ref.split(','):
                 request_body['TrackingNumber'] = tracking
-                _ = service.delete_shipment(request_body)
+                cancel_res = service.delete_shipment(request_body)
         except HTTPError as e:
             raise ValidationError(e)
         picking.message_post(body=_('Shipment N° %s has been cancelled') % (picking.carrier_tracking_ref, ))
