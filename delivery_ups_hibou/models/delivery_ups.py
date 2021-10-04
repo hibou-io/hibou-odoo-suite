@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.delivery_ups.models.ups_request import UPSRequest, Package
@@ -216,3 +218,132 @@ class ProviderUPS(models.Model):
                 'tracking_number': carrier_tracking_ref}
             res = res + [shipping_data]
         return res
+
+    def ups_rate_shipment_multi(self, order=None, picking=None, packages=None):
+        if not packages:
+            return self._ups_rate_shipment_multi_package(order=order, picking=picking)
+        else:
+            rates = []
+            for package in packages:
+                rates += self._ups_rate_shipment_multi_package(order=order, picking=picking, package=package)
+            return rates
+
+    def _ups_rate_shipment_multi_package(self, order=None, picking=None, package=None):
+        # TODO package here is ignored, it should not be (UPS is not multi-rating capable until we can get rates for a single package)
+        superself = self.sudo()
+        srm = UPSRequest(self.log_xml, superself.ups_username, superself.ups_passwd, superself.ups_shipper_number, superself.ups_access_number, self.prod_environment)
+        ResCurrency = self.env['res.currency']
+        max_weight = self.ups_default_packaging_id.max_weight
+        packages = []
+        if order:
+            currency = order.currency_id
+            company = order.company_id
+            date_order = order.date_order or fields.Date.today()
+            total_qty = 0
+            total_weight = 0
+            for line in order.order_line.filtered(lambda line: not line.is_delivery):
+                total_qty += line.product_uom_qty
+                total_weight += line.product_id.weight * line.product_qty
+
+            if max_weight and total_weight > max_weight:
+                total_package = int(total_weight / max_weight)
+                last_package_weight = total_weight % max_weight
+
+                for seq in range(total_package):
+                    packages.append(Package(self, max_weight))
+                if last_package_weight:
+                    packages.append(Package(self, last_package_weight))
+            else:
+                packages.append(Package(self, total_weight))
+        else:
+            currency = picking.sale_id.currency_id if picking.sale_id else picking.company_id.currency_id
+            company = picking.company_id
+            date_order = picking.sale_id.date_order or fields.Date.today() if picking.sale_id else fields.Date.today()
+            # Is total quantity the number of packages or the number of items being shipped?
+            total_qty = len(picking.package_ids)
+            packages = [Package(self, package.shipping_weight) for package in picking.package_ids]
+
+
+        shipment_info = {
+            'total_qty': total_qty  # required when service type = 'UPS Worldwide Express Freight'
+        }
+
+        if self.ups_cod:
+            cod_info = {
+                'currency': currency.name,
+                'monetary_value': order.amount_total if order else picking.sale_id.amount_total,
+                'funds_code': self.ups_cod_funds_code,
+            }
+        else:
+            cod_info = None
+
+        # Hibou Delivery
+        shipper_company = self.get_shipper_company(order=order, picking=picking)
+        shipper_warehouse = self.get_shipper_warehouse(order=order, picking=picking)
+        recipient = self.get_recipient(order=order, picking=picking)
+        date_planned = fields.Datetime.now()
+        if self.env.context.get('date_planned'):
+            date_planned = self.env.context.get('date_planned')
+
+        check_value = srm.check_required_value(shipper_company, shipper_warehouse, recipient, order=order, picking=picking)
+        if check_value:
+            return [{'success': False,
+                     'price': 0.0,
+                     'error_message': check_value,
+                     'warning_message': False,
+                     }]
+
+        #ups_service_type = order.ups_service_type or self.ups_default_service_type
+        ups_service_type = None # See if this gets us all service types
+        result = srm.get_shipping_price(
+            shipment_info=shipment_info, packages=packages, shipper=shipper_company, ship_from=shipper_warehouse,
+            ship_to=recipient, packaging_type=self.ups_default_packaging_id.shipper_package_code, service_type=ups_service_type,
+            saturday_delivery=self.ups_saturday_delivery, cod_info=cod_info, date_planned=date_planned, multi=True)
+        # Hibou Delivery
+        is_third_party = self._get_ups_is_third_party(order=order, picking=picking)
+
+        response = []
+        for rate in result:
+            if rate.get('error_message'):
+                _logger.error('UPS error: %s' % rate['error_message'])
+                response.append({
+                    'success': False, 'price': 0.0,
+                    'error_message': _('Error:\n%s') % rate['error_message'],
+                    'warning_message': False,
+                })
+            else:
+                if currency.name == rate['currency_code']:
+                    price = float(rate['price'])
+                else:
+                    quote_currency = ResCurrency.search([('name', '=', rate['currency_code'])], limit=1)
+                    price = quote_currency._convert(
+                        float(rate['price']), currency, company, date_order)
+
+                if is_third_party:
+                    # Don't show delivery amount, if ups bill my account option is true
+                    price = 0.0
+
+                service_code = rate['service_code']
+                carrier = self.ups_find_delivery_carrier_for_service(service_code)
+                if carrier:
+                    response.append({
+                        'carrier': carrier,
+                        'success': True,
+                        'price': price,
+                        'error_message': False,
+                        'warning_message': False,
+                        'date_planned': date_planned,
+                        'date_delivered': None,
+                        'transit_days': rate.get('transit_days', 0),
+                        'service_code': service_code,
+                    })
+        return response
+
+    def ups_find_delivery_carrier_for_service(self, service_code):
+        if self.ups_default_service_type == service_code:
+            return self
+        # arbitrary decision, lets find the same account number
+        carrier = self.search([('ups_shipper_number', '=', self.ups_shipper_number),
+                               ('ups_default_service_type', '=', service_code)
+                               ], limit=1)
+        return carrier

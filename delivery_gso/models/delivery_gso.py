@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 import pytz
 from math import ceil
 from requests import HTTPError
@@ -160,7 +162,7 @@ class ProviderGSO(models.Model):
             company = self.get_shipper_company(picking=picking)
             from_ = self.get_shipper_warehouse(picking=picking)
             to = self.get_recipient(picking=picking)
-            address_type = 'B' if bool(to.company or to.parent_id.company) else 'R'
+            address_type = 'B' if bool(to.is_company or to.parent_id.is_company) else 'R'
 
             request_body = {
                 'AccountNumber': sudoself.gso_account_number,
@@ -188,9 +190,15 @@ class ProviderGSO(models.Model):
                 'thermal': [],
                 'paper': [],
             }
-            if picking.package_ids:
+            picking_packages = picking.package_ids
+            package_carriers = picking_packages.mapped('carrier_id')
+            if package_carriers:
+                # only ship ours
+                picking_packages = picking_packages.filtered(lambda p: p.carrier_id == self and not p.carrier_tracking_ref)
+
+            if picking_packages:
                 # Every package will be a transaction
-                for package in picking.package_ids:
+                for package in picking_packages:
                     request_body['Shipment']['Weight'] = self._gso_convert_weight(package.shipping_weight)
                     request_body['Shipment'].update(self._gso_get_package_dimensions(package))
                     request_body['Shipment']['ShipmentReference'] = package.name
@@ -207,7 +215,8 @@ class ProviderGSO(models.Model):
                             cost += response['ShipmentCharges']['TotalCharge']
                     except HTTPError as e:
                         raise ValidationError(e)
-            else:
+            elif not package_carriers:
+                # ship the whole picking
                 request_body['Shipment']['Weight'] = self._gso_convert_weight(picking.shipping_weight)
                 request_body['Shipment'].update(self._gso_get_package_dimensions())
                 request_body['Shipment']['ShipmentReference'] = picking.name
@@ -224,6 +233,8 @@ class ProviderGSO(models.Model):
                         cost += response['ShipmentCharges']['TotalCharge']
                 except HTTPError as e:
                     raise ValidationError(e)
+            else:
+                continue
 
             # Handle results
             trackings = [l[0] for l in labels['thermal']] + [l(0) for l in labels['paper']]
@@ -251,7 +262,7 @@ class ProviderGSO(models.Model):
             }
             for tracking in picking.carrier_tracking_ref.split(','):
                 request_body['TrackingNumber'] = tracking
-                _ = service.delete_shipment(request_body)
+                cancel_res = service.delete_shipment(request_body)
         except HTTPError as e:
             raise ValidationError(e)
         picking.message_post(body=(_('Shipment N° %s has been cancelled') % (picking.carrier_tracking_ref, )))
@@ -262,7 +273,7 @@ class ProviderGSO(models.Model):
         service = sudoself._get_gso_service()
         from_ = sudoself.get_shipper_warehouse(order=order)
         to = sudoself.get_recipient(order=order)
-        address_type = 'B' if bool(to.company or to.parent_id.company) else 'R'
+        address_type = 'B' if bool(to.is_company or to.parent_id.is_company) else 'R'
 
         est_weight_value = self._gso_convert_weight(
             sum([(line.product_id.weight * line.product_uom_qty) for line in order.order_line]) or 0.0)
@@ -319,3 +330,106 @@ class ProviderGSO(models.Model):
         for _ in pickings:
             res.append('https://www.gso.com/Tracking')
         return res
+
+    def gso_rate_shipment_multi(self, order=None, picking=None, packages=None):
+        if not packages:
+            return self._gso_rate_shipment_multi_package(order=order, picking=picking)
+        else:
+            rates = []
+            for package in packages:
+                rates += self._gso_rate_shipment_multi_package(order=order, picking=picking, package=package)
+            return rates
+
+    def _gso_rate_shipment_multi_package(self, order=None, picking=None, package=None):
+        sudoself = self.sudo()
+        try:
+            service = sudoself._get_gso_service()
+        except HTTPError as e:
+            _logger.error(e)
+            return [{
+                'success': False,
+                'price': 0.0,
+                'error_message': _('GSO web service returned an error. ' + str(e)),
+                'warning_message': False,
+            }]
+
+        from_ = sudoself.get_shipper_warehouse(order=order, picking=picking)
+        to = sudoself.get_recipient(order=order, picking=picking)
+        address_type = 'B' if bool(to.is_company or to.parent_id.is_company) else 'R'
+        package_dimensions = self._gso_get_package_dimensions(package=package)
+
+        date_planned = fields.Datetime.now()
+        if self.env.context.get('date_planned'):
+            date_planned = self.env.context.get('date_planned')
+
+        ship_date_utc = fields.Datetime.from_string(date_planned if date_planned else fields.Datetime.now())
+        ship_date_utc = ship_date_utc.replace(tzinfo=pytz.utc)
+        ship_date_gso = ship_date_utc.astimezone(pytz.timezone(GSO_TZ))
+        ship_date_gso = fields.Datetime.to_string(ship_date_gso)
+
+        if order:
+            est_weight_value = self._gso_convert_weight(
+                sum([(line.product_id.weight * line.product_uom_qty) for line in order.order_line]) or 0.0)
+        elif not package:
+            est_weight_value = self._gso_convert_weight(picking.shipping_weight)
+        else:
+            est_weight_value = self._gso_convert_weight(package.shipping_weight or package.weight)
+
+        request_body = {
+            'AccountNumber': sudoself.gso_account_number,
+            'OriginZip': from_.zip,
+            'DestinationZip': to.zip,
+            'ShipDate': ship_date_gso,
+            'PackageDimension': package_dimensions,
+            'PackageWeight': est_weight_value,
+            'DeliveryAddressType': address_type,
+        }
+
+        try:
+            result = service.get_rates_and_transit_time(request_body)
+            # _logger.warn('GSO result:\n%s' % result)
+        except HTTPError as e:
+            _logger.error(e)
+            return [{
+                'success': False,
+                'price': 0.0,
+                'error_message': _('GSO web service returned an error.'),
+                'warning_message': False,
+            }]
+
+        # delivery = list(filter(lambda d: d['ServiceCode'] == sudoself.gso_service_type, result['DeliveryServiceTypes']))
+        # if delivery:
+        rates = []
+        for delivery in result['DeliveryServiceTypes']:
+            delivery_date_gso = delivery['DeliveryDate'].replace('T', ' ')
+            delivery_date_gso = fields.Datetime.from_string(delivery_date_gso)
+            delivery_date_gso = delivery_date_gso.replace(tzinfo=pytz.timezone(GSO_TZ))
+            delivery_date_utc = delivery_date_gso.astimezone(pytz.utc)
+            delivery_date_utc = fields.Datetime.to_string(delivery_date_utc)
+            price = delivery.get('ShipmentCharges', {}).get('TotalCharge', 0.0)
+
+            carrier = self.gso_find_delivery_carrier_for_service(delivery['ServiceCode'])
+            if carrier:
+                rates.append({
+                    'carrier': carrier,
+                    'package': package or self.env['stock.quant.package'].browse(),
+                    'success': True,
+                    'price': price,
+                    'error_message': False,
+                    'warning_message': _('TotalCharge not found.') if price == 0.0 else False,
+                    'date_planned': date_planned,
+                    'date_delivered': delivery_date_utc,
+                    'transit_days': False,
+                    'service_code': delivery['ServiceCode'],
+                })
+
+        return rates
+
+    def gso_find_delivery_carrier_for_service(self, service_code):
+        if self.gso_service_type == service_code:
+            return self
+        # arbitrary decision, lets find the same account number
+        carrier = self.search([('gso_account_number', '=', self.gso_account_number),
+                               ('gso_service_type', '=', service_code)
+                               ], limit=1)
+        return carrier

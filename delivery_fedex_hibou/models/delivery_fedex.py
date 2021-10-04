@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 import logging
 import time
 from odoo import fields, models, tools, _
@@ -16,6 +18,10 @@ class DeliveryFedex(models.Model):
         ('GROUND_HOME_DELIVERY', 'GROUND_HOME_DELIVERY'),
         ('FEDEX_EXPRESS_SAVER', 'FEDEX_EXPRESS_SAVER'),
     ])
+
+    def _fedex_convert_weight(self, weight, unit):
+        # dummy converter
+        return weight
 
     def _get_fedex_is_third_party(self, order=None, picking=None):
         third_party_account = self.get_third_party_account(order=order, picking=picking)
@@ -112,6 +118,8 @@ class DeliveryFedex(models.Model):
         date_planned = None
         if self.env.context.get('date_planned'):
             date_planned = self.env.context.get('date_planned')
+        if date_planned and isinstance(date_planned, str):
+            date_planned = fields.Datetime.from_string(date_planned)
 
 
         # Authentication stuff
@@ -205,6 +213,15 @@ class DeliveryFedex(models.Model):
             srm = FedexRequest(self.log_xml, request_type="shipping", prod_environment=self.prod_environment)
             superself = self.sudo()
 
+            picking_packages = picking.package_ids
+            package_carriers = picking_packages.mapped('carrier_id')
+            if package_carriers:
+                # only ship ours
+                picking_packages = picking_packages.filtered(lambda p: p.carrier_id == self and not p.carrier_tracking_ref)
+
+            if package_carriers and not picking_packages:
+                continue
+
             shipper_company = superself.get_shipper_company(picking=picking)
             shipper_warehouse = superself.get_shipper_warehouse(picking=picking)
             recipient = superself.get_recipient(picking=picking)
@@ -222,7 +239,7 @@ class DeliveryFedex(models.Model):
             # Not the actual reference.  Using `shipment_name` during `add_package` calls.
             srm.transaction_detail(picking.id)
 
-            package_type = picking.package_ids and picking.package_ids[0].packaging_id.shipper_package_code or self.fedex_default_packaging_id.shipper_package_code
+            package_type = picking_packages and picking_packages[0].packaging_id.shipper_package_code or self.fedex_default_packaging_id.shipper_package_code
             srm.shipment_request(self.fedex_droppoff_type, self.fedex_service_type, package_type, self.fedex_weight_unit, self.fedex_saturday_delivery)
             srm.set_currency(_convert_curr_iso_fdx(picking.company_id.currency_id.name))
             srm.set_shipper(shipper_company, shipper_warehouse)
@@ -258,7 +275,7 @@ class DeliveryFedex(models.Model):
                 srm.customs_value(_convert_curr_iso_fdx(commodity_currency.name), total_commodities_amount, "NON_DOCUMENTS")
                 srm.duties_payment(picking.picking_type_id.warehouse_id.partner_id.country_id.code, superself.fedex_account_number)
 
-            package_count = len(picking.package_ids) or 1
+            package_count = len(picking_packages) or 1
 
             # TODO RIM master: factorize the following crap
 
@@ -280,13 +297,23 @@ class DeliveryFedex(models.Model):
                 package_labels = []
                 carrier_tracking_ref = ""
 
-                for sequence, package in enumerate(picking.package_ids, start=1):
-
-                    package_weight = _convert_weight(package.shipping_weight, self.fedex_weight_unit)
+                for sequence, package in enumerate(picking_packages, start=1):
+                    package_weight = self._fedex_convert_weight(package.shipping_weight, self.fedex_weight_unit)
+                    packaging = package.packaging_id
+                    packaging_code = packaging.shipper_package_code if (packaging.package_carrier_type == 'fedex' and packaging.shipper_package_code) else self.fedex_default_packaging_id.shipper_package_code
 
                     # Hibou Delivery
                     # Add more details to package.
-                    srm.add_package(package_weight, sequence_number=sequence, ref=('%s-%d' % (order_name, sequence)), insurance=insurance_value)
+                    srm.add_package(
+                        package_weight,
+                        # package_code=packaging_code,
+                        # package_height=packaging.height,
+                        # package_width=packaging.width,
+                        # package_length=packaging.length,
+                        sequence_number=sequence,
+                        ref=('%s-%d' % (order_name, sequence)),
+                        insurance=insurance_value
+                    )
                     srm.set_master_package(net_weight, package_count, master_tracking_id=master_tracking_id)
                     request = srm.process_shipment()
                     package_name = package.name or sequence
@@ -350,9 +377,17 @@ class DeliveryFedex(models.Model):
             # One package #
             ###############
             elif package_count == 1:
-                # Hibou Delivery
-                # Add more details to package.
-                srm.add_package(net_weight, ref=order_name, insurance=insurance_value)
+                packaging = picking_packages[:1].packaging_id or self.fedex_default_packaging_id
+                packaging_code = packaging.shipper_package_code if packaging.package_carrier_type == 'fedex' else self.fedex_default_packaging_id.shipper_package_code
+                srm.add_package(
+                    net_weight,
+                    # package_code=packaging_code,
+                    # package_height=packaging.height,
+                    # package_width=packaging.width,
+                    # package_length=packaging.length,
+                    ref=order_name,
+                    insurance=insurance_value
+                )
                 srm.set_master_package(net_weight, 1)
 
                 # Ask the shipping to fedex
@@ -394,3 +429,238 @@ class DeliveryFedex(models.Model):
                 raise UserError(_('No packages for this picking'))
 
         return res
+
+    def fedex_rate_shipment_multi(self, order=None, picking=None, packages=None):
+        if not packages:
+            return self._fedex_rate_shipment_multi_package(order=order, picking=picking)
+        else:
+            rates = []
+            for package in packages:
+                rates += self._fedex_rate_shipment_multi_package(order=order, picking=picking, package=package)
+            return rates
+
+    def _fedex_rate_shipment_multi_package(self, order=None, picking=None, package=None):
+        if order:
+            max_weight = self._fedex_convert_weight(self.fedex_default_packaging_id.max_weight, self.fedex_weight_unit)
+            is_india = order.partner_shipping_id.country_id.code == 'IN' and order.company_id.partner_id.country_id.code == 'IN'
+            est_weight_value = sum([(line.product_id.weight * line.product_uom_qty) for line in order.order_line]) or 0.0
+            weight_value = self._fedex_convert_weight(est_weight_value, self.fedex_weight_unit)
+            order_currency = order.currency_id
+        elif not package:
+            is_india = picking.partner_id.country_id.code == 'IN' and picking.company_id.partner_id.country_id.code == 'IN'
+            est_weight_value = sum([(line.product_id.weight * (line.qty_done or line.product_uom_qty)) for line in picking.move_line_ids]) or 0.0
+            weight_value = self._fedex_convert_weight(est_weight_value, self.fedex_weight_unit)
+            order_currency = picking.sale_id.currency_id if picking.sale_id else picking.company_id.currency_id
+        else:
+            is_india = picking.partner_id.country_id.code == 'IN' and picking.company_id.partner_id.country_id.code == 'IN'
+            order_currency = picking.sale_id.currency_id if picking.sale_id else picking.company_id.currency_id
+            est_weight_value = package.shipping_weight or package.weight
+            weight_value = self._fedex_convert_weight(est_weight_value, self.fedex_weight_unit)
+
+
+        price = 0.0
+
+        # Some users may want to ship very lightweight items; in order to give them a rating, we round the
+        # converted weight of the shipping to the smallest value accepted by FedEx: 0.01 kg or lb.
+        # (in the case where the weight is actually 0.0 because weights are not set, don't do this)
+        if weight_value > 0.0:
+            weight_value = max(weight_value, 0.01)
+
+        superself = self.sudo()
+
+        # Hibou Delivery methods for collecting details in an overridable way
+        shipper_company = superself.get_shipper_company(order=order, picking=picking)
+        shipper_warehouse = superself.get_shipper_warehouse(order=order, picking=picking)
+        recipient = superself.get_recipient(order=order, picking=picking)
+        acc_number = superself._get_fedex_account_number(order=order, picking=picking)
+        meter_number = superself._get_fedex_meter_number(order=order, picking=picking)
+        order_name = superself.get_order_name(order=order, picking=picking)
+        insurance_value = superself.get_insurance_value(order=order, picking=picking)
+        residential = self._get_fedex_recipient_is_residential(recipient)
+        date_planned = fields.Datetime.now()
+        if self.env.context.get('date_planned'):
+            date_planned = self.env.context.get('date_planned')
+        if date_planned and isinstance(date_planned, str):
+            date_planned = fields.Datetime.from_string(date_planned)
+
+        # Authentication stuff
+        srm = FedexRequest(self.log_xml, request_type="rating", prod_environment=self.prod_environment)
+        srm.web_authentication_detail(superself.fedex_developer_key, superself.fedex_developer_password)
+        srm.client_detail(acc_number, meter_number)
+
+        # Build basic rating request and set addresses
+        srm.transaction_detail(order_name)
+
+        # TODO what shipment requests can we make?
+        # TODO package and main weights?
+        # TODO need package & weight count to pass in
+        srm.shipment_request(
+            self.fedex_droppoff_type,
+            None,  # because we want all of the rates back...
+            self.fedex_default_packaging_id.shipper_package_code,
+            self.fedex_weight_unit,
+            self.fedex_saturday_delivery,
+            ship_timestamp=date_planned,
+        )
+        pkg = self.fedex_default_packaging_id
+
+        srm.set_currency(_convert_curr_iso_fdx(order_currency.name))
+        srm.set_shipper(shipper_company, shipper_warehouse)
+        srm.set_recipient(recipient, residential=residential)
+
+        if order and max_weight and weight_value > max_weight:
+            total_package = int(weight_value / max_weight)
+            last_package_weight = weight_value % max_weight
+
+            for sequence in range(1, total_package + 1):
+                srm.add_package(
+                    max_weight,
+                    # package_code=pkg.shipper_package_code,
+                    # package_height=pkg.height,
+                    # package_width=pkg.width,
+                    # package_length=pkg.length,
+                    sequence_number=sequence,
+                    mode='rating',
+                )
+            if last_package_weight:
+                total_package = total_package + 1
+                srm.add_package(
+                    last_package_weight,
+                    # package_code=pkg.shipper_package_code,
+                    # package_height=pkg.height,
+                    # package_width=pkg.width,
+                    # package_length=pkg.length,
+                    sequence_number=total_package,
+                    mode='rating',
+                )
+            srm.set_master_package(weight_value, total_package)
+        elif order:
+            srm.add_package(
+                weight_value,
+                # package_code=pkg.shipper_package_code,
+                # package_height=pkg.height,
+                # package_width=pkg.width,
+                # package_length=pkg.length,
+                mode='rating',
+            )
+            srm.set_master_package(weight_value, 1)
+        else:
+            if package:
+                package_weight = self._fedex_convert_weight(package.shipping_weight or package.weight, self.fedex_weight_unit)
+                packaging = package.packaging_id
+                package_code = package.packaging_id.shipper_package_code if packaging.package_carrier_type == 'fedex' else self.fedex_default_packaging_id.shipper_package_code
+
+                srm.add_package(
+                    package_weight,
+                    mode='rating',
+                    # package_code=package_code,
+                    # package_height=packaging.height,
+                    # package_width=packaging.width,
+                    # package_length=packaging.length,
+                    sequence_number=1,
+                    ref=('%s-%d' % (order_name, 1)),
+                    insurance=insurance_value
+                )
+            else:
+                # deliver all together...
+                package_weight = self._fedex_convert_weight(picking.shipping_weight or picking.weight, self.fedex_weight_unit)
+                packaging = self.fedex_default_packaging_id
+
+                srm.add_package(
+                    package_weight,
+                    mode='rating',
+                    # package_code=packaging.shipper_package_code,
+                    # package_height=packaging.height,
+                    # package_width=packaging.width,
+                    # package_length=packaging.length,
+                    sequence_number=1,
+                    # po_number=po_number,
+                    # dept_number=dept_number,
+                    ref=('%s-%d' % (order_name, 1)),
+                    insurance=insurance_value
+                )
+
+
+        # Commodities for customs declaration (international shipping)
+        # TODO Intestigate rating if needed...
+        # if self.fedex_service_type in ['INTERNATIONAL_ECONOMY', 'INTERNATIONAL_PRIORITY'] or is_india:
+        #     total_commodities_amount = 0.0
+        #     commodity_country_of_manufacture = order.warehouse_id.partner_id.country_id.code
+        #
+        #     for line in order.order_line.filtered(lambda l: l.product_id.type in ['product', 'consu']):
+        #         commodity_amount = line.price_total / line.product_uom_qty
+        #         total_commodities_amount += (commodity_amount * line.product_uom_qty)
+        #         commodity_description = line.product_id.name
+        #         commodity_number_of_piece = '1'
+        #         commodity_weight_units = self.fedex_weight_unit
+        #         commodity_weight_value = self._fedex_convert_weight(line.product_id.weight * line.product_uom_qty,
+        #                                                             self.fedex_weight_unit)
+        #         commodity_quantity = line.product_uom_qty
+        #         commodity_quantity_units = 'EA'
+        #         # DO NOT FORWARD PORT AFTER 12.0
+        #         if getattr(line.product_id, 'hs_code', False):
+        #             commodity_harmonized_code = line.product_id.hs_code or ''
+        #         else:
+        #             commodity_harmonized_code = ''
+        #         srm._commodities(_convert_curr_iso_fdx(order_currency.name), commodity_amount,
+        #                          commodity_number_of_piece, commodity_weight_units, commodity_weight_value,
+        #                          commodity_description, commodity_country_of_manufacture, commodity_quantity,
+        #                          commodity_quantity_units, commodity_harmonized_code)
+        #     srm.customs_value(_convert_curr_iso_fdx(order_currency.name), total_commodities_amount, "NON_DOCUMENTS")
+        #     srm.duties_payment(order.warehouse_id.partner_id.country_id.code, superself.fedex_account_number)
+
+        request_list = srm.rate(date_planned=date_planned, multi=True)
+        result = []
+        for request in request_list:
+            price = 0.0
+            warnings = request.get('warnings_message')
+            if warnings:
+                _logger.info(warnings)
+
+            if not request.get('errors_message'):
+                if _convert_curr_iso_fdx(order_currency.name) in request['price']:
+                    price = request['price'][_convert_curr_iso_fdx(order_currency.name)]
+                else:
+                    _logger.info("Preferred currency has not been found in FedEx response")
+                    company_currency = order.company_id.currency_id
+                    if _convert_curr_iso_fdx(company_currency.name) in request['price']:
+                        amount = request['price'][_convert_curr_iso_fdx(company_currency.name)]
+                        price = company_currency._convert(amount, order_currency, order.company_id,
+                                                          order.date_order or fields.Date.today())
+                    else:
+                        amount = request['price']['USD']
+                        price = company_currency._convert(amount, order_currency, order.company_id,
+                                                          order.date_order or fields.Date.today())
+            else:
+                result.append({'carrier': self,
+                               'success': False,
+                               'price': 0.0,
+                               'error_message': _('Error:\n%s') % request['errors_message'],
+                               'warning_message': False,
+                               'service_code': request['service_code'],
+                               })
+            service_code = request['service_code']
+            carrier = self.fedex_find_delivery_carrier_for_service(service_code)
+            if carrier:
+                date_delivered = request.get('date_delivered', False)
+                result.append({'carrier': carrier,
+                               'package': package or self.env['stock.quant.package'].browse(),
+                               'success': True,
+                               'price': price,
+                               'error_message': False,
+                               'transit_days': request.get('transit_days', False),
+                               'date_delivered': date_delivered,
+                               'date_planned': date_planned,
+                               'warning_message': _('Warning:\n%s') % warnings if warnings else False,
+                               'service_code': request['service_code'],
+                               })
+        return result
+
+    def fedex_find_delivery_carrier_for_service(self, service_code):
+        if self.fedex_service_type == service_code:
+            return self
+        # arbitrary decision, lets find the same account number
+        carrier = self.search([('fedex_account_number', '=', self.fedex_account_number),
+                               ('fedex_service_type', '=', service_code)
+                               ], limit=1)
+        return carrier
