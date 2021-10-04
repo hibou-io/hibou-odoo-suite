@@ -19,6 +19,10 @@ class DeliveryFedex(models.Model):
         ('FEDEX_EXPRESS_SAVER', 'FEDEX_EXPRESS_SAVER'),
     ])
 
+    def _fedex_convert_weight(self, weight, unit):
+        # dummy converter
+        return weight
+
     def _get_fedex_is_third_party(self, order=None, picking=None):
         third_party_account = self.get_third_party_account(order=order, picking=picking)
         if third_party_account:
@@ -114,6 +118,8 @@ class DeliveryFedex(models.Model):
         date_planned = None
         if self.env.context.get('date_planned'):
             date_planned = self.env.context.get('date_planned')
+        if date_planned and isinstance(date_planned, str):
+            date_planned = fields.Datetime.from_string(date_planned)
 
 
         # Authentication stuff
@@ -298,12 +304,12 @@ class DeliveryFedex(models.Model):
 
                     # Hibou Delivery
                     # Add more details to package.
-                    srm._add_package(
+                    srm.add_package(
                         package_weight,
-                        package_code=packaging_code,
-                        package_height=packaging.height,
-                        package_width=packaging.width,
-                        package_length=packaging.length,
+                        # package_code=packaging_code,
+                        # package_height=packaging.height,
+                        # package_width=packaging.width,
+                        # package_length=packaging.length,
                         sequence_number=sequence,
                         ref=('%s-%d' % (order_name, sequence)),
                         insurance=insurance_value
@@ -373,12 +379,12 @@ class DeliveryFedex(models.Model):
             elif package_count == 1:
                 packaging = picking_packages[:1].packaging_id or self.fedex_default_packaging_id
                 packaging_code = packaging.shipper_package_code if packaging.package_carrier_type == 'fedex' else self.fedex_default_packaging_id.shipper_package_code
-                srm._add_package(
+                srm.add_package(
                     net_weight,
-                    package_code=packaging_code,
-                    package_height=packaging.height,
-                    package_width=packaging.width,
-                    package_length=packaging.length,
+                    # package_code=packaging_code,
+                    # package_height=packaging.height,
+                    # package_width=packaging.width,
+                    # package_length=packaging.length,
                     ref=order_name,
                     insurance=insurance_value
                 )
@@ -474,6 +480,8 @@ class DeliveryFedex(models.Model):
         date_planned = fields.Datetime.now()
         if self.env.context.get('date_planned'):
             date_planned = self.env.context.get('date_planned')
+        if date_planned and isinstance(date_planned, str):
+            date_planned = fields.Datetime.from_string(date_planned)
 
         # Authentication stuff
         srm = FedexRequest(self.log_xml, request_type="rating", prod_environment=self.prod_environment)
@@ -507,10 +515,10 @@ class DeliveryFedex(models.Model):
             for sequence in range(1, total_package + 1):
                 srm.add_package(
                     max_weight,
-                    package_code=pkg.shipper_package_code,
-                    package_height=pkg.height,
-                    package_width=pkg.width,
-                    package_length=pkg.length,
+                    # package_code=pkg.shipper_package_code,
+                    # package_height=pkg.height,
+                    # package_width=pkg.width,
+                    # package_length=pkg.length,
                     sequence_number=sequence,
                     mode='rating',
                 )
@@ -518,10 +526,10 @@ class DeliveryFedex(models.Model):
                 total_package = total_package + 1
                 srm.add_package(
                     last_package_weight,
-                    package_code=pkg.shipper_package_code,
-                    package_height=pkg.height,
-                    package_width=pkg.width,
-                    package_length=pkg.length,
+                    # package_code=pkg.shipper_package_code,
+                    # package_height=pkg.height,
+                    # package_width=pkg.width,
+                    # package_length=pkg.length,
                     sequence_number=total_package,
                     mode='rating',
                 )
@@ -529,10 +537,10 @@ class DeliveryFedex(models.Model):
         elif order:
             srm.add_package(
                 weight_value,
-                package_code=pkg.shipper_package_code,
-                package_height=pkg.height,
-                package_width=pkg.width,
-                package_length=pkg.length,
+                # package_code=pkg.shipper_package_code,
+                # package_height=pkg.height,
+                # package_width=pkg.width,
+                # package_length=pkg.length,
                 mode='rating',
             )
             srm.set_master_package(weight_value, 1)
@@ -545,10 +553,10 @@ class DeliveryFedex(models.Model):
                 srm.add_package(
                     package_weight,
                     mode='rating',
-                    package_code=package_code,
-                    package_height=packaging.height,
-                    package_width=packaging.width,
-                    package_length=packaging.length,
+                    # package_code=package_code,
+                    # package_height=packaging.height,
+                    # package_width=packaging.width,
+                    # package_length=packaging.length,
                     sequence_number=1,
                     ref=('%s-%d' % (order_name, 1)),
                     insurance=insurance_value
@@ -561,10 +569,10 @@ class DeliveryFedex(models.Model):
                 srm.add_package(
                     package_weight,
                     mode='rating',
-                    package_code=packaging.shipper_package_code,
-                    package_height=packaging.height,
-                    package_width=packaging.width,
-                    package_length=packaging.length,
+                    # package_code=packaging.shipper_package_code,
+                    # package_height=packaging.height,
+                    # package_width=packaging.width,
+                    # package_length=packaging.length,
                     sequence_number=1,
                     # po_number=po_number,
                     # dept_number=dept_number,
@@ -635,9 +643,6 @@ class DeliveryFedex(models.Model):
             carrier = self.fedex_find_delivery_carrier_for_service(service_code)
             if carrier:
                 date_delivered = request.get('date_delivered', False)
-                if date_delivered:
-                    tz = pytz.timezone(self.delivery_calendar_id.tz)
-                    date_delivered = tz.localize(date_delivered).astimezone(pytz.utc).replace(tzinfo=None)
                 result.append({'carrier': carrier,
                                'package': package or self.env['stock.quant.package'].browse(),
                                'success': True,
