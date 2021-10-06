@@ -23,10 +23,10 @@ def inline_b64decode(data):
         return ''
 
 
-class ProductPackaging(models.Model):
-    _inherit = 'product.packaging'
+class StockPackageType(models.Model):
+    _inherit = 'stock.package.type'
 
-    package_carrier_type = fields.Selection(selection_add=[('gso', 'gso.com')])
+    package_carrier_type = fields.Selection(selection_add=[('gso', 'gso.com')], ondelete={'gso': 'set default'})
 
 
 class ProviderGSO(models.Model):
@@ -36,7 +36,7 @@ class ProviderGSO(models.Model):
     gso_username = fields.Char(string='gso.com Username', groups='base.group_system')
     gso_password = fields.Char(string='gso.com Password', groups='base.group_system')
     gso_account_number = fields.Char(string='gso.com Account Number', groups='base.group_system')
-    gso_default_packaging_id = fields.Many2one('product.packaging', string='Default Package Type')
+    gso_default_packaging_id = fields.Many2one('stock.package.type', string='Default Package Type')
     # For service type, SAM, SPM, and SEV require authorized accounts.
     gso_service_type = fields.Selection([('PDS', 'Priority Overnight'),
                                          ('EPS', 'Early Priority Overnight'),
@@ -151,11 +151,20 @@ class ProviderGSO(models.Model):
             package_type = self.gso_default_packaging_id
         else:
             package_type = package.packaging_id
+        length_uom = self.env['product.template']._get_length_uom_id_from_ir_config_parameter()
+        if length_uom.name == 'ft':
+            return {'Length': round(package_type.packaging_length / 12.0), 'Width': round(package_type.width / 12.0), 'Height': round(package_type.height / 12.0)}
+        elif length_uom.name == 'mm':
+            return {'Length': round(package_type.packaging_length * 0.0393701), 'Width': round(package_type.width * 0.0393701), 'Height': round(package_type.height * 0.0393701)}
         return {'Length': package_type.packaging_length, 'Width': package_type.width, 'Height': package_type.height}
 
-    def _gso_convert_weight(self, weight_in_kg):
-        # m(lb) = m(kg) / 0.45359237
-        weight_in_lb = weight_in_kg / 0.45359237
+    def _gso_convert_weight(self, weight_in_db):
+        weight_uom = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
+        if weight_uom.name == 'kg':
+            weight_in_lb = weight_in_db / 0.45359237
+        else:
+            # assume lbs
+            weight_in_lb = weight_in_db
         # If less than 8 oz...
         if weight_in_lb < 0.5:
             return 0
