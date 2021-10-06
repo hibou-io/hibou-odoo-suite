@@ -118,7 +118,7 @@ class TestStockDeliveryPlanner(TransactionCase):
         self.picking.move_line_ids.filtered(lambda ml: ml.product_id == self.product).qty_done = 5.0
         packing_action = self.picking.action_put_in_pack()
         packing_wizard = Form(self.env[packing_action['res_model']].with_context(packing_action['context']))
-        packing_wizard.delivery_packaging_id = self.fedex_package
+        packing_wizard.delivery_package_type_id = self.fedex_package
         choose_delivery_package = packing_wizard.save()
         choose_delivery_package.action_put_in_pack()
         self.assertEqual(self.picking.shipping_weight, 5.0)
