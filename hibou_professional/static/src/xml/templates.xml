@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="HibouProfessionalSystrayWidget">
-        <li class="hibou_professional_systray o_mail_systray_item">
-            <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false" data-flip="false" data-display="static" href="#">
+        <div class="hibou_professional_systray o_mail_systray_item dropdown">
+            <a class="dropdown-toggle o-no-caret o-dropdown--narrow" data-toggle="dropdown" aria-expanded="false" data-flip="false" data-display="static" href="#" role="button">
                 <img t-if="! (widget.expiring || widget.expired)" class="hibou-icon-small" width="16px" height="16px" src="/hibou_professional/static/src/img/hibou_icon_small.png" alt="Hibou Icon"/>
                 <i class="fa fa-exclamation-triangle" t-if="widget.expiring || widget.expired"/>
                 <span class="expiration_message" t-if="widget.expiring" t-esc="widget.expiring"/>
@@ -131,6 +131,6 @@
                     </div>
                 </div>
             </div>
-        </li>
+        </div>
     </t>
 </templates>

@@ -13,11 +13,16 @@ Hibou Professional Support and Billing
     """,
     'website': 'https://hibou.io/',
     'data': [
-        'views/webclient_templates.xml',
     ],
-    'qweb': [
-        'static/src/xml/templates.xml',
-    ],
+    'assets': {
+        'web.assets_qweb': [
+            'hibou_professional/static/src/xml/templates.xml',
+        ],
+        'web.assets_backend': [
+            'hibou_professional/static/src/css/web.css',
+            'hibou_professional/static/src/js/core.js',
+        ],
+    },
     'installable': True,
     'auto_install': True,
     'license': 'OPL-1',
