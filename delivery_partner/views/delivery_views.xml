@@ -69,7 +69,7 @@
         <field name="inherit_id" ref="delivery.view_partner_property_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='property_delivery_carrier_id']" position="after">
-                <field name="shipping_account_ids" context="{'default_partner_id': active_id}">
+                <field name="shipping_account_ids">
                     <tree>
                         <field name="description"/>
                         <field name="name"/>
