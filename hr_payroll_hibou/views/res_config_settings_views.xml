@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="res_config_settings_view_form_hibou" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.hr.payroll.hibou</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="50"/>
+            <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@data-key='hr_payroll']" position="inside">
+                    <field name="module_l10n_us_hr_payroll" invisible="1"/>
+                    <!-- TODO payment, attendance, timesheet, ovetrtime... -->
+                    <h2>Hibou Payroll</h2>
+                    <div class="row mt16 o_settings_container" id="hr_payroll_hibou">
+                        <div class="col-lg-6 col-12 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="payslip_sum_type" string="Payslip Sum Behavior"/>
+                                <div class="text-muted">
+                                    Customize the behavior of what payslips are eligible when summing over date ranges in rules.
+                                    Generally, "Date To" or "Accounting Date" would be preferred in the United States and anywhere
+                                    else where the ending date on the payslip is used to calculate wage bases.
+                                </div>
+                                <field name="payslip_sum_type"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_l10n_us_hr_payroll_401k"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_l10n_us_hr_payroll_401k" string="USA Payroll 401k"/>
+                                <div class="text-muted">
+                                    Provide retirement plans with optional company matching.
+                                    <strong>Hibou Professional</strong>
+                                </div>
+                                <div class="mt8" id="l10n_us_hr_payroll_401k_match">
+                                    <button name="%(hr_payroll.hr_rule_parameter_action)d" icon="fa-arrow-right" type="action"
+                                            string="Configure Matching &amp; Limits" class="btn-link"
+                                            context="{'search_default_us_payroll_401k': True}"
+                                            attrs="{'invisible': [('module_l10n_us_hr_payroll_401k', '=', False)]}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_hr_payroll_payment"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_hr_payroll_payment"/>
+                                <div class="text-muted">
+                                    Register payments on payslips! Have control over journal entries created from
+                                    payroll to include partner details, set grouping options, and apply fiscal position
+                                    account mappings.
+                                    <strong>Hibou Professional</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_hr_payroll_attendance"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_hr_payroll_attendance"/>
+                                <div class="text-muted">
+                                    Extend Attendance into Payroll with Work Types, Overtime!
+                                    <strong>Hibou Professional</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_hr_payroll_timesheet"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_hr_payroll_timesheet"/>
+                                <div class="text-muted">
+                                    Extend Timesheets into Payroll with Work Types, Overtime!
+                                    <strong>Hibou Professional</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_hr_payroll_commission"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_hr_payroll_commission"/>
+                                <div class="text-muted">
+                                    Pay Commissions in Payroll!
+                                    <strong>Hibou Professional</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>
