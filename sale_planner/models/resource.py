@@ -15,16 +15,16 @@ class ResourceCalendar(models.Model):
 
         # which method to use for retrieving intervals
         if compute_leaves:
-            get_intervals = partial(self._work_intervals, domain=domain)
+            get_intervals = partial(self._work_intervals_batch, domain=domain)
         else:
-            get_intervals = self._attendance_intervals
+            get_intervals = self._attendance_intervals_batch
 
         if days >= 0:
             found = set()
             delta = timedelta(days=14)
             for n in range(100):
                 dt = day_dt + delta * n
-                for start, stop, meta in get_intervals(dt, dt + delta):
+                for start, stop, meta in get_intervals(dt, dt + delta)[False]:
                     found.add(start.date())
                     if len(found) >= days:
                         return revert(stop)
@@ -36,7 +36,7 @@ class ResourceCalendar(models.Model):
             delta = timedelta(days=14)
             for n in range(100):
                 dt = day_dt - delta * n
-                for start, stop, meta in reversed(get_intervals(dt - delta, dt)):
+                for start, stop, meta in reversed(get_intervals(dt - delta, dt))[False]:
                     found.add(start.date())
                     if len(found) == days:
                         return revert(start)
