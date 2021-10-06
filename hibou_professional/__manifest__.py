@@ -5,7 +5,7 @@
     'author': 'Hibou Corp. <hello@hibou.io>',
     'category': 'Tools',
     'depends': ['mail'],
-    'version': '14.0.1.0.0',
+    'version': '15.0.1.0.0',
     'description': """
 Hibou Professional Support and Billing
 ======================================
