@@ -14,12 +14,11 @@ class SignifydConnector(models.Model):
 
     name = fields.Char(string='Connector Name', required=True)
     test_mode = fields.Boolean(string='Test Mode')
-    user_key = fields.Char(string='Team/Username', required=True)
     secret_key = fields.Char(string='API Key', required=True)
-    user_key_test = fields.Char(string='TEST Team/Username')
     secret_key_test = fields.Char(string='TEST API Key')
     webhooks_registered = fields.Boolean(string='Successfully Registered Webhooks')
     notify_user_ids = fields.Many2many('res.users', string='Receive decline notifications')
+    website_ids = fields.One2many('website', 'signifyd_connector_id', string='Used on Websites')
 
     # TODO ideally this would be a regular constant
     # however other entities currently use this by reference

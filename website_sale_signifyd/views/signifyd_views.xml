@@ -80,14 +80,14 @@
                         <field name="webhooks_registered" invisible="1"/>
                         <div class="text-success float-right"
                              attrs="{'invisible': [('webhooks_registered', '=', False)]}">
-                            <i class="fa fa-check-square"></i>
+                            <i class="fa fa-check-square" title="Webhooks Active"/>
                             <strong>
                                 Webhooks Active
                             </strong>
                         </div>
                         <div class="text-danger float-right"
                              attrs="{'invisible': [('webhooks_registered', '=', True)]}">
-                            <i class="fa fa-square"></i>
+                            <i class="fa fa-square" title="Webhooks Inactive"/>
                             <strong>
                                 Webhooks Inactive
                             </strong>
@@ -103,16 +103,14 @@
 
                     <group>
                         <group>
-                            <field name="user_key" attrs="{'invisible': [('test_mode', '=', True)]}"/>
                             <field name="secret_key" attrs="{'invisible': [('test_mode', '=', True)]}"/>
-                            <field name="user_key_test" attrs="{'invisible': [('test_mode', '!=', True)]}"/>
                             <field name="secret_key_test" attrs="{'invisible': [('test_mode', '!=', True)]}"/>
                             <p class="text-muted">
                                 Optional: Add users to be notified if a sale order is declined by Signifyd.
                             </p>
                             <field name="notify_user_ids" widget="many2many_tags"/>
+                            <field name="website_ids" widget="many2many_tags"/>
                         </group>
-
                     </group>
                 </sheet>
             </form>
