@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="HibouProfessionalSystrayWidget">
+        <div class="hibou_professional_systray o_mail_systray_item dropdown">
+            <a class="dropdown-toggle o-no-caret o-dropdown--narrow" data-toggle="dropdown" aria-expanded="false" data-flip="false" data-display="static" href="#" role="button">
+                <img t-if="! (widget.expiring || widget.expired)" class="hibou-icon-small" width="16px" height="16px" src="/hibou_professional/static/src/img/hibou_icon_small.png" alt="Hibou Icon"/>
+                <i class="fa fa-exclamation-triangle" t-if="widget.expiring || widget.expired"/>
+                <span class="expiration_message" t-if="widget.expiring" t-esc="widget.expiring"/>
+                <span class="expiration_message" t-if="widget.expired" t-esc="widget.expired"/>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right o_mail_systray_dropdown" role="menu">
+                <div class="o_mail_systray_dropdown_items">
+                    <a href="https://hibou.io/help?utm_source=db&amp;utm_medium=help" target="_blank">
+                        <div class="o_mail_preview">
+                            <div class="o_preview_info">
+                                <div class="o_preview_title">
+                                    <span class="o_preview_name hibou_professional_help">
+                                        Hibou Professional Help
+                                    </span>
+                                </div>
+                                <div>
+                                    <p>We're here to help!<br/>Click here to review Hibou's help resources or to contact us today.</p>
+                                </div>
+                                <div class="text-danger hibou_professional_error"/>
+                            </div>
+                        </div>
+                    </a>
+                    <div t-if="widget.allow_message || (widget.allow_admin_message &amp;&amp; widget.is_admin)" class="o_mail_preview hibou_message_form_container">
+                        <div class="o_preview_info">
+                            <div class="o_preview_title">
+                                    <span class="o_preview_name hibou_professional_help">Talk to Hibou!</span>
+                            </div>
+                            <div>
+                                <br/>
+                                <p class="get_messages">
+                                    <button class="hibou_get_messages btn btn-secondary btn-sm">Retrieve Recent Subjects</button>
+                                </p>
+                            </div>
+                            <div class="hibou_message_form">
+                                <t t-set="subject_types" t-value="widget.types"/>
+                                <p>
+                                    <label for="hibou_message_type">Who do you want to talk to?</label>
+                                    <select class="hibou_message_type form-control" name="hibou_message_type">
+                                        <t t-foreach="subject_types" t-as="type">
+                                            <option t-attf-value="#{type[0]}" t-esc="type[1]"/>
+                                        </t>
+                                    </select>
+                                </p>
+                                <p id="hibou_subject_selection">
+                                    <label for="hibou_subject_selection">Update Existing</label>
+                                    <select class="hibou_subject_selection form-control" name="hibou_subject_selection">
+                                        <t t-foreach="subject_types" t-as="type">
+                                            <t t-foreach="widget.get_subjects(type[0])" t-as="subject">
+                                                <option t-attf-value="#{subject[0]}" t-attf-class="hibou_subject_selection_option #{type[0]}" t-esc="subject[1]"/>
+                                            </t>
+                                        </t>
+                                        <option value="0">New</option>
+                                    </select>
+                                </p>
+                                <p id="hibou_message_priority">
+                                    <label for="hibou_message_priority">Priority</label>
+                                    <select class="hibou_message_priority form-control" name="hibou_message_priority">
+                                        <option value="0">Low priority</option>
+                                        <option value="1">Medium priority</option>
+                                        <option value="2">High priority</option>
+                                        <option value="3">Urgent</option>
+                                    </select>
+                                </p>
+                                <p id="hibou_message_subject">
+                                    <label for="hibou_message_subject">Subject</label>
+                                    <input type="text" class="hibou_message_subject form-control" name="hibou_message_subject"/>
+                                </p>
+                                <p>
+                                    <p>You can use <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank">Markdown</a> for formatting.</p>
+                                    <textarea rows="5" class="hibou_message_body form-control" name="hibou_message_body"/>
+                                </p>
+                                <button type="submit" class="hibou_send_message btn btn-primary">Send</button>
+                            </div>
+                            <div class="hibou_message_response" style="display: none;">
+                                <a target="_blank">Click to view your message</a>
+                            </div>
+                        </div>
+                    </div>
+                    <t t-if="widget.expiration_reason == 'trial' || (! widget.expiration_reason) || widget.expired || widget.expiring">
+                        <a class="button-quote-link" target="_blank">
+                            <div class="o_mail_preview">
+                                <div class="o_preview_info">
+                                    <div class="o_preview_title">
+                                        <span class="o_preview_name hibou_professional_help">
+                                            See pricing and get a Quote
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <p>Click here to review Hibou's pricing and start a new Professional Subscription.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="o_mail_preview subscription_form">
+                            <div class="o_preview_info">
+                                <div class="o_preview_title">
+                                    <p>
+                                        <span t-if="widget.expiration_reason == 'trial'">You are on a trial of Hibou Professional.<br/></span>
+                                        If you have a subscription code, please enter it here.
+                                    </p>
+                                </div>
+                                <div>
+                                    <input type="text" name="hibou_professional_code form-control" class="hibou_professional_code"/>
+                                    <button type="submit" class="update_subscription btn btn-primary">Update Subscription</button>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <div t-if="widget.is_admin" class="o_mail_preview message_preferences_form">
+                        <div class="o_preview_info">
+                            <div class="o_preview_title">
+                                <p>
+                                    You can send messages (tickets, project tasks, etc.) directly to Hibou using this dropdown.<br/><br/>Select which users can send messages.
+                                </p>
+                            </div>
+                            <div>
+                                <p>
+                                    <input type="checkbox" t-att-checked="widget.allow_admin_message=='1' or None" name="hibou_allow_admin_message" class="hibou_allow_admin_message"/> Admin Users (like yourself)
+                                </p>
+                                <p>
+                                    <input type="checkbox" t-att-checked="widget.allow_message=='1' or None" name="hibou_allow_message" class="hibou_allow_message"/> All Internal Users
+                                </p>
+                                <button type="submit" class="update_message_preferences btn btn-secondary">Update Message Preferences</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
