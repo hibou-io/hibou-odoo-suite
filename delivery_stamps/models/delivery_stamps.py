@@ -42,8 +42,8 @@ STAMPS_CONTENT_TYPES = {
 STAMPS_INTEGRATION_ID = 'f62cb4f0-aa07-4701-a1dd-f0e7c853ed3c'
 
 
-class ProductPackaging(models.Model):
-    _inherit = 'product.packaging'
+class StockPackageType(models.Model):
+    _inherit = 'stock.package.type'
 
     package_carrier_type = fields.Selection(selection_add=[('stamps', 'Stamps.com')])
     stamps_cubic_pricing = fields.Boolean(string="Stamps.com Use Cubic Pricing")
@@ -65,7 +65,7 @@ class ProviderStamps(models.Model):
                                             ('US-EMI', ' Priority Mail Express International'),
                                             ],
                                            required=True, string="Service Type", default="US-PM")
-    stamps_default_packaging_id = fields.Many2one('product.packaging', string='Default Package Type')
+    stamps_default_packaging_id = fields.Many2one('stock.package.type', string='Default Package Type')
 
     stamps_image_type = fields.Selection([('Auto', 'Auto'),
                                           ('Png', 'PNG'),
@@ -105,7 +105,11 @@ class ProviderStamps(models.Model):
             package_type = self.stamps_default_packaging_id
         else:
             package_type = package.packaging_id
-        # TODO should convert to inches if it is not already
+        length_uom = self.env['product.template']._get_length_uom_id_from_ir_config_parameter()
+        if length_uom.name == 'ft':
+            return round(package_type.packaging_length / 12.0), round(package_type.width / 12.0), round(package_type.height / 12.0)
+        elif length_uom.name == 'mm':
+            return round(package_type.packaging_length * 0.0393701), round(package_type.width * 0.0393701), round(package_type.height * 0.0393701)
         return package_type.packaging_length, package_type.width, package_type.height
 
     def _get_stamps_service(self):
@@ -118,15 +122,11 @@ class ProviderStamps(models.Model):
 
     def _stamps_convert_weight(self, weight):
         """ weight always expressed in database units (KG/LBS) """
-        if self.stamps_default_packaging_id.max_weight and self.stamps_default_packaging_id.max_weight < weight:
-            raise ValidationError('Stamps cannot ship for weight: ' + str(weight) + ' kgs/lbs.')
-
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        product_weight_in_lbs_param = get_param('product.weight_in_lbs')
-        if product_weight_in_lbs_param == '1':
-            return weight
-
-        weight_in_pounds = weight * 2.20462
+        weight_uom = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
+        if weight_uom.name == 'kg':
+            weight_in_pounds = weight * 2.20462
+        else:
+            weight_in_pounds = weight
         return weight_in_pounds
 
     def _get_stamps_shipping_for_order(self, service, order, date_planned):

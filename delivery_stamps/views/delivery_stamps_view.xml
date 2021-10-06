@@ -27,10 +27,10 @@
         </field>
     </record>
 
-    <record id="product_packaging_delivery_form" model="ir.ui.view">
-        <field name="name">stamps.product.packaging.form.delivery</field>
-        <field name="model">product.packaging</field>
-        <field name="inherit_id" ref="delivery.product_packaging_delivery_form"/>
+    <record id="stock_package_type_form_delivery" model="ir.ui.view">
+        <field name="name">stamps.stock.package.type.form.delivery</field>
+        <field name="model">stock.package.type</field>
+        <field name="inherit_id" ref="delivery.stock_package_type_form_delivery"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='barcode']" position='before'>
                 <field name="stamps_cubic_pricing"/>
