@@ -150,7 +150,7 @@ class ProviderGSO(models.Model):
         if not package:
             package_type = self.gso_default_packaging_id
         else:
-            package_type = package.packaging_id
+            package_type = package.package_type_id
         length_uom = self.env['product.template']._get_length_uom_id_from_ir_config_parameter()
         if length_uom.name == 'ft':
             return {'Length': round(package_type.packaging_length / 12.0), 'Width': round(package_type.width / 12.0), 'Height': round(package_type.height / 12.0)}
