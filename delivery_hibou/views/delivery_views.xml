@@ -17,8 +17,8 @@
         <field name="model">choose.delivery.package</field>
         <field name="inherit_id" ref="delivery.choose_delivery_package_view_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='delivery_packaging_id']" position="attributes">
-                <attribute name="domain">[('product_id', '=', False)]</attribute>
+            <xpath expr="//field[@name='delivery_package_type_id']" position="attributes">
+                <attribute name="domain">[]</attribute>
             </xpath>
         </field>
     </record>
