@@ -87,7 +87,7 @@ class ProviderStamps(models.Model):
     def _stamps_package_type(self, package=None):
         if not package:
             return self.stamps_default_packaging_id.shipper_package_code
-        return package.packaging_id.shipper_package_code if package.packaging_id.shipper_package_code in STAMPS_PACKAGE_TYPES else 'Package'
+        return package.package_type_id.shipper_package_code if package.package_type_id.shipper_package_code in STAMPS_PACKAGE_TYPES else 'Package'
 
     def _stamps_content_type(self, package=None):
         package_type = self._stamps_package_type(package=package)
@@ -98,13 +98,13 @@ class ProviderStamps(models.Model):
     def _stamps_package_is_cubic_pricing(self, package=None):
         if not package:
             return self.stamps_default_packaging_id.stamps_cubic_pricing
-        return package.packaging_id.stamps_cubic_pricing
+        return package.package_type_id.stamps_cubic_pricing
 
     def _stamps_package_dimensions(self, package=None):
         if not package:
             package_type = self.stamps_default_packaging_id
         else:
-            package_type = package.packaging_id
+            package_type = package.package_type_id
         length_uom = self.env['product.template']._get_length_uom_id_from_ir_config_parameter()
         if length_uom.name == 'ft':
             return round(package_type.packaging_length / 12.0), round(package_type.width / 12.0), round(package_type.height / 12.0)
