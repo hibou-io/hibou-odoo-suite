@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="structure_type_employee" model="hr.payroll.structure.type">
+        <field name="name">USA Employee</field>
+        <field name="default_resource_calendar_id" ref="resource.resource_calendar_std"/>
+        <field name="country_id" ref="base.us"/>
+    </record>
+
+
+
+    <record id="hr_payroll_structure" model="hr.payroll.structure">
+        <field name="name">USA Employee Standard</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="type_id" ref="l10n_us_hr_payroll.structure_type_employee"/>
+        <field name="unpaid_work_entry_type_ids" eval="[
+            (4, ref('hr_work_entry_contract.work_entry_type_unpaid_leave')),
+            ]"/>
+    </record>
+
+    <record id="l10n_us_hr_payroll.structure_type_employee" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure"/>
+    </record>
+
+    <!-- State Unemployment -->
+    <record id="hr_payroll_category_ee_us_suta" model="hr.salary.rule.category">
+        <field name="name">EE: State Unemployment SUTA</field>
+        <field name="code">EE_US_SUTA</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    <record id="hr_payroll_category_er_us_suta" model="hr.salary.rule.category">
+        <field name="name">ER: State Unemployment SUTA</field>
+        <field name="code">ER_US_SUTA</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <!-- State Income Tax -->
+    <record id="hr_payroll_category_ee_us_sit" model="hr.salary.rule.category">
+        <field name="name">EE: State Income Tax Withholding</field>
+        <field name="code">EE_US_SIT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <!-- Tax Exempt Benefits/Wage -->
+    <!-- IRS Publication 15-B Lists several categories of benefits, limits and classifications -->
+    <!-- If your rule is intended to add to gross wages or be pre-gross, use the ALW_ Categories -->
+    <record id="hr_payroll_category_alw_fit_exempt" model="hr.salary.rule.category">
+        <field name="name">Wage: US FIT Exempt</field>
+        <field name="code">ALW_FIT_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+    
+    <record id="hr_payroll_category_alw_fit_fica_exempt" model="hr.salary.rule.category">
+        <field name="name">Wage: US FIT &amp; FICA Exempt</field>
+        <field name="code">ALW_FIT_FICA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+    
+    <record id="hr_payroll_category_alw_fit_futa_exempt" model="hr.salary.rule.category">
+        <field name="name">Wage: US FIT &amp; FUTA Exempt</field>
+        <field name="code">ALW_FIT_FUTA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+    
+    <record id="hr_payroll_category_alw_fit_fica_futa_exempt" model="hr.salary.rule.category">
+        <field name="name">Wage: US FIT &amp; FICA &amp; FUTA Exempt</field>
+        <field name="code">ALW_FIT_FICA_FUTA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+    
+    <record id="hr_payroll_category_alw_fica_exempt" model="hr.salary.rule.category">
+        <field name="name">Wage: US FICA Exempt</field>
+        <field name="code">ALW_FICA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+    
+    <record id="hr_payroll_category_alw_fica_futa_exempt" model="hr.salary.rule.category">
+        <field name="name">Wage: US FICA &amp; FUTA Exempt</field>
+        <field name="code">ALW_FICA_FUTA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+    
+    <record id="hr_payroll_category_alw_futa_exempt" model="hr.salary.rule.category">
+        <field name="name">Wage: US FUTA Exempt</field>
+        <field name="code">ALW_FUTA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+    
+    <!-- Tax Exempt Deductions -->
+    <!-- If your rule is intended to withhold from gross, use the DED_ Categories -->
+    <record id="hr_payroll_category_ded_fit_exempt" model="hr.salary.rule.category">
+        <field name="name">Deduction: US FIT Exempt</field>
+        <field name="code">DED_FIT_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    
+    <record id="hr_payroll_category_ded_fit_fica_exempt" model="hr.salary.rule.category">
+        <field name="name">Deduction: US FIT &amp; FICA Exempt</field>
+        <field name="code">DED_FIT_FICA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    
+    <record id="hr_payroll_category_ded_fit_futa_exempt" model="hr.salary.rule.category">
+        <field name="name">Deduction: US FIT &amp; FUTA Exempt</field>
+        <field name="code">DED_FIT_FUTA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    
+    <record id="hr_payroll_category_ded_fit_fica_futa_exempt" model="hr.salary.rule.category">
+        <field name="name">Deduction: US FIT &amp; FICA &amp; FUTA Exempt</field>
+        <field name="code">DED_FIT_FICA_FUTA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    
+    <record id="hr_payroll_category_ded_fica_exempt" model="hr.salary.rule.category">
+        <field name="name">Deduction: US FICA Exempt</field>
+        <field name="code">DED_FICA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    
+    <record id="hr_payroll_category_ded_fica_futa_exempt" model="hr.salary.rule.category">
+        <field name="name">Deduction: US FICA &amp; FUTA Exempt</field>
+        <field name="code">DED_FICA_FUTA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    
+    <record id="hr_payroll_category_ded_futa_exempt" model="hr.salary.rule.category">
+        <field name="name">Deduction: US FUTA Exempt</field>
+        <field name="code">DED_FUTA_EXEMPT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+</odoo>
