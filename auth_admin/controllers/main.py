@@ -33,7 +33,7 @@ class AuthAdmin(http.Controller):
             uid = http.request.session.authenticate(http.request.session.db, user.login, 'x')
             if uid is not False:
                 http.request.params['login_success'] = True
-                return http.redirect_with_hash('/my/home')
-            return http.local_redirect('/my/home')
+                return http.request.redirect('/my/home')
+            return http.request.redirect('/my/home')
         except (exceptions.Warning, ) as e:
             return http.Response(e.message, status=400)
