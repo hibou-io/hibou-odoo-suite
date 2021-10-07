@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="timesheet_view_form_inherit" model="ir.ui.view">
+        <field name="name">account.analytic.line.form.inherit</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="timesheet_grid.timesheet_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='task_id']" position="after">
+                <field name="work_type_id"
+                       domain="[('allow_timesheet', '=', True)]"
+                       context="{'default_allow_timesheet': True}" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
