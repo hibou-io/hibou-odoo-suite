@@ -115,7 +115,7 @@ class TestAttendancePayslip(common.TestPayslip):
         self.payslip.attendance_ids = self.env['hr.attendance'].browse()
         self.payslip.state = 'draft'
         self.payslip.flush()
-        self.payslip._onchange_employee()
+        self.payslip.action_refresh_from_work_entries()
         self.payslip.compute_sheet()
         cats = self._getCategories(self.payslip)
         self.assertAlmostEqual(cats['BASIC'], 3247.68, 2)
@@ -123,7 +123,7 @@ class TestAttendancePayslip(common.TestPayslip):
         self.payslip.write({'attendance_ids': [(5, 0, 0)]})
         self.payslip.state = 'draft'
         self.payslip.flush()
-        self.payslip._onchange_employee()
+        self.payslip.action_refresh_from_work_entries()
         self.payslip.compute_sheet()
         cats = self._getCategories(self.payslip)
         self.assertAlmostEqual(cats['BASIC'], 3247.68, 2)
