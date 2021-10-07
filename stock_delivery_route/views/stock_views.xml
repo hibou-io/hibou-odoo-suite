@@ -72,15 +72,16 @@
     </record>
 
     <!-- Picking Batch -->
-    <record id="stock_picking_batch_form_inherit" model="ir.ui.view">
-        <field name="name">stock.picking.batch.form.inherit</field>
-        <field name="model">stock.picking.batch</field>
-        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
+    <record id="view_picking_tree_batch_inherit" model="ir.ui.view">
+        <field name="name">stock_picking_batch.picking.tree.batch.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock_picking_batch.view_picking_tree_batch"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='picking_ids']/tree/field[@name='name']" position="before">
+            <xpath expr="//field[@name='name']" position="before">
                 <field name="sequence" widget="handle"/>
                 <field name="partner_address" />
             </xpath>
         </field>
     </record>
+
 </odoo>
