@@ -30,7 +30,8 @@
     <menuitem
         id="hr_work_entry_type_menu"
         name="Work Entry Types"
-        parent="hr_attendance.menu_hr_attendance_manage_attendances"
+        parent="hr_attendance.menu_hr_attendance_root"
+        sequence="90"
         action="hr_work_entry.hr_work_entry_type_action"/>
 
 </odoo>

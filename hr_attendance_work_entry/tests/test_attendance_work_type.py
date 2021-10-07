@@ -1,3 +1,4 @@
+from time import sleep
 from odoo.tests import common
 
 
@@ -38,6 +39,9 @@ class TestAttendanceWorkType(common.TransactionCase):
         attendance = self.employee._attendance_action_change()
         self.assertEqual(attendance.work_type_id, break_type)
         self.assertEqual(self.employee.attendance_state, 'break')
+
+        # tests likely won't pass as the timestamps will be the same
+        sleep(1)
 
         # check back in immediately with default
         self.employee = self.employee.with_context(work_type_id=self.default_work_type.id)
