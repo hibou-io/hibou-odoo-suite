@@ -1,7 +1,7 @@
 {
     'name': 'Timesheet Grid Work Entry',
     'description': 'bridge',
-    'version': '14.0.1.0.0',
+    'version': '15.0.1.0.0',
     'website': 'https://hibou.io/',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'license': 'AGPL-3',
