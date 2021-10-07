@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Salary Other Input -->
+    <record id="commission_other_input" model="hr.payslip.input.type">
+        <field name="name">Commissions</field>
+        <field name="code">COMMISSION</field>
+    </record>
+
+</odoo>

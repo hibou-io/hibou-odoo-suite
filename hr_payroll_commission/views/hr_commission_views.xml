@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_commission_payment_form_inherit" model="ir.ui.view">
+        <field name="name">hr.expense.sheet.view.form.payroll</field>
+        <field name="model">hr.commission.payment</field>
+        <field name="inherit_id" ref="hr_commission.view_hr_commission_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="pay_in_payslip" attrs="{'invisible': ['|', ('pay_in_payslip', '=', False), ('payslip_id', '!=', False)]}"/>
+                <field name="payslip_id" attrs="{'invisible':[('payslip_id','=',False)]}"/>
+            </xpath>
+            <xpath expr="//form/header" position="inside">
+                <button name="action_report_in_next_payslip" type="object"
+                        string="Report in Next Payslip"
+                        groups="account.group_account_manager"
+                        attrs="{'invisible': ['|', ('pay_in_payslip', '=', True), ('payslip_id', '!=', False)]}"
+                        class="oe_highlight"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
