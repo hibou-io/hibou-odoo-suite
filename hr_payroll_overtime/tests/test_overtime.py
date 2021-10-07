@@ -24,7 +24,12 @@ class TestOvertime(common.TransactionCase):
             'overtime_work_type_id': self.work_type_overtime.id,
         })
         self.employee = self.env.ref('hr.employee_hne')
-        self.contract = self.employee.contract_ids.filtered(lambda l: l.state == 'open')
+        self.contract = self.employee.contract_ids.create({
+            'name': 'testing contract',
+            'employee_id': self.employee.id,
+            'date_start': '2020-01-01',
+            'wage': 2000.0,
+        })
         self.payslip = self.env['hr.payslip'].create({
             'name': 'test slip',
             'employee_id': self.employee.id,
