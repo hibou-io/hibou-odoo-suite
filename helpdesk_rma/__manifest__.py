@@ -1,7 +1,7 @@
 {
     'name': 'Helpdesk RMA',
     'summary': 'Adds RMA functionality to the Helpdesk App',
-    'version': '14.0.1.0.0',
+    'version': '15.0.1.0.0',
     'author': "Hibou Corp.",
     'category': 'Helpdesk',
     'license': 'AGPL-3',
