@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record model="ir.actions.server" id="action_us_salary_rule_account_set">
+            <field name="name">US Default Accounting</field>
+            <field name="model_id" ref="hr_payroll.model_hr_salary_rule"/>
+            <field name="binding_model_id" ref="hr_payroll.model_hr_salary_rule" />
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    companies = env.user.company_ids
+                    # You can override the account codes with kwargs like
+                    # ap_code='2111', salary_exp_code='6111'
+                    env['account.chart.template']._us_configure_payroll_account_data(companies, salary_rules=records, full_reset=False)
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_us_salary_rule_account_reset">
+            <field name="name">US Default Accounting (Reset)</field>
+            <field name="model_id" ref="hr_payroll.model_hr_salary_rule"/>
+            <field name="binding_model_id" ref="hr_payroll.model_hr_salary_rule" />
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    companies = env.user.company_ids
+                    # You can override the account codes with kwargs like
+                    # ap_code='2111', salary_exp_code='6111'
+                    env['account.chart.template']._us_configure_payroll_account_data(companies, salary_rules=records, full_reset=True)
+            </field>
+        </record>
+
+    </data>
+</odoo>
