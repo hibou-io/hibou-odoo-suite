@@ -156,7 +156,7 @@ class TestPayslipTimesheet(common.TestPayslip):
         })
 
         self.payslip.state = 'draft'
-        self.payslip._onchange_employee()
+        self.payslip.action_refresh_from_work_entries()
         timesheet_line = self.payslip.worked_days_line_ids.filtered(lambda l: l.code == 'TS')
         timesheet_overtime_line = self.payslip.worked_days_line_ids.filtered(lambda l: l.code == 'TS_OT')
         self.assertTrue(timesheet_line)

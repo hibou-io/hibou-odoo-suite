@@ -10,6 +10,6 @@ def ts_payroll_pre_init_hook(cr):
     from installing.
     """
     cr.execute("UPDATE hr_work_entry_type "
-               "SET code = 'TS_OT-PRE-INSTALL-14' "
+               "SET code = 'TS_OT-PRE-INSTALL-15' "
                "WHERE code = 'TS_OT';"
                )
