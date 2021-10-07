@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_account_journal_form_inherit" model="ir.ui.view">
+        <field name="name">account.journal.form.inherit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='advanced_settings']/group" position="inside">
+                <group name="payroll_payment" string="Payroll Payments">
+                    <field name="payroll_entry_type"/>
+                    <field name="payroll_payment_journal_id" domain="[('type', 'in', ('bank', 'cash'))]"/>
+                    <field name="payroll_payment_method_id" domain="[('payment_type', '=', 'outbound')]"/>
+                    <field name="payroll_payment_method_refund_id" domain="[('payment_type', '=', 'inbound')]"/>
+                </group>
+            </xpath>
+            <xpath expr="//page[@name='bank_account']//field[@name='code']" position="before">
+                <field name="default_account_id" string="Default Account" attrs="{'invisible': [('type', '!=', 'general')]}" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
