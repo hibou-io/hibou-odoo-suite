@@ -1,7 +1,7 @@
 {
     'name': 'Helpdesk Sales',
     'summary': 'Adds smart button on Helpdesk Tickets to see and create Sale Orders',
-    'version': '14.0.1.0.0',
+    'version': '15.0.1.0.0',
     'author': "Hibou Corp.",
     'category': 'Helpdesk',
     'license': 'AGPL-3',
