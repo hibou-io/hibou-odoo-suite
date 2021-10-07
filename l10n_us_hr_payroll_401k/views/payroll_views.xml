@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="hr_rule_parameter_view_search_inherit" model="ir.ui.view">
+        <field name="name">hr.rule.parameter.search.inherit</field>
+        <field name="model">hr.rule.parameter</field>
+        <field name="inherit_id" ref="hr_payroll.hr_rule_parameter_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter name="us_payroll_401k"
+                        domain="[('code', 'ilike', '401k')]"
+                        string="US Payroll 401k"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
