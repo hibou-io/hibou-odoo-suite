@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_warehouse_inherit" model="ir.ui.view">
+        <field name="name">stock.warehouse.inherit</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock_delivery_route.view_warehouse_inherit" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='delivery_route_ids']/tree" position="inside">
+                <field name="latitude"/>
+                <field name="longitude"/>
+            </xpath>
+            <xpath expr="//field[@name='delivery_route_ids']/form//field[@name='warehouse_id']" position="after">
+                <field name="latitude"/>
+                <field name="longitude"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
