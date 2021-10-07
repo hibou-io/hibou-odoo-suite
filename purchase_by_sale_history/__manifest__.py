@@ -1,7 +1,8 @@
 {
     'name': 'Purchase by Sale History',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '14.0.1.0.0',
+    'version': '15.0.1.0.0',
+    'license': 'LGPL-3',
     'category': 'Purchases',
     'sequence': 95,
     'summary': 'Fill Purchase Orders by Sales History',
