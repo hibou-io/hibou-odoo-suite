@@ -122,6 +122,8 @@ class RMATemplate(models.Model):
                 'product_uom': l.product_uom_id.id,
                 'procure_method': self.in_procure_method,
                 'to_refund': self.in_to_refund,
+                'location_id': self.in_location_id.id,
+                'location_dest_id': self.in_location_dest_id.id,
             }) for l in rma.lines.filtered(lambda l: l.product_id.type != 'service')],
         }
 
@@ -140,6 +142,8 @@ class RMATemplate(models.Model):
                 'product_uom': l.product_uom_id.id,
                 'procure_method': self.out_procure_method,
                 'to_refund': self.out_to_refund,
+                'location_id': self.out_location_id.id,
+                'location_dest_id': self.out_location_dest_id.id,
             }) for l in rma.lines.filtered(lambda l: l.product_id.type != 'service')],
         }
 

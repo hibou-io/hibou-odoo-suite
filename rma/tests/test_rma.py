@@ -80,15 +80,11 @@ class TestRMA(common.TransactionCase):
         location = self.env.ref('stock.stock_location_stock')
         location_customer = self.env.ref('stock.stock_location_customers')
 
-        adj = self.env['stock.inventory'].create({
-            'name': 'Adjust Out',
-            'product_ids': [(4, self.product1.id)],
-        })
-        adj.action_start()
-        adj.line_ids.write({
-            'product_qty': 0.0,
-        })
-        adj.action_validate()
+        adjust_to_zero_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product1.id,
+            'location_id': location.id,
+            'inventory_quantity': 0.0
+        }).action_apply_inventory()
 
         # No Quants after moving inventory out (quant exists with qty == 0 in Odoo 14)
         quant = self.env['stock.quant'].search([('product_id', '=', self.product1.id),
@@ -106,22 +102,13 @@ class TestRMA(common.TransactionCase):
             'product_uom_id': self.product1.uom_id.id,
             'company_id': self.env.user.company_id.id,
         })
-        adj = self.env['stock.inventory'].create({
-            'name': 'Initial',
-            'product_ids': [(4, self.product1.id)],
-        })
-        adj.action_start()
-        if not adj.line_ids:
-            _ = self.env['stock.inventory.line'].create({
-                'inventory_id': adj.id,
-                'product_id': self.product1.id,
-                'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
-            })
-        adj.line_ids.write({
-            'product_qty': 1.0,
-            'prod_lot_id': lot.id,
-        })
-        adj.action_validate()
+
+        adjust_to_zero_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product1.id,
+            'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
+            'inventory_quantity': 1.0,
+            'lot_id': lot.id,
+        }).action_apply_inventory()
 
         self.assertEqual(self.product1.qty_available, 1.0)
         self.assertTrue(lot.quant_ids)
@@ -188,6 +175,10 @@ class TestRMA(common.TransactionCase):
         self.assertEqual(rma.in_picking_id.state, 'assigned')
         pack_opt = rma.in_picking_id.move_line_ids[0]
         self.assertTrue(pack_opt)
+
+        # unlink the lot so that we can re-add it later
+        self.assertTrue(pack_opt.lot_id)
+        pack_opt.write({'lot_id': False})
 
         # We cannot check this directly anymore.  Instead just try to return the same lot and make sure you can.
         # self.assertEqual(pack_opt.lot_id, lot)
