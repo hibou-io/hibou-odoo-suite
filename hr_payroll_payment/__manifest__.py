@@ -3,7 +3,7 @@
 {
     'name': 'Payroll Payments',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '14.0.1.0.0',
+    'version': '15.0.1.0.0',
     'category': 'Human Resources',
     'sequence': 95,
     'summary': 'Register payments for Payroll Payslips',
@@ -13,7 +13,7 @@ Pay your Payroll
 
 Hibou's Payroll Payments modifies, and abstracts, the way that the accounting for payslips is generated.
 
-In stock Odoo 14, journal entries are grouped by account and name, but has no linking to partners.
+In stock Odoo 15, journal entries are grouped by account and name, but has no linking to partners.
 
 On the Payroll Journal, you can now select optional journal entry creation with the options:
 

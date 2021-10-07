@@ -37,7 +37,7 @@ class TestHrPayrollAccount(TestBase):
         net_rule.account_credit = ap
         bank_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
         self.account_journal.payroll_payment_journal_id = bank_journal
-        self.account_journal.payroll_payment_method_id = bank_journal.outbound_payment_method_ids[0]
+        self.account_journal.payroll_payment_method_id = bank_journal.outbound_payment_method_line_ids[0].payment_method_id
 
     def _setup_fiscal_position(self):
         account_rule_debit = self.rule.account_debit
@@ -61,7 +61,7 @@ class TestHrPayrollAccount(TestBase):
         # Original method groups but has no partners.
         self.account_journal.payroll_entry_type = 'original'
         super().test_00_hr_payslip_run()
-        self.assertEqual(len(self.payslip_run.slip_ids), 3)
+        self.assertEqual(len(self.payslip_run.slip_ids), 2)
         self.assertEqual(len(self.payslip_run.slip_ids.mapped('move_id')), 1)
         self.assertEqual(len(self.payslip_run.slip_ids.mapped('move_id.line_ids.partner_id')), 0)
 
@@ -79,7 +79,7 @@ class TestHrPayrollAccount(TestBase):
         # Grouped method groups but has partners.
         self.account_journal.payroll_entry_type = 'grouped'
         super().test_01_hr_payslip_run()
-        self.assertEqual(len(self.payslip_run.slip_ids), 3)
+        self.assertEqual(len(self.payslip_run.slip_ids), 2)
         self.assertEqual(len(self.payslip_run.slip_ids.mapped('move_id')), 1)
         self.assertEqual(len(self.payslip_run.slip_ids.mapped('move_id.line_ids.partner_id')), 2)
         # what is going on with the 3rd one?!
@@ -103,13 +103,13 @@ class TestHrPayrollAccount(TestBase):
         self.account_journal.payroll_entry_type = 'slip'
         # Call 'other' implementation.
         super().test_01_hr_payslip_run()
-        self.assertEqual(len(self.payslip_run.slip_ids), 3)
-        self.assertEqual(len(self.payslip_run.slip_ids.mapped('move_id')), 3)
+        self.assertEqual(len(self.payslip_run.slip_ids), 2)
+        self.assertEqual(len(self.payslip_run.slip_ids.mapped('move_id')), 2)
         self.assertEqual(len(self.payslip_run.slip_ids.mapped('move_id.line_ids.partner_id')), 2)
         slips_to_pay = self.payslip_run.slip_ids
         # what is going on with the 3rd one?!
         # it is possible to filter it out, but it doesn't change it
-        self.assertEqual(len(slips_to_pay), 3)
+        self.assertEqual(len(slips_to_pay), 2)
         action = slips_to_pay.action_register_payment()
         payment_ids = action['res_ids']
         self.assertEqual(len(payment_ids), 2)
