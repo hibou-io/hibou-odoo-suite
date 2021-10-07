@@ -60,13 +60,17 @@ class TestPayslip(common.TransactionCase):
             self._logger.warning(message)
             
     def _createEmployee(self):
-        return self.env['hr.employee'].create({
+        employee = self.env['hr.employee'].create({
             'birthday': '1985-03-14',
             'country_id': self.ref('base.us'),
             'department_id': self.ref('hr.dep_rd'),
             'gender': 'male',
             'name': 'Jared'
         })
+        employee.address_home_id = self.env['res.partner'].create({
+            'name': 'Jared (private)',
+        })
+        return employee
 
     def _get_contract_defaults(self, contract_values):
         if not contract_values.get('state'):
