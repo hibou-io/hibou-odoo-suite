@@ -3,7 +3,7 @@
 {
     'name': 'USA - 401K Payroll',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '14.0.1.0.0',
+    'version': '15.0.1.0.0',
     'category': 'Payroll',
     'depends': [
         'l10n_us_hr_payroll',
