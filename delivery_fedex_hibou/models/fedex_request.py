@@ -35,6 +35,7 @@ class FedexRequest(fedex_request.FedexRequest):
     _service_transit_days = {
         'FEDEX_2_DAY': 2,
         'FEDEX_2_DAY_AM': 2,
+        'FEDEX_3_DAY_FREIGHT': 3,
         'FIRST_OVERNIGHT': 1,
         'PRIORITY_OVERNIGHT': 1,
         'STANDARD_OVERNIGHT': 1,
@@ -195,6 +196,10 @@ class FedexRequest(fedex_request.FedexRequest):
                     # Hibou Delivery Planning
                     if hasattr(self.response.RateReplyDetails[0], 'DeliveryTimestamp') and self.response.RateReplyDetails[0].DeliveryTimestamp:
                         formatted_response['date_delivered'] = self.response.RateReplyDetails[0].DeliveryTimestamp
+                        if hasattr(self.response.RateReplyDetails[0].CommitDetails[0], 'TransitTime'):
+                            transit_days = self.response.RateReplyDetails[0].CommitDetails[0].TransitTime
+                            transit_days = self._transit_days.get(transit_days, 0)
+                            formatted_response['transit_days'] = transit_days
                     elif hasattr(self.response.RateReplyDetails[0], 'CommitDetails') and hasattr(self.response.RateReplyDetails[0].CommitDetails[0], 'CommitTimestamp'):
                         formatted_response['date_delivered'] = self.response.RateReplyDetails[0].CommitDetails[0].CommitTimestamp
                         formatted_response['transit_days'] = self._service_transit_days.get(self.response.RateReplyDetails[0].CommitDetails[0].ServiceType, 0)
@@ -214,9 +219,14 @@ class FedexRequest(fedex_request.FedexRequest):
                         # Hibou Delivery Planning
                         if hasattr(rate_reply_detail, 'DeliveryTimestamp') and rate_reply_detail.DeliveryTimestamp:
                             res['date_delivered'] = rate_reply_detail.DeliveryTimestamp
+                            res['transit_days'] = self._service_transit_days.get(rate_reply_detail.ServiceType, 0)
+                            if not res['transit_days'] and hasattr(rate_reply_detail.CommitDetails[0], 'TransitTime'):
+                                transit_days = rate_reply_detail.CommitDetails[0].TransitTime
+                                transit_days = self._transit_days.get(transit_days, 0)
+                                res['transit_days'] = transit_days
                         elif hasattr(rate_reply_detail, 'CommitDetails') and hasattr(rate_reply_detail.CommitDetails[0], 'CommitTimestamp'):
                             res['date_delivered'] = rate_reply_detail.CommitDetails[0].CommitTimestamp
-                            res['transit_days'] = self._service_transit_days.get(rate_reply_detail.CommitDetails[0].ServiceType, 0)
+                            res['transit_days'] = self._service_transit_days.get(rate_reply_detail.ServiceType, 0)
                         elif hasattr(rate_reply_detail, 'CommitDetails') and hasattr(rate_reply_detail.CommitDetails[0], 'TransitTime'):
                             transit_days = rate_reply_detail.CommitDetails[0].TransitTime
                             transit_days = self._transit_days.get(transit_days, 0)
