@@ -1,17 +1,52 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
+from os import path as os_path
 import suds
 from odoo.addons.delivery_ups.models.ups_request import UPSRequest
 
 SUDS_VERSION = suds.__version__
 
+import logging
+_logger = logging.getLogger(__name__)
+
+# If you're getting SOAP/suds errors
+# logging.getLogger('suds.client').setLevel(logging.DEBUG)
+
+TNT_CODE_MAP = {
+    'GND': '03',
+    # TODO fill in the rest if needed....
+}
+
+
+def patched__init__(self, debug_logger, username, password, shipper_number, access_number, prod_environment):
+    self.debug_logger = debug_logger
+    # Product and Testing url
+    self.endurl = "https://onlinetools.ups.com/webservices/"
+    if not prod_environment:
+        self.endurl = "https://wwwcie.ups.com/webservices/"
+
+    # Basic detail require to authenticate
+    self.username = username
+    self.password = password
+    self.shipper_number = shipper_number
+    self.access_number = access_number
+
+    self.rate_wsdl = '../api/RateWS.wsdl'
+    self.ship_wsdl = '../api/Ship.wsdl'
+    self.void_wsdl = '../api/Void.wsdl'
+    dirname = os_path.dirname(__file__)
+    self.tnt_wsdl = os_path.join(dirname, '../api/TNTWS.wsdl')
+
 
 def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from, ship_to, packaging_type, service_type,
-                       saturday_delivery, cod_info, date_planned=False):
+                               saturday_delivery, cod_info, date_planned=False, multi=False):
     client = self._set_client(self.rate_wsdl, 'Rate', 'RateRequest')
 
     request = client.factory.create('ns0:RequestType')
+
     request.RequestOption = 'Rate'
+    if multi:
+        request.RequestOption = 'Shop'
 
     classification = client.factory.create('ns2:CodeDescriptionType')
     classification.Code = '00'  # Get rates for the shipper account
@@ -83,18 +118,78 @@ def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from
             return self.get_error_message(response.Response.ResponseStatus.Code,
                                           response.Response.ResponseStatus.Description)
 
-        result = {}
-        result['currency_code'] = response.RatedShipment[0].TotalCharges.CurrencyCode
+        if multi:
+            result = []
+            tnt_response = None
+            tnt_ready = False
+            for rated_shipment in response.RatedShipment:
+                res = {}
+                res['service_code'] = rated_shipment.Service.Code
+                res['currency_code'] = rated_shipment.TotalCharges.CurrencyCode
+                negotiated_rate = 'NegotiatedRateCharges' in rated_shipment and rated_shipment.NegotiatedRateCharges.TotalCharge.MonetaryValue or None
 
-        # Some users are qualified to receive negotiated rates
-        negotiated_rate = 'NegotiatedRateCharges' in response.RatedShipment[0] and response.RatedShipment[
-            0].NegotiatedRateCharges.TotalCharge.MonetaryValue or None
+                res['price'] = negotiated_rate or rated_shipment.TotalCharges.MonetaryValue
+                # Hibou Delivery
+                if hasattr(rated_shipment, 'GuaranteedDelivery') and hasattr(rated_shipment.GuaranteedDelivery, 'BusinessDaysInTransit'):
+                    res['transit_days'] = int(rated_shipment.GuaranteedDelivery.BusinessDaysInTransit)
 
-        result['price'] = negotiated_rate or response.RatedShipment[0].TotalCharges.MonetaryValue
+                if not res.get('transit_days') and date_planned:
+                    if not tnt_response:
+                        try:
+                            tnt_client = self._set_client(self.tnt_wsdl, 'TimeInTransit', 'TimeInTransitRequest')
+                            tnt_request = tnt_client.factory.create('tnt:TimeInTransitRequest')
+                            tnt_request.Request.RequestOption = 'TNT'
 
-        # Hibou Delivery
-        if hasattr(response.RatedShipment[0], 'GuaranteedDelivery') and hasattr(response.RatedShipment[0].GuaranteedDelivery, 'BusinessDaysInTransit'):
-            result['transit_days'] = int(response.RatedShipment[0].GuaranteedDelivery.BusinessDaysInTransit)
+                            tnt_request.ShipFrom.Address.City = ship_from.city or ''
+                            tnt_request.ShipFrom.Address.CountryCode = ship_from.country_id.code or ''
+                            tnt_request.ShipFrom.Address.PostalCode = ship_from.zip or ''
+                            if ship_from.country_id.code in ('US', 'CA', 'IE'):
+                                tnt_request.ShipFrom.Address.StateProvinceCode = ship_from.state_id.code or ''
+
+                            tnt_request.ShipTo.Address.City = ship_to.city or ''
+                            tnt_request.ShipTo.Address.CountryCode = ship_to.country_id.code or ''
+                            tnt_request.ShipTo.Address.PostalCode = ship_to.zip or ''
+                            if ship_to.country_id.code in ('US', 'CA', 'IE'):
+                                tnt_request.ShipTo.Address.StateProvinceCode = ship_to.state_id.code or ''
+
+                            tnt_request.Pickup.Date = date_planned.split(' ')[0].replace('-', '')
+                            tnt_request.Pickup.Time = date_planned.split(' ')[1].replace(':', '')
+
+                            # tnt_request_transit_from = tnt_client.factory.create('ns1:TransitFrom')
+                            tnt_response = tnt_client.service.ProcessTimeInTransit(Request=tnt_request.Request,
+                                                                                   ShipFrom=tnt_request.ShipFrom,
+                                                                                   ShipTo=tnt_request.ShipTo,
+                                                                                   Pickup=tnt_request.Pickup)
+                            tnt_ready = tnt_response.Response.ResponseStatus.Code == "1"
+                        except Exception as e:
+                            _logger.warning('exception during the UPS Time In Transit request. ' + str(e))
+                            tnt_ready = False
+                            tnt_response = '-1'
+                    if tnt_ready:
+                        for service in tnt_response.TransitResponse.ServiceSummary:
+                            if TNT_CODE_MAP.get(service.Service.Code) == service_type:
+                                if hasattr(service, 'EstimatedArrival') and hasattr(service.EstimatedArrival, 'BusinessDaysInTransit'):
+                                    res['transit_days'] = int(service.EstimatedArrival.BusinessDaysInTransit)
+                                    break
+                    # use TNT API to
+                result.append(res)
+        else:
+            result = {}
+            result['currency_code'] = response.RatedShipment[0].TotalCharges.CurrencyCode
+
+            # Some users are qualified to receive negotiated rates
+            negotiated_rate = 'NegotiatedRateCharges' in response.RatedShipment[0] and response.RatedShipment[
+                0].NegotiatedRateCharges.TotalCharge.MonetaryValue or None
+
+            result['price'] = negotiated_rate or response.RatedShipment[0].TotalCharges.MonetaryValue
+            # Hibou Delivery
+            if hasattr(response.RatedShipment[0], 'GuaranteedDelivery') and hasattr(response.RatedShipment[0].GuaranteedDelivery, 'BusinessDaysInTransit'):
+                result['transit_days'] = int(response.RatedShipment[0].GuaranteedDelivery.BusinessDaysInTransit)
+
+            if not result.get('transit_days') and date_planned:
+                # use TNT API to
+                _logger.warning('   We would now use the TNT service. But who would show the transit days? 2')
+
         # End
 
         return result
@@ -110,5 +205,5 @@ def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from
     except IOError as e:
         return self.get_error_message('0', 'UPS Server Not Found:\n%s' % e)
 
-
+UPSRequest.__init__ = patched__init__
 UPSRequest.get_shipping_price = patched_get_shipping_price
