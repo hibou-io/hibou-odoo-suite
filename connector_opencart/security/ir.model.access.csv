@@ -11,3 +11,5 @@
 "access_opencart_sale_order_sale_manager","opencart_sale_order","model_opencart_sale_order","sales_team.group_sale_manager",1,1,1,1
 "access_opencart_sale_order_stock_user","opencart_sale_order warehouse user","model_opencart_sale_order","stock.group_stock_user",1,0,0,0
 "access_opencart_backend_user","opencart_backend user","model_opencart_backend","sales_team.group_sale_salesman",1,0,0,0
+"access_opencart_stock_picking_user","opencart_stock_picking user","model_opencart_stock_picking","stock.group_stock_user",1,1,1,0
+"access_opencart_product_template_user","opencart_product_template user","model_opencart_product_template","base.group_user",1,0,0,0
