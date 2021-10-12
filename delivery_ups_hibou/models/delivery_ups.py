@@ -5,6 +5,9 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.addons.delivery_ups.models.ups_request import UPSRequest, Package
 from odoo.tools import pdf
 
+import logging
+_logger = logging.getLogger(__name__)
+
 
 class ProviderUPS(models.Model):
     _inherit = 'delivery.carrier'
@@ -136,16 +139,27 @@ class ProviderUPS(models.Model):
             shipper_warehouse = superself.get_shipper_warehouse(picking=picking)
             recipient = superself.get_recipient(picking=picking)
 
+            picking_packages = picking.package_ids
+            package_carriers = picking_packages.mapped('carrier_id')
+            if package_carriers:
+                # only ship ours
+                picking_packages = picking_packages.filtered(lambda p: p.carrier_id == self and not p.carrier_tracking_ref)
+
+            if not picking_packages:
+                continue
+
             packages = []
             package_names = []
-            if picking.package_ids:
+            if picking_packages:
                 # Create all packages
-                for package in picking.package_ids:
+                for package in picking_packages:
                     packages.append(Package(self, package.shipping_weight, quant_pack=package.packaging_id, name=package.name))
                     package_names.append(package.name)
+
+            # what is the point of weight_bulk?
             # Create one package with the rest (the content that is not in a package)
-            if picking.weight_bulk:
-                packages.append(Package(self, picking.weight_bulk))
+            # if picking.weight_bulk:
+            #     packages.append(Package(self, picking.weight_bulk))
 
             invoice_line_total = 0
             for move in picking.move_lines:
@@ -179,7 +193,7 @@ class ProviderUPS(models.Model):
             if check_value:
                 raise UserError(check_value)
 
-            package_type = picking.package_ids and picking.package_ids[0].packaging_id.shipper_package_code or self.ups_default_packaging_id.shipper_package_code
+            package_type = picking_packages and picking_packages[0].packaging_id.shipper_package_code or self.ups_default_packaging_id.shipper_package_code
             result = srm.send_shipping(
                 shipment_info=shipment_info, packages=packages, shipper=shipper_company, ship_from=shipper_warehouse,
                 ship_to=recipient, packaging_type=package_type, service_type=ups_service_type, label_file_type=self.ups_label_file_type, ups_carrier_account=ups_carrier_account,
@@ -229,7 +243,6 @@ class ProviderUPS(models.Model):
             return rates
 
     def _ups_rate_shipment_multi_package(self, order=None, picking=None, package=None):
-        # TODO package here is ignored, it should not be (UPS is not multi-rating capable until we can get rates for a single package)
         superself = self.sudo()
         srm = UPSRequest(self.log_xml, superself.ups_username, superself.ups_passwd, superself.ups_shipper_number, superself.ups_access_number, self.prod_environment)
         ResCurrency = self.env['res.currency']
@@ -260,9 +273,13 @@ class ProviderUPS(models.Model):
             company = picking.company_id
             date_order = picking.sale_id.date_order or fields.Date.today() if picking.sale_id else fields.Date.today()
             # Is total quantity the number of packages or the number of items being shipped?
-            total_qty = len(picking.package_ids)
-            packages = [Package(self, package.shipping_weight) for package in picking.package_ids]
-
+            if package:
+                total_qty = 1
+                packages = [Package(self, package.shipping_weight)]
+            else:
+                # all packages....
+                total_qty = len(picking.package_ids)
+                packages = [Package(self, package.shipping_weight) for package in picking.package_ids.filtered(lambda p: not p.carrier_id)]
 
         shipment_info = {
             'total_qty': total_qty  # required when service type = 'UPS Worldwide Express Freight'
@@ -292,9 +309,8 @@ class ProviderUPS(models.Model):
                      'error_message': check_value,
                      'warning_message': False,
                      }]
-
-        #ups_service_type = order.ups_service_type or self.ups_default_service_type
-        ups_service_type = None # See if this gets us all service types
+        # We now use Shop if we send multi=True
+        ups_service_type = (order.ups_service_type or self.ups_default_service_type) if order else self.ups_default_service_type
         result = srm.get_shipping_price(
             shipment_info=shipment_info, packages=packages, shipper=shipper_company, ship_from=shipper_warehouse,
             ship_to=recipient, packaging_type=self.ups_default_packaging_id.shipper_package_code, service_type=ups_service_type,
@@ -304,7 +320,14 @@ class ProviderUPS(models.Model):
 
         response = []
         for rate in result:
-            if rate.get('error_message'):
+            if isinstance(rate, str):
+                # assume error
+                response.append({
+                    'success': False, 'price': 0.0,
+                    'error_message': _('Error:\n%s') % rate,
+                    'warning_message': False,
+                })
+            elif rate.get('error_message'):
                 _logger.error('UPS error: %s' % rate['error_message'])
                 response.append({
                     'success': False, 'price': 0.0,
@@ -328,6 +351,7 @@ class ProviderUPS(models.Model):
                 if carrier:
                     response.append({
                         'carrier': carrier,
+                        'package':  package or self.env['stock.quant.package'].browse(),
                         'success': True,
                         'price': price,
                         'error_message': False,
