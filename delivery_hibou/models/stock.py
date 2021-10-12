@@ -11,6 +11,7 @@ class StockPicking(models.Model):
             ('no', 'No'),
         ], string='Require Insurance', default='auto',
         help='If your carrier supports it, auto should be calculated off of the "Automatic Insurance Value" field.')
+    commercial_partner_id = fields.Many2one('res.partner', related='partner_id.commercial_partner_id')
 
     @api.depends('move_lines.priority', 'carrier_id')
     def _compute_priority(self):
