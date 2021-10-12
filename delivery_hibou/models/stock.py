@@ -35,6 +35,7 @@ class StockPicking(models.Model):
         ], string='Require Insurance', default='auto',
         help='If your carrier supports it, auto should be calculated off of the "Automatic Insurance Value" field.')
     package_carrier_tracking_ref = fields.Char(string='Package Tracking Numbers', compute='_compute_package_carrier_tracking_ref')
+    commercial_partner_id = fields.Many2one('res.partner', related='partner_id.commercial_partner_id')
 
     @api.depends('package_ids.carrier_tracking_ref')
     def _compute_package_carrier_tracking_ref(self):
