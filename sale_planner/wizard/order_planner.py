@@ -689,6 +689,7 @@ class SaleOrderMakePlan(models.TransientModel):
             for carrier in carriers:
                 new_base_option = deepcopy(base_option)
                 has_error = False
+                found_carrier_ids = set()
                 for wh_id, wh_vals in base_option['sub_options'].items():
                     if has_error:
                         continue
@@ -698,17 +699,30 @@ class SaleOrderMakePlan(models.TransientModel):
                     if not wh_carrier_options:
                         has_error = True
                     else:
+                        for _option in wh_carrier_options:
+                            if _option.get('carrier_id'):
+                                found_carrier_ids.add(_option['carrier_id'])
                         new_base_option['sub_options'][wh_id] = wh_carrier_options
 
                 if has_error:
                     continue
-                # now that we've collected, we can roll up some details.
 
-                new_base_option['carrier_id'] = carrier.id
-                new_base_option['shipping_price'] = self._get_shipping_price_for_options(new_base_option['sub_options'])
-                new_base_option['requested_date'] = self._get_max_requested_date(new_base_option['sub_options'])
-                new_base_option['transit_days'] = self._get_max_transit_days(new_base_option['sub_options'])
-                options.append(new_base_option)
+                # now that we've collected details for this carrier, we likely have more than one carrier's rates
+                _logger.info('  from ' + str(carrier) + ' found ' + str(found_carrier_ids))
+                for carrier_id in found_carrier_ids:
+                    carrier_option = deepcopy(base_option)
+                    carrier_option['carrier_id'] = False
+                    for wh_id, wh_vals in base_option['sub_options'].items():
+                        for co in new_base_option['sub_options'].get(wh_id, []):
+                            if co.get('carrier_id') == carrier_id:
+                                # we have found the rate!
+                                carrier_option['carrier_id'] = carrier_id
+                                carrier_option['sub_options'][wh_id] = co
+                    if carrier_option['carrier_id']:
+                        carrier_option['shipping_price'] = self._get_shipping_price_for_options(carrier_option['sub_options'])
+                        carrier_option['requested_date'] = self._get_max_requested_date(carrier_option['sub_options'])
+                        carrier_option['transit_days'] = self._get_max_transit_days(carrier_option['sub_options'])
+                        options.append(carrier_option)
 
             #restore values in case more processing occurs
             order_fake.warehouse_id = original_order_fake_warehouse_id
@@ -741,7 +755,8 @@ class SaleOrderMakePlan(models.TransientModel):
     def _generate_shipping_carrier_option(self, base_option, order_fake, carrier):
         # some carriers look at the order carrier_id
         order_fake.carrier_id = carrier
-        order_fake.date_planned = base_option.get('date_planned')
+        date_planned = base_option.get('date_planned')
+        order_fake.date_planned = date_planned
 
         # this logic comes from "delivery.models.sale_order.SaleOrder"
         try:
@@ -798,6 +813,12 @@ class SaleOrderMakePlan(models.TransientModel):
                     price_unit = rate['price']
                     date_delivered = rate.get('date_delivered')
                     transit_days = rate.get('transit_days')
+
+                    if date_planned and transit_days and not date_delivered:
+                        # compute from planned date anc current rate carrier
+                        date_delivered = rate_carrier.calculate_date_delivered(date_planned, transit_days)
+                    elif date_planned and date_delivered and not transit_days:
+                        transit_days = rate_carrier.calculate_transit_days(date_planned, date_delivered)
 
                     final_price = float(price_unit) * (1.0 + (float(rate_carrier.margin) / 100.0))
                     option = deepcopy(base_option)
