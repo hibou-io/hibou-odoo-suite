@@ -19,6 +19,13 @@ class SignifydConnector(models.Model):
     webhooks_registered = fields.Boolean(string='Successfully Registered Webhooks')
     notify_user_ids = fields.Many2many('res.users', string='Receive decline notifications')
     website_ids = fields.One2many('website', 'signifyd_connector_id', string='Used on Websites')
+    signifyd_case_type = fields.Selection([
+        ('', 'No Case'),
+        ('SCORE', 'Score'),
+        ('DECISION', 'Decision'),
+        ('GUARANTEE', 'Guarantee'),
+    ], string='Default Case Creation', help='Used for internal/admin orders, overridden by payment acquirer.',
+        required=True, default='')
 
     # TODO ideally this would be a regular constant
     # however other entities currently use this by reference
@@ -71,6 +78,10 @@ class SignifydConnector(models.Model):
                 },
                 {
                     "event": "GUARANTEE_COMPLETION",
+                    "url": base_url + "/signifyd/cases/update"
+                },
+                {
+                    "event": "DECISION_MADE",
                     "url": base_url + "/signifyd/cases/update"
                 },
             ]
@@ -127,6 +138,14 @@ class SignifydConnector(models.Model):
         score = post.get('score')
         disposition_reason = post.get('dispositionReason')
         disposition = post.get('disposition')
+        checkpoint_action = post.get('checkpointAction', '')
+        if not checkpoint_action and guarantee_disposition:
+            if guarantee_disposition == 'APPROVED':
+                checkpoint_action = 'ACCEPT'
+            elif guarantee_disposition == 'DECLINED':
+                checkpoint_action = 'REJECT'
+            else:
+                checkpoint_action = 'HOLD'
         last_update = str(dt.now())
 
         values = {}
@@ -144,5 +163,6 @@ class SignifydConnector(models.Model):
         values.update({'disposition_reason': disposition_reason}) if disposition_reason else ''
         values.update({'disposition': disposition}) if disposition else ''
         values.update({'last_update': last_update})
+        values.update({'checkpoint_action': checkpoint_action})
 
         return values

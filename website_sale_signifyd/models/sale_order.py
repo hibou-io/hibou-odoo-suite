@@ -10,7 +10,7 @@ class SaleOrder(models.Model):
 
     signifyd_case_id = fields.Many2one('signifyd.case', readonly=1, copy=False)
     singifyd_score = fields.Float(related='signifyd_case_id.score')
-    signifyd_disposition_status = fields.Selection(related='signifyd_case_id.guarantee_disposition')
+    signifyd_checkpoint_action = fields.Selection(string='Signifyd Action', related='signifyd_case_id.checkpoint_action')
 
     def action_view_signifyd_case(self):
         self.ensure_one()
@@ -35,7 +35,13 @@ class SaleOrder(models.Model):
         return res
 
     def _should_post_signifyd(self):
-        return self.state in ('sale', 'done') and not self.signifyd_case_id
+        # If we have no transaction/acquirer we will still send!
+        # this case is useful for admin or free orders but could be customized here.
+        case_required = bool(self.website_id.signifyd_connector_id.signifyd_case_type)
+        a_case_types = self.transaction_ids.mapped('acquirer_id.signifyd_case_type')
+        if a_case_types:
+            case_required = any(a_case_types)
+        return self.state in ('sale', 'done') and not self.signifyd_case_id and case_required
 
     def post_signifyd_case(self):
         if not self.website_id.signifyd_connector_id:
@@ -66,6 +72,18 @@ class SaleOrder(models.Model):
 
     @api.model
     def _prepare_signifyd_case_values(self, order_session_id, checkout_token, browser_ip_address):
+        decision_request = self.website_id.signifyd_connector_id.signifyd_case_type or 'DECISION'
+
+        # find the highest 'acquirer override'
+        # note that we shouldn't be here if the override would prevent sending
+        a_case_types = self.transaction_ids.mapped('acquirer_id.signifyd_case_type')
+        if a_case_types and 'GUARANTEE' in a_case_types:
+            decision_request = 'GUARANTEE'
+        elif a_case_types and 'SCORE' in a_case_types:
+            decision_request = 'SCORE'
+        elif a_case_types and 'DECISION' in a_case_types:
+            decision_request = 'DECISION'
+
         tx_status_type = {
             'draft': 'FAILURE',
             'pending': 'PENDING',
@@ -77,7 +95,7 @@ class SaleOrder(models.Model):
         recipients = self.partner_invoice_id + self.partner_shipping_id
         new_case_vals = {
             'decisionRequest': {
-                'paymentFraud': 'GUARANTEE',
+                'paymentFraud': decision_request,
             },
             'purchase': {
                 "orderSessionId": order_session_id,
