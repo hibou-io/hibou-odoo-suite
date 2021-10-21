@@ -7,12 +7,6 @@
         <field name="inherit_id" ref="website.view_website_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='other']" position="inside">
-                <div class="oe_title">
-                    <h3>
-                        Signifyd Configuration
-                    </h3>
-                </div>
-                <label for="signifyd_connector_id" string="Settings"/>
                 <field name="signifyd_connector_id"/>
             </xpath>
         </field>
