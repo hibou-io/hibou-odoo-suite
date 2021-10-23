@@ -3,6 +3,8 @@
 
     <!-- Payment terms list items for /shop/payment -->
     <template id="payment_term_items">
+        <p t-esc="order.sudo().payment_term_id"/>
+        <p t-esc="website_sale_order.sudo().payment_term_id"/>
         <t t-set="partner_term" t-value="order.partner_id.property_payment_term_id"/>
         <!-- Show current partners payment terms -->
         <t t-if="partner_term and partner_term not in website_terms">
@@ -12,7 +14,8 @@
                        t-att-data-deposit-flat="partner_term.deposit_flat or '0'"
                        name="payment_term_id"
                        t-att-id="'payment_term_%i' % partner_term.id"
-                       type="radio"/>
+                       t-att-checked="term == order.payment_term_id"
+                   type="radio"/>
                 <label t-att-for="'payment_term_%i' % partner_term.id"
                        t-field="partner_term.name"
                        class="label-optional"/>
@@ -24,6 +27,7 @@
                    t-att-data-deposit-percentage="term.deposit_percentage or '0'"
                    t-att-data-deposit-flat="term.deposit_flat or '0'"
                    t-att-id="'payment_term_%i' % term.id"
+                   t-att-checked="term == order.payment_term_id"
                    type="radio"
                    name="payment_term_id"/>
             <label t-att-for="'payment_term_%i' % term.id"
@@ -37,9 +41,9 @@
         <xpath expr="//div[@id='payment_method']" position="before">
             <t t-set="website_terms" t-value="website.get_payment_terms()" />
             <t t-if="website_terms and website_sale_order.amount_total &gt; website.payment_deposit_threshold">
-                <t t-call="website_sale_payment_terms.payment_term_success_modal"/>
-                <t t-call="website_sale_payment_terms.payment_term_error_modal"/>
-                <div id="payment_terms">
+                <div class="oe_payment_terms">
+                    <t t-call="website_sale_payment_terms.payment_term_success_modal"/>
+                    <t t-call="website_sale_payment_terms.payment_term_error_modal"/>
                     <h3 class="mb24 mt24">Payment Terms</h3>
                     <div class="card border-0">
                         <ul class="list-group">
@@ -118,12 +122,12 @@
     <!-- Add empty div to calculate amount due today in payment_terms.js -->
     <template id="amount_due_today" inherit_id="website_sale.total">
         <xpath expr="//tr[@id='order_total']" position="after">
-            <tr id="order_due_today" t-att-style="'' if website_sale_order.amount_total_deposit else 'display: none;'">
+            <tr id="order_due_today" t-att-class="'' if website_sale_order.amount_due_today else 'd-none'">
                 <td class="text-right text-info">
                     <strong>Due Now:</strong>
                 </td>
                 <td class="text-xl-right">
-                    <strong t-field="website_sale_order.amount_total_deposit"
+                    <strong t-field="website_sale_order.amount_due_today" class="monetary_field"
                             t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
                 </td>
             </tr>
