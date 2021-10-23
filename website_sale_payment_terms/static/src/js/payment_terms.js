@@ -9,12 +9,10 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
     require('website_sale_delivery.checkout');
 
 
-    console.log('Payment Terms V10.2');
-
     publicWidget.registry.websiteSalePaymentTerms = publicWidget.Widget.extend({
-        selector: '.oe_website_sale',
+        selector: '.oe_payment_terms',
         events: {
-            "click #payment_terms input[name='payment_term_id']": '_onPaymentTermClick',
+            "click input[name='payment_term_id']": '_onPaymentTermClick',
             "click #btn_accept_payment_terms": '_acceptPaymentTerms',
             "click #btn_deny_payment_terms": '_denyPaymentTerms',
         },
@@ -23,7 +21,7 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
          * @override
          */
         start: function () {
-            core.bus.on('payment_terms_update_amount', this, this.updateAmountDue);
+            console.log('Payment Terms V10.3');
             return this._super.apply(this, arguments).then(function () {
                 var available_term = $('input[name="payment_term_id"]').length;
                 var $payButton = $('#o_payment_form_pay');
@@ -51,32 +49,32 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
          * @param: {number} d Deposit percentage
          * @param: {number} f Deposit flat amount
          */
-        calculateDeposit: function (t, d, f) {
-            var amount = t * d / 100 + f;
-            if (amount > 0) {
-                amount = amount.toFixed(2);
-                amount = amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                return amount;
-            } else {
-                amount = 0.00;
-                return amount;
-            }
-        },
+        // calculateDeposit: function (t, d, f) {
+        //     var amount = t * d / 100 + f;
+        //     if (amount > 0) {
+        //         amount = amount.toFixed(2);
+        //         amount = amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        //         return amount;
+        //     } else {
+        //         amount = 0.00;
+        //         return amount;
+        //     }
+        // },
 
         /*
          * All input clicks update due amount
          *
          * @public
          */
-        updateAmountDue: function () {
-            var amount_total = $('#order_total span.oe_currency_value').html().replace(',', '');
-            amount_total = parseFloat(amount_total);
-            var $checked = $('input[name="payment_term_id"]:checked');
-            var $deposit_percentage = $checked.attr('data-deposit-percentage');
-            var $deposit_flat = parseFloat($checked.attr('data-deposit-flat'));
-            var $due_amount = this.calculateDeposit(amount_total, $deposit_percentage, $deposit_flat);
-            $('#order_due_today span.oe_currency_value').html($due_amount);
-        },
+        // updateAmountDue: function () {
+        //     var amount_total = $('#order_total span.oe_currency_value').html().replace(',', '');
+        //     amount_total = parseFloat(amount_total);
+        //     var $checked = $('input[name="payment_term_id"]:checked');
+        //     var $deposit_percentage = $checked.attr('data-deposit-percentage');
+        //     var $deposit_flat = parseFloat($checked.attr('data-deposit-flat'));
+        //     var $due_amount = this.calculateDeposit(amount_total, $deposit_percentage, $deposit_flat);
+        //     $('#order_due_today span.oe_currency_value').html($due_amount);
+        // },
 
         //--------------------------------------------------------------------------
         // Private
@@ -104,7 +102,8 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
          */
         _onPaymentTermUpdateAnswer: function (result) {
             if (!result.error) {
-
+                console.log("_onPaymentTermUpdateAnswer");
+                console.log(result);
                 // Get Payment Term note/description for modal
                 var note = result.note;
                 if (!result.note) {
@@ -112,8 +111,8 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
                 }
 
                 // Change forms based on order payment requirement
-                this.updateAmountDue();
-                if(!result.require_payment) {
+                $('#order_due_today .monetary_field').html(result.amount_due_today_html);
+                if(result.amount_due_today == 0.0) {
                     $('#payment_method').hide();
                     $('#non_payment_method').show();
                     $('#order_due_today').hide();
@@ -157,7 +156,7 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
     publicWidget.registry.websiteSaleDelivery.include({
         _handleCarrierUpdateResult: function (result) {
             this._super.apply(this, arguments);
-            core.bus.trigger('payment_terms_update_amount');
+            $('#order_due_today .monetary_field').html(result.amount_due_today);
         },
     });
 

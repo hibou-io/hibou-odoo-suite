@@ -12,7 +12,7 @@ Allow customers to choose payment terms if order total meets a configured thresh
         """,
     'depends': [
         'sale_payment_deposit',
-        'website_sale',
+        # 'website_sale',
         'website_sale_delivery',
     ],
     'auto_install': False,
