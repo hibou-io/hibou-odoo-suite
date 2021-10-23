@@ -24,57 +24,20 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
             console.log('Payment Terms V10.3');
             return this._super.apply(this, arguments).then(function () {
                 var available_term = $('input[name="payment_term_id"]').length;
-                var $payButton = $('#o_payment_form_pay');
                 if (available_term > 0) {
-                    console.log('Payment term detected');
+                    var $payButton = $('#o_payment_form_pay');
                     $payButton.prop('disabled', true);
                     var disabledReasons = $payButton.data('disabled_reasons') || {};
-                    disabledReasons.payment_terms_selection = true;
+                    if ($('input[name="payment_term_id"][checked]')) {
+                        disabledReasons.payment_terms_selection = false;
+                    } else {
+                        disabledReasons.payment_terms_selection = true;
+                    }
                     $payButton.data('disabled_reasons', disabledReasons);
-                } else {
-                    console.log('no payment term detected');
+                    $payButton.prop('disabled', _.contains($payButton.data('disabled_reasons'), true));
                 }
             });
         },
-
-        //--------------------------------------------------------------------------
-        // Public
-        //--------------------------------------------------------------------------
-
-        /*
-         * Calculate amount Due Now
-         *
-         * @public
-         * @param: {number} t Total
-         * @param: {number} d Deposit percentage
-         * @param: {number} f Deposit flat amount
-         */
-        // calculateDeposit: function (t, d, f) {
-        //     var amount = t * d / 100 + f;
-        //     if (amount > 0) {
-        //         amount = amount.toFixed(2);
-        //         amount = amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        //         return amount;
-        //     } else {
-        //         amount = 0.00;
-        //         return amount;
-        //     }
-        // },
-
-        /*
-         * All input clicks update due amount
-         *
-         * @public
-         */
-        // updateAmountDue: function () {
-        //     var amount_total = $('#order_total span.oe_currency_value').html().replace(',', '');
-        //     amount_total = parseFloat(amount_total);
-        //     var $checked = $('input[name="payment_term_id"]:checked');
-        //     var $deposit_percentage = $checked.attr('data-deposit-percentage');
-        //     var $deposit_flat = parseFloat($checked.attr('data-deposit-flat'));
-        //     var $due_amount = this.calculateDeposit(amount_total, $deposit_percentage, $deposit_flat);
-        //     $('#order_due_today span.oe_currency_value').html($due_amount);
-        // },
 
         //--------------------------------------------------------------------------
         // Private
@@ -115,11 +78,9 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
                 if(result.amount_due_today == 0.0) {
                     $('#payment_method').hide();
                     $('#non_payment_method').show();
-                    $('#order_due_today').hide();
                 } else {
                     $('#payment_method').show();
                     $('#non_payment_method').hide();
-                    $('#order_due_today').show();
                 }
 
                 // Open success modal with message

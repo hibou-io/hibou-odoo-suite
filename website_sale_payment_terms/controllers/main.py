@@ -9,7 +9,7 @@ class WebsiteSalePaymentTerms(WebsiteSaleDelivery):
     def payment(self, **post):
         order = request.website.sale_get_order()
         payment_term_id = post.get('payment_term_id')
-        if order.amount_total <= request.website.payment_deposit_threshold:
+        if order.amount_total > request.website.payment_deposit_threshold:
             if payment_term_id:
                 payment_term_id = int(payment_term_id)
             if order:
