@@ -34,6 +34,12 @@ class StockPicking(models.Model):
             ('no', 'No'),
         ], string='Require Insurance', default='auto',
         help='If your carrier supports it, auto should be calculated off of the "Automatic Insurance Value" field.')
+    require_signature = fields.Selection([
+            ('auto', 'Automatic'),
+            ('yes', 'Yes'),
+            ('no', 'No'),
+        ], string='Require Signature', default='auto',
+        help='If your carrier supports it, auto should be calculated off of the "Automatic Signature Required Value" field.')
     package_carrier_tracking_ref = fields.Char(string='Package Tracking Numbers', compute='_compute_package_carrier_tracking_ref')
 
     @api.depends('package_ids.carrier_tracking_ref')
