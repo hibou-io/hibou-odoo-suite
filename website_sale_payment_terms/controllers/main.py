@@ -51,9 +51,7 @@ class WebsiteSalePaymentTerms(WebsiteSaleDelivery):
     def reject_term_agreement(self, **kw):
         order = request.website.sale_get_order()
         if order:
-            partner = request.env.user.partner_id
-            order.write({'payment_term_id': request.website.sale_get_payment_term(partner),
-                         'require_payment': True})
+            order.payment_term_id = False
         return request.redirect('/shop/cart')
 
     # Confirm order without taking payment
