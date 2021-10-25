@@ -13,7 +13,7 @@
                        t-att-data-deposit-flat="partner_term.deposit_flat or '0'"
                        name="payment_term_id"
                        t-att-id="'payment_term_%i' % partner_term.id"
-                       t-att-checked="term == selected_term"
+                       t-att-checked="partner_term == selected_term"
                    type="radio"/>
                 <label t-att-for="'payment_term_%i' % partner_term.id"
                        t-field="partner_term.name"
@@ -57,7 +57,7 @@
         </xpath>
         <xpath expr="//div[@id='payment_method']" position="after">
             <!-- Bypass Validation for users with 0 deposit payment terms -->
-            <div class="mt-3" t-att-style="'display: none;' if website_sale_order.amount_due_today else 'display: block;'" id="non_payment_method">
+            <div class="mt-3" t-if="website_sale_order.amount_total" t-att-style="'display: none;' if website_sale_order.amount_due_today else 'display: block;'" id="non_payment_method">
                 <div class="float-left mt-2">
                     <a role="button" href="/shop/cart" class="btn btn-secondary">
                         <i class="fa fa-chevron-left"/>
