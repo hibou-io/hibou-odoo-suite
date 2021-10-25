@@ -9,6 +9,9 @@ class DeliveryCarrier(models.Model):
     automatic_insurance_value = fields.Float(string='Automatic Insurance Value',
                                              help='Will be used during shipping to determine if the '
                                                   'picking\'s value warrants insurance being added.')
+    automatic_sig_req_value = fields.Float(string='Automatic Signature Required Value',
+                                           help='Will be used during shipping to determine if the '
+                                                'picking\'s value warrants signature required being added.')
     procurement_priority = fields.Selection(PROCUREMENT_PRIORITIES,
                                             string='Procurement Priority',
                                             help='Priority for this carrier. Will affect pickings '
@@ -30,6 +33,21 @@ class DeliveryCarrier(models.Model):
             elif picking.require_insurance == 'auto' and self.automatic_insurance_value and self.automatic_insurance_value > value:
                 value = 0.0
         return value
+
+    def get_signature_required(self, order=None, picking=None):
+        value = 0.0
+        if order:
+            if order.order_line:
+                value = sum(order.order_line.filtered(lambda l: l.type != 'service').mapped('price_subtotal'))
+            else:
+                return False
+        if picking:
+            value = picking.declared_value()
+            if picking.require_signature == 'no':
+                return False
+            elif picking.require_signature == 'yes':
+                return True
+        return self.automatic_sig_req_value and value >= self.automatic_sig_req_value
 
     def get_third_party_account(self, order=None, picking=None):
         if order and order.shipping_account_id:

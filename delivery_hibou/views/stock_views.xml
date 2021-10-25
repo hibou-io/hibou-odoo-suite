@@ -29,6 +29,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='carrier_id']" position="before">
                 <field name="require_insurance" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                <field name="require_signature" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                 <field name="shipping_account_id" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"
                        options="{'no_create': True, 'no_open': True}"
                        domain="['|', ('partner_id', '=', False), ('partner_id', '=', partner_id)]"/>

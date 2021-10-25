@@ -1,7 +1,7 @@
 {
     'name': 'Delivery Hibou',
     'summary': 'Adds underlying pinnings for things like "RMA Return Labels"',
-    'version': '11.0.1.1.0',
+    'version': '11.0.1.2.0',
     'author': "Hibou Corp.",
     'category': 'Stock',
     'license': 'AGPL-3',
