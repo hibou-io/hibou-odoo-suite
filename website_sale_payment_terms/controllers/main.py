@@ -60,10 +60,7 @@ class WebsiteSalePaymentTerms(WebsiteSaleDelivery):
         order = request.website.sale_get_order()
         if not order:
             return request.redirect('/shop')
-        if order.require_payment:
-            return request.redirect('/shop/payment')
-        if not order.payment_term_id or (
-                order.payment_term_id.deposit_percentage or order.payment_term_id.deposit_flat):
+        if order.amount_due_today:
             return request.redirect('/shop/payment')
 
         # made it this far, lets confirm
