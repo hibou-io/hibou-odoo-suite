@@ -279,6 +279,9 @@ class ChooseDeliveryPackage(models.TransientModel):
     package_require_signature = fields.Boolean(string='Require Signature')
 
     def _default_package_declared_value(self):
+        # guard for install
+        if not self.env.context.get('active_id'):
+            return 0.0
         if self.env.context.get('default_stock_quant_package_id'):
             stock_quant_package = self.env['stock.quant.package'].browse(self.env.context['default_stock_quant_package_id'])
             return stock_quant_package.package_declared_value
