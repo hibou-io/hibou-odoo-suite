@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_pax.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-foreach='receipt.paymentlines']" position="inside">
+            <t t-if="line.pax_approval">
+                <div class="pos-receipt-left-padding">
+                    <span>APPROVAL CODE: </span>
+                    <span>
+                        <t t-esc="line.pax_approval" />
+                    </span>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>
