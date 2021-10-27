@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_pax.PaymentScreenPaymentLines" t-inherit="point_of_sale.PaymentScreenPaymentLines" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('paymentline')]//t[@t-esc='line.payment_method.name']" position="replace">
+            <t t-if="line.pax_txn_pending">
+                <span>WAITING FOR TXN</span>
+                <div>
+                    <div class="pax-send-transaction-button"
+                        t-on-click="trigger('pax-send-payment-request', line)"
+                        aria-label="Send Credit" title="Send Credit">
+                        <span>Credit</span>
+                    </div>
+                    <div class="pax-send-transaction-button"
+                        t-on-click="trigger('pax-send-payment-request-debit', line)"
+                        aria-label="Send Debit" title="Send Debit">
+                        <span>Debit</span>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <t t-esc="line.payment_method.name" />
+                <t t-esc="line.name" />
+            </t>
+        </xpath>
+    </t>
+
+</templates>
