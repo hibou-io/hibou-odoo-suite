@@ -7,12 +7,18 @@ class StockQuantPackage(models.Model):
 
     carrier_id = fields.Many2one('delivery.carrier', string='Carrier')
     carrier_tracking_ref = fields.Char(string='Tracking Reference')
+    require_insurance = fields.Boolean(string='Require Insurance')
+    require_signature = fields.Boolean(string='Require Signature')
+    declared_value = fields.Float(string='Declared Value')
 
     def _get_active_picking(self):
         picking_id = self._context.get('active_id')
         picking_model = self._context.get('active_model')
         if not picking_id or picking_model != 'stock.picking':
-            raise UserError('Cannot cancel package other than through shipment/picking.')
+            picking_id = self._context.get('picking_active_id')
+            picking_model = self._context.get('picking_active_model')
+            if not picking_id or picking_model != 'stock.picking':
+                raise UserError('Cannot cancel package other than through shipment/picking.')
         return self.env['stock.picking'].browse(picking_id)
 
     def send_to_shipper(self):
@@ -81,8 +87,10 @@ class StockPicking(models.Model):
         res = super(StockPicking, self).create(values)
         return res
 
-    def declared_value(self):
+    def declared_value(self, package=None):
         self.ensure_one()
+        if package:
+            return package.declared_value
         cost = sum([(l.product_id.standard_price * l.qty_done) for l in self.move_line_ids] or [0.0])
         if not cost:
             # Assume Full Value
@@ -126,6 +134,8 @@ class StockPicking(models.Model):
                     tracking_numbers.append(tracking_number)
                     # Try to add tracking to the individual packages.
                     potential_tracking_numbers = tracking_number.split(',')
+                    if len(potential_tracking_numbers) == 1:
+                        potential_tracking_numbers = tracking_number.split('+')  # UPS for example...
                     if len(potential_tracking_numbers) >= len(carrier_packages):
                         for t, p in zip(potential_tracking_numbers, carrier_packages):
                             p.carrier_tracking_ref = t

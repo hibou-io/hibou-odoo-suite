@@ -17,6 +17,9 @@
                     <field name="carrier_tracking_ref" class="oe_inline" />
                     <button type="object" class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|',('carrier_tracking_ref','=',False),('carrier_id','=', False)]}"/>
                 </div>
+                <field name="declared_value" />
+                <field name="require_insurance" />
+                <field name="require_signature" />
             </xpath>
         </field>
     </record>
@@ -36,12 +39,12 @@
                 <field name="package_carrier_tracking_ref" attrs="{'invisible': [('package_carrier_tracking_ref', '=', False)]}" />
                 <button name="clear_carrier_tracking_ref" type="object" string="Clear Tracking" attrs="{'invisible': [('carrier_tracking_ref', '!=', False)]}" />
                 <button name="reset_carrier_tracking_ref" type="object" string="Reset Tracking" attrs="{'invisible': [('package_carrier_tracking_ref', '!=', False)]}" />
-                <field name="package_ids" attrs="{'invisible': [('package_carrier_tracking_ref', '=', False)]}" context="{'active_id': id, 'active_model': 'stock.picking'}" nolabel="1" colspan="2">
+                <field name="package_ids" attrs="{'invisible': [('package_carrier_tracking_ref', '=', False)]}" nolabel="1" colspan="2">
                     <tree>
                         <field name="name" />
                         <field name="carrier_id" />
                         <field name="carrier_tracking_ref" />
-                        <button type="object" name="cancel_shipment" string="Cancel" />
+                        <button type="object" name="cancel_shipment" string="Cancel" context="{'picking_active_id': parent.id, 'picking_active_model': 'stock.picking'}" />
                     </tree>
                 </field>
             </xpath>

@@ -12,13 +12,13 @@ _logger = logging.getLogger(__name__)
 class ProviderUPS(models.Model):
     _inherit = 'delivery.carrier'
 
-    def _get_ups_signature_required_type(self):
+    def _get_ups_signature_required_type(self, order=None, picking=None, package=None):
         # '3' for Adult Sig.
         return '2'
 
-    def _get_ups_signature_required(self, order=None, picking=None):
-        if self.get_signature_required(order=order, picking=picking):
-            return self._get_ups_signature_required_type()
+    def _get_ups_signature_required(self, order=None, picking=None, package=None):
+        if self.get_signature_required(order=order, picking=picking, package=package):
+            return self._get_ups_signature_required_type(order=order, picking=picking, package=package)
         return False
 
     def _get_ups_is_third_party(self, order=None, picking=None):
@@ -168,8 +168,6 @@ class ProviderUPS(models.Model):
             shipper_company = superself.get_shipper_company(picking=picking)
             shipper_warehouse = superself.get_shipper_warehouse(picking=picking)
             recipient = superself.get_recipient(picking=picking)
-            signature_required = superself._get_ups_signature_required(picking=picking)
-            insurance_value = superself.get_insurance_value(picking=picking)
             currency = picking.sale_id.currency_id if picking.sale_id else picking.company_id.currency_id
             insurance_currency_code = currency.name
 
@@ -188,7 +186,7 @@ class ProviderUPS(models.Model):
                 # Create all packages
                 for package in picking_packages:
                     packages.append(Package(self, package.shipping_weight, quant_pack=package.packaging_id, name=package.name,
-                                            insurance_value=insurance_value, insurance_currency_code=insurance_currency_code, signature_required=signature_required))
+                                            insurance_value=superself.get_insurance_value(picking=picking, package=package), insurance_currency_code=insurance_currency_code, signature_required=superself._get_ups_signature_required(picking=picking, package=package)))
                     package_names.append(package.name)
 
             # what is the point of weight_bulk?
@@ -282,11 +280,10 @@ class ProviderUPS(models.Model):
         srm = UPSRequest(self.log_xml, superself.ups_username, superself.ups_passwd, superself._get_main_ups_account_number(order=order, picking=picking), superself.ups_access_number, self.prod_environment)
         ResCurrency = self.env['res.currency']
         max_weight = self.ups_default_packaging_id.max_weight
-        insurance_value = superself.get_insurance_value(order=order, picking=picking)
-        insurance_currency_code = 'USD'  # will be overridden below, here for consistency
-        signature_required = superself._get_ups_signature_required(order=order, picking=picking)
         packages = []
         if order:
+            insurance_value = superself.get_insurance_value(order=order)
+            signature_required = superself._get_ups_signature_required(order=order)
             currency = order.currency_id
             insurance_currency_code = currency.name
             company = order.company_id
@@ -315,14 +312,14 @@ class ProviderUPS(models.Model):
             # Is total quantity the number of packages or the number of items being shipped?
             if package:
                 total_qty = 1
-                packages = [Package(self, package.shipping_weight, insurance_value=insurance_value, insurance_currency_code=insurance_currency_code, signature_required=signature_required)]
+                packages = [Package(self, package.shipping_weight, insurance_value=superself.get_insurance_value(picking=picking, package=package), insurance_currency_code=insurance_currency_code, signature_required=superself._get_ups_signature_required(picking=picking, package=package))]
             elif picking.package_ids:
                 # all packages....
                 total_qty = len(picking.package_ids)
-                packages = [Package(self, package.shipping_weight, insurance_value=insurance_value, insurance_currency_code=insurance_currency_code, signature_required=signature_required) for package in picking.package_ids.filtered(lambda p: not p.carrier_id)]
+                packages = [Package(self, package.shipping_weight, insurance_value=superself.get_insurance_value(picking=picking, package=package), insurance_currency_code=insurance_currency_code, signature_required=superself._get_ups_signature_required(picking=picking, package=package)) for package in picking.package_ids.filtered(lambda p: not p.carrier_id)]
             else:
                 total_qty = 1
-                packages.append(Package(self, picking.shipping_weight or picking.weight, insurance_value=insurance_value, insurance_currency_code=insurance_currency_code, signature_required=signature_required))
+                packages.append(Package(self, picking.shipping_weight or picking.weight, insurance_value=superself.get_insurance_value(picking=picking), insurance_currency_code=insurance_currency_code, signature_required=superself._get_ups_signature_required(picking=picking)))
 
         shipment_info = {
             'total_qty': total_qty  # required when service type = 'UPS Worldwide Express Freight'
