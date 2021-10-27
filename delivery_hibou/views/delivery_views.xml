@@ -21,6 +21,11 @@
             <xpath expr="//field[@name='delivery_packaging_id']" position="attributes">
                 <attribute name="domain">[('product_id', '=', False)]</attribute>
             </xpath>
+            <xpath expr="//field[@name='delivery_packaging_id']" position="after">
+                <field name="package_declared_value" />
+                <field name="package_require_insurance" />
+                <field name="package_require_signature" />
+            </xpath>
         </field>
     </record>
 

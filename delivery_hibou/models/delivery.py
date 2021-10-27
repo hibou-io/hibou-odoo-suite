@@ -19,7 +19,7 @@ class DeliveryCarrier(models.Model):
 
     # Utility
 
-    def get_insurance_value(self, order=None, picking=None):
+    def get_insurance_value(self, order=None, picking=None, package=None):
         value = 0.0
         if order:
             if order.order_line:
@@ -27,14 +27,17 @@ class DeliveryCarrier(models.Model):
             else:
                 return value
         if picking:
-            value = picking.declared_value()
-            if picking.require_insurance == 'no':
+            value = picking.declared_value(package=package)
+            if package and not package.require_insurance:
                 value = 0.0
-            elif picking.require_insurance == 'auto' and self.automatic_insurance_value and self.automatic_insurance_value > value:
-                value = 0.0
+            else:
+                if picking.require_insurance == 'no':
+                    value = 0.0
+                elif picking.require_insurance == 'auto' and self.automatic_insurance_value and self.automatic_insurance_value > value:
+                    value = 0.0
         return value
 
-    def get_signature_required(self, order=None, picking=None):
+    def get_signature_required(self, order=None, picking=None, package=None):
         value = 0.0
         if order:
             if order.order_line:
@@ -42,11 +45,14 @@ class DeliveryCarrier(models.Model):
             else:
                 return False
         if picking:
-            value = picking.declared_value()
-            if picking.require_signature == 'no':
-                return False
-            elif picking.require_signature == 'yes':
-                return True
+            value = picking.declared_value(package=package)
+            if package:
+                return package.require_signature
+            else:
+                if picking.require_signature == 'no':
+                    return False
+                elif picking.require_signature == 'yes':
+                    return True
         return self.automatic_sig_req_value and value >= self.automatic_sig_req_value
 
     def get_third_party_account(self, order=None, picking=None):
@@ -262,3 +268,44 @@ class DeliveryCarrier(models.Model):
                     })
 
             return getattr(self, '%s_cancel_shipment' % self.delivery_type)(pickings)
+
+
+class ChooseDeliveryPackage(models.TransientModel):
+    _inherit = 'choose.delivery.package'
+
+    package_declared_value = fields.Float(string='Declared Value',
+                                          default=lambda self: self._default_package_declared_value())
+    package_require_insurance = fields.Boolean(string='Require Insurance')
+    package_require_signature = fields.Boolean(string='Require Signature')
+
+    def _default_package_declared_value(self):
+        if self.env.context.get('default_stock_quant_package_id'):
+            stock_quant_package = self.env['stock.quant.package'].browse(self.env.context['default_stock_quant_package_id'])
+            return stock_quant_package.package_declared_value
+        else:
+            picking_id = self.env['stock.picking'].browse(self.env.context['active_id'])
+            move_line_ids = [po for po in picking_id.move_line_ids if po.qty_done > 0 and not po.result_package_id]
+            total_value = sum([po.qty_done * po.product_id.standard_price for po in move_line_ids])
+            return total_value
+
+    @api.onchange('package_declared_value')
+    def _onchange_package_declared_value(self):
+        picking = self.env['stock.picking'].browse(self.env.context['active_id'])
+        value = self.package_declared_value
+        if picking.require_insurance == 'auto':
+            self.package_require_insurance = value and picking.carrier_id.automatic_insurance_value and value >= picking.carrier_id.automatic_insurance_value
+        else:
+            self.package_require_insurance = picking.require_insurance == 'yes'
+        if picking.require_signature == 'auto':
+            self.package_require_signature = value and picking.carrier_id.automatic_sig_req_value and value >= picking.carrier_id.automatic_sig_req_value
+        else:
+            self.package_require_signature = picking.require_signature == 'yes'
+
+    def put_in_pack(self):
+        super().put_in_pack()
+        if self.stock_quant_package_id:
+            self.stock_quant_package_id.write({
+                'declared_value': self.package_declared_value,
+                'require_insurance': self.package_require_insurance,
+                'require_signature': self.package_require_signature,
+            })
