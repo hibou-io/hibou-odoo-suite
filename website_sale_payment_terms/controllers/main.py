@@ -1,15 +1,15 @@
 from odoo.http import request, route
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
 
 
-class WebsiteSalePaymentTerms(WebsiteSale):
+class WebsiteSalePaymentTerms(WebsiteSaleDelivery):
 
     # In case payment_term_id is set by query-string in a link (from website_sale_delivery)
     @route(['/shop/payment'], type='http', auth="public", website=True)
     def payment(self, **post):
         order = request.website.sale_get_order()
         payment_term_id = post.get('payment_term_id')
-        if order.amount_total <= request.website.payment_deposit_threshold:
+        if order.amount_total > request.website.payment_deposit_threshold:
             if payment_term_id:
                 payment_term_id = int(payment_term_id)
             if order:
@@ -36,11 +36,14 @@ class WebsiteSalePaymentTerms(WebsiteSale):
     # Return values after order payment_term_id is updated
     def _update_website_payment_term_return(self, order, **post):
         if order:
+            Monetary = request.env['ir.qweb.field.monetary']
+            currency = order.currency_id
             return {
                 'payment_term_name': order.payment_term_id.name,
                 'payment_term_id': order.payment_term_id.id,
                 'note': order.payment_term_id.note,
-                'require_payment': order.require_payment,
+                'amount_due_today': order.amount_due_today,
+                'amount_due_today_html': Monetary.value_to_html(order.amount_due_today, {'display_currency': currency}),
             }
         return {}
 
@@ -48,9 +51,7 @@ class WebsiteSalePaymentTerms(WebsiteSale):
     def reject_term_agreement(self, **kw):
         order = request.website.sale_get_order()
         if order:
-            partner = request.env.user.partner_id
-            order.write({'payment_term_id': request.website.sale_get_payment_term(partner),
-                         'require_payment': True})
+            order.payment_term_id = False
         return request.redirect('/shop/cart')
 
     # Confirm order without taking payment
@@ -59,10 +60,7 @@ class WebsiteSalePaymentTerms(WebsiteSale):
         order = request.website.sale_get_order()
         if not order:
             return request.redirect('/shop')
-        if order.require_payment:
-            return request.redirect('/shop/payment')
-        if not order.payment_term_id or (
-                order.payment_term_id.deposit_percentage or order.payment_term_id.deposit_flat):
+        if order.amount_due_today:
             return request.redirect('/shop/payment')
 
         # made it this far, lets confirm
@@ -74,3 +72,11 @@ class WebsiteSalePaymentTerms(WebsiteSale):
         if request.website and request.website.sale_reset:
             request.website.sale_reset()
         return request.redirect('/shop/confirmation')
+
+    def _update_website_sale_delivery_return(self, order, **post):
+        res = super(WebsiteSalePaymentTerms, self)._update_website_sale_delivery_return(order, **post)
+        Monetary = request.env['ir.qweb.field.monetary']
+        currency = order.currency_id
+        if order:
+            res['amount_due_today'] = Monetary.value_to_html(order.amount_due_today, {'display_currency': currency})
+        return res
