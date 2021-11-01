@@ -1,6 +1,7 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
 from odoo.tests import common
+from odoo.exceptions import UserError
 
 
 class TestCommission(common.TransactionCase):
@@ -219,3 +220,71 @@ class TestCommission(common.TransactionCase):
         self.assertEqual(len(coach_commission), 1, 'Incorrect commission count %d (expect 1)' % len(coach_commission))
         self.assertEqual(coach_commission.state, 'done', 'Commission is not done.')
         self.assertEqual(coach_commission.rate, 12.0, 'Commission rate should be the contract rate.')
+
+    def test_commission_cancel_post_journal_entry(self):
+        # find and configure company commissions journal
+        commission_journal = self.env['account.journal'].search([('type', '=', 'general')], limit=1)
+        self.assertTrue(commission_journal)
+        expense_account = self.env.ref('l10n_generic_coa.1_expense')
+        commission_journal.default_account_id = expense_account
+        self.env.user.company_id.commission_journal_id = commission_journal
+
+        coach = self._createEmployee(self.browse_ref('base.user_root'))
+        coach_contract = self._createContract(coach, 12.0, admin_commission_rate=2.0)
+        user = self.user
+        emp = self.employee
+        emp.address_home_id = user.partner_id  # Important field for payables.
+        emp.coach_id = coach
+
+        contract = self._createContract(emp, 5.0)
+
+        inv = self._create_invoice(user)
+
+        self.assertFalse(inv.commission_ids, 'Commissions exist when invoice is created.')
+        inv.action_post()  # validate
+        self.assertEqual(inv.state, 'posted')
+        self.assertEqual(inv.payment_state, 'not_paid')
+        self.assertTrue(inv.commission_ids, 'Commissions not created when invoice is validated.')
+
+        user_commission = inv.commission_ids.filtered(lambda c: c.employee_id.id == emp.id)
+        self.assertEqual(len(user_commission), 1, 'Incorrect commission count %d (expect 1)' % len(user_commission))
+        self.assertEqual(user_commission.state, 'draft', 'Commission is not draft.')
+        self.assertFalse(user_commission.move_id, 'Commission has existing journal entry.')
+
+        # Amounts
+        commission_rate = contract.commission_rate
+        self.assertEqual(commission_rate, 5.0)
+        expected = (inv.amount_for_commission() * commission_rate) / 100.0
+        actual = user_commission.amount
+        self.assertAlmostEqual(actual, expected, int(inv.company_currency_id.rounding))
+
+        # Pay.
+        pay_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': inv.partner_id.id,
+            'amount': inv.amount_residual,
+            'currency_id': inv.currency_id.id,
+            'journal_id': pay_journal.id,
+        })
+        payment.action_post()
+
+        receivable_line = payment.move_id.line_ids.filtered('credit')
+
+        inv.js_assign_outstanding_line(receivable_line.id)
+        self.assertEqual(inv.payment_state, 'in_payment', 'Invoice is not paid.')
+
+        user_commission = inv.commission_ids.filtered(lambda c: c.employee_id.id == emp.id)
+        self.assertEqual(user_commission.state, 'done', 'Commission is not done.')
+        self.assertTrue(user_commission.move_id, 'Commission didn\'t create a journal entry.')
+
+        # By Default, Odoo does NOT allow you to cancel/unlink a journal entry.
+        with self.assertRaises(UserError):
+            user_commission.action_cancel()
+
+        # Our form has the needed context to allow cancel/unlink of a journal entry.
+        user_commission.with_context(force_delete=True).action_cancel()
+        self.assertEqual(user_commission.state, 'cancel', 'Commission is not cancelled.')
+        self.assertFalse(user_commission.move_id, 'Commission didn\'t remove journal entry.')

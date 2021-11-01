@@ -9,7 +9,7 @@
                     <button name="action_confirm" string="Confirm" class="btn-primary" type="object" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                     <button name="action_draft" string="Set Draft" class="btn-default" type="object" attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
                     <button name="action_mark_paid" string="Mark Paid" class="btn-default" type="object" attrs="{'invisible': [('state', '!=', 'done')]}"/>
-                    <button name="action_cancel" string="Cancel" class="btn-default" type="object" attrs="{'invisible': [('state', '=', 'cancel')]}"/>
+                    <button name="action_cancel" string="Cancel" class="btn-default" type="object" attrs="{'invisible': [('state', '=', 'cancel')]}" context="{'force_delete': True}"/>
                     <field name="state" widget="statusbar" on_change="1" modifiers="{'readonly': true}"/>
                 </header>
                 <sheet>
