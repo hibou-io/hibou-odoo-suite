@@ -2,7 +2,7 @@
     'name': 'Website Payment Terms',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'category': 'Sales',
-    'version': '13.0.1.0.0',
+    'version': '14.0.1.0.0',
     'description':
         """
 Website Payment Terms
