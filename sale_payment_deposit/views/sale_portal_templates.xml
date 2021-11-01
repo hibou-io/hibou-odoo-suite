@@ -10,13 +10,13 @@
         <xpath expr="//div[@id='modalaccept']/div/form/main/p/ul/li[2]" position="replace">
             <li><span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/></li>
             <li t-if="sale_order.amount_total_deposit"><span>Deposit today of:</span> <b data-id="total_amount_deposit" t-field="sale_order.amount_total_deposit"/></li>
-            <li t-if="sale_order.payment_term_id.note"><span t-field="sale_order.payment_term_id.note"/></li>
+            <li t-if="sale_order.payment_term_id.note.striptags()"><span t-field="sale_order.payment_term_id.note"/></li>
         </xpath>
         <!-- Display the Deposit when Paying -->
         <xpath expr="//div[@id='modalaccept']/div/div/main/p/ul/li[2]" position="replace">
             <li t-if="sale_order.amount_total_deposit"><span>For the deposit amount of:</span> <b data-id="total_amount_deposit" t-field="sale_order.amount_total_deposit"/></li>
             <li t-else=""><span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/></li>
-            <li t-if="sale_order.payment_term_id.note"><span t-field="sale_order.payment_term_id.note"/></li>
+            <li t-if="sale_order.payment_term_id.note.striptags()"><span t-field="sale_order.payment_term_id.note"/></li>
         </xpath>
     </template>
 </odoo>
