@@ -1,6 +1,5 @@
-from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.addons.sale.models.sale import SaleOrder
+from odoo.addons.sale.models.sale_order import SaleOrder
 
 
 def _create_payment_transaction(self, vals):
