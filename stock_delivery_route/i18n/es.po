@@ -1,0 +1,114 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_delivery_route
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-12 01:49+0000\n"
+"PO-Revision-Date: 2021-10-12 01:49+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: stock_delivery_route
+#: model:ir.model.fields,field_description:stock_delivery_route.field_stock_picking__partner_address
+msgid "Address"
+msgstr "Dirección"
+
+#. module: stock_delivery_route
+#: model:ir.model,name:stock_delivery_route.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: stock_delivery_route
+#: model:ir.model.fields,field_description:stock_delivery_route.field_stock_warehouse_delivery_route__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: stock_delivery_route
+#: model:ir.model.fields,field_description:stock_delivery_route.field_stock_warehouse_delivery_route__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: stock_delivery_route
+#: model:ir.model.fields,field_description:stock_delivery_route.field_sale_order__delivery_route_id
+#: model:ir.model.fields,field_description:stock_delivery_route.field_stock_picking__delivery_route_id
+#: model_terms:ir.ui.view,arch_db:stock_delivery_route.view_picking_internal_search_inherit
+msgid "Delivery Route"
+msgstr "Ruta de Envío"
+
+#. module: stock_delivery_route
+#: model:ir.model.fields,field_description:stock_delivery_route.field_res_partner__delivery_route_ids
+#: model:ir.model.fields,field_description:stock_delivery_route.field_res_users__delivery_route_ids
+#: model:ir.model.fields,field_description:stock_delivery_route.field_stock_warehouse__delivery_route_ids
+#: model_terms:ir.ui.view,arch_db:stock_delivery_route.view_partner_form_inherit
+#: model_terms:ir.ui.view,arch_db:stock_delivery_route.view_warehouse_inherit
+msgid "Delivery Routes"
+msgstr "Rutas de Envío"
+
+#. module: stock_delivery_route
+#: model:ir.model.fields,field_description:stock_delivery_route.field_stock_warehouse_delivery_route__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: stock_delivery_route
+#: model:ir.model.fields,field_description:stock_delivery_route.field_stock_warehouse_delivery_route__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_delivery_route
+#: model:ir.model.fields,field_description:stock_delivery_route.field_stock_warehouse_delivery_route____last_update
+msgid "Last Modified on"
+msgstr "Última Modificación el"
+
+#. module: stock_delivery_route
+#: model:ir.model.fields,field_description:stock_delivery_route.field_stock_warehouse_delivery_route__write_uid
+msgid "Last Updated by"
+msgstr "Última Actualización por"
+
+#. module: stock_delivery_route
+#: model:ir.model.fields,field_description:stock_delivery_route.field_stock_warehouse_delivery_route__write_date
+msgid "Last Updated on"
+msgstr "Última Actualización el"
+
+#. module: stock_delivery_route
+#: model:ir.model.fields,field_description:stock_delivery_route.field_stock_warehouse_delivery_route__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: stock_delivery_route
+#: model:ir.model.fields,field_description:stock_delivery_route.field_stock_warehouse_delivery_route__note
+msgid "Note"
+msgstr "Nota"
+
+#. module: stock_delivery_route
+#: model:ir.model,name:stock_delivery_route.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venta"
+
+#. module: stock_delivery_route
+#: model:ir.model.fields,field_description:stock_delivery_route.field_stock_picking__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: stock_delivery_route
+#: model:ir.model,name:stock_delivery_route.model_stock_picking
+msgid "Transfer"
+msgstr "Transferir"
+
+#. module: stock_delivery_route
+#: model:ir.model,name:stock_delivery_route.model_stock_warehouse
+#: model:ir.model.fields,field_description:stock_delivery_route.field_stock_picking__warehouse_id
+#: model:ir.model.fields,field_description:stock_delivery_route.field_stock_warehouse_delivery_route__warehouse_id
+msgid "Warehouse"
+msgstr "Almacén"
+
+#. module: stock_delivery_route
+#: model:ir.model,name:stock_delivery_route.model_stock_warehouse_delivery_route
+msgid "stock.warehouse.delivery.route"
+msgstr "stock.warehouse.delivery.route"
