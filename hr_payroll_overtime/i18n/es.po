@@ -1,0 +1,353 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll_overtime
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-11-01 23:24+0000\n"
+"PO-Revision-Date: 2021-11-01 23:24+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_payroll_overtime
+#: code:addons/hr_payroll_overtime/models/hr_work_entry.py:0
+#, python-format
+msgid "An override should only have a Date OR Day of Week."
+msgstr "Una anulación solo debe tener una Fecha o un Diá de la Semana."
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type__create_uid
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type_override__create_uid
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type__create_date
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type_override__create_date
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type_override__date
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override__date
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override_abstract__date
+msgid "Date"
+msgstr "Fecha"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_resource_calendar__day_week_start
+msgid "Day Week Starts"
+msgstr "Día que comienza la semana"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type_override__day_of_week
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override__day_of_week
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override_abstract__day_of_week
+msgid "Day of Week"
+msgstr "Día de la semana"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type_override__name
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override__name
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override_abstract__name
+msgid "Description"
+msgstr "Descripción"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type__display_name
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type_override__display_name
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,help:hr_payroll_overtime.field_hr_work_entry_overtime_type_override__work_type_id
+#: model:ir.model.fields,help:hr_payroll_overtime.field_hr_work_entry_type_override__work_type_id
+#: model:ir.model.fields,help:hr_payroll_overtime.field_hr_work_entry_type_override_abstract__work_type_id
+msgid "Distinct Work Type for when this applies."
+msgstr "Tipo de trabajo distinto para cuando esto aplica"
+
+#. module: hr_payroll_overtime
+#: model:ir.model,name:hr_payroll_overtime.model_hr_contract
+msgid "Employee Contract"
+msgstr "Contrato del empleado"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_overtime_type_override__day_of_week__5
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_type_override__day_of_week__5
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_type_override_abstract__day_of_week__5
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__resource_calendar__day_week_start__5
+msgid "Friday"
+msgstr "Viernes"
+
+#. module: hr_payroll_overtime
+#: model:ir.model,name:hr_payroll_overtime.model_hr_work_entry_type
+msgid "HR Work Entry Type"
+msgstr "Tipo de entrada de trabajo de RRHH"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type__hours_per_day
+msgid "Hours/Day"
+msgstr "Horas/Día"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type__hours_per_week
+msgid "Hours/Week"
+msgstr "Horas/Semana"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type__id
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type_override__id
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type____last_update
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type_override____last_update
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override____last_update
+msgid "Last Modified on"
+msgstr "Última Modificación el"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type__write_uid
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type_override__write_uid
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override__write_uid
+msgid "Last Updated by"
+msgstr "Última Actualización por"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type__write_date
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type_override__write_date
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override__write_date
+msgid "Last Updated on"
+msgstr "Última Actualización el"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_overtime_type_override__day_of_week__1
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_type_override__day_of_week__1
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_type_override_abstract__day_of_week__1
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__resource_calendar__day_week_start__1
+msgid "Monday"
+msgstr "Lunes"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type__multiplier
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type_override__multiplier
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override__multiplier
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override_abstract__multiplier
+msgid "Multiplier"
+msgstr "Multiplicador"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: hr_payroll_overtime
+#: model_terms:ir.actions.act_window,help:hr_payroll_overtime.hr_work_entry_overtime_type_action_main
+msgid "No Overtime Rules"
+msgstr "Sin reglas de horas extra"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,help:hr_payroll_overtime.field_hr_work_entry_overtime_type__hours_per_day
+msgid "Number of hours worked in a single day to trigger overtime."
+msgstr "Número de horas trabajadas en un día para activar horas extra"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,help:hr_payroll_overtime.field_hr_work_entry_overtime_type__hours_per_week
+msgid "Number of hours worked in a week to trigger overtime."
+msgstr "Número de horas trabajadas en una semana para activar horas extras"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type_override__work_type_id
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override__work_type_id
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override_abstract__work_type_id
+msgid "Override Work Type"
+msgstr "Anular Tipo de Trabajo"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,help:hr_payroll_overtime.field_hr_work_entry_overtime_type__override_ids
+msgid "Override lines with a Date will be considered before Day of Week."
+msgstr ""
+"Anular líneas con una fecha que será considerada antes del Día de la Semana"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,help:hr_payroll_overtime.field_hr_work_entry_type__override_ids
+msgid "Override work entry type on payslip."
+msgstr "Anular el tipo de entrada de trabajo en el recibo de nómina"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type__override_ids
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type__override_ids
+#: model_terms:ir.ui.view,arch_db:hr_payroll_overtime.hr_work_entry_overtime_type_form
+msgid "Overrides"
+msgstr "Anula"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_contract__is_overtime_exempt
+msgid "Overtime Exempt"
+msgstr "Exento de Horas Extras"
+
+#. module: hr_payroll_overtime
+#: model:ir.model,name:hr_payroll_overtime.model_hr_work_entry_overtime_type_override
+msgid "Overtime Rule Override"
+msgstr "Anular Regla de Horas Extra"
+
+#. module: hr_payroll_overtime
+#: model:ir.actions.act_window,name:hr_payroll_overtime.hr_work_entry_overtime_type_action_main
+#: model:ir.model,name:hr_payroll_overtime.model_hr_work_entry_overtime_type
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_overtime_type_override__overtime_type_id
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type__overtime_type_id
+#: model:ir.ui.menu,name:hr_payroll_overtime.hr_work_entry_overtime_type_menu_main
+#: model_terms:ir.ui.view,arch_db:hr_payroll_overtime.hr_work_entry_overtime_type_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_overtime.hr_work_entry_overtime_type_tree
+msgid "Overtime Rules"
+msgstr "Reglas de Horas Extra"
+
+#. module: hr_payroll_overtime
+#: model_terms:ir.ui.view,arch_db:hr_payroll_overtime.hr_work_entry_overtime_type_search
+msgid "Overtime Rules Search"
+msgstr "Busqueda de reglas de horas extra"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type__overtime_work_type_id
+msgid "Overtime Work Type"
+msgstr "Tipo de trabajo de horas extra"
+
+#. module: hr_payroll_overtime
+#: model:ir.model,name:hr_payroll_overtime.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Recibo de nómina"
+
+#. module: hr_payroll_overtime
+#: model:ir.model,name:hr_payroll_overtime.model_hr_payslip_worked_days
+msgid "Payslip Worked Days"
+msgstr "Días trabajados en el recibo de nómina"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_payslip_worked_days__rate
+msgid "Rate"
+msgstr "Tasa"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,help:hr_payroll_overtime.field_hr_work_entry_overtime_type_override__multiplier
+#: model:ir.model.fields,help:hr_payroll_overtime.field_hr_work_entry_type_override__multiplier
+#: model:ir.model.fields,help:hr_payroll_overtime.field_hr_work_entry_type_override_abstract__multiplier
+msgid "Rate for override. E.g. maybe you have \"Sunday Pay\" at 2.0x"
+msgstr "Tasa de anulación. ej. Quizas usted tiene \"Pago de Domingo\" a 2.0x"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,help:hr_payroll_overtime.field_hr_work_entry_overtime_type__multiplier
+msgid "Rate for when overtime is reached."
+msgstr "Tasa para cuando se alcanzan las horas extras."
+
+#. module: hr_payroll_overtime
+#: code:addons/hr_payroll_overtime/models/hr_payslip.py:0
+#, python-format
+msgid ""
+"RecursionError raised.  Ensure you have not overtime loops, you should have "
+"an end work type that does not have any \"overtime\" version, and would be "
+"considered the \"highest overtime\" work type and rate."
+msgstr ""
+"Error de Recursividad Generado.  Asegurese que no tiene ciclos de horas extra, " 
+"deber tener un tipo de trabajo final que no tenga ninguna versión de \"Tiempo Extra\" y "
+"se consideraría el tipo de trabajo y tasa de \"Horas Extras más Altas\""
+
+#. module: hr_payroll_overtime
+#: model:ir.model,name:hr_payroll_overtime.model_resource_calendar
+msgid "Resource Working Time"
+msgstr "Tiempo de trabajo de recursos"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_overtime_type_override__day_of_week__6
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_type_override__day_of_week__6
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_type_override_abstract__day_of_week__6
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__resource_calendar__day_week_start__6
+msgid "Saturday"
+msgstr "Sábado"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_overtime_type_override__day_of_week__7
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_type_override__day_of_week__7
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_type_override_abstract__day_of_week__7
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__resource_calendar__day_week_start__7
+msgid "Sunday"
+msgstr "Domingo"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_overtime_type_override__day_of_week__4
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_type_override__day_of_week__4
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_type_override_abstract__day_of_week__4
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__resource_calendar__day_week_start__4
+msgid "Thursday"
+msgstr "Jueves"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_overtime_type_override__day_of_week__2
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_type_override__day_of_week__2
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_type_override_abstract__day_of_week__2
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__resource_calendar__day_week_start__2
+msgid "Tuesday"
+msgstr "Martes"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_overtime_type_override__day_of_week__3
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_type_override__day_of_week__3
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__hr_work_entry_type_override_abstract__day_of_week__3
+#: model:ir.model.fields.selection,name:hr_payroll_overtime.selection__resource_calendar__day_week_start__3
+msgid "Wednesday"
+msgstr "Miércoles"
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,field_description:hr_payroll_overtime.field_hr_work_entry_type_override__original_type_id
+msgid "Work Entry Type"
+msgstr "Tipo de entrada de trabajo"
+
+#. module: hr_payroll_overtime
+#: model:ir.model,name:hr_payroll_overtime.model_hr_work_entry_type_override
+msgid "Work Type Override"
+msgstr "Anular Tipo de Trabajo"
+
+#. module: hr_payroll_overtime
+#: code:addons/hr_payroll_overtime/models/hr_payslip.py:0
+#, python-format
+msgid "Work type \"%s\" (id %s) must not have itself as its next overtime type."
+msgstr "El tipo de trabajo \"%s\" (id %s) no debe tener a sí mismo como su próximo Tipo de Horas Extra."
+
+#. module: hr_payroll_overtime
+#: code:addons/hr_payroll_overtime/models/hr_payslip.py:0
+#, python-format
+msgid ""
+"Work type \"%s\" (id %s) must not have itself as its next overtime type. "
+"This occurred due to an override \"%s\" from overtime rules \"%s\"."
+msgstr "El tipo de trabajo \"%s\" (id %s) no debe tener a sí mismo como su próximo Tipo de Horas Extra."
+"Esto ha ocurrido debido a una anulación \"%s\" de las reglas de horas extras \"%s\"."
+
+#. module: hr_payroll_overtime
+#: code:addons/hr_payroll_overtime/models/hr_payslip.py:0
+#, python-format
+msgid ""
+"Work type \"%s\" (id %s) must not have itself as its override work type. "
+"This occurred due to an override line \"%s\"."
+msgstr ""                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+"El tipo de trabajo \"%s\" (id %s) no debe tener a sí mismo como su tipo de trabajo de anulación. "
+"Esto ha ocurrido debido a una línea de anulación \"%s\"."
+
+#. module: hr_payroll_overtime
+#: model:ir.model.fields,help:hr_payroll_overtime.field_hr_contract__is_overtime_exempt
+msgid "e.g. Agriculture or farm work exempt under the US FLSA."
+msgstr "ej. Agricultura o trabajo agrícola exento bajo la FLSA de los EE.UU"
+
+#. module: hr_payroll_overtime
+#: model:ir.model,name:hr_payroll_overtime.model_hr_work_entry_type_override_abstract
+msgid "hr.work.entry.type.override.abstract"
+msgstr "hr.work.entry.type.override.abstract"

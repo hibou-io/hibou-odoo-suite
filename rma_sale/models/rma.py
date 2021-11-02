@@ -34,7 +34,7 @@ class RMATemplate(models.Model):
             if line_map:
                 sale_order = self.env['sale.order'].with_user(request_user).browse(res_id)
                 if not sale_order.exists():
-                    raise ValidationError('Invalid user for sale order.')
+                    raise ValidationError(_('Invalid user for sale order.'))
                 lines = []
                 sale_order_sudo = sale_order.sudo()
                 for line_id, qty in line_map.items():
@@ -43,19 +43,19 @@ class RMATemplate(models.Model):
                         if not qty:
                             continue
                         if qty < 0.0 or line.qty_delivered < qty:
-                            raise ValidationError('Invalid quantity.')
+                            raise ValidationError(_('Invalid quantity.'))
                         validity = self._rma_sale_line_validity(line)
                         if not validity:
-                            raise ValidationError('Product is not eligible for return.')
+                            raise ValidationError(_('Product is not eligible for return.'))
                         if validity == 'expired':
-                            raise ValidationError('Product is past the return period.')
+                            raise ValidationError(_('Product is past the return period.'))
                         lines.append((0, 0, {
                             'product_id': line.product_id.id,
                             'product_uom_id': line.product_uom.id,
                             'product_uom_qty': qty,
                         }))
                 if not lines:
-                    raise ValidationError('Missing product quantity.')
+                    raise ValidationError(_('Missing product quantity.'))
                 rma = self.env['rma.rma'].create({
                     'name': _('New'),
                     'sale_order_id': sale_order.id,
@@ -233,7 +233,7 @@ class RMA(models.Model):
 
         old_picking = self._find_candidate_return_picking(product_ids, self.sale_order_id.picking_ids, self.template_id.in_location_id.id)
         if not old_picking:
-            raise UserError('No eligible pickings were found to return (you can only return products from the same initial picking).')
+            raise UserError(_('No eligible pickings were found to return (you can only return products from the same initial picking).'))
 
         new_picking = self._new_in_picking(old_picking)
         self._new_in_moves(old_picking, new_picking, {})
@@ -257,8 +257,8 @@ class RMA(models.Model):
 
         old_picking = self._find_candidate_return_picking(product_ids, self.sale_order_id.picking_ids, self.template_id.out_location_dest_id.id)
         if not old_picking:
-            raise UserError(
-                'No eligible pickings were found to duplicate (you can only return products from the same initial picking).')
+            raise UserError(_(
+                'No eligible pickings were found to duplicate (you can only return products from the same initial picking).'))
 
         new_picking = self._new_out_picking(old_picking)
         self._new_out_moves(old_picking, new_picking, {})

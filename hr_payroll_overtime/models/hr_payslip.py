@@ -1,5 +1,5 @@
 from collections import defaultdict
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
@@ -74,9 +74,9 @@ class HRPayslip(models.Model):
                 for work_type, hours, _ in entries:
                     self._aggregate_overtime_add_work_type_hours(work_type, hours, iso_date, result, iso_days, day_hours, week_hours)
         except RecursionError:
-            raise UserError('RecursionError raised.  Ensure you have not overtime loops, you should have an '
+            raise UserError(_('RecursionError raised.  Ensure you have not overtime loops, you should have an '
                             'end work type that does not have any "overtime" version, and would be considered '
-                            'the "highest overtime" work type and rate.')
+                            'the "highest overtime" work type and rate.'))
 
         return result
 
@@ -97,9 +97,8 @@ class HRPayslip(models.Model):
             multiplier = override.multiplier
             if work_type == new_work_type:
                 # trivial infinite recursion from override
-                raise UserError('Work type "%s" (id %s) must not have itself as its override work type. '
-                                'This occurred due to an override line "%s".' % (
-                                    work_type.name, work_type.id, override.name))
+                raise UserError(_('Work type "%s" (id %s) must not have itself as its override work type. '
+                                'This occurred due to an override line "%s".', work_type.name, work_type.id, override.name))
             # update the work_type on this step.
             work_type = new_work_type
             working_aggregation[work_type][2] = multiplier
@@ -133,14 +132,14 @@ class HRPayslip(models.Model):
                 override = work_type.overtime_type_id.override_for_iso_date(iso_date)
                 if work_type == overtime_work_type:
                     # trivial infinite recursion
-                    raise UserError('Work type "%s" (id %s) must not have itself as its next overtime type.' % (work_type.name, work_type.id))
+                    raise UserError(_('Work type "%s" (id %s) must not have itself as its next overtime type.', work_type.name, work_type.id))
                 if override:
                     overtime_work_type = override.work_type_id
                     multiplier = override.multiplier
                     if work_type == overtime_work_type:
                         # trivial infinite recursion from override
-                        raise UserError('Work type "%s" (id %s) must not have itself as its next overtime type. '
-                                        'This occurred due to an override "%s" from overtime rules "%s".' % (
+                        raise UserError(_('Work type "%s" (id %s) must not have itself as its next overtime type. '
+                                        'This occurred due to an override "%s" from overtime rules "%s".', 
                             work_type.name, work_type.id, override.name, work_type.overtime_type_id.name))
                 # we need to save this because it won't be set once it reenter, we won't know what the original
                 # overtime multiplier was
