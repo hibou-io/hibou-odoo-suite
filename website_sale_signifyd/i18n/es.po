@@ -1,0 +1,404 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_sale_signifyd
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-11-01 20:59+0000\n"
+"PO-Revision-Date: 2021-11-01 20:59+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: website_sale_signifyd
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.signifyd_connector_form_view
+msgid ""
+"<i class=\"fa fa-check-square\" title=\"Webhooks Active\"/>\n"
+"                            <strong>\n"
+"                                Webhooks Active\n"
+"                            </strong>"
+msgstr ""
+"<i class=\"fa fa-check-square\" title=\"Webhooks Activos\"/>\n"
+"                            <strong>\n"
+"                                Webhooks Activos\n"
+"                            </strong>"
+
+#. module: website_sale_signifyd
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.signifyd_connector_form_view
+msgid ""
+"<i class=\"fa fa-square\" title=\"Webhooks Inactive\"/>\n"
+"                            <strong>\n"
+"                                Webhooks Inactive\n"
+"                            </strong>"
+msgstr ""
+"<i class=\"fa fa-square\" title=\"Webhooks Inactivos\"/>\n"
+"                            <strong>\n"
+"                                Webhooks Inactivos\n"
+"                            </strong>"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_connector__secret_key
+msgid "API Key"
+msgstr "Clave de API"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__adjusted_score
+msgid "Adjusted Score"
+msgstr "Puntuación Ajustada"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields.selection,name:website_sale_signifyd.selection__signifyd_case__guarantee_disposition__approved
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.stock_picking_form_inherit
+msgid "Approved"
+msgstr "Aprobada"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields.selection,name:website_sale_signifyd.selection__signifyd_case__guarantee_disposition__canceled
+msgid "Canceled"
+msgstr "Cancelada"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__case_id
+msgid "Case ID"
+msgstr "ID del Case"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__status
+msgid "Case Status"
+msgstr "Estado del Caso"
+
+#. module: website_sale_signifyd
+#: code:addons/website_sale_signifyd/models/signifyd.py:0
+#: code:addons/website_sale_signifyd/models/signifyd.py:0
+#, python-format
+msgid "Case not represented in Signifyd."
+msgstr "El caso no esta representado en Signifyd"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_connector__name
+msgid "Connector Name"
+msgstr "Nombre del conector"
+
+#. module: website_sale_signifyd
+#: model:ir.model,name:website_sale_signifyd.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__create_uid
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_connector__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__create_date
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_connector__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields.selection,name:website_sale_signifyd.selection__signifyd_case__guarantee_disposition__declined
+msgid "Declined"
+msgstr "Rechazado"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields.selection,name:website_sale_signifyd.selection__signifyd_case__status__dismissed
+msgid "Dismissed"
+msgstr "Desestimado"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__display_name
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_connector__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__disposition_reason
+msgid "Disposition Reason"
+msgstr "Motivo de Disposición"
+
+#. module: website_sale_signifyd
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.signifyd_case_form_view
+msgid "Force Update"
+msgstr "Forzar Actualización"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields.selection,name:website_sale_signifyd.selection__signifyd_case__review_disposition__fraud
+msgid "Fraudulent"
+msgstr "Fraudulento"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields.selection,name:website_sale_signifyd.selection__signifyd_case__review_disposition__good
+msgid "Good"
+msgstr "Bueno"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_sale_order__signifyd_disposition_status
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__guarantee_disposition
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_stock_picking__signifyd_hold
+msgid "Guarantee Status"
+msgstr "Estado de Garantía"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__name
+msgid "Headline"
+msgstr "Titular"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__id
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_connector__id
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.partner_view_form_view_inherit
+msgid "ID"
+msgstr "ID"
+
+#. module: website_sale_signifyd
+#: model:ir.model,name:website_sale_signifyd.model_signifyd_connector
+msgid "Interact with Signifyd API"
+msgstr "Interactuar con API de Signifyd"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case____last_update
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_connector____last_update
+msgid "Last Modified on"
+msgstr "Última Modificación el"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__last_update
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.partner_view_form_view_inherit
+msgid "Last Update"
+msgstr "Última Actualización"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__write_uid
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_connector__write_uid
+msgid "Last Updated by"
+msgstr "Última Actualización por"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__write_date
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_connector__write_date
+msgid "Last Updated on"
+msgstr "Última Actualización el"
+
+#. module: website_sale_signifyd
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.stock_picking_form_inherit
+msgid "On Hold"
+msgstr "Suspendido"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields.selection,name:website_sale_signifyd.selection__signifyd_case__status__open
+msgid "Open"
+msgstr "Abierto"
+
+#. module: website_sale_signifyd
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.signifyd_connector_form_view
+msgid ""
+"Optional: Add users to be notified if a sale order is declined by Signifyd."
+msgstr ""
+"Opcional: Agregar usuarios que serán notificados si un pedido de venta es "
+"rechazada por Signifyd."
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__order_id
+msgid "Order"
+msgstr "Pedido"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__order_outcome
+msgid "Order Outcome"
+msgstr "Resultado del Pedido"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__partner_id
+msgid "Partner"
+msgstr "Socio"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields.selection,name:website_sale_signifyd.selection__signifyd_case__guarantee_disposition__pending
+#: model:ir.model.fields.selection,name:website_sale_signifyd.selection__signifyd_case__review_disposition__unset
+msgid "Pending"
+msgstr "Pendiente"
+
+#. module: website_sale_signifyd
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.signifyd_connector_form_view
+msgid "Re-register Webhooks"
+msgstr "Volver a registrar Webhooks"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_connector__notify_user_ids
+msgid "Receive decline notifications"
+msgstr "Recibir notificación de rechazos"
+
+#. module: website_sale_signifyd
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.signifyd_connector_form_view
+msgid "Register Webhooks"
+msgstr "Registrar Webhooks"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__review_disposition
+msgid "Review Status"
+msgstr "Estado de Revisión"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields.selection,name:website_sale_signifyd.selection__signifyd_case__guarantee_disposition__in_review
+msgid "Reviewing"
+msgstr "En Evaluación"
+
+#. module: website_sale_signifyd
+#: model:ir.model,name:website_sale_signifyd.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venta"
+
+#. module: website_sale_signifyd
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.signifyd_case_form_view
+msgid "Score"
+msgstr "Puntuación"
+
+#. module: website_sale_signifyd
+#: model:ir.ui.menu,name:website_sale_signifyd.menu_action_signifyd_connector
+msgid "Signifyd"
+msgstr "Signifyd"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_sale_order__signifyd_case_id
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_stock_picking__singifyd_case_id
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.signifyd_case_form_view
+msgid "Signifyd Case"
+msgstr "Caso de Signifyd"
+
+#. module: website_sale_signifyd
+#: model:ir.actions.act_window,name:website_sale_signifyd.action_signifyd_case_form
+msgid "Signifyd Case Information"
+msgstr "Información del Caso de Signifyd"
+
+#. module: website_sale_signifyd
+#: code:addons/website_sale_signifyd/models/signifyd.py:0
+#, python-format
+msgid "Signifyd Case has no ID?"
+msgstr "¿El caso de Signifyd no tiene ID?"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_res_partner__signifyd_case_count
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_res_partner__signifyd_case_ids
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_res_users__signifyd_case_count
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_res_users__signifyd_case_ids
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.partner_view_form_view_inherit
+msgid "Signifyd Cases"
+msgstr "Casos de Signifyd"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_website__signifyd_connector_id
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.signifyd_connector_form_view
+msgid "Signifyd Connector"
+msgstr "Conector de Signifyd"
+
+#. module: website_sale_signifyd
+#: model:ir.actions.act_window,name:website_sale_signifyd.action_signifyd_connector
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.signifyd_connector_tree_view
+msgid "Signifyd Connectors"
+msgstr "Conectores de Signifyd"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_res_partner__signifyd_average_score
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_res_users__signifyd_average_score
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.partner_view_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.sale_order_form_view_inherit
+msgid "Signifyd Score"
+msgstr "Puntuación de Signifyd"
+
+#. module: website_sale_signifyd
+#: model_terms:ir.ui.view,arch_db:website_sale_signifyd.sale_order_form_view_inherit
+msgid "Signifyd Status"
+msgstr "Estado de Signifyd"
+
+#. module: website_sale_signifyd
+#: model:mail.message.subtype,description:website_sale_signifyd.disposition_change
+msgid "Signifyd Status Updated"
+msgstr "Estado de Signifyd Actualizado"
+
+#. module: website_sale_signifyd
+#: model:mail.message.subtype,name:website_sale_signifyd.disposition_change
+msgid "Signifyd Updated"
+msgstr "Signifyd Actualizado"
+
+#. module: website_sale_signifyd
+#: code:addons/website_sale_signifyd/models/signifyd.py:0
+#, python-format
+msgid "Signifyd Updated Record to %s"
+msgstr "Signifyd ha Actualizado Registro a %s "
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__signifyd_url
+msgid "Signifyd.com"
+msgstr "Signifyd.com"
+
+#. module: website_sale_signifyd
+#: model:ir.model,name:website_sale_signifyd.model_signifyd_case
+msgid "Stores Signifyd case information on orders."
+msgstr "Almacena Informacion del Caso de Signifyd en los pedidos"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields.selection,name:website_sale_signifyd.selection__signifyd_case__order_outcome__successful
+msgid "Successful"
+msgstr "Exitoso"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_connector__webhooks_registered
+msgid "Successfully Registered Webhooks"
+msgstr "Los Webhooks se Registraron Exitosamente"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_connector__secret_key_test
+msgid "TEST API Key"
+msgstr "Clave de API de Prueba"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__team_id
+msgid "Team ID"
+msgstr "ID del Equipo"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__team_name
+msgid "Team Name"
+msgstr "Nombre el Equipo"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_connector__test_mode
+msgid "Test Mode"
+msgstr "Modo de Prueba"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_sale_order__singifyd_score
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__score
+msgid "Transaction Score"
+msgstr "Puntuación de la Transacción"
+
+#. module: website_sale_signifyd
+#: model:ir.model,name:website_sale_signifyd.model_stock_picking
+msgid "Transfer"
+msgstr "Transferir"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_case__uuid
+msgid "Unique ID"
+msgstr "ID Único"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields,field_description:website_sale_signifyd.field_signifyd_connector__website_ids
+msgid "Used on Websites"
+msgstr "Utilizado en Sitos Web"
+
+#. module: website_sale_signifyd
+#: model:ir.model,name:website_sale_signifyd.model_website
+msgid "Website"
+msgstr "Sitio Web"
+
+#. module: website_sale_signifyd
+#: model:ir.model.fields.selection,name:website_sale_signifyd.selection__signifyd_case__order_outcome__pending
+msgid "pending"
+msgstr "Pendiente"

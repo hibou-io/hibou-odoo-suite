@@ -84,7 +84,7 @@ class SignifydCase(models.Model):
     def get_case(self):
         self.ensure_one()
         if not self.case_id:
-            raise UserError('Case not represented in Signifyd.')
+            raise UserError(_('Case not represented in Signifyd.'))
         connector = self._get_connector()
         headers = connector.get_headers()
         r = requests.get(
@@ -100,12 +100,12 @@ class SignifydCase(models.Model):
     def update_case_info(self, vals=None):
         self.ensure_one()
         if not self.case_id:
-            raise UserError('Case not represented in Signifyd.')
+            raise UserError(_('Case not represented in Signifyd.'))
         if not vals:
             case = self.get_case()
             case_id = case.get('caseId')
             if not case_id:
-                raise ValueError('Signifyd Case has no ID?')
+                raise ValueError(_('Signifyd Case has no ID?'))
             team_id = case.get('teamId', self.team_id)
             team_name = case.get('teamName', self.team_name)
             uuid = case.get('uuid', self.uuid)
