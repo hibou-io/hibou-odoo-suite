@@ -1,0 +1,266 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_attendance_work_entry
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-30 01:04+0000\n"
+"PO-Revision-Date: 2021-10-30 01:04+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_attendance_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_attendance_work_entry.hr_employees_view_kanban_inherit
+#: model_terms:ir.ui.view,arch_db:hr_attendance_work_entry.hr_kanban_view_employees_inherit
+msgid ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
+"oe_hr_attendance_status_blue\" role=\"img\" aria-label=\"On Break\" "
+"title=\"On Break\"/>"
+msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
+"oe_hr_attendance_status_blue\" role=\"img\" aria-label=\"En descanso\" "
+"title=\"En descanso\"/>"
+
+#. module: hr_attendance_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_attendance_work_entry.hr_employees_view_kanban_inherit
+#: model_terms:ir.ui.view,arch_db:hr_attendance_work_entry.hr_kanban_view_employees_inherit
+msgid ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
+"oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Available\" "
+"title=\"Available\"/>"
+msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
+"oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Disponible\" "
+"title=\"Disponible\"/"
+
+#. module: hr_attendance_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_attendance_work_entry.hr_employees_view_kanban_inherit
+#: model_terms:ir.ui.view,arch_db:hr_attendance_work_entry.hr_kanban_view_employees_inherit
+msgid ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
+"oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"At Lunch\" "
+"title=\"At Lunch\"/>"
+msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
+"oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"En el almuerzo\" "
+"title=\"En el almuerzo\"/>"
+
+#. module: hr_attendance_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_attendance_work_entry.hr_employees_view_kanban_inherit
+#: model_terms:ir.ui.view,arch_db:hr_attendance_work_entry.hr_kanban_view_employees_inherit
+msgid ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
+"oe_hr_attendance_status_red\" role=\"img\" aria-label=\"Not available\" "
+"title=\"Not available\"/>"
+msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
+"oe_hr_attendance_status_red\" role=\"img\" aria-label=\"No Disponible\" "
+"title=\"No Disponible\"/>"
+
+#. module: hr_attendance_work_entry
+#: model:ir.model.fields,field_description:hr_attendance_work_entry.field_hr_work_entry_type__allow_attendance
+msgid "Allow in Attendance"
+msgstr "Permitido en Asistencia"
+
+#. module: hr_attendance_work_entry
+#: model:hr.work.entry.type,name:hr_attendance_work_entry.work_input_attendance
+#: model:ir.model,name:hr_attendance_work_entry.model_hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance_work_entry.hr_work_entry_type_view_form_inherit
+msgid "Attendance"
+msgstr "Asistencia"
+
+#. module: hr_attendance_work_entry
+#: model:ir.model.fields,field_description:hr_attendance_work_entry.field_hr_work_entry_type__attendance_icon
+msgid "Attendance Icon"
+msgstr "Icono de Asistencia"
+
+#. module: hr_attendance_work_entry
+#: model:ir.model.fields,field_description:hr_attendance_work_entry.field_hr_work_entry_type__attendance_state
+msgid "Attendance State"
+msgstr "Estado de Asistencia"
+
+#. module: hr_attendance_work_entry
+#: model:ir.model.fields,field_description:hr_attendance_work_entry.field_hr_employee__attendance_state
+msgid "Attendance Status"
+msgstr "Estado de Asistencia"
+
+#. module: hr_attendance_work_entry
+#: code:addons/hr_attendance_work_entry/models/work_entry.py:0
+#: model:ir.model.fields.selection,name:hr_attendance_work_entry.selection__hr_employee__attendance_state__break
+#: model:ir.model.fields.selection,name:hr_attendance_work_entry.selection__hr_work_entry_type__attendance_state__break
+#, python-format
+msgid "Break"
+msgstr "Descanso"
+
+#. module: hr_attendance_work_entry
+#: code:addons/hr_attendance_work_entry/models/employee.py:0
+#, python-format
+msgid ""
+"Cannot perform check out on %(empl_name)s, could not find corresponding "
+"check in. Your attendances have probably been modified manually by human "
+"resources."
+msgstr ""
+"No se pudo realizar un registro de salida para %(empl_name)s, ya que no se "
+"encontro un registro de entrada correspondiente. Sus asistencias han "
+"probablemente sido modificado manualmente for recursos humanos"
+
+#. module: hr_attendance_work_entry
+#: model:ir.model.fields.selection,name:hr_attendance_work_entry.selection__hr_work_entry_type__attendance_state__checked_in
+msgid "Checked in"
+msgstr "Registro de Entrada"
+
+#. module: hr_attendance_work_entry
+#: model:ir.model,name:hr_attendance_work_entry.model_hr_employee
+msgid "Employee"
+msgstr "Empleado"
+
+#. module: hr_attendance_work_entry
+#. openerp-web
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#, python-format
+msgid "Error: could not find corresponding employee."
+msgstr "Error: No se pudo encontrar el empleado correspondiente"
+
+#. module: hr_attendance_work_entry
+#. openerp-web
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#, python-format
+msgid "Go back"
+msgstr "Volver"
+
+#. module: hr_attendance_work_entry
+#: model:ir.model,name:hr_attendance_work_entry.model_hr_work_entry_type
+msgid "HR Work Entry Type"
+msgstr "Tipo de entrada de trabajo de RRHH"
+
+#. module: hr_attendance_work_entry
+#: model:ir.model.fields.selection,name:hr_attendance_work_entry.selection__hr_employee__attendance_state__lunch
+#: model:ir.model.fields.selection,name:hr_attendance_work_entry.selection__hr_work_entry_type__attendance_state__lunch
+msgid "Lunch"
+msgstr "Almuerzo"
+
+#. module: hr_attendance_work_entry
+#. openerp-web
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#, python-format
+msgid "Or, continue working as:"
+msgstr "O, Sigue trabajando como:"
+
+#. module: hr_attendance_work_entry
+#. openerp-web
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#, python-format
+msgid "Please enter your PIN to"
+msgstr "Por favor ingrese su PIN para"
+
+#. module: hr_attendance_work_entry
+#. openerp-web
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#, python-format
+msgid "Please return to the main menu."
+msgstr "Por favor regrese al menú principal"
+
+#. module: hr_attendance_work_entry
+#. openerp-web
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#, python-format
+msgid "Sign Out"
+msgstr "Cerrar Sesión"
+
+#. module: hr_attendance_work_entry
+#. openerp-web
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#, python-format
+msgid "Sign in"
+msgstr "Iniciar Sesión"
+
+#. module: hr_attendance_work_entry
+#. openerp-web
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#, python-format
+msgid "Sign out"
+msgstr "Cerrar Sesión"
+
+#. module: hr_attendance_work_entry
+#. openerp-web
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#, python-format
+msgid "Stop"
+msgstr "Detener"
+
+#. module: hr_attendance_work_entry
+#. openerp-web
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#, python-format
+msgid "Today's work hours:"
+msgstr "Horas de trabajo de hoy:"
+
+#. module: hr_attendance_work_entry
+#. openerp-web
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#, python-format
+msgid "Want to check out?"
+msgstr "¿Desea registrar una salida?"
+
+#. module: hr_attendance_work_entry
+#. openerp-web
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#, python-format
+msgid ""
+"Warning : Your user should be linked to an employee to use attendance. "
+"Please contact your administrator."
+msgstr ""
+"Advertencia : Su usuario debe estar vinculado a un empleado para usarla en asistencias."
+"Por favor contacte su administrador"
+
+#. module: hr_attendance_work_entry
+#. openerp-web
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#, python-format
+msgid "Welcome!"
+msgstr "¡Bienvenida!"
+
+#. module: hr_attendance_work_entry
+#: model:ir.ui.menu,name:hr_attendance_work_entry.hr_work_entry_type_menu
+msgid "Work Entry Types"
+msgstr "Tipos de entradas de trabajo"
+
+#. module: hr_attendance_work_entry
+#: model:ir.model.fields,field_description:hr_attendance_work_entry.field_hr_attendance__work_type_id
+msgid "Work Type"
+msgstr "Tipo de trabajo"
+
+#. module: hr_attendance_work_entry
+#. openerp-web
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#, python-format
+msgid "check in"
+msgstr "el Registro de entrada"
+
+#. module: hr_attendance_work_entry
+#. openerp-web
+#: code:addons/hr_attendance_work_entry/static/src/xml/hr_attendance.xml:0
+#, python-format
+msgid "check out"
+msgstr "el Registro de salida"
