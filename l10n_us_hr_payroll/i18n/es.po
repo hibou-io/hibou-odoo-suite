@@ -439,7 +439,7 @@ msgstr "EE: Desempleo del Estado SUTA"
 #. module: l10n_us_hr_payroll
 #: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ak_suta
 msgid "EE: US AK Alaska State Unemployment (UC-2)"
-msgstr ""EE: EE.UU AK Alaska Desempleo del Estado (UC-2)"
+msgstr "EE: EE.UU AK Alaska Desempleo del Estado (UC-2)"
 
 #. module: l10n_us_hr_payroll
 #: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_al_sit
@@ -724,7 +724,7 @@ msgstr "ER: EE.UU AR Arkansas Desempleo del Estado"
 #. module: l10n_us_hr_payroll
 #: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_az_suta
 msgid "ER: US AZ Arizona State Unemployment"
-msgstr ""ER: EE.UU AZ Arizona Desempleo del Estado"
+msgstr "ER: EE.UU AZ Arizona Desempleo del Estado"
 
 #. module: l10n_us_hr_payroll
 #: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ca_suta_ett
@@ -1035,7 +1035,7 @@ msgstr "Formularios de Nómina del Empleado"
 #. module: l10n_us_hr_payroll
 #: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_search
 msgid "Employee Payroll Forms Search"
-msgstr "Busqueda de Formularios de Nómina del Empleado""
+msgstr "Busqueda de Formularios de Nómina del Empleado"
 
 #. module: l10n_us_hr_payroll
 #: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
@@ -1864,7 +1864,7 @@ msgstr "Casados/Unión Civil de Pareja Separada"
 #. module: l10n_us_hr_payroll
 #: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mi_w4_sit_exemptions
 msgid "Michigan MI W-4 Exemptions"
-msgstr ""Michigan MI W-4 Exenciones"
+msgstr "Michigan MI W-4 Exenciones"
 
 #. module: l10n_us_hr_payroll
 #: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mn_w4mn_sit_allowances
@@ -2114,7 +2114,7 @@ msgstr "OK-W-4 5."
 #. module: l10n_us_hr_payroll
 #: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__oh_it4_sit_exemptions
 msgid "Ohio IT-4 Exemptions"
-msgstr ""Ohio IT-4 Exenciones
+msgstr "Ohio IT-4 Exenciones"
 
 #. module: l10n_us_hr_payroll
 #: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ok_w4_sit_allowances
