@@ -1,0 +1,222 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll_payment
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-12 01:27+0000\n"
+"PO-Revision-Date: 2021-10-12 01:27+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_payroll_payment
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#, python-format
+msgid "Adjustment Entry"
+msgstr "Entrada de Ajuste"
+
+#. module: hr_payroll_payment
+#: model:ir.model.fields,field_description:hr_payroll_payment.field_hr_payslip_run__date
+msgid "Date Account"
+msgstr "Cuenta de Fecha"
+
+#. module: hr_payroll_payment
+#: model_terms:ir.ui.view,arch_db:hr_payroll_payment.view_account_journal_form_inherit
+msgid "Default Account"
+msgstr "Cuenta Predeterminada"
+
+#. module: hr_payroll_payment
+#: model:ir.model,name:hr_payroll_payment.model_hr_contract
+msgid "Employee Contract"
+msgstr "Contrato del empleado"
+
+#. module: hr_payroll_payment
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#, python-format
+msgid ""
+"Employee's private address account payable not the same for all addresses."
+msgstr "La cuenta a pagar de la dirección privada del empleado no es la misma para todas las direcciones."
+
+#. module: hr_payroll_payment
+#: model:ir.model,name:hr_payroll_payment.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "Generar los recibos de nómina para todos los empleados seleccionados"
+
+#. module: hr_payroll_payment
+#: model:ir.model.fields.selection,name:hr_payroll_payment.selection__account_journal__payroll_entry_type__grouped
+msgid "Grouped"
+msgstr "Agrupado"
+
+#. module: hr_payroll_payment
+#: model:ir.model.fields,help:hr_payroll_payment.field_account_bank_statement_import_journal_creation__payroll_entry_type
+#: model:ir.model.fields,help:hr_payroll_payment.field_account_journal__payroll_entry_type
+msgid ""
+"Grouped and Payslip will add partner info and group by account and partner. "
+"Payslip will generate a journal entry for every payslip."
+msgstr "El recibo de nómina generará un asiento contable para cada recibo de nómina"
+
+#. module: hr_payroll_payment
+#: model:ir.model.fields,field_description:hr_payroll_payment.field_hr_payslip__is_paid
+msgid "Has been Paid"
+msgstr "Ha sido Pagado"
+
+#. module: hr_payroll_payment
+#: model:ir.model,name:hr_payroll_payment.model_account_journal
+msgid "Journal"
+msgstr "Diario"
+
+#. module: hr_payroll_payment
+#: model:ir.model.fields,help:hr_payroll_payment.field_hr_payslip_run__date
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr "Mantener vacio para utilizar el periodo de la fecha de validación (recibo de nómina)"
+
+#. module: hr_payroll_payment
+#: model_terms:ir.ui.view,arch_db:hr_payroll_payment.payslip_filter_payment
+#: model_terms:ir.ui.view,arch_db:hr_payroll_payment.payslip_run_filter_payment
+msgid "Needs Payment"
+msgstr "Requiere Pagar"
+
+#. module: hr_payroll_payment
+#: model_terms:ir.ui.view,arch_db:hr_payroll_payment.payslip_filter_payment
+msgid "Needs Payment or Reconciliation"
+msgstr "Requiere pagar o reconciliar"
+
+#. module: hr_payroll_payment
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#, python-format
+msgid "One of the contract for these payslips has no structure type."
+msgstr "Uno de los contratos para estas recibos de nómina no tiene ningún tipo de estructura"
+
+#. module: hr_payroll_payment
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#, python-format
+msgid "One of the payroll structures has no account journal defined on it."
+msgstr "Uno de las estructuras de nomina no tienen un diario de cuenta definido"
+
+#. module: hr_payroll_payment
+#: model:ir.model.fields.selection,name:hr_payroll_payment.selection__account_journal__payroll_entry_type__original
+msgid "Original"
+msgstr "Original"
+
+#. module: hr_payroll_payment
+#: model:ir.model,name:hr_payroll_payment.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Recibo de nómina"
+
+#. module: hr_payroll_payment
+#: model:ir.model.fields,field_description:hr_payroll_payment.field_hr_payslip_run__batch_payment_id
+msgid "Payment Batch"
+msgstr "Lote de Pagos"
+
+#. module: hr_payroll_payment
+#: model:ir.model.fields,field_description:hr_payroll_payment.field_account_bank_statement_import_journal_creation__payroll_entry_type
+#: model:ir.model.fields,field_description:hr_payroll_payment.field_account_journal__payroll_entry_type
+msgid "Payroll Entry Type"
+msgstr "Tipo de entrada de nómina"
+
+#. module: hr_payroll_payment
+#: model:ir.model.fields,field_description:hr_payroll_payment.field_hr_contract__payroll_fiscal_position_id
+msgid "Payroll Fiscal Position"
+msgstr "Posición Fiscal de la Nómina"
+
+#. module: hr_payroll_payment
+#: model:ir.model.fields,field_description:hr_payroll_payment.field_account_bank_statement_import_journal_creation__payroll_payment_journal_id
+#: model:ir.model.fields,field_description:hr_payroll_payment.field_account_journal__payroll_payment_journal_id
+msgid "Payroll Payment Journal"
+msgstr "Diario de Pago de la Nómina"
+
+#. module: hr_payroll_payment
+#: model:ir.model.fields,field_description:hr_payroll_payment.field_account_bank_statement_import_journal_creation__payroll_payment_method_id
+#: model:ir.model.fields,field_description:hr_payroll_payment.field_account_journal__payroll_payment_method_id
+msgid "Payroll Payment Method"
+msgstr "Método de pago de la nómina"
+
+#. module: hr_payroll_payment
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#, python-format
+msgid ""
+"Payroll Payment journal not configured on the existing entry's journal."
+msgstr "El diario de pago de la nómina no ha sido configurado en algún diario de una entrada existente"
+
+#. module: hr_payroll_payment
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#, python-format
+msgid "Payroll Payment method not configured on the existing entry's journal."
+msgstr "El método de pago de la nómina no ha sido configurado en algún diario de una entrada existente"
+
+#. module: hr_payroll_payment
+#: model_terms:ir.ui.view,arch_db:hr_payroll_payment.view_account_journal_form_inherit
+msgid "Payroll Payments"
+msgstr "Pagos de Nómina"
+
+#. module: hr_payroll_payment
+#: model:ir.model.fields,field_description:hr_payroll_payment.field_account_bank_statement_import_journal_creation__payroll_payment_method_refund_id
+#: model:ir.model.fields,field_description:hr_payroll_payment.field_account_journal__payroll_payment_method_refund_id
+msgid "Payroll Refund Method"
+msgstr "Método de Reembolso de la Nómina"
+
+#. module: hr_payroll_payment
+#: model:ir.model.fields.selection,name:hr_payroll_payment.selection__account_journal__payroll_entry_type__slip
+msgid "Payslip"
+msgstr "Recibo de Nómina"
+
+#. module: hr_payroll_payment
+#: model:ir.model,name:hr_payroll_payment.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Lotes de recibos de nómina"
+
+#. module: hr_payroll_payment
+#: model:ir.model.fields,field_description:hr_payroll_payment.field_hr_payslip_run__is_paid
+msgid "Payslips Paid"
+msgstr "Recibos de nóminas pagadas"
+
+#. module: hr_payroll_payment
+#: model_terms:ir.ui.view,arch_db:hr_payroll_payment.hr_payslip_form_payment
+#: model_terms:ir.ui.view,arch_db:hr_payroll_payment.hr_payslip_run_form_payment
+msgid "Register Payment"
+msgstr "Registrar Pago"
+
+#. module: hr_payroll_payment
+#: model_terms:ir.ui.view,arch_db:hr_payroll_payment.payslip_run_filter_payment
+msgid "Slips needs Payment or Reconciliation"
+msgstr "Recibos de nómina requieren ser pagadas o reconciliadas"
+
+#. module: hr_payroll_payment
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#, python-format
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Default Account!"
+msgstr "¡El diario de gastos \"%s\" no ha configurado apropiadamente la cuenta predeterminada!"
+
+#. module: hr_payroll_payment
+#: code:addons/hr_payroll_payment/models/hr_payslip.py:0
+#, python-format
+msgid "The following employees are missing private addresses. %s"
+msgstr "A los siguientes empleados les faltan direcciones privadas. %s"
+
+#. module: hr_payroll_payment
+#: model:ir.model.fields,help:hr_payroll_payment.field_hr_contract__payroll_fiscal_position_id
+msgid "Used for mapping accounts when processing payslip journal entries."
+msgstr "Se utilizará para asignar cuentas cuando se procesa asientos contables del diario de nominas"

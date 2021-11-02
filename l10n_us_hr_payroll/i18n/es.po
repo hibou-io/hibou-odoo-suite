@@ -1,0 +1,2511 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_us_hr_payroll
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-12 01:33+0000\n"
+"PO-Revision-Date: 2021-10-12 01:33+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ms_89_350_sit_filing_status
+msgid "89-350 1. 2. 3. 8."
+msgstr "89-350 1. 2. 3. 8."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ms_89_350_sit_exemption_value
+msgid "89-350 Box 6 (including filing status amounts)"
+msgstr "89-350 Caja 6 (incluyendo montos de Estado Civil)"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__az_a4_sit_withholding_percentage
+msgid "A-4 1. (0.8 or 1.3 or 1.8 or 2.7 or 3.6 or 4.2 or 5.1 or 0 for exempt."
+msgstr "A-4 1. (0.8 ó 1.3 ó 1.8 ó 2.7 ó 3.6 ó 4.2 ó 5.1 ó 0 para exento"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__al_a4_sit_exemptions
+msgid "A4 1. 2. 3."
+msgstr "A4 1. 2. 3."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__al_a4_sit_dependents
+msgid "A4 4."
+msgstr "A4 4."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "AL Alabama"
+msgstr "AL Alabama"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "AR Arkansas"
+msgstr "AR Arkansas"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ar_ar4ec_sit_allowances
+msgid "AR4EC 3."
+msgstr "AR4EC 3."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "AZ Arizona"
+msgstr "AZ Arizona"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional Allowances 4(c)."
+msgstr "Retencion Adicional 4(c)"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional Allowances 5."
+msgstr "Retencion Adicional 5"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional Allowances Step 2."
+msgstr "Retencion Adicional Paso 2."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional State & County Witholding 7. 8."
+msgstr "Retención de Estado y Distrito Adicional 7. 8."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional Withholding"
+msgstr "Retención adicional"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional Withholding (Box H)"
+msgstr "Retención Adicional (Caja H)"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional Withholding (Line 2)"
+msgstr "Retención Adicional (Línea 2)"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional Withholding (Line 5)"
+msgstr "Retención Adicional (Línea 5)"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional Withholding 1."
+msgstr "Retención Adicional 1"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional Withholding 2."
+msgstr "Retención Adicional 2"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional Withholding 4(C)."
+msgstr "Retención Adicional 4(c)"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional Withholding 4."
+msgstr "Retención Adicional 4"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional Withholding 5."
+msgstr "Retención Adicional 5"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional Withholding 6."
+msgstr "Retención Adicional 6"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional Withholding 7."
+msgstr "Retención Adicional 7"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Additional Withholding 8."
+msgstr "Retención Adicional 8"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Age & Blindness Exemptions (Line 1(b))"
+msgstr "Exenciones de Edad & Ceguera (Línea 1(b))"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__al_a4_sit_dependents
+msgid "Alabama A4 Dependents"
+msgstr "Alabama A4 Dependientes"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__al_a4_sit_exemptions
+msgid "Alabama A4 Withholding Exemptions"
+msgstr "Alabama A4 Exenciones de Retención"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Allowance Rate 3."
+msgstr "Asignación Tasa 3"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Allowances (Old W4)"
+msgstr "Asignaciones (W4 Antigua)"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Allowances 1."
+msgstr "Asignaciones 1"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Allowances 1.2."
+msgstr "Asignaciones 1.2"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Allowances 1.2.3."
+msgstr "Asignaciones 1.2.3"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Allowances 3."
+msgstr "Asignaciones 3"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Allowances 4."
+msgstr "Asignaciones 4"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Allowances 5."
+msgstr "Asignaciones 5"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Allowances 6."
+msgstr "Asignaciones 6"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__state_id
+msgid "Applied State"
+msgstr "Estado aplicado"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__az_a4_sit_withholding_percentage
+msgid "Arizona A-4 Withholding Percentage"
+msgstr "Arizona A-4 Porcentaje de Retención"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ar_ar4ec_sit_allowances
+msgid "Arkansas AR4EC allowances"
+msgstr "Arkansas AR4EC Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_salary_rule_gamification
+msgid "Badges"
+msgstr "Tarjetas de Identificación"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Basic Allowances Step 1."
+msgstr "Asignación Básica Paso 1."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__fed_940_type__basic
+msgid "Basic Rate (6%)"
+msgstr "Tasa Básica (6%)"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "CA California"
+msgstr "CA California"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ca_de4_sit_filing_status
+msgid "CA W-4 1(c)."
+msgstr "CA W-4 1(c)."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ca_de4_sit_allowances
+msgid "CA W-4 3."
+msgstr "CA W-4 3."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ca_de4_sit_additional_allowances
+msgid "CA W-4 4(c)."
+msgstr "CA W-4 4(c)."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "CO Colorado"
+msgstr "CO Colorado"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "CT Connecticut"
+msgstr "CT Connecticut"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ct_w4na_sit_code
+msgid "CT-W4 1."
+msgstr "CT-W4 1."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ca_de4_sit_additional_allowances
+msgid "California W-4 Additional Allowances"
+msgstr "California W-4 Asignaciones Adicionales"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ca_de4_sit_allowances
+msgid "California W-4 Allowances"
+msgstr "California W-4 Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ca_de4_sit_filing_status
+msgid "California W-4 Filing Status"
+msgstr "California W-4 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__workers_comp_ee_code
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__workers_comp_er_code
+msgid "Code for a Rule Parameter, used by some states or your own rules."
+msgstr "Código para el parametro de norma, utilizado por algunos estados o sus proprias normas"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_salary_rule_commission
+msgid "Commissions"
+msgstr "Comisiones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ct_w4na_sit_code
+msgid "Connecticut CT-W4 Withholding Code"
+msgstr "Connecticut CT-W4 Código de Retención"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model,name:l10n_us_hr_payroll.model_hr_contract_us_payroll_config
+msgid "Contract US Payroll Forms"
+msgstr "Contrato US Formularios de Nómina"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "DE Delaware"
+msgstr "DE Delaware"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__de_w4_sit_filing_status
+msgid "DE W-4 3."
+msgstr "DE W-4 3."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__de_w4_sit_dependent
+msgid "DE W-4 4."
+msgstr "DE W-4 4."
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_ded_fica_futa_exempt
+msgid "Deduction: US FICA & FUTA Exempt"
+msgstr "Deducción: Exento de FICA & FUTA de EE.UU"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_ded_fica_exempt
+msgid "Deduction: US FICA Exempt"
+msgstr "Deducción: Exento de FICA de EE.UU"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_ded_fit_fica_futa_exempt
+msgid "Deduction: US FIT & FICA & FUTA Exempt"
+msgstr "Deducción: Exento de FIT & FICA & FUTA de EE.UU"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_ded_fit_fica_exempt
+msgid "Deduction: US FIT & FICA Exempt"
+msgstr "Deducción: Exento de FIT & FICA de EE.UU"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_ded_fit_futa_exempt
+msgid "Deduction: US FIT & FUTA Exempt"
+msgstr "Deducción: Exento de FIT & FICA EE.UU"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_ded_fit_exempt
+msgid "Deduction: US FIT Exempt"
+msgstr "Deducción: Exento de FIT de EE.UU"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_ded_futa_exempt
+msgid "Deduction: US FUTA Exempt"
+msgstr "Deducción: Exento de FUTA de EE.UU"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Deductions"
+msgstr "Deducciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__de_w4_sit_dependent
+msgid "Delaware W-4 Dependents"
+msgstr "Delaware W-4 Dependientes"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__de_w4_sit_filing_status
+msgid "Delaware W-4 Marital Status"
+msgstr "Delaware W-4 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Dependent Allowances 4."
+msgstr "Asignaciones de Dependiente 4"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Dependent Credit"
+msgstr "Crédito de Dependiente"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Dependent Exemption 6."
+msgstr "Exento de Dependientes 6"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Dependent Exemption 7."
+msgstr "Exento de Dependientes 7"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Dependents 4."
+msgstr "Dependientes 4"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Dependents Allowances 4."
+msgstr "Asignaciones de Dependientes 4"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__name
+msgid "Description"
+msgstr "Descripción"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_ee_fed_941
+msgid "EE: Federal 941 FICA"
+msgstr "EE: 941 FICA Federal"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_ee_fed_941_fit
+msgid "EE: Federal 941 Income Tax Withholding"
+msgstr "EE: Federal 941 Retención de Impuestos sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_ee_us_sit
+msgid "EE: State Income Tax Withholding"
+msgstr "EE: Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_ee_us_suta
+msgid "EE: State Unemployment SUTA"
+msgstr "EE: Desempleo del Estado SUTA"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ak_suta
+msgid "EE: US AK Alaska State Unemployment (UC-2)"
+msgstr "EE: EE.UU AK Alaska Desempleo del Estado (UC-2)"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_al_sit
+msgid "EE: US AL Alabama State Income Tax Withholding"
+msgstr "EE: EE.UU AL Alabama Retención de los Impuestos sobre la Renta del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ar_sit
+msgid "EE: US AR Arkansas State Income Tax Withholding"
+msgstr "EE: EE.UU AR Arkansas Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_az_sit
+msgid "EE: US AZ Arizona State Income Tax Withholding"
+msgstr "EE: EE.UU AZ Arizona Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ca_suta_sdi
+msgid "EE: US CA California State Disability Insurance"
+msgstr "EE: EE.UU CA California Seguro de Discapacidades del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ca_sit
+msgid "EE: US CA California State Income Tax Withholding"
+msgstr "EE: EE.UU CA California Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_co_sit
+msgid "EE: US CO Colorado State Income Tax Withholding"
+msgstr "EE: EE.UU CO Colorado Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ct_sit
+msgid "EE: US CT Connecticut State Income Tax Withholding"
+msgstr "EE: EE.UU CT Connecticut Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_de_sit
+msgid "EE: US DE Delaware State Income Tax Withholding"
+msgstr "EE: EE.UU DE Delaware Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_fed_941_m
+msgid "EE: US FICA Medicare"
+msgstr "EE: EE.UU FICA Medicare"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_fed_941_m_add
+msgid "EE: US FICA Medicare Additional"
+msgstr "EE: EE.UU FICA Medicare Adicional"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_fed_941_ss
+msgid "EE: US FICA Social Security"
+msgstr "EE: EE.UU FICA Seguro Social"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_fed_941_fit
+msgid "EE: US Federal Income Tax Withholding"
+msgstr "EE: EE.UU Retención de impuestos federales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ga_sit
+msgid "EE: US GA Georgia State Income Tax Withholding"
+msgstr "EE: EE.UU GA Georgia Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_hi_sit
+msgid "EE: US HI Hawaii State Income Tax Withholding"
+msgstr "EE: EE.UU HI Hawaii Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ia_sit
+msgid "EE: US IA Iowa State Income Tax Withholding"
+msgstr "EE: EE.UU IA Iowa Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_id_sit
+msgid "EE: US ID Idaho State Income Tax Withholding"
+msgstr "EE: EE.UU ID Idaho Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_il_sit
+msgid "EE: US IL Illinois State Income Tax Withholding"
+msgstr "EE: EE.UU IL Illinois Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_in_sit
+msgid "EE: US IN Indiana State Income Tax Withholding"
+msgstr "EE: EE.UU IN Indiana Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ks_sit
+msgid "EE: US KS Kansas State Income Tax Withholding"
+msgstr "EE: EE.UU KS Kansas Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ky_sit
+msgid "EE: US KY Kentucky State Income Tax Withholding"
+msgstr "EE: EE.UU KY Kentucky Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_la_sit
+msgid "EE: US LA Louisiana State Income Tax Withholding"
+msgstr "EE: EE.UU LA Louisiana Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_me_sit
+msgid "EE: US ME Maine State Income Tax Withholding"
+msgstr "EE: EE.UU ME Maine Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_mi_sit
+msgid "EE: US MI Michigan State Income Tax Withholding"
+msgstr "EE: EE.UU MI Michigan Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_mn_sit
+msgid "EE: US MN Minnesota State Income Tax Withholding"
+msgstr "EE: EE.UU MN Minnesota Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_mo_sit
+msgid "EE: US MO Missouri State Income Tax Withholding"
+msgstr "EE: EE.UU MO Missouri Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ms_sit
+msgid "EE: US MS Mississippi State Income Tax Withholding"
+msgstr "EE: EE.UU MS Mississippi Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_mt_sit
+msgid "EE: US MT Montana State Income Tax Withholding (MW-3)"
+msgstr "EE: EE.UU MT Montana Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_nc_sit
+msgid "EE: US NC North Carolina State Income Tax Withholding"
+msgstr "EE: EE.UU NC North Carolina Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_nd_sit
+msgid "EE: US ND North Dakota State Income Tax Withholding"
+msgstr "EE: EE.UU ND North Dakota Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ne_sit
+msgid "EE: US NE Nebraska State Income Tax Withholding"
+msgstr "EE: EE.UU NE Nebraska Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_nj_fli
+msgid "EE: US NJ New Jersey Family Leave Insurance"
+msgstr "EE: EE.UU NJ New Jersey Seguro de Licencia Familiar"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_nj_sdi
+msgid "EE: US NJ New Jersey State Disability Insurance"
+msgstr "EE: EE.UU NJ New Jersey Seguro de Discapacidades del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_nj_sit
+msgid "EE: US NJ New Jersey State Income Tax Withholding"
+msgstr "EE: EE.UU NJ New Jersey Retención de impuestos estatales sobre la renta" 
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_nj_suta
+msgid "EE: US NJ New Jersey State Unemployment"
+msgstr "EE: EE.UU NJ New Jersey Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_nj_wf
+msgid "EE: US NJ New Jersey Workforce Development"
+msgstr "EE: EE.UU NJ New Jersey Desarrollo de la Fuerza Laboral"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_nm_sit
+msgid "EE: US NM New Mexico State Income Tax Withholding"
+msgstr "EE: EE.UU NM New Mexico Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ny_sit
+msgid "EE: US NY New York State Income Tax Withholding"
+msgstr "EE: EE.UU NY New York Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_oh_sit
+msgid "EE: US OH Ohio State Income Tax Withholding (IT 501)"
+msgstr "EE: EE.UU OH Ohio State Retención de impuestos estatales sobre la renta (IT 501)"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ok_sit
+msgid "EE: US OK Oklahoma State Income Tax Withholding"
+msgstr "EE: EE.UU OK Oklahoma Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_pa_sit
+msgid "EE: US PA Pennsylvania State Income Tax Withholding (PA-501)"
+msgstr "EE: EE.UU PA Pennsylvania Retención de impuestos estatales sobre la renta (PA-501)"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_pa_suta
+msgid "EE: US PA Pennsylvania State Unemployment (UC-2)"
+msgstr "EE: EE.UU PA Pennsylvania Desempleo del Estado (UC-2)"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ri_sit
+msgid "EE: US RI Rhode Island State Income Tax Withholding"
+msgstr "EE: EE.UU RI Rhode Island Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_sc_sit
+msgid "EE: US SC South Carolina State Income Tax Withholding"
+msgstr "EE: EE.UU SC South Carolina Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_ut_sit
+msgid "EE: US UT Utah State Income Tax Withholding"
+msgstr "EE: EE.UU UT Utah Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_va_sit
+msgid "EE: US VA Virginia State Income Tax Withholding"
+msgstr "EE: EE.UU VA Virginia Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_vt_sit
+msgid "EE: US VT Vermont State Income Tax Withholding"
+msgstr "EE: EE.UU VT Vermont Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_wa_fml
+msgid "EE: US WA Washington State Family Medical Leave"
+msgstr "EE: EE.UU WA Washington Licencia Médica Familiar del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_wa_lni
+msgid "EE: US WA Washington State LNI"
+msgstr "EE: EE.UU WA Washington LNI del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_wi_sit
+msgid "EE: US WI Wisconsin State Income Tax Withholding"
+msgstr "EE: EE.UU WI Wisconsin Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_ee_us_wv_sit
+msgid "EE: US WV West Virginia State Income Tax Withholding"
+msgstr "EE: EE.UU WV West Virginia Retención de impuestos estatales sobre la renta"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_er_fed_940
+msgid "ER: Federal 940 FUTA"
+msgstr "ER: Federal 940 FUTA"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_er_fed_941
+msgid "ER: Federal 941 FICA"
+msgstr "ER: Federal 941 FICA"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_er_us_suta
+msgid "ER: State Unemployment SUTA"
+msgstr "ER: Desempleo del Estado SUTA"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ak_suta
+msgid "ER: US AK Alaska State Unemployment"
+msgstr "ER: EE.UU AK Alaska Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_al_suta
+msgid "ER: US AL Alabama State Unemployment"
+msgstr "ER: EE.UU AL Alabama Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ar_suta
+msgid "ER: US AR Arkansas State Unemployment"
+msgstr "ER: EE.UU AR Arkansas Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_az_suta
+msgid "ER: US AZ Arizona State Unemployment"
+msgstr "ER: EE.UU AZ Arizona Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ca_suta_ett
+msgid "ER: US CA California State Employee Training Tax"
+msgstr "ER: EE.UU CA California Impuesto Estatal de la Formación de Empleados"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ca_suta
+msgid "ER: US CA California State Unemployment"
+msgstr "ER: EE.UU CA California Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_co_suta
+msgid "ER: US CO Colorado State Unemployment"
+msgstr "ER: EE.UU CO Colorado Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ct_suta
+msgid "ER: US CT Connecticut State Unemployment"
+msgstr "ER: EE.UU CT Connecticut Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_de_suta
+msgid "ER: US DE Delaware State Unemployment"
+msgstr "ER: EE.UU DE Delaware Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_fed_941_m
+msgid "ER: US FICA Medicare"
+msgstr "ER: EE.UU FICA Medicare"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_fed_941_ss
+msgid "ER: US FICA Social Security"
+msgstr "ER: EE.UU FICA Seguro Social"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_fl_suta
+msgid "ER: US FL Florida State Unemployment (RT-6)"
+msgstr "ER: EE.UU FL Florida Desempleo del Estado (RT-6)"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_fed_940
+msgid "ER: US FUTA Federal Unemployment"
+msgstr "ER: EE.UU FUTA Desempleo Federal"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ga_suta
+msgid "ER: US GA Georgia State Unemployment"
+msgstr "ER: EE.UU GA Georgia Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_hi_suta
+msgid "ER: US HI Hawaii State Unemployment"
+msgstr "ER: EE.UU HI Hawaii Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ia_suta
+msgid "ER: US IA Iowa State Unemployment"
+msgstr "ER: EE.UU IA Iowa Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_id_suta
+msgid "ER: US ID Idaho State Unemployment"
+msgstr "ER: EE.UU ID Idaho Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_il_suta
+msgid "ER: US IL Illinois State Unemployment"
+msgstr "ER: EE.UU IL Illinois Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_in_suta
+msgid "ER: US IN Indiana State Unemployment"
+msgstr "ER: EE.UU IN Indiana Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ks_suta
+msgid "ER: US KS Kansas State Unemployment"
+msgstr "ER: EE.UU KS Kansas Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ky_suta
+msgid "ER: US KY Kentucky State Unemployment"
+msgstr "ER: EE.UU KY Kentucky Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_la_suta
+msgid "ER: US LA Louisiana State Unemployment"
+msgstr "ER: EE.UU LA Louisiana Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_me_suta
+msgid "ER: US ME Maine State Unemployment"
+msgstr "ER: EE.UU ME Maine Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_mi_suta
+msgid "ER: US MI Michigan State Unemployment"
+msgstr "ER: EE.UU MI Michigan Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_mn_suta
+msgid "ER: US MN Minnesota State Unemployment"
+msgstr "ER: EE.UU MN Minnesota Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_mo_suta
+msgid "ER: US MO Missouri State Unemployment"
+msgstr "ER: EE.UU MO Missouri Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ms_suta
+msgid "ER: US MS Mississippi State Unemployment"
+msgstr "ER: EE.UU MS Mississippi Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_mt_suta
+msgid "ER: US MT Montana State Unemployment (UI-5)"
+msgstr "ER: EE.UU MT Montana Desempleo del Estado (UI-5)"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_mt_suta_aft
+msgid ""
+"ER: US MT Montana State Unemployment Administrative Fund Tax (AFT) (UI-5)"
+msgstr ""
+"ER: EE.UU MT Montana Impuesto del Fondo Administrativo de Desempleo del Estado (AFT) (UI-5)"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_nc_suta
+msgid "ER: US NC North Carolina State Unemployment"
+msgstr "ER: EE.UU NC North Carolina Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_nd_suta
+msgid "ER: US ND North Dakota State Unemployment"
+msgstr "ER: UEE.UUS ND North Dakota Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ne_suta
+msgid "ER: US NE Nebraska State Unemployment"
+msgstr "ER: EE.UU NE Nebraska Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_nh_suta
+msgid "ER: US NH New Hampshire State Unemployment"
+msgstr "ER: EE.UU NH New Hampshire Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_nj_fli
+msgid "ER: US NJ New Jersey Family Leave Insurance"
+msgstr "ER: EE.UU NJ New Jersey Seguro de Licencia Familiar"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_nj_sdi
+msgid "ER: US NJ New Jersey State Disability Insurance"
+msgstr "ER: EE.UU NJ New Jersey Seguro de Discapacidades del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_nj_suta
+msgid "ER: US NJ New Jersey State Unemployment"
+msgstr "ER: EE.UU NJ New Jersey Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_nj_wf
+msgid "ER: US NJ New Jersey Workforce Development"
+msgstr "ER: EE.UU NJ New Jersey Desarrollo de la Fuerza Laboral"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_nm_suta
+msgid "ER: US NM New Mexico State Unemployment"
+msgstr "ER: EE.UU NM New Mexico Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_nv_suta
+msgid "ER: US NV Nevada State Unemployment (RT-6)"
+msgstr "ER: EE.UU NV Nevada Desempleo del Estado (RT-6)"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ny_suta_mctmt
+msgid ""
+"ER: US NY New York State Metropolitan Commuter Transportation Mobility Tax"
+msgstr ""
+"ER: EE.UU NY New York Impuesto Estatal de Movilidad de Transport de Cercanías Metropolitano"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ny_suta_rsf
+msgid "ER: US NY New York State Re-employment Service Fund"
+msgstr "ER: EE.UU NY New York Fondo de Servicio de Reempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ny_suta
+msgid "ER: US NY New York State Unemployment"
+msgstr "ER: EE.UU NY New York Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_oh_suta
+msgid "ER: US OH Ohio State Unemployment (JFS-20125)"
+msgstr "ER: EE.UU OH Ohio Desempleo del Estado (JFS-20125)"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ok_suta
+msgid "ER: US OK Oklahoma State Unemployment"
+msgstr "ER: EE.UU OK Oklahoma Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_pa_suta
+msgid "ER: US PA Pennsylvania State Unemployment (UC-2)"
+msgstr "ER: EE.UU PA Pennsylvania Desempleo del Estado (UC-2)"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ri_suta
+msgid "ER: US RI Rhode Island State Unemployment"
+msgstr "ER: EE.UU RI Rhode Island Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_sc_suta
+msgid "ER: US SC South Carolina State Unemployment"
+msgstr "ER: EE.UU SC South Carolina Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_sd_suta
+msgid "ER: US SD South Dakota State Unemployment"
+msgstr "ER: EE.UU SD South Dakota Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_tn_suta
+msgid "ER: US TN Tennessee State Unemployment"
+msgstr "ER: EE.UU TN Tennessee Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_tx_suta_etia
+msgid "ER: US TX Texas Employment & Training Investment Assessment (C-3)"
+msgstr "ER: EE.UU TX Texas Evaluación de Inversiones en Empleo & Formación (C-3)"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_tx_suta_oa
+msgid "ER: US TX Texas Obligation Assessment (C-3)"
+msgstr "ER: EE.UU TX Texas Evaluación de Obligaciones"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_tx_suta
+msgid "ER: US TX Texas State Unemployment (C-3)"
+msgstr "ER: EE.UU TX Texas Desempleo del Estado (C-3)"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_ut_suta
+msgid "ER: US UT Utah State Unemployment"
+msgstr "ER: EE.UU UT Utah Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_va_suta
+msgid "ER: US VA Virginia State Unemployment"
+msgstr "ER: EE.UU VA Virginia Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_vt_suta
+msgid "ER: US VT Vermont State Unemployment"
+msgstr "ER: EE.UU VT Vermont Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_wa_fml
+msgid "ER: US WA Washington State Family Medical Leave"
+msgstr "ER: EE.UU WA Washington Licencia Médica Familiar del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_wa_lni
+msgid "ER: US WA Washington State LNI"
+msgstr "ER: EE.UU WA Washington LNI del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_wa_suta
+msgid "ER: US WA Washington State Unemployment (5208A/B)"
+msgstr "ER: EE.UU WA Washington Desempleo del Estado (5208A/B)"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_wi_suta
+msgid "ER: US WI Wisconsin State Unemployment"
+msgstr "ER: EE.UU WI Wisconsin Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_wv_suta
+msgid "ER: US WV West Virginia State Unemployment"
+msgstr "ER: EE.UU WV West Virginia Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule,name:l10n_us_hr_payroll.hr_payroll_rule_er_us_wy_suta
+msgid "ER: US WY Wyoming State Unemployment"
+msgstr "ER: EE.UU WY Wyoming Desempleo del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__employee_id
+msgid "Employee"
+msgstr "Empleado"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model,name:l10n_us_hr_payroll.model_hr_contract
+msgid "Employee Contract"
+msgstr "Contrato del empleado"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.actions.act_window,name:l10n_us_hr_payroll.us_payroll_config_action_main
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_tree
+msgid "Employee Payroll Forms"
+msgstr "Formularios de Nómina del Empleado"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_search
+msgid "Employee Payroll Forms Search"
+msgstr "Busqueda de Formularios de Nómina del Empleado"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid ""
+"Ensure that your Employee and Employer workers' comp code fields are filled "
+"in for WA LNI withholding."
+msgstr ""
+"Asegure que los campos del empleador y del código de compensación de trabajadores del empleador estan llenados "
+"para la WA Retención de LNI"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ca_de4_sit_filing_status__
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__fed_941_fit_w4_filing_status__
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ga_g4_sit_filing_status__
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__hi_hw4_sit_filing_status__
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__me_w4me_sit_filing_status__
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__mn_w4mn_sit_filing_status__
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__mo_mow4_sit_filing_status__
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ms_89_350_sit_filing_status__
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__nc_nc4_sit_filing_status__
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__nd_w4_sit_filing_status__
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__nj_njw4_sit_filing_status__
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ny_it2104_sit_filing_status__
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Exempt"
+msgstr "Exento"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__fed_940_type__exempt
+msgid "Exempt (0%)"
+msgstr "Exento (0%)"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Exempt (Line 3 or 4)"
+msgstr "Exento (Línea 3 o 4)"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Exempt 1. 2."
+msgstr "Exento 1. 2."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Exempt 3."
+msgstr "Exento 3."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Exempt 6."
+msgstr "Exento 6."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Exempt 7."
+msgstr "Exento 7."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Exempt 8."
+msgstr "Exento 8."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_941_fica_exempt
+msgid "Exempt from Social Security and Medicare e.g. F1 Student Visa"
+msgstr "Exento de Seguro Social y Medicare ej. Visa de Estudiante"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Exemptions"
+msgstr "Exenciones"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Exemptions (Total) 6."
+msgstr "Exenciones (Total) 6."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Exemptions 1.(d)"
+msgstr "Exenciones 1.(d)"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Exemptions 4."
+msgstr "Exenciones 4."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Exemptions 6."
+msgstr "Exenciones 6."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract__external_wages
+msgid "External Existing Wages"
+msgstr "Salarios Existentes Externos"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_941_fica_exempt
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "FICA Exempt"
+msgstr "Exento de FICA"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "FL Florida"
+msgstr "FL Florida"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Federal"
+msgstr "Federal"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Federal Unemployment Rate"
+msgstr "Tasa de Desempleo Federal"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract__futa_type
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_940_type
+msgid "Federal Unemployment Tax Type (FUTA)"
+msgstr "Tipo de Tasa de Desempleo Federal (FUTA)"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_941_fit_w4_additional_withholding
+msgid "Federal W4 Additional Withholding [4(c)]"
+msgstr "Federal W4 Retención Adicional [4(c)]"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_941_fit_w4_allowances
+msgid "Federal W4 Allowances (before 2020)"
+msgstr "Federal W4 Asignaciones (Antes de 2020)"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_941_fit_w4_deductions
+msgid "Federal W4 Deductions [4(b)]"
+msgstr "Federal W4 Deducciones [4(b)]"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_941_fit_w4_dependent_credit
+msgid "Federal W4 Dependent Credit [3]"
+msgstr "Federal W4 Crédito para Dependientes [3]"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_941_fit_w4_filing_status
+msgid "Federal W4 Filing Status [1(c)]"
+msgstr "Federal W4 Estado Civil [1(c)]"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_941_fit_w4_is_nonresident_alien
+msgid "Federal W4 Is Nonresident Alien"
+msgstr "Federal W4 Es Extranjero No Residente"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_941_fit_w4_multiple_jobs_higher
+msgid "Federal W4 Multiple Jobs Higher [2(c)]"
+msgstr "Federal W4 Múltiples Trabajos Más Altos [2(c)]"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_941_fit_w4_other_income
+msgid "Federal W4 Other Income [4(a)]"
+msgstr "Federal W4 Otros Ingresos [4(a)]"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Filing Status"
+msgstr "Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Filing Status 1(C)."
+msgstr "Estado Civil 1(C)"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Filing Status 1(c)."
+msgstr "Estado Civil 1(c)"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Filing Status 1."
+msgstr "Estado Civil 1."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Filing Status 2."
+msgstr "Estado Civil 2."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Filing Status 3."
+msgstr "Estado Civil 3."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form 89-350 - State Income Tax"
+msgstr "Formulario 89-350 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form 940 - Federal Unemployment"
+msgstr "Formulario 940 - Desempleo Federal"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form 941 / W4 - Federal Income Tax"
+msgstr "Formulario 941 / W4 - Impuestos Federales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form A-4 - State Income Tax"
+msgstr "Formulario A-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form A4 - State Income Tax"
+msgstr "Formulario A4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form AR4EC - State Income Tax"
+msgstr "Formulario AR4EC - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form CT-W4 - State Income Tax"
+msgstr "Formulario CT-W4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form DE W-4 - State Income Tax"
+msgstr "Formulario DE W-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form G-4 - State Income Tax"
+msgstr "Formulario G-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form HI HW-4 - State Income Tax"
+msgstr "Formulario HI HW-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form IA W-4 - State Income Tax"
+msgstr "Formulario IA W-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form ID W-4 - State Income Tax"
+msgstr "Formulario ID W-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form IL-W-4 - State Income Tax"
+msgstr "Formulario IL-W-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form IN WH-4 - State Income Tax"
+msgstr "Formulario IN WH-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form IT-4 - State Income Tax"
+msgstr "Formulario IT-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form KS K-4 - State Income Tax"
+msgstr "Formulario KS K-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form LA L-4 - State Income Tax"
+msgstr "Formulario LA L-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form MI-W4 - State Income Tax"
+msgstr "Formulario MI-W4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form MO W-4 - State Income Tax"
+msgstr "Formulario MO W-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form MT-4 - State Income Tax"
+msgstr "Formulario MT-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form NC-4 - State Income Tax"
+msgstr "Formulario NC-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form ND W-4 - State Income Tax"
+msgstr "Formulario ND W-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form NJ-W4 - State Income Tax"
+msgstr "Formulario NJ-W4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form NM W-4 - State Income Tax"
+msgstr "Formulario NM W-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form NY IT-2104 - State Income Tax"
+msgstr "Formulario NY IT-2104 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form OK-W-4 - State Income Tax"
+msgstr "Formulario OK-W-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form RI W-4 - State Income Tax"
+msgstr "Formulario RI W-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form SC W-4 - State Income Tax"
+msgstr "Formulario SC W-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form UT W-4 - State Income Tax"
+msgstr "Formulario UT W-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form VA-4/VA-4P - State Income Tax"
+msgstr "Formulario VA-4/VA-4P - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form VT W-4VT - State Income Tax"
+msgstr "Formulario VT W-4VT - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form W-4 - State Income Tax"
+msgstr "Formulario W-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form W-4ME - State Income Tax"
+msgstr "Formulario W-4ME - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form W-4MN - State Income Tax"
+msgstr "Formulario W-4MN - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_941_fit_w4_multiple_jobs_higher
+msgid "Form W4 (2020+) 2(c) Checkbox. Uses Higher Withholding tables."
+msgstr "Formulario W4 (2020+) 2(c) Casilla. Utiliza Tablas de Retención Más Altas"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_941_fit_w4_other_income
+msgid "Form W4 (2020+) 4(a)"
+msgstr "Formulario W4 (2020+) 4(a)"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_941_fit_w4_deductions
+msgid "Form W4 (2020+) 4(b)"
+msgstr "Formulario W4 (2020+) 4(b)"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_941_fit_w4_additional_withholding
+msgid "Form W4 (2020+) 4(c)"
+msgstr "Formulario W4 (2020+) 4(c)"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__fed_941_fit_w4_dependent_credit
+msgid "Form W4 (2020+) Line 3"
+msgstr "Formulario W4 (2020+) Línea 3"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form WT-4 - State Income Tax"
+msgstr "Formulario WT-4 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Form WV/IT-104 - State Income Tax"
+msgstr "Formulario WV/IT-104 - Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ga_g4_sit_filing_status
+msgid "G-4 3."
+msgstr "G-4 3."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ga_g4_sit_dependent_allowances
+msgid "G-4 4."
+msgstr "G-4 4."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ga_g4_sit_additional_allowances
+msgid "G-4 5."
+msgstr "G-4 5."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "GA Georgia"
+msgstr "GA Georgia"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ga_g4_sit_additional_allowances
+msgid "Georgia G-4 Additional Allowances"
+msgstr "Georgia G-4 Asignaciones Adicionales"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ga_g4_sit_dependent_allowances
+msgid "Georgia G-4 Dependent Allowances"
+msgstr "Georgia G-4 Asignaciones de Dependientes"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ga_g4_sit_filing_status
+msgid "Georgia G-4 Filing Status"
+msgstr "Georgia G-4 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__hi_hw4_sit_filing_status
+msgid "HI HW-4 3."
+msgstr "HI HW-4 3."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__hi_hw4_sit_allowances
+msgid "HI HW-4 4."
+msgstr "HI HW-4 4."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "HI Hawaii"
+msgstr "HI Hawaii"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__hi_hw4_sit_allowances
+msgid "Hawaii HW-4 Allowances"
+msgstr "Hawaii HW-4 Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__hi_hw4_sit_filing_status
+msgid "Hawaii HW-4 Marital Status"
+msgstr "Hawaii HW-4 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ca_de4_sit_filing_status__head_household
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__fed_941_fit_w4_filing_status__married_as_single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ga_g4_sit_filing_status__head_of_household
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__hi_hw4_sit_filing_status__head_of_household
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__id_w4_sit_filing_status__head_of_household
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__mo_mow4_sit_filing_status__head_of_household
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ms_89_350_sit_filing_status__head_of_household
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__nc_nc4_sit_filing_status__head_household
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__nd_w4_sit_filing_status__head_household
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__nj_njw4_sit_filing_status__head_household
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ut_w4_sit_filing_status__head_household
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__wv_it104_sit_filing_status__head_household
+msgid "Head of Household"
+msgstr "Jefe del Hogar"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "IA Iowa"
+msgstr "IA Iowa"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ia_w4_sit_allowances
+msgid "IA W-4 6."
+msgstr "IA W-4 6."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "ID Idaho"
+msgstr "ID Idaho"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__id_w4_sit_allowances
+msgid "ID W-4 1."
+msgstr "ID W-4 1."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__id_w4_sit_filing_status
+msgid "ID W-4 A.B.C."
+msgstr "ID W-4 A.B.C."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "IL Illinois"
+msgstr "IL Illinois"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__il_w4_sit_basic_allowances
+msgid "IL-W-4 Step 1."
+msgstr "IL-W-4 Paso 1."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__il_w4_sit_additional_allowances
+msgid "IL-W-4 Step 2."
+msgstr "IL-W-4 Paso 1."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "IN Indiana"
+msgstr "IN Indiana"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__in_w4_sit_personal_exemption
+msgid "IN-W-4 5."
+msgstr "IN-W-4 5."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__in_w4_sit_dependent_exemption
+msgid "IN-W-4 6."
+msgstr "IN-W-4 6."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__id_w4_sit_allowances
+msgid "Idaho ID W-4 Allowances"
+msgstr "Idaho ID W-4 Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__id_w4_sit_filing_status
+msgid "Idaho ID W-4 Withholding Status"
+msgstr "Idaho ID W-4 Estado de Retención"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__il_w4_sit_additional_allowances
+msgid "Illinois IL-W-4 Number of Additional Allowances"
+msgstr "Illinois IL-W-4 Número de Asignaciones Adicionales"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__il_w4_sit_basic_allowances
+msgid "Illinois IL-W-4 Number of Basic Allowances"
+msgstr "Illinois IL-W-4 Número de Asignaciones Adicionales"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__in_w4_sit_dependent_exemption
+msgid "Indiana In-W-4 Number of Dependent Exemption"
+msgstr "Indiana In-W-4 Número de Exenciones Para Dependientes"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__in_w4_sit_personal_exemption
+msgid "Indiana In-W-4 Number of Personal Exemption"
+msgstr "Indiana In-W-4 Número de Exención Personal"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ia_w4_sit_allowances
+msgid "Iowa W-4 allowances"
+msgstr "Iowa W-4 Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Is Nonresident Alien"
+msgstr "Es Extranjero No Residente"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ks_k4_sit_filing_status__married
+msgid "Joint"
+msgstr "Conjunto"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ks_k4_sit_filing_status
+msgid "KS K-4 3."
+msgstr "KS K-4 3."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ks_k4_sit_allowances
+msgid "KS K-4 Step 4."
+msgstr "KS K-4 Paso 4."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "KS Kansas"
+msgstr "KS Kansas"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "KY Kentucky"
+msgstr "KY Kentucky"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ks_k4_sit_filing_status
+msgid "Kansas K-4 Filing Status"
+msgstr "Kansas K-4 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ks_k4_sit_allowances
+msgid "Kansas KS K-4 Number of Allowances"
+msgstr "Kansas K-4 Número de Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__la_l4_sit_filing_status
+msgid "LA L-4 3."
+msgstr "LA L-4 3."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__la_l4_sit_exemptions
+msgid "LA L-4 6."
+msgstr "LA L-4 6."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__la_l4_sit_dependents
+msgid "LA L-4 7."
+msgstr "LA L-4 7."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "LA Louisiana"
+msgstr "LA Louisiana"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config____last_update
+msgid "Last Modified on"
+msgstr "Última Modificación el"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__write_uid
+msgid "Last Updated by"
+msgstr "Última Actualización por"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__write_date
+msgid "Last Updated on"
+msgstr "Última Actualización el"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__oh_it4_sit_exemptions
+msgid "Line 4"
+msgstr "Línea 4"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__la_l4_sit_filing_status
+msgid "Louisiana LA L-4 Filing Status"
+msgstr "Louisiana LA L-4 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__la_l4_sit_dependents
+msgid "Louisiana LA L-4 Number of Dependents"
+msgstr "Louisiana LA L-4 Número de Dependientes"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__la_l4_sit_exemptions
+msgid "Louisiana LA L-4 Number of Exemptions"
+msgstr "Louisiana LA L-4 Número de Exenciones"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "ME Maine"
+msgstr "ME Maine"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__me_w4me_sit_filing_status
+msgid "ME W-4ME 3."
+msgstr "ME W-4ME 3."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "MI Michigan"
+msgstr "MI Michigan"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mi_w4_sit_exemptions
+msgid "MI-W4 6."
+msgstr "MI-W4 6."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "MN Minnesota"
+msgstr "MN Minnesota"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "MO Missouri"
+msgstr "MO Missouri"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mo_mow4_sit_filing_status
+msgid "MO W-4 1."
+msgstr "MO W-4 1."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mo_mow4_sit_withholding
+msgid "MO W-4 3."
+msgstr "MO W-4 3."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__al_a4_sit_exemptions__ms
+msgid "MS"
+msgstr "MS"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "MS Mississippi"
+msgstr "MS Mississippi"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "MT Montana"
+msgstr "MT Montana"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mt_mw4_sit_exemptions
+msgid "MW-4 Box G"
+msgstr "MW-4 Caja G"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mt_mw4_sit_exempt
+msgid "MW-4 Section 2"
+msgstr "MW-4 Sección 2"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__me_w4me_sit_allowances
+msgid "Maine Allowances"
+msgstr "Maine Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__me_w4me_sit_filing_status
+msgid "Maine W-4ME Filing Status"
+msgstr "Maine W-4ME Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Marital Status"
+msgstr "Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Marital Status 1. 2. 3. 8."
+msgstr "Estado Civil 1. 2. 3. 8."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Marital Status 3."
+msgstr "Estado Civil 3."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__hi_hw4_sit_filing_status__married
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__id_w4_sit_filing_status__married
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__la_l4_sit_filing_status__married
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__me_w4me_sit_filing_status__married
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__mn_w4mn_sit_filing_status__married
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__nc_nc4_sit_filing_status__married
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__nd_w4_sit_filing_status__married
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ne_w4n_sit_filing_status__married
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ny_it2104_sit_filing_status__married
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ok_w4_sit_filing_status__married
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ut_w4_sit_filing_status__married
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__vt_w4vt_sit_filing_status__married
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__wi_wt4_sit_filing_status__married
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__wv_it104_sit_filing_status__married
+msgid "Married"
+msgstr "Casado"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__mo_mow4_sit_filing_status__married
+msgid "Married (Spouse does not work)"
+msgstr "Casado (Cónyuge no trabaja)"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ms_89_350_sit_filing_status__married_dual
+msgid "Married (spouse IS employed)"
+msgstr "Casado (Cónyuge ESTA empleado)"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ms_89_350_sit_filing_status__married
+msgid "Married (spouse NOT employed)"
+msgstr "Casado (Cónyuge NO esta empleado)"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ga_g4_sit_filing_status__married_filing_joint,_both_spouses_working
+msgid "Married Filing Joint, both spouses working"
+msgstr "Casados con Declaración Conjunta, ambos trabajan"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ga_g4_sit_filing_status__married_filing_joint,_one_spouse_working
+msgid "Married Filing Joint, one spouse working"
+msgstr "Casados con Declaración Conjunta, solo un Cónyuge trabaja"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ga_g4_sit_filing_status__married_filing_separate
+msgid "Married Filing Separate"
+msgstr "Casados con Declaraciones Separadas"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ca_de4_sit_filing_status__married
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__de_w4_sit_filing_status__married
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__fed_941_fit_w4_filing_status__married
+msgid "Married filing jointly"
+msgstr "Casados con Declaración Conjunta"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ok_w4_sit_filing_status__head_household
+msgid "Married, but withhold at higher Single rate"
+msgstr "Casado, pero retener a una tasa de Soltero más alta "
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__nj_njw4_sit_filing_status__married_joint
+msgid "Married/Civil Union Couple Joint"
+msgstr "Casados/Unión Civil de Pareja Conjunta"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__nj_njw4_sit_filing_status__married_separate
+msgid "Married/Civil Union partner Separate"
+msgstr "Casados/Unión Civil de Pareja Separada"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mi_w4_sit_exemptions
+msgid "Michigan MI W-4 Exemptions"
+msgstr "Michigan MI W-4 Exenciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mn_w4mn_sit_allowances
+msgid "Minnesota Allowances"
+msgstr "Minnesota Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mn_w4mn_sit_filing_status
+msgid "Minnesota W-4MN Marital Status"
+msgstr "Minnesota W-4MN Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ms_89_350_sit_exemption_value
+msgid "Mississippi 89-350 Exemption Total"
+msgstr "Mississippi 89-350 Total de Exento"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ms_89_350_sit_filing_status
+msgid "Mississippi 89-350 Filing Status"
+msgstr "Mississippi 89-350 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mo_mow4_sit_withholding
+msgid "Missouri MO W-4 Reduced Withholding"
+msgstr "Missouri MO W-4 Retención Reducida"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mo_mow4_sit_filing_status
+msgid "Missouri W-4 Filing Status"
+msgstr "Missouri W-4 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mt_mw4_sit_exempt
+msgid "Montana MW-4 Exempt from Withholding"
+msgstr "Montana MW-4 Exento de Retención"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mt_mw4_sit_exemptions
+msgid "Montana MW-4 Exemptions"
+msgstr "Montana MW-4 Exenciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__mt_mw4_sit_exempt__montana_for_marriage
+msgid "Montana for Marriage"
+msgstr "Montana para Matrimonio"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Multiple Jobs Checked"
+msgstr "Varios Trabajos Marcados"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "NC North Carolina"
+msgstr "NC North Carolina"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__nc_nc4_sit_filing_status
+msgid "NC-4"
+msgstr "NC-4"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__nc_nc4_sit_allowances
+msgid "NC-4 1."
+msgstr "NC-4 1."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "ND North Dakota"
+msgstr "ND North Dakota"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__nd_w4_sit_filing_status
+msgid "ND W-4"
+msgstr "ND W-4"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "NE Nebraska"
+msgstr "NE Nebraska"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ne_w4n_sit_filing_status
+msgid "NE W-4N"
+msgstr "NE W-4N"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ne_w4n_sit_allowances
+msgid "NE W-4N 1."
+msgstr "NE W-4N 1."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "NH New Hampshire"
+msgstr "NH New Hampshire"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "NJ New Jersey"
+msgstr "NJ New Jersey"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__nj_njw4_sit_filing_status
+msgid "NJ-W4 2."
+msgstr "NJ-W4 2."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__nj_njw4_sit_allowances
+msgid "NJ-W4 4."
+msgstr "NJ-W4 4."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__nj_njw4_sit_rate_table
+msgid "NJ-W4. 3."
+msgstr "NJ-W4. 3."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "NM New Mexico"
+msgstr "NM New Mexico"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "NV Nevada"
+msgstr "NV Nevada"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ny_it2104_sit_filing_status
+msgid "NY IT-2104"
+msgstr "NY IT-2104"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ny_it2104_sit_allowances
+msgid "NY IT-2104 1. 2."
+msgstr "NY IT-2104 1. 2."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "NY IT-2104 3. 4. 5."
+msgstr "NY IT-2104 3. 4. 5."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "NY New York"
+msgstr "NY New York"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ne_w4n_sit_allowances
+msgid "Nebraska NE W-4N Allowances"
+msgstr "Nebraska NE W-4N Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ne_w4n_sit_filing_status
+msgid "Nebraska NE W-4N Filing Status"
+msgstr "Nebraska NE W-4N Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__nj_njw4_sit_allowances
+msgid "New Jersey NJ-W4 Allowances"
+msgstr "New Jersey NJ-W4 Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__nj_njw4_sit_filing_status
+msgid "New Jersey NJ-W4 Filing Status"
+msgstr "New Jersey NJ-W4 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__nj_njw4_sit_rate_table
+msgid "New Jersey Wage Chart Letter"
+msgstr " Nueva Jersey Carta de la Tabla de Salarios"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ny_it2104_sit_allowances
+msgid "New York IT-2104 Allowances"
+msgstr "New York IT-2104 Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ny_it2104_sit_filing_status
+msgid "New York NY IT-2104 Filing Status"
+msgstr "New York NY IT-2104 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.actions.act_window,help:l10n_us_hr_payroll.us_payroll_config_action_main
+msgid "No Forms"
+msgstr "Ningún Formulario"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "No additional fields."
+msgstr "Sin Campos Adicionales"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__fed_940_type__normal
+msgid "Normal Net Rate (0.6%)"
+msgstr "Tasa Neta Normal (0.6%)"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__nc_nc4_sit_allowances
+msgid "North Carolina NC-4 Allowances"
+msgstr "North Carolina NC-4 Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__nc_nc4_sit_filing_status
+msgid "North Carolina NC-4 Filing Status"
+msgstr "North Carolina NC-4 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__mt_mw4_sit_exempt__north_dakota
+msgid "North Dakota"
+msgstr "North Dakota"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__nd_w4_sit_allowances
+msgid "North Dakota ND W-4"
+msgstr "North Dakota ND W-4"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__nd_w4_sit_filing_status
+msgid "North Dakota ND W-4 Filing Status"
+msgstr "North Dakota ND W-4 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__mt_mw4_sit_exempt__
+msgid "Not Exempt"
+msgstr "No Exento"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "OH Ohio"
+msgstr "OH Ohio"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "OK Oklahoma"
+msgstr "OK Oklahoma"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ok_w4_sit_filing_status
+msgid "OK-W-4"
+msgstr "OK-W-4"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ok_w4_sit_allowances
+msgid "OK-W-4 5."
+msgstr "OK-W-4 5."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__oh_it4_sit_exemptions
+msgid "Ohio IT-4 Exemptions"
+msgstr "Ohio IT-4 Exenciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ok_w4_sit_allowances
+msgid "Oklahoma OK-W-4 Allowances"
+msgstr "Oklahoma OK-W-4 Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ok_w4_sit_filing_status
+msgid "Oklahoma OK-W-4 Filing Status"
+msgstr "Oklahoma OK-W-4 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Other Income"
+msgstr "Otros Ingresos"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "PA Pennsylvania"
+msgstr "PA Pennsylvania"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model,name:l10n_us_hr_payroll.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Recibo de Nómina"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract__us_payroll_config_id
+#: model:ir.ui.menu,name:l10n_us_hr_payroll.us_payroll_config_menu_main
+msgid "Payroll Forms"
+msgstr "Formularios de Nómina"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Personal Exemption 5."
+msgstr "Exención Personal 5."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Personal Exemption 6."
+msgstr "Exención Personal 6."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Personal Exemptions (Line 1(a))"
+msgstr "Exenciones Personales (Línea 1(a))"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model,name:l10n_us_hr_payroll.model_publisher_warranty_contract
+msgid "Publisher Warranty Contract"
+msgstr "Contrato de Garantía del Editor"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "RI Rhode Island"
+msgstr "RI Rhode Island"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ri_w4_sit_allowances
+msgid "RI W-4 1."
+msgstr "RI W-4 1."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Rate Table 3."
+msgstr "Tabla de Tasas 3."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Reduce Withholding 3."
+msgstr "Reducir Retención 3."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__mt_mw4_sit_exempt__tribe
+msgid "Registered Tribe"
+msgstr "Tribu Registrado"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__mt_mw4_sit_exempt__reserve
+msgid "Reserve or National Guard"
+msgstr "Reserva o Guardia Nacional"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ri_w4_sit_allowances
+msgid "Rhode Island RI W-4 Allowances"
+msgstr "Rhode Island RI W-4 Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "SC South Carolina"
+msgstr "SC South Carolina"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__sc_w4_sit_allowances
+msgid "SC W-4 5."
+msgstr "SC W-4 5."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "SD South Dakota"
+msgstr "SD South Dakota"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ga_g4_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__hi_hw4_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__id_w4_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ks_k4_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__la_l4_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__mn_w4mn_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ms_89_350_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__nc_nc4_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__nd_w4_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ne_w4n_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__nj_njw4_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ny_it2104_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ok_w4_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ut_w4_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__vt_w4vt_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__wi_wt4_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__wv_it104_sit_filing_status__single
+msgid "Single"
+msgstr "Soltero"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__me_w4me_sit_filing_status__single
+msgid "Single or Head of Household"
+msgstr "Soltero o Jefe de Familia"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__mo_mow4_sit_filing_status__single
+msgid "Single or Married Spouse Works or Married Filing Separate"
+msgstr "Soltero o Casado y el Conyuge trabaja o Casado con Declaraciones Separadas"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__ca_de4_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__de_w4_sit_filing_status__single
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__fed_941_fit_w4_filing_status__single
+msgid "Single or Married filing separately"
+msgstr "Soltero o Casado con Declaraciones Separadas"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__sc_w4_sit_allowances
+msgid "South Carolina SC W-4 Allowances"
+msgstr "South Carolina SC W-4 Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__state_code
+msgid "State Code"
+msgstr "Código del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "State Exempt"
+msgstr "Exento del Estado"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__state_income_tax_additional_withholding
+msgid "State Income Tax Additional Withholding"
+msgstr "Retención Adicional de Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__state_income_tax_exempt
+msgid "State Income Tax Exempt"
+msgstr "Exento de Impuestos Estatales sobre la Renta"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "State Information and Extra"
+msgstr "Información Estatal y Más"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "TN Tennessee"
+msgstr "TN Tennessee"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "TX Texas"
+msgstr "TX Texas"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__state_code
+msgid "The state code."
+msgstr "El Código del Estado."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "UT Utah"
+msgstr "UT Utah"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ut_w4_sit_filing_status
+msgid "UT W-4 C."
+msgstr "UT W-4 C."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__ut_w4_sit_filing_status
+msgid "Utah UT W-4 Filing Status"
+msgstr "Utah UT W-4 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "VA Virginia"
+msgstr "VA Virginia"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__va_va4_sit_exemptions
+msgid "VA-4(P) 1(a)"
+msgstr "VA-4(P) 1(a)"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__va_va4_sit_other_exemptions
+msgid "VA-4(P) 1(b)"
+msgstr "VA-4(P) 1(b)"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "VT Vermont"
+msgstr "VT Vermont"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__vt_w4vt_sit_filing_status
+msgid "VT W-4VT"
+msgstr "VT W-4VT"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__vt_w4vt_sit_allowances
+msgid "VT W-4VT 5."
+msgstr "VT W-4VT 5."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__vt_w4vt_sit_allowances
+msgid "Vermont VT W-4VT Allowances"
+msgstr "Vermont VT W-4VT Asignaciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__vt_w4vt_sit_filing_status
+msgid "Vermont VT W-4VT Filing Status"
+msgstr "Vermont VT W-4VT Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__va_va4_sit_other_exemptions
+msgid "Virginia VA-4(P) Age & Blindness Exemptions"
+msgstr "Virginia VA-4(P) Exenciones de Edad & Ceguera"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__va_va4_sit_exemptions
+msgid "Virginia VA-4(P) Personal Exemptions"
+msgstr "Virginia VA-4(P) Exenciones Personales"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__me_w4me_sit_allowances
+msgid "W-4ME 4."
+msgstr "W-4ME 4."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mn_w4mn_sit_filing_status
+msgid "W-4MN"
+msgstr "W-4MN"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__mn_w4mn_sit_allowances
+msgid "W-4MN 1."
+msgstr "W-4MN 1."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "WA Washington"
+msgstr "WA Washington"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__wi_wt4_sit_filing_status
+msgid "WI WT-4"
+msgstr "WI WT-4"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__wi_wt4_sit_exemptions
+msgid "WI WT-4 1.(d)"
+msgstr "WI WT-4 1.(d)"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "WI Wisconsin"
+msgstr "WI Wisconsin"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__wv_it104_sit_filing_status
+msgid "WV WV/IT-104"
+msgstr "WV WV/IT-104"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,help:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__wv_it104_sit_exemptions
+msgid "WV WV/IT-104 4."
+msgstr "WV WV/IT-104 4."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "WV West Virginia"
+msgstr "WV West Virginia"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "WY Wyoming"
+msgstr "WY Wyoming"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_alw_fica_futa_exempt
+msgid "Wage: US FICA & FUTA Exempt"
+msgstr "Salario: Exento de FICA & FUTA de EE.UU"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_alw_fica_exempt
+msgid "Wage: US FICA Exempt"
+msgstr "Salario: Exento de FICA de EE.UU"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_alw_fit_fica_futa_exempt
+msgid "Wage: US FIT & FICA & FUTA Exempt"
+msgstr "Salario: Exento de FIT & FICA & FUTA de EE.UU"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_alw_fit_fica_exempt
+msgid "Wage: US FIT & FICA Exempt"
+msgstr "Salario: Exento de FIT & FICA de EE.UU"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_alw_fit_futa_exempt
+msgid "Wage: US FIT & FUTA Exempt"
+msgstr "Salario: US FIT & FUTA Exento"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_alw_fit_exempt
+msgid "Wage: US FIT Exempt"
+msgstr "Salario: Exento de FIT de EE.UU"
+
+#. module: l10n_us_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll.hr_payroll_category_alw_futa_exempt
+msgid "Wage: US FUTA Exempt"
+msgstr "Salario: Exento de FUTA de EE.UU"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__wv_it104_sit_exemptions
+msgid "West Virginia Exemptions"
+msgstr "West Virginia Exenciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__wv_it104_sit_filing_status
+msgid "West Virginia WV/IT-104 Filing Status"
+msgstr "West Virginia WV/IT-104 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_us_hr_payroll.selection__hr_contract_us_payroll_config__nj_njw4_sit_filing_status__widower
+msgid "Widower/Surviving Civil Union Partner"
+msgstr "Viudo/Pareja Sobreviviente de una Unión Civil"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__wi_wt4_sit_exemptions
+msgid "Wisconsin Exemptions"
+msgstr "Wisconsin Exenciones"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__wi_wt4_sit_filing_status
+msgid "Wisconsin WT-4 Filing Status"
+msgstr "Wisconsin WT-4 Estado Civil"
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Withholding Code 1."
+msgstr "Código de Retención 1."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Withholding Exemptions 1. 2. 3."
+msgstr "Exenciones de Retención 1. 2. 3."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Withholding Percentage 1."
+msgstr "Porcentaje de Retención 1."
+
+#. module: l10n_us_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll.us_payroll_config_form
+msgid "Withholding Status A.B.C."
+msgstr "Estado de Retención A.B.C."
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__workers_comp_ee_code
+msgid "Workers' Comp Code (Employee Withholding)"
+msgstr "Código de Compensación para trabajadores (Retención del Empleado)"
+
+#. module: l10n_us_hr_payroll
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll.field_hr_contract_us_payroll_config__workers_comp_er_code
+msgid "Workers' Comp Code (Employer Withholding)"
+msgstr "Código de Compensación para Trabajadores (Retención del Empleador)"

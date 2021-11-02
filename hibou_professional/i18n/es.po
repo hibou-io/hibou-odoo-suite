@@ -1,0 +1,283 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hibou_professional
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-30 00:44+0000\n"
+"PO-Revision-Date: 2021-10-30 00:44+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Admin Users (like yourself)"
+msgstr "Usuarios Administrativos (Como Usted)"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "All Internal Users"
+msgstr "Todo los Usuarios Internas"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Click here to review Hibou's help resources or to contact us today."
+msgstr ""
+"Presione aquí para revisar los recursos de ayuda de Hibou o para contactarse"
+" con nosotros hoy"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid ""
+"Click here to review Hibou's pricing and start a new Professional "
+"Subscription."
+msgstr ""
+"Presione aquí para revisar los precios de Hibou y para comenzar una nueva "
+"suscripción profesional"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Click to view your message"
+msgstr "Presione aquí para ver sus mensajes"
+
+#. module: hibou_professional
+#: code:addons/hibou_professional/models/update.py:0
+#, python-format
+msgid "Error retrieving messages, maybe the token is wrong."
+msgstr "Error al recuperar mensajes, tal vez el token sea incorrecto."
+
+#. module: hibou_professional
+#: code:addons/hibou_professional/models/update.py:0
+#, python-format
+msgid "Error sending message."
+msgstr "Error al enviar el mensaje."
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Hibou Icon"
+msgstr "Icono de Hibou"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Hibou Professional Help"
+msgstr "Ayuda con Hibou Profesional"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "High priority"
+msgstr "Prioridad Alta"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "If you have a subscription code, please enter it here."
+msgstr "Si usted tienen un código de suscripción, por favor ingréselo aquí"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Low priority"
+msgstr "Prioridad Baja"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Markdown"
+msgstr "Markdown"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Medium priority"
+msgstr "Prioridad Mediana"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "New"
+msgstr "Nuevo"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Priority"
+msgstr "Prioridad"
+
+#. module: hibou_professional
+#: model:ir.model,name:hibou_professional.model_publisher_warranty_contract
+msgid "Publisher Warranty Contract"
+msgstr "Contrato de Garantía del Editor"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Retrieve Recent Subjects"
+msgstr "Extraer Asuntos Recientes"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "See pricing and get a Quote"
+msgstr "Ver Precios y Obtener una Cotización"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Select which users can send messages."
+msgstr "Seleccione que usuarios pueden enviar mensajes"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Send"
+msgstr "Enviar"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Subject"
+msgstr "Asunto"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Talk to Hibou!"
+msgstr "¡Habla con Hibou!"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Update Existing"
+msgstr "Actualizar Existentes"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Update Message Preferences"
+msgstr "Actualizar Preferencias de Mensajes"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Update Subscription"
+msgstr "Actualizar Suscripción"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Urgent"
+msgstr "Urgente"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "We're here to help!"
+msgstr "¡Estamos aquí para ayudar!"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "Who do you want to talk to?"
+msgstr "¿Con quién deseas hablar?"
+
+#. module: hibou_professional
+#: code:addons/hibou_professional/models/update.py:0
+#, python-format
+msgid "You are not allowed to send messages at this time."
+msgstr "No está permitido enviar mensajes en este momento."
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "You are on a trial of Hibou Professional."
+msgstr "Estas usando Hibou Profesional de Prueba"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid ""
+"You can send messages (tickets, project tasks, etc.) directly to Hibou using"
+" this dropdown."
+msgstr ""
+"Usted podrá enviar mensajes (tickets, tareas de proyectos, etc.) "
+"directamente a Hibou utilizando esta lista desplegable"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "You can use"
+msgstr "Usted podrá utilizar"
+
+#. module: hibou_professional
+#: code:addons/hibou_professional/models/update.py:0
+#, python-format
+msgid "Your Hibou Professional subscription has ended."
+msgstr "Su suscripción de Hibou Professional ha finalizado"
+
+#. module: hibou_professional
+#: code:addons/hibou_professional/models/update.py:0
+#, python-format
+msgid "Your Hibou Professional subscription is ending soon."
+msgstr "Su suscripción de Hibou Professional finalizará pronto."
+
+#. module: hibou_professional
+#: code:addons/hibou_professional/models/update.py:0
+#, python-format
+msgid "Your trial of Hibou Professional has ended."
+msgstr "Su prueba de Hibou Professional ha finalizado."
+
+#. module: hibou_professional
+#: code:addons/hibou_professional/models/update.py:0
+#, python-format
+msgid "Your trial of Hibou Professional is ending soon."
+msgstr "Su prueba de Hibou Professional finalizará pronto"
+
+#. module: hibou_professional
+#. openerp-web
+#: code:addons/hibou_professional/static/src/xml/templates.xml:0
+#, python-format
+msgid "for formatting."
+msgstr "para el formato."

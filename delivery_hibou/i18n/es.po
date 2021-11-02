@@ -1,0 +1,163 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_hibou
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-29 23:24+0000\n"
+"PO-Revision-Date: 2021-10-29 23:24+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: delivery_hibou
+#: model:ir.model.fields.selection,name:delivery_hibou.selection__stock_picking__require_insurance__auto
+msgid "Automatic"
+msgstr "Automático"
+
+#. module: delivery_hibou
+#: model:ir.model.fields,field_description:delivery_hibou.field_delivery_carrier__automatic_insurance_value
+msgid "Automatic Insurance Value"
+msgstr "Valor de Seguro Automático"
+
+#. module: delivery_hibou
+#: model_terms:ir.ui.view,arch_db:delivery_hibou.hibou_view_quant_package_form
+#: model_terms:ir.ui.view,arch_db:delivery_hibou.view_picking_withcarrier_out_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: delivery_hibou
+#: code:addons/delivery_hibou/models/stock.py:0
+#, python-format
+msgid "Cannot cancel package other than through shipment/picking."
+msgstr ""
+"No se puede cancelar el paquete de otra manera que no sea a través del "
+"envío/picking."
+
+#. module: delivery_hibou
+#: code:addons/delivery_hibou/models/delivery.py:0
+#, python-format
+msgid "Cannot rate package without picking."
+msgstr "No se puede calificar el paquete sin picking"
+
+#. module: delivery_hibou
+#: model:ir.model.fields,field_description:delivery_hibou.field_stock_quant_package__carrier_id
+msgid "Carrier"
+msgstr "Transportista"
+
+#. module: delivery_hibou
+#: model_terms:ir.ui.view,arch_db:delivery_hibou.view_picking_withcarrier_out_form
+msgid "Clear Tracking"
+msgstr "Vaciar Seguimiento"
+
+#. module: delivery_hibou
+#: model:ir.model.fields,help:delivery_hibou.field_stock_picking__require_insurance
+msgid ""
+"If your carrier supports it, auto should be calculated off of the "
+"\"Automatic Insurance Value\" field."
+msgstr ""
+"Si su transportista lo permite, auto debe ser calculado en base del campo "
+"\"Valor de Seguro Automático\""
+
+#. module: delivery_hibou
+#: model:ir.model.fields.selection,name:delivery_hibou.selection__stock_picking__require_insurance__no
+msgid "No"
+msgstr "No"
+
+#. module: delivery_hibou
+#: model:ir.model.fields.selection,name:delivery_hibou.selection__delivery_carrier__procurement_priority__0
+msgid "Normal"
+msgstr "Normal"
+
+#. module: delivery_hibou
+#: model:ir.model.fields,field_description:delivery_hibou.field_stock_picking__package_carrier_tracking_ref
+msgid "Package Tracking Numbers"
+msgstr "Números de Seguimiento del Paquete"
+
+#. module: delivery_hibou
+#: model:ir.model,name:delivery_hibou.model_stock_quant_package
+msgid "Packages"
+msgstr "Paquetes"
+
+#. module: delivery_hibou
+#: model:ir.model.fields,help:delivery_hibou.field_delivery_carrier__procurement_priority
+msgid ""
+"Priority for this carrier. Will affect pickings and procurements related to "
+"this carrier."
+msgstr ""
+"Prioridad para este transportista. Afectará las operaciones de Picking y "
+"adquisiciones del transportista"
+
+#. module: delivery_hibou
+#: model:ir.model.fields,field_description:delivery_hibou.field_delivery_carrier__procurement_priority
+msgid "Procurement Priority"
+msgstr "Prioridad de Adquisición"
+
+#. module: delivery_hibou
+#: model:ir.model.fields,field_description:delivery_hibou.field_stock_picking__require_insurance
+msgid "Require Insurance"
+msgstr "Requiere Seguro"
+
+#. module: delivery_hibou
+#: model_terms:ir.ui.view,arch_db:delivery_hibou.view_picking_withcarrier_out_form
+msgid "Reset Tracking"
+msgstr "Restablecer Seguimiento"
+
+#. module: delivery_hibou
+#: model_terms:ir.ui.view,arch_db:delivery_hibou.hibou_view_quant_package_form
+msgid "Ship"
+msgstr "Enviar"
+
+#. module: delivery_hibou
+#: code:addons/delivery_hibou/models/stock.py:0
+#, python-format
+msgid ""
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
+"%(ref)s<br/>Cost: %(price).2f %(currency)s"
+msgstr ""
+"Cargamento enviado al transportista %(carrier_name)s para enviar con número de seguimiento"
+"%(ref)s<br/>Costo: %(price).2f %(currency)s
+
+#. module: delivery_hibou
+#: model:ir.model.fields,field_description:delivery_hibou.field_stock_picking__shipping_account_id
+msgid "Shipping Account"
+msgstr "Cuenta de Envío"
+
+#. module: delivery_hibou
+#: model:ir.model,name:delivery_hibou.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "Métodos de Envío"
+
+#. module: delivery_hibou
+#: model:ir.model.fields,field_description:delivery_hibou.field_stock_quant_package__carrier_tracking_ref
+msgid "Tracking Reference"
+msgstr "Referencia de Seguimiento"
+
+#. module: delivery_hibou
+#: model:ir.model,name:delivery_hibou.model_stock_picking
+msgid "Transfer"
+msgstr "Transferir"
+
+#. module: delivery_hibou
+#: model:ir.model.fields.selection,name:delivery_hibou.selection__delivery_carrier__procurement_priority__1
+msgid "Urgent"
+msgstr "Urgente"
+
+#. module: delivery_hibou
+#: model:ir.model.fields,help:delivery_hibou.field_delivery_carrier__automatic_insurance_value
+msgid ""
+"Will be used during shipping to determine if the picking's value warrants "
+"insurance being added."
+msgstr ""
+"Será utilizado durante el envío para determinar si la operación de Picking "
+"requiere agregar seguro"
+
+#. module: delivery_hibou
+#: model:ir.model.fields.selection,name:delivery_hibou.selection__stock_picking__require_insurance__yes
+msgid "Yes"
+msgstr "Sí"
