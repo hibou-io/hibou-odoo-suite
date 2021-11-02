@@ -1,0 +1,241 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_stamps
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-12 01:20+0000\n"
+"PO-Revision-Date: 2021-10-12 01:20+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_service_type__us-emi
+msgid " Priority Mail Express International"
+msgstr "Servicio Postal Prioritario Express Internacional"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_image_type__azpl
+msgid "AZPL"
+msgstr "AZPL"
+
+#. module: delivery_stamps
+#: model:ir.model.fields,field_description:delivery_stamps.field_delivery_carrier__stamps_addon_dc
+msgid "Add Delivery Confirmation"
+msgstr "Agregar Confirmación de Entrega"
+
+#. module: delivery_stamps
+#: model:ir.model.fields,field_description:delivery_stamps.field_delivery_carrier__stamps_addon_hp
+msgid "Add Hidden Postage"
+msgstr "Agregar Franqueo Oculto"
+
+#. module: delivery_stamps
+#: model:ir.model.fields,field_description:delivery_stamps.field_delivery_carrier__stamps_addon_sc
+msgid "Add Signature Confirmation"
+msgstr "Agregar Firma de Confirmación"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_image_type__auto
+msgid "Auto"
+msgstr "Automático"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_image_type__bzpl
+msgid "BZPL"
+msgstr "BZPL"
+
+#. module: delivery_stamps
+#: code:addons/delivery_stamps/models/delivery_stamps.py:0
+#, python-format
+msgid "Cancelling due to error: "
+msgstr "Cancelando debido a un error"
+
+#. module: delivery_stamps
+#: code:addons/delivery_stamps/models/delivery_stamps.py:0
+#, python-format
+msgid "Cannot use customs without packing items to ship first."
+msgstr "No se puede usar el servicio de aduana sin empacar los artículos para enviar primero."
+
+#. module: delivery_stamps
+#: model:ir.model.fields,field_description:delivery_stamps.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "Transportista"
+
+#. module: delivery_stamps
+#: model:ir.model.fields,field_description:delivery_stamps.field_delivery_carrier__stamps_default_packaging_id
+msgid "Default Package Type"
+msgstr "Tipo de Paquete Predeterminado"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_image_type__epl
+msgid "EPL"
+msgstr "EPL"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_image_type__encryptedpngurl
+msgid "Encrypted PNG URL"
+msgstr "URL de PNG Encriptado"
+
+#. module: delivery_stamps
+#: code:addons/delivery_stamps/models/delivery_stamps.py:0
+#, python-format
+msgid "Error Retrieving Response from Stamps.com"
+msgstr "Error al recuperar una respuesta de Stamps.com"
+
+#. module: delivery_stamps
+#: code:addons/delivery_stamps/models/delivery_stamps.py:0
+#, python-format
+msgid "Error on full shipment.  Attempted to cancel any previously shipped."
+msgstr "Error en el envío completo. Se intentó cancelar cualquier envío que se había enviado anteriormente"
+
+#. module: delivery_stamps
+#: code:addons/delivery_stamps/models/delivery_stamps.py:0
+#, python-format
+msgid "Error on shipment. \"%s\""
+msgstr "Error en el envío. \"%s\""
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_service_type__us-fc
+msgid "First-Class"
+msgstr "Primera-Clase"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_service_type__us-fci
+msgid "First-Class International"
+msgstr "Primera Clase Internacional"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_image_type__gif
+msgid "GIF"
+msgstr "GIF"
+
+#. module: delivery_stamps
+#: model:ir.model.fields,field_description:delivery_stamps.field_delivery_carrier__stamps_image_type
+msgid "Image Type"
+msgstr "Tipo de Imagen"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_image_type__jpg
+msgid "JPG"
+msgstr "JPG"
+
+#. module: delivery_stamps
+#: code:addons/delivery_stamps/models/delivery_stamps.py:0
+#, python-format
+msgid "No valid rates returned from Stamps.com"
+msgstr "No se devolvieron tarifas válidas de Stamps.com"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_image_type__pdf
+msgid "PDF"
+msgstr "PDF"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_image_type__png
+msgid "PNG"
+msgstr "PNG"
+
+#. module: delivery_stamps
+#: code:addons/delivery_stamps/models/delivery_stamps.py:0
+#, python-format
+msgid "Partner (%s) name must be more than 2 characters."
+msgstr "El nombre del Socio (%s) debe tener más de dos caracteres"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_image_type__printoncepdf
+msgid "Print Once PDF"
+msgstr "Imprimir PDF Una Vez"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_service_type__us-pm
+msgid "Priority"
+msgstr "Prioridad"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_service_type__us-pmi
+msgid "Priority Mail International"
+msgstr "Servicio Postal Prioritaria Internacional"
+
+#. module: delivery_stamps
+#: model:ir.model.fields,field_description:delivery_stamps.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "Proveedor"
+
+#. module: delivery_stamps
+#: model:ir.model.fields,field_description:delivery_stamps.field_delivery_carrier__stamps_service_type
+msgid "Service Type"
+msgstr "Tipo de Servicio"
+
+#. module: delivery_stamps
+#: code:addons/delivery_stamps/models/delivery_stamps.py:0
+#, python-format
+msgid "Shipment N° %s has been cancelled"
+msgstr "Número de Envío %s ha sido cancelado"
+
+#. module: delivery_stamps
+#: code:addons/delivery_stamps/models/delivery_stamps.py:0
+#, python-format
+msgid ""
+"Shipment created into Stamps.com <br/> <b>Tracking Number : <br/> \"%s\" "
+"</b>"
+msgstr "El envío ha sido creado en Stamps.com <br/> <b> Número de Seguimiento : <br/> \"%s\" </b>"
+
+#. module: delivery_stamps
+#: model:ir.model,name:delivery_stamps.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "Métodos de Envío"
+
+#. module: delivery_stamps
+#: code:addons/delivery_stamps/models/delivery_stamps.py:0
+#: code:addons/delivery_stamps/models/delivery_stamps.py:0
+#: code:addons/delivery_stamps/models/delivery_stamps.py:0
+#, python-format
+msgid "Stamps needs ZIP. From: \"%s\" To: \"%s\""
+msgstr "Stamps requiere un Código Postal. Desde: %s Hasta: %s"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__stock_package_type__package_carrier_type__stamps
+msgid "Stamps.com"
+msgstr "Stamps.com"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__delivery_type__stamps
+msgid "Stamps.com (USPS)"
+msgstr "Stamps.com (USPS)"
+
+#. module: delivery_stamps
+#: model_terms:ir.ui.view,arch_db:delivery_stamps.view_delivery_carrier_form_with_provider_stamps
+msgid "Stamps.com Configuration"
+msgstr "Stamps.com Configuración"
+
+#. module: delivery_stamps
+#: model:ir.model.fields,field_description:delivery_stamps.field_delivery_carrier__stamps_password
+msgid "Stamps.com Password"
+msgstr "Stamps.com Clave"
+
+#. module: delivery_stamps
+#: model:ir.model.fields,field_description:delivery_stamps.field_stock_package_type__stamps_cubic_pricing
+msgid "Stamps.com Use Cubic Pricing"
+msgstr "Stamps.com Utilice el Precio Cúbicos"
+
+#. module: delivery_stamps
+#: model:ir.model.fields,field_description:delivery_stamps.field_delivery_carrier__stamps_username
+msgid "Stamps.com Username"
+msgstr "Stamps.com Usuario"
+
+#. module: delivery_stamps
+#: model:ir.model,name:delivery_stamps.model_stock_package_type
+msgid "Stock package type"
+msgstr "Tipo de Paquete de Stock"
+
+#. module: delivery_stamps
+#: model:ir.model.fields.selection,name:delivery_stamps.selection__delivery_carrier__stamps_image_type__zpl
+msgid "ZPL"
+msgstr "ZPL"

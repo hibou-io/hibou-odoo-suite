@@ -134,7 +134,9 @@ class ProviderStamps(models.Model):
         weight = self._stamps_convert_weight(weight)
 
         if not all((order.warehouse_id.partner_id.zip, order.partner_shipping_id.zip)):
-            raise ValidationError('Stamps needs ZIP. From: ' + str(order.warehouse_id.partner_id.zip) + ' To: ' + str(order.partner_shipping_id.zip))
+            raise ValidationError(_('Stamps needs ZIP. From: "%s" To: "%s"',
+                                  order.warehouse_id.partner_id.zip,
+                                  order.partner_shipping_id.zip))
 
         ret_val = service.create_shipping()
         ret_val.ShipDate = date_planned.strftime('%Y-%m-%d') if date_planned else date.today().isoformat()
@@ -160,7 +162,9 @@ class ProviderStamps(models.Model):
         recipient = self.get_recipient(order=order, picking=picking)
 
         if not all((shipper.zip, recipient.zip)):
-            raise ValidationError('Stamps needs ZIP. From: ' + str(shipper.zip) + ' To: ' + str(recipient.zip))
+            raise ValidationError(_('Stamps needs ZIP. From: "%s" To: "%s"',
+                                  shipper.zip,
+                                  recipient.zip))
 
         ret_val = service.create_shipping()
         ret_val.ShipDate = date_planned.strftime('%Y-%m-%d') if date_planned else date.today().isoformat()
@@ -180,7 +184,7 @@ class ProviderStamps(models.Model):
     def _stamps_address(self, service, partner):
         address = service.create_address()
         if not partner.name or len(partner.name) < 2:
-            raise ValidationError('Partner (%s) name must be more than 2 characters.' % (partner, ))
+            raise ValidationError(_('Partner (%s) name must be more than 2 characters.', partner))
         address.FullName = partner.name
         address.Address1 = partner.street
         if partner.street2:
@@ -206,7 +210,9 @@ class ProviderStamps(models.Model):
         ret = []
         company, from_partner, to_partner = self._stamps_get_addresses_for_picking(picking)
         if not all((from_partner.zip, to_partner.zip)):
-            raise ValidationError('Stamps needs ZIP/PostalCode. From: ' + str(from_partner.zip) + ' To: ' + str(to_partner.zip))
+            raise ValidationError(_('Stamps needs ZIP. From: "%s" To: "%s"',
+                                  from_partner.zip,
+                                  to_partner.zip))
 
         picking_packages = picking.package_ids
         package_carriers = picking_packages.mapped('carrier_id')
@@ -290,7 +296,7 @@ class ProviderStamps(models.Model):
         result = {
             'success': False,
             'price': 0.0,
-            'error_message': 'Error Retrieving Response from Stamps.com',
+            'error_message': _('Error Retrieving Response from Stamps.com'),
             'warning_message': False
         }
         date_planned = None
@@ -362,7 +368,7 @@ class ProviderStamps(models.Model):
                         if customs:
                             customs.ContentType = shipping.ContentType
                             if not picking.package_ids:
-                                raise ValidationError('Cannot use customs without packing items to ship first.')
+                                raise ValidationError(_('Cannot use customs without packing items to ship first.'))
                             customs_total = 0.0
                             product_values = {}
                             # Note multiple packages will result in all product being on customs form.
@@ -415,20 +421,20 @@ class ProviderStamps(models.Model):
                 _logger.warn(e)
                 if package_labels:
                     for name, label in package_labels:
-                        body = 'Cancelling due to error: ' + str(label.TrackingNumber)
+                        body = _(u'Cancelling due to error: ', label.TrackingNumber)
                         try:
                             service.remove_label(label.TrackingNumber)
                         except WebFault as e:
                             raise ValidationError(e)
                         else:
                             picking.message_post(body=body)
-                    raise ValidationError('Error on full shipment.  Attempted to cancel any previously shipped.')
-                raise ValidationError('Error on shipment. ' + str(e))
+                    raise ValidationError(_('Error on full shipment.  Attempted to cancel any previously shipped.'))
+                raise ValidationError(_('Error on shipment. "%s"', e))
             else:
                 carrier_price = 0.0
                 tracking_numbers = []
                 for name, label in package_labels:
-                    body = 'Shipment created into Stamps.com <br/> <b>Tracking Number : <br/>' + label.TrackingNumber + '</b>'
+                    body = _(u'Shipment created into Stamps.com <br/> <b>Tracking Number : <br/> "%s" </b>', label.TrackingNumber)
                     tracking_numbers.append(label.TrackingNumber)
                     carrier_price += float(label.Rate.Amount)
                     url = label.URL
@@ -519,7 +525,7 @@ class ProviderStamps(models.Model):
             res.append({
                 'success': False,
                 'price': 0.0,
-                'error_message': 'No valid rates returned from Stamps.com',
+                'error_message': _('No valid rates returned from Stamps.com'),
                 'warning_message': False
             })
         return res
