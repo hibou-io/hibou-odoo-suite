@@ -3,7 +3,7 @@
 import datetime
 import requests
 
-from odoo import api, fields, models, release
+from odoo import api, fields, models, release, _
 from odoo.exceptions import UserError
 
 
@@ -28,14 +28,14 @@ class PublisherWarrantyContract(models.AbstractModel):
             today = fields.Date.today()
             if expiration_date_date < today:
                 if expiration_reason == 'trial':
-                    expired = 'Your trial of Hibou Professional has ended.'
+                    expired = _('Your trial of Hibou Professional has ended.')
                 else:
-                    expired = 'Your Hibou Professional subscription has ended.'
+                    expired = _('Your Hibou Professional subscription has ended.')
             elif expiration_date_date < (today + datetime.timedelta(days=self.DAYS_ENDING_SOON)):
                 if expiration_reason == 'trial':
-                    expiring = 'Your trial of Hibou Professional is ending soon.'
+                    expiring = _('Your trial of Hibou Professional is ending soon.')
                 else:
-                    expiring = 'Your Hibou Professional subscription is ending soon.'
+                    expiring = _('Your Hibou Professional subscription is ending soon.')
 
         is_admin = self.env.user.has_group('base.group_erp_manager')
         allow_admin_message = get_param('database.hibou_allow_admin_message')
@@ -68,7 +68,7 @@ class PublisherWarrantyContract(models.AbstractModel):
             allow_message = get_param('database.hibou_allow_admin_message') and self.env.user.has_group(
                 'base.group_erp_manager')
             if not allow_message:
-                raise UserError('You are not allowed to send messages at this time.')
+                raise UserError(_('You are not allowed to send messages at this time.'))
 
     @api.model
     def hibou_professional_quote(self):
@@ -116,7 +116,7 @@ class PublisherWarrantyContract(models.AbstractModel):
             wrapper = r.json()
             return wrapper.get('result', {})
         except:
-            return {'error': 'Error sending message.'}
+            return {'error': _('Error sending message.')}
 
     @api.model
     def hibou_professional_get_messages(self):
@@ -130,7 +130,7 @@ class PublisherWarrantyContract(models.AbstractModel):
             # not jsonrpc
             return r.json()
         except:
-            return {'error': 'Error retrieving messages, maybe the token is wrong.'}
+            return {'error': _('Error retrieving messages, maybe the token is wrong.')}
 
     @api.model
     def hibou_professional_update(self, professional_code):

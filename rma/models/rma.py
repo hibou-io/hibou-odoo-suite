@@ -61,7 +61,7 @@ class RMATemplate(models.Model):
             if move_map:
                 picking = self.env['stock.picking'].browse(res_id)
                 if picking.partner_id != request_user.partner_id:
-                    raise ValidationError('Invalid user for picking.')
+                    raise ValidationError(_('Invalid user for picking.'))
                 lines = []
                 for move_id, qty in move_map.items():
                     move = picking.move_lines.filtered(lambda l: l.id == move_id)
@@ -69,14 +69,14 @@ class RMATemplate(models.Model):
                         if not qty:
                             continue
                         if qty < 0.0 or move.quantity_done < qty:
-                            raise ValidationError('Invalid quantity.')
+                            raise ValidationError(_('Invalid quantity.'))
                         lines.append((0, 0, {
                             'product_id': move.product_id.id,
                             'product_uom_id': move.product_uom.id,
                             'product_uom_qty': qty,
                         }))
                 if not lines:
-                    raise ValidationError('Missing product quantity.')
+                    raise ValidationError(_('Missing product quantity.'))
                 rma = self.env['rma.rma'].create({
                     'name': _('New'),
                     'stock_picking_id': picking.id,

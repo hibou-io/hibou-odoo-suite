@@ -1,0 +1,63 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll_commission
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-12 01:26+0000\n"
+"PO-Revision-Date: 2021-10-12 01:26+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_payroll_commission
+#: model:ir.model.fields,field_description:hr_payroll_commission.field_hr_payslip__commission_count
+msgid "Commission Count"
+msgstr "Recuento de Comisiones"
+
+#. module: hr_payroll_commission
+#: model:ir.model,name:hr_payroll_commission.model_hr_commission_payment
+msgid "Commission Payment"
+msgstr "Pago de comisiones"
+
+#. module: hr_payroll_commission
+#: model:ir.model.fields,field_description:hr_payroll_commission.field_hr_payslip__commission_payment_ids
+#: model_terms:ir.ui.view,arch_db:hr_payroll_commission.hr_payslip_view_form_inherit
+msgid "Commissions"
+msgstr "Comisiones"
+
+#. module: hr_payroll_commission
+#: model:ir.model.fields,help:hr_payroll_commission.field_hr_payslip__commission_payment_ids
+msgid "Commissions to reimburse to employee."
+msgstr "Comisiones para reembolsar al empleado"
+
+#. module: hr_payroll_commission
+#: model:ir.model,name:hr_payroll_commission.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Recibo de Nómina"
+
+#. module: hr_payroll_commission
+#: model:ir.model.fields,field_description:hr_payroll_commission.field_hr_commission_payment__payslip_id
+msgid "Payslip"
+msgstr "Recibo de Nómina"
+
+#. module: hr_payroll_commission
+#: model:ir.model.fields,field_description:hr_payroll_commission.field_hr_commission_payment__pay_in_payslip
+msgid "Reimburse In Next Payslip"
+msgstr "Reembolsar en el próximo recibo de nómina"
+
+#. module: hr_payroll_commission
+#: code:addons/hr_payroll_commission/models/hr_payslip.py:0
+#, python-format
+msgid "Reimbursed Commissions"
+msgstr "Comisiones Reembolsadas"
+
+#. module: hr_payroll_commission
+#: model_terms:ir.ui.view,arch_db:hr_payroll_commission.view_hr_commission_payment_form_inherit
+msgid "Report in Next Payslip"
+msgstr "Reportar en el próximo recibo de nómina"

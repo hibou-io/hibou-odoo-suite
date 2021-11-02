@@ -1,0 +1,102 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_us_hr_payroll_401k
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-12 01:34+0000\n"
+"PO-Revision-Date: 2021-10-12 01:34+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_us_hr_payroll_401k
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll_401k.hr_contract_view_form_inherit
+msgid "401K"
+msgstr "401K"
+
+#. module: l10n_us_hr_payroll_401k
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll_401k.field_hr_contract__ira_rate
+msgid "401K Contribution (%)"
+msgstr "Contribución (%) de 401K"
+
+#. module: l10n_us_hr_payroll_401k
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll_401k.field_hr_contract__ira_amount
+msgid "401K Contribution Amount"
+msgstr "Monto de Contribución de 401K"
+
+#. module: l10n_us_hr_payroll_401k
+#: model:hr.salary.rule,name:l10n_us_hr_payroll_401k.rule_ee_ira
+msgid "EE: 401K"
+msgstr "EE: 401K"
+
+#. module: l10n_us_hr_payroll_401k
+#: model:hr.salary.rule,name:l10n_us_hr_payroll_401k.rule_ee_ira_roth
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll_401k.category_ee_401k_roth
+msgid "EE: 401K Roth"
+msgstr "EE: 401K Roth"
+
+#. module: l10n_us_hr_payroll_401k
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll_401k.category_ee_401k_traditional
+msgid "EE: 401K Traditional"
+msgstr "EE: 401K Tradicional"
+
+#. module: l10n_us_hr_payroll_401k
+#: model:hr.salary.rule.category,name:l10n_us_hr_payroll_401k.category_er_401k
+msgid "ER: 401K Contribution"
+msgstr "ER: 401K Contribución"
+
+#. module: l10n_us_hr_payroll_401k
+#: model:hr.salary.rule,name:l10n_us_hr_payroll_401k.rule_er_ira
+msgid "ER: 401K Match"
+msgstr "ER: 401K Aportación Paralela"
+
+#. module: l10n_us_hr_payroll_401k
+#: model:ir.model,name:l10n_us_hr_payroll_401k.model_hr_contract
+msgid "Employee Contract"
+msgstr "Contrato del empleado"
+
+#. module: l10n_us_hr_payroll_401k
+#: model:ir.model,name:l10n_us_hr_payroll_401k.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Recibo de nómina"
+
+#. module: l10n_us_hr_payroll_401k
+#: model:ir.model.fields,help:l10n_us_hr_payroll_401k.field_hr_contract__ira_roth_amount
+msgid "Post-Tax Contribution Amount"
+msgstr "Monto de contribución tras impuestos"
+
+#. module: l10n_us_hr_payroll_401k
+#: model:ir.model.fields,help:l10n_us_hr_payroll_401k.field_hr_contract__ira_roth_rate
+msgid "Post-Tax Contribution Percentage"
+msgstr "Porcentaje de contribución tras impuestos"
+
+#. module: l10n_us_hr_payroll_401k
+#: model:ir.model.fields,help:l10n_us_hr_payroll_401k.field_hr_contract__ira_amount
+msgid "Pre-Tax (traditional) Contribution Amount"
+msgstr "Monto de contribución pre impuestos (tradicional)"
+
+#. module: l10n_us_hr_payroll_401k
+#: model:ir.model.fields,help:l10n_us_hr_payroll_401k.field_hr_contract__ira_rate
+msgid "Pre-Tax (traditional) Contribution Percentage"
+msgstr "Porcentaje de contribución pre impuestos (Tradicional)"
+
+#. module: l10n_us_hr_payroll_401k
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll_401k.field_hr_contract__ira_roth_rate
+msgid "Roth 401K Contribution (%)"
+msgstr "Contribución (%) de Roth 401K"
+
+#. module: l10n_us_hr_payroll_401k
+#: model:ir.model.fields,field_description:l10n_us_hr_payroll_401k.field_hr_contract__ira_roth_amount
+msgid "Roth 401K Contribution Amount"
+msgstr "Monto de Contribución de Roth 401K"
+
+#. module: l10n_us_hr_payroll_401k
+#: model_terms:ir.ui.view,arch_db:l10n_us_hr_payroll_401k.hr_rule_parameter_view_search_inherit
+msgid "US Payroll 401k"
+msgstr "Nómina de EE.UU 401K"

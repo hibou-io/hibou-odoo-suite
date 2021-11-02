@@ -1,6 +1,6 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 
@@ -95,7 +95,7 @@ class Commission(models.Model):
 
     def unlink(self):
         if self.filtered(lambda c: c.move_id):
-            raise UserError('You cannot delete a commission when it has an accounting entry.')
+            raise UserError(_('You cannot delete a commission when it has an accounting entry.'))
         return super(Commission, self).unlink()
 
     def _filter_source_moves_for_creation(self, moves):
@@ -175,7 +175,7 @@ class Commission(models.Model):
             if not liability_account:
                 liability_account = commission.employee_id.address_home_id.property_account_payable_id
             if not liability_account:
-                raise UserError('Commission liability account must be configured if employee\'s don\'t have AP setup.')
+                raise UserError(_('Commission liability account must be configured if employee\'s don\'t have AP setup.'))
 
             date = commission.source_move_id.date if commission.source_move_id else fields.Date.context_today(commission)
 
@@ -218,9 +218,9 @@ class Commission(models.Model):
 
     def action_mark_paid(self):
         if self.filtered(lambda c: c.state != 'done'):
-            raise UserError('You cannot mark a commission "paid" if it is not already "done".')
+            raise UserError(_('You cannot mark a commission "paid" if it is not already "done".'))
         if not self:
-            raise UserError('You must have at least one "done" commission.')
+            raise UserError(_('You must have at least one "done" commission.'))
         payments = self._mark_paid()
         action = self.env.ref('hr_commission.action_hr_commission_payment').read()[0]
         action['res_ids'] = payments.ids

@@ -1,0 +1,203 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_delivery_planner
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-12 01:47+0000\n"
+"PO-Revision-Date: 2021-10-12 01:47+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: stock_delivery_planner
+#: model_terms:ir.ui.view,arch_db:stock_delivery_planner.res_config_settings_view_form
+msgid ""
+"Add a carrier that represents the 'base rate' for a carrier's type. <br/>\n"
+"                                For example, you should add 1 FedEx carrier here and let us build up the\n"
+"                                rates for your other FedEx shipping methods."
+msgstr ""
+"Agregar un transportista que representa la 'tarifa base' para el tipo de transportista <br/>\n"
+"                                Por ejemplo, usted debe agregar un transportista de FedEx aquí y dejarnos acumular \n"
+"                                tarifas para sus otros metodos de envío de FedEx"
+
+#. module: stock_delivery_planner
+#: model:ir.model,name:stock_delivery_planner.model_res_config_settings
+msgid "Config Settings"
+msgstr "Opciones de configuración"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner__create_uid
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner__create_date
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__days_different
+msgid "Days Different"
+msgstr "Días Diferentes"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields.selection,name:stock_delivery_planner.selection__stock_delivery_planner_option__selection__deselected
+msgid "De-selected"
+msgstr "Desmarcar Selección"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__carrier_id
+msgid "Delivery Method"
+msgstr "Métodos de Envío"
+
+#. module: stock_delivery_planner
+#: model_terms:ir.ui.view,arch_db:stock_delivery_planner.res_config_settings_view_form
+msgid "Delivery Planner"
+msgstr "Planificador de Entregas"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_res_config_settings__stock_delivery_planner_base_carrier_ids
+msgid "Delivery Planner Base Carriers"
+msgstr "Planificador de Entregas de Transportistas Base"
+
+#. module: stock_delivery_planner
+#: code:addons/stock_delivery_planner/wizard/stock_delivery_planner.py:0
+#, python-format
+msgid "Delivery Rate Planner"
+msgstr "Planificador de Tarifas de Entrega"
+
+#. module: stock_delivery_planner
+#: model_terms:ir.ui.view,arch_db:stock_delivery_planner.view_stock_delivery_planner
+msgid "Discard"
+msgstr "Descartar"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner__display_name
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__requested_date
+msgid "Expected Delivery Date"
+msgstr "Fecha de Entrega Esperada"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner__id
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner____last_update
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option____last_update
+msgid "Last Modified on"
+msgstr "Última Modificación el"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner__write_uid
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__write_uid
+msgid "Last Updated by"
+msgstr "Última Actualización por"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner__write_date
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__write_date
+msgid "Last Updated on"
+msgstr "Última Actualización el"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields.selection,name:stock_delivery_planner.selection__stock_delivery_planner_option__selection__
+msgid "None"
+msgstr "Ninguno"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner__plan_option_ids
+msgid "Options"
+msgstr "Opciones"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__package_id
+msgid "Package"
+msgstr "Paquete"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner__packages_planned
+msgid "Packages Planned"
+msgstr "Paquetes Planificadas"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__plan_id
+#: model_terms:ir.ui.view,arch_db:stock_delivery_planner.view_stock_delivery_planner
+msgid "Plan"
+msgstr "Planificar"
+
+#. module: stock_delivery_planner
+#: code:addons/stock_delivery_planner/models/stock.py:0
+#, python-format
+msgid "Plan Delivery"
+msgstr "Planificar Entrega"
+
+#. module: stock_delivery_planner
+#: model_terms:ir.ui.view,arch_db:stock_delivery_planner.view_picking_form
+msgid "Plan Shipment"
+msgstr "Planificar Envío"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__date_planned
+msgid "Planned Date"
+msgstr "Fecha Planificada"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__sale_requested_date
+msgid "Sale Order Delivery Date"
+msgstr "Fecha de Entrega del Pedido de Venta"
+
+#. module: stock_delivery_planner
+#: model_terms:ir.ui.view,arch_db:stock_delivery_planner.view_stock_delivery_planner
+msgid "Select"
+msgstr "Seleccionar"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields.selection,name:stock_delivery_planner.selection__stock_delivery_planner_option__selection__selected
+msgid "Selected"
+msgstr "Seleccionado"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__selection
+msgid "Selection"
+msgstr "Selección"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__price
+msgid "Shipping Price"
+msgstr "Precio de Envío"
+
+#. module: stock_delivery_planner
+#: model:ir.model,name:stock_delivery_planner.model_stock_delivery_planner_option
+msgid "Stock Delivery Planner Option"
+msgstr "Opcion de Planificador de Entrega de Stock"
+
+#. module: stock_delivery_planner
+#: model:ir.model,name:stock_delivery_planner.model_stock_delivery_planner
+msgid "Stock Delivery Planner Wizard"
+msgstr "Asistente de Planificador de Entrega de Stock"
+
+#. module: stock_delivery_planner
+#: model:ir.model,name:stock_delivery_planner.model_stock_picking
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner__picking_id
+msgid "Transfer"
+msgstr "Transferir"
+
+#. module: stock_delivery_planner
+#: model:ir.model.fields,field_description:stock_delivery_planner.field_stock_delivery_planner_option__transit_days
+msgid "Transit Days"
+msgstr "Días de Tránsito"

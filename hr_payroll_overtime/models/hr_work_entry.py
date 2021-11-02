@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 from .resource_calendar import WEEKDAY_SELECTION
@@ -20,7 +20,7 @@ class WorkEntryOverride(models.AbstractModel):
     def _constrain_days(self):
         for override in self:
             if override.day_of_week and override.date:
-                raise ValidationError('An override should only have a Date OR Day of Week.')
+                raise ValidationError(_('An override should only have a Date OR Day of Week.'))
 
     def iso_date_applies(self, iso_date):
         for override in self:
