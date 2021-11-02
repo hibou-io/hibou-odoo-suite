@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import fields, models, _
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.exceptions import UserError
 
@@ -197,7 +197,7 @@ class DeliveryCarrier(models.Model):
                 packages = picking.package_ids
         else:
             if packages:
-                raise UserError('Cannot rate package without picking.')
+                raise UserError(_('Cannot rate package without picking.'))
             self = self.with_context(date_planned=(order.date_planned or fields.Datetime.now()))
 
         res = []
