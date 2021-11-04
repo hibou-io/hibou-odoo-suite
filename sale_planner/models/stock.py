@@ -10,5 +10,6 @@ class Warehouse(models.Model):
         'resource.calendar', 'Shipping Calendar',
         help="This calendar represents shipping availability from the warehouse.")
     sale_planner_carrier_ids = fields.Many2many('delivery.carrier',
+                                                relation='sale_planner_carrier_wh_rel',
                                                 string='Sale Order Planner Base Carriers',
                                                 help='Overrides the global carriers.')
