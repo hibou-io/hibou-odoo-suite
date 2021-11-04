@@ -18,7 +18,7 @@
                             For example, you should add 1 FedEx carrier here and let us build up the
                             rates for your other FedEx shipping methods.
                         </div>
-                        <field name="sale_planner_carrier_ids" class="oe_inline" />
+                        <field name="sale_planner_carrier_ids" class="oe_inline" options="{'no_create_edit': True, 'no_create': True}" />
                     </div>
                 </div>
                 <div class="col-lg-6 col-12 o_setting_box" id="sale_planner_warehouses">
@@ -29,7 +29,7 @@
                             Warehouses you typically ship inventory out of that you want to
                             include in the planning of sale orders.
                         </div>
-                        <field name="sale_planner_warehouse_ids" class="oe_inline" />
+                        <field name="sale_planner_warehouse_ids" class="oe_inline" options="{'no_create_edit': True, 'no_create': True}" />
                     </div>
                 </div>
             </xpath>
