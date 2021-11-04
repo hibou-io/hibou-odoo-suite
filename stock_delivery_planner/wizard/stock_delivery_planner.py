@@ -26,14 +26,15 @@ class StockDeliveryPlanner(models.TransientModel):
     def create(self, values):
         planner = super(StockDeliveryPlanner, self).create(values)
 
-        base_carriers = self.env['delivery.carrier']
-        carrier_ids = self.env['ir.config_parameter'].sudo().get_param('stock.delivery.planner.carrier_ids.%s' % (self.env.user.company_id.id, ))
-        if carrier_ids:
-            try:
-                carrier_ids = [int(c) for c in carrier_ids.split(',')]
-                base_carriers = base_carriers.browse(carrier_ids)
-            except:
-                pass
+        base_carriers = planner.picking_id.picking_type_id.warehouse_id.delivery_planner_carrier_ids
+        if not base_carriers:
+            carrier_ids = self.env['ir.config_parameter'].sudo().get_param('stock.delivery.planner.carrier_ids.%s' % (self.env.user.company_id.id, ))
+            if carrier_ids:
+                try:
+                    carrier_ids = [int(c) for c in carrier_ids.split(',')]
+                    base_carriers = base_carriers.browse(carrier_ids)
+                except:
+                    pass
 
         for carrier in base_carriers:
             rates = carrier.rate_shipment_multi(picking=planner.picking_id)
