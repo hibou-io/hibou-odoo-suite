@@ -239,7 +239,7 @@ class DeliveryFedex(models.Model):
             recipient = superself.get_recipient(picking=picking)
             acc_number = superself._get_fedex_account_number(picking=picking)
             meter_number = superself._get_fedex_meter_number(picking=picking)
-            payment_acc_number = superself._get_fedex_payment_account_number()
+            payment_acc_number = superself._get_fedex_payment_account_number(picking=picking)
             order_name = superself.get_order_name(picking=picking)
             attn = superself.get_attn(picking=picking)
             insurance_value = superself.get_insurance_value(picking=picking)
@@ -274,7 +274,7 @@ class DeliveryFedex(models.Model):
                 commodity_country_of_manufacture = picking.picking_type_id.warehouse_id.partner_id.country_id.code
 
                 for operation in picking.move_line_ids:
-                    commodity_amount = operation.move_id.sale_line_id.price_reduce_taxinc or operation.product_id.list_price
+                    commodity_amount = operation.move_id.sale_line_id.price_reduce_taxinc or operation.product_id.lst_price
                     total_commodities_amount += (commodity_amount * operation.qty_done)
                     commodity_description = operation.product_id.name
                     commodity_number_of_piece = '1'
@@ -285,7 +285,7 @@ class DeliveryFedex(models.Model):
                     commodity_harmonized_code = operation.product_id.hs_code or ''
                     srm.commodities(_convert_curr_iso_fdx(commodity_currency.name), commodity_amount, commodity_number_of_piece, commodity_weight_units, commodity_weight_value, commodity_description, commodity_country_of_manufacture, commodity_quantity, commodity_quantity_units, commodity_harmonized_code)
                 srm.customs_value(_convert_curr_iso_fdx(commodity_currency.name), total_commodities_amount, "NON_DOCUMENTS")
-                srm.duties_payment(shipper_warehouse.partner_id, acc_number, superself.fedex_duty_payment)
+                srm.duties_payment(shipper_warehouse, acc_number, superself.fedex_duty_payment)
                 send_etd = superself.env['ir.config_parameter'].get_param("delivery_fedex.send_etd")
                 srm.commercial_invoice(self.fedex_document_stock_type, send_etd)
 
