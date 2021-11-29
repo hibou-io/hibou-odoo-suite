@@ -293,7 +293,7 @@ class DeliveryFedex(models.Model):
                         commodity_harmonized_code = ''
                     srm._commodities(_convert_curr_iso_fdx(commodity_currency.name), commodity_amount, commodity_number_of_piece, commodity_weight_units, commodity_weight_value, commodity_description, commodity_country_of_manufacture, commodity_quantity, commodity_quantity_units, commodity_harmonized_code)
                 srm.customs_value(_convert_curr_iso_fdx(commodity_currency.name), total_commodities_amount, "NON_DOCUMENTS")
-                srm.duties_payment(shipper_warehouse.partner_id.country_id.code, acc_number)
+                srm.duties_payment(shipper_warehouse.country_id.code, acc_number)
 
             package_count = len(picking_packages) or 1
 
