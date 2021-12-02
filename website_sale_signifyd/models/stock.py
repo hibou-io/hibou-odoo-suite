@@ -7,7 +7,7 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     singifyd_case_id = fields.Many2one(related='sale_id.signifyd_case_id')
-    signifyd_hold = fields.Selection(related='sale_id.signifyd_disposition_status')
+    signifyd_hold = fields.Selection(related='sale_id.signifyd_checkpoint_action')
 
     def action_view_signifyd_case(self):
         self.ensure_one()

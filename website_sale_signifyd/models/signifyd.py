@@ -47,6 +47,11 @@ class SignifydCase(models.Model):
     score = fields.Float(string='Transaction Score')
     adjusted_score = fields.Float(string='Adjusted Score')
     signifyd_url = fields.Char('Signifyd.com', compute='_compute_signifyd_url')
+    checkpoint_action = fields.Selection([
+        ('ACCEPT', 'Accept'),
+        ('HOLD', 'Hold'),
+        ('REJECT', 'Reject'),
+    ], string='Checkpoint Action')
 
     def _get_connector(self):
         return self.order_id.website_id.signifyd_connector_id
@@ -115,6 +120,14 @@ class SignifydCase(models.Model):
             guarantee_disposition = case.get('guaranteeDisposition', self.guarantee_disposition)
             adjusted_score = case.get('adjustedScore', self.adjusted_score)
             score = case.get('score', self.score)
+            checkpoint_action = case.get('checkpointAction', self.checkpoint_action)
+            if not checkpoint_action and guarantee_disposition:
+                if guarantee_disposition == 'APPROVED':
+                    checkpoint_action = 'ACCEPT'
+                elif guarantee_disposition == 'DECLINED':
+                    checkpoint_action = 'REJECT'
+                else:
+                    checkpoint_action = 'HOLD'
 
             vals = {
                 'case_id': case_id,
@@ -128,13 +141,15 @@ class SignifydCase(models.Model):
                 'guarantee_disposition': guarantee_disposition,
                 'score': score,
                 'last_update': dt.now(),  # why not just use
+                'checkpoint_action': checkpoint_action,
             }
 
         outcome = vals.get('guarantee_disposition')
-        if outcome == 'DECLINED':
+        checkpoint_action = vals.get('checkpoint_action')
+        if outcome == 'DECLINED' or checkpoint_action == 'REJECT':
             connector = self._get_connector()
             for user in connector.notify_user_ids:
-                self.create_notification(user, outcome)
+                self.create_notification(user, outcome or checkpoint_action)
 
         self.write(vals)
 

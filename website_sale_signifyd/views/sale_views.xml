@@ -28,7 +28,7 @@
             </xpath>
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field name="signifyd_case_id" attrs="{'invisible': [('signifyd_case_id', '=', False)]}"/>
-                <field name="signifyd_disposition_status" string="Signifyd Status"
+                <field name="signifyd_checkpoint_action" string="Signifyd Status"
                        attrs="{'invisible': [('signifyd_case_id', '=', False)]}"/>
             </xpath>
         </field>
@@ -40,7 +40,7 @@
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='invoice_status']" position="after">
-                <field name="signifyd_disposition_status"/>
+                <field name="signifyd_checkpoint_action"/>
             </xpath>
         </field>
     </record>
@@ -50,7 +50,7 @@
         <field name="res_model">sale.order</field>
         <field name="default" eval="True"/>
         <field name="description">Signifyd Status Updated</field>
-        <field name="relation_field">signifyd_case_id.guarantee_disposition</field>
+        <field name="relation_field">signifyd_case_id.checkpoint_action</field>
     </record>
 
 </odoo>

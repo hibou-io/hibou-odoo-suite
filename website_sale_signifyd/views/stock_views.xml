@@ -10,10 +10,10 @@
                 <field name="signifyd_hold" invisible="1"/>
                 <field name="singifyd_case_id" invisible="1"/>
                 <button name="action_view_signifyd_case" string="On Hold" type="object" class="oe_stat_button text-danger"
-                        icon="fa-hand-stop-o" attrs="{'invisible': [ '|', ('signifyd_hold', '=', 'APPROVED'), ('singifyd_case_id', '=', False)]}"/>
+                        icon="fa-hand-stop-o" attrs="{'invisible': [ '|', ('signifyd_hold', '=', 'ACCEPT'), ('singifyd_case_id', '=', False)]}"/>
 
                 <button name="action_view_signifyd_case" string="Approved" type="object" class="oe_stat_button text-success"
-                        icon="fa-thumbs-o-up" attrs="{'invisible': [ '|', ('signifyd_hold', '!=', 'APPROVED'), ('singifyd_case_id', '=', False)]}"/>
+                        icon="fa-thumbs-o-up" attrs="{'invisible': [ '|', ('signifyd_hold', '!=', 'ACCEPT'), ('singifyd_case_id', '=', False)]}"/>
             </xpath>
         </field>
 
