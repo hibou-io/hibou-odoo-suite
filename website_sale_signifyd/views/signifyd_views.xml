@@ -37,6 +37,7 @@
 
                     <group>
                         <group>
+                            <field name="checkpoint_action"/>
                             <field name="last_update"/>
                             <field name="uuid"/>
                             <field name="case_id"/>
@@ -105,6 +106,7 @@
                         <group>
                             <field name="secret_key" attrs="{'invisible': [('test_mode', '=', True)]}"/>
                             <field name="secret_key_test" attrs="{'invisible': [('test_mode', '!=', True)]}"/>
+                            <field name="signifyd_case_type" />
                             <p class="text-muted">
                                 Optional: Add users to be notified if a sale order is declined by Signifyd.
                             </p>
