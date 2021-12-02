@@ -1,3 +1,6 @@
 [submodule "external/camptocamp-cloud-platform"]
 	path = external/camptocamp-cloud-platform
 	url = https://github.com/hibou-io/camptocamp-cloud-platform.git
+[submodule "external/hibou-oca/queue"]
+	path = external/hibou-oca/queue
+	url = https://github.com/hibou-io/oca-queue.git
