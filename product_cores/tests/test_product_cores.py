@@ -153,22 +153,13 @@ class TestProductCores(common.TransactionCase):
 
     def test_02_sale(self):
         # Need Inventory.
-        adjustment = self.env['stock.inventory'].create({
-            'name': 'Initial',
-            'product_ids': [(4, self.product.id)],
+        adjust_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product.id,
+            'inventory_quantity': 20.0,
+            'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
         })
-        adjustment.action_start()
-        if not adjustment.line_ids:
-            adjustment_line = self.env['stock.inventory.line'].create({
-                'inventory_id': adjustment.id,
-                'product_id': self.product.id,
-                'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
-            })
-        adjustment.line_ids.write({
-            # Maybe add Serial.
-            'product_qty': 20.0,
-        })
-        adjustment.action_validate()
+        adjust_quant.action_apply_inventory()
+        self.assertEqual(self.product.virtual_available, 20.0)
 
         sale = self.env['sale.order'].create({
             'partner_id': self.customer.id,

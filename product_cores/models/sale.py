@@ -17,6 +17,7 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
+    qty_delivered = fields.Float(recursive=True)
     core_line_id = fields.Many2one('sale.order.line', string='Core Sale Line', copy=False)
 
     @api.model
