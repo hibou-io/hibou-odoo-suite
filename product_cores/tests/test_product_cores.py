@@ -125,7 +125,7 @@ class TestProductCores(common.TransactionCase):
         f.purchase_id = purchase
         vendor_bill = f.save()
         self.assertEqual(len(vendor_bill.invoice_line_ids), 2)
-        vendor_bill.post()
+        vendor_bill.action_post()
         for line in vendor_bill.invoice_line_ids:
             pol = purchase.order_line.filtered(lambda l: l.product_id == line.product_id)
             self.assertTrue(pol)
@@ -209,9 +209,10 @@ class TestProductCores(common.TransactionCase):
         sale.picking_ids.action_assign()
 
         self.assertEqual(so_line.product_uom_qty, sale.picking_ids.move_lines.reserved_availability)
-        res_dict = sale.picking_ids.button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
-        wizard.process()
+        for move_line in sale.picking_ids.mapped('move_lines.move_line_ids'):
+            move_line.qty_done = move_line.product_uom_qty
+        sale.picking_ids.button_validate()
+        self.assertEqual(sale.picking_ids.state, 'done')
         self.assertEqual(so_line.qty_delivered, so_line.product_uom_qty)
 
         # Ensure all products are delivered.
@@ -243,8 +244,8 @@ class TestProductCores(common.TransactionCase):
 
         return_picking = sale.picking_ids.filtered(lambda p: p.state != 'done')
         self.assertTrue(return_picking)
-        res_dict = return_picking.button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
-        wizard.process()
+        for move_line in return_picking.mapped('move_lines.move_line_ids'):
+            move_line.qty_done = move_line.product_uom_qty
+        return_picking.button_validate()
 
         self.assertTrue(all(l.qty_delivered == 0.0 for l in sale.order_line))
