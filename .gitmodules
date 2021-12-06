@@ -4,3 +4,9 @@
 [submodule "external/hibou-oca/queue"]
 	path = external/hibou-oca/queue
 	url = https://github.com/hibou-io/oca-queue.git
+[submodule "external/hibou-oca/server-tools"]
+	path = external/hibou-oca/server-tools
+	url = https://github.com/hibou-io/oca-server-tools.git
+[submodule "external/hibou-oca/sale-workflow"]
+	path = external/hibou-oca/sale-workflow
+	url = https://github.com/hibou-io/oca-sale-workflow.git
