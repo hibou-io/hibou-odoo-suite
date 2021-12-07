@@ -48,7 +48,7 @@ def er_401k_match(wages, payslip, categories, worked_days, inputs):
     else:
         if remaining - result < 0.0:
             result = remaining
-    return result
+    return -result
 
 
 class HRPayslip(models.Model):
