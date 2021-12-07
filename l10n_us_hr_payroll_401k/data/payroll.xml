@@ -57,7 +57,7 @@
     <record id="category_ee_401k_traditional" model="hr.salary.rule.category">
         <field name="name">EE: 401K Traditional</field>
         <field name="code">EE_IRA</field>
-        <field name="parent_id" ref="l10n_us_hr_payroll.hr_payroll_category_ded_fit_fica_futa_exempt"/>
+        <field name="parent_id" ref="l10n_us_hr_payroll.hr_payroll_category_ded_fit_exempt"/>
     </record>
     <record id="category_ee_401k_roth" model="hr.salary.rule.category">
         <field name="name">EE: 401K Roth</field>
