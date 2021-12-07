@@ -33,7 +33,7 @@ class TestUsPayslip(common.TestUsPayslip):
 
         er_ira_line = payslip.line_ids.filtered(lambda l: l.code == 'ER_IRA_MATCH')
         self.assertTrue(er_ira_line)
-        self.assertPayrollEqual(er_ira_line.amount, 80.0)  # 4% of wage up to their contribution
+        self.assertPayrollEqual(er_ira_line.amount, -80.0)  # 4% of wage up to their contribution
 
         contract.ira_rate = 0.0
         contract.ira_amount = 25.0
@@ -44,7 +44,7 @@ class TestUsPayslip(common.TestUsPayslip):
 
         er_ira_line = payslip.line_ids.filtered(lambda l: l.code == 'ER_IRA_MATCH')
         self.assertTrue(er_ira_line)
-        self.assertPayrollEqual(er_ira_line.amount, 25.0)  # 4% of wage up to their contribution
+        self.assertPayrollEqual(er_ira_line.amount, -25.0)  # 4% of wage up to their contribution
 
     def test_02_payslip_roth(self):
         wage = 2000.0
@@ -61,7 +61,7 @@ class TestUsPayslip(common.TestUsPayslip):
 
         er_ira_line = payslip.line_ids.filtered(lambda l: l.code == 'ER_IRA_MATCH')
         self.assertTrue(er_ira_line)
-        self.assertPayrollEqual(er_ira_line.amount, 80.0)  # 4% of wage up to their contribution
+        self.assertPayrollEqual(er_ira_line.amount, -80.0)  # 4% of wage up to their contribution
 
         contract.ira_roth_rate = 0.0
         contract.ira_roth_amount = 25.0
@@ -72,7 +72,7 @@ class TestUsPayslip(common.TestUsPayslip):
 
         er_ira_line = payslip.line_ids.filtered(lambda l: l.code == 'ER_IRA_MATCH')
         self.assertTrue(er_ira_line)
-        self.assertPayrollEqual(er_ira_line.amount, 25.0)  # 4% of wage up to their contribution
+        self.assertPayrollEqual(er_ira_line.amount, -25.0)  # 4% of wage up to their contribution
 
     def test_10_payslip_limits(self):
         self.er_match_parameter.parameter_value = '20.0'  # 20% match up to salary
@@ -92,7 +92,7 @@ class TestUsPayslip(common.TestUsPayslip):
         self.assertPayrollEqual(ira_line.amount, -(wage * rate / 100.0))
         er_ira_line = payslip.line_ids.filtered(lambda l: l.code == 'ER_IRA_MATCH')
         self.assertTrue(er_ira_line)
-        self.assertPayrollEqual(er_ira_line.amount, -ira_line.amount)
+        self.assertPayrollEqual(er_ira_line.amount, ira_line.amount)
         common.process_payslip(payslip)
 
         # Payslip 2 - 3.5k
@@ -104,7 +104,7 @@ class TestUsPayslip(common.TestUsPayslip):
         self.assertPayrollEqual(ira_line.amount, -(self.EE_LIMIT-(wage * rate / 100.0)))
         er_ira_line = payslip.line_ids.filtered(lambda l: l.code == 'ER_IRA_MATCH')
         self.assertTrue(er_ira_line)
-        self.assertPayrollEqual(er_ira_line.amount, -ira_line.amount)
+        self.assertPayrollEqual(er_ira_line.amount, ira_line.amount)
         common.process_payslip(payslip)
 
         # Payslip 3 - 0 (over limit)
@@ -124,7 +124,7 @@ class TestUsPayslip(common.TestUsPayslip):
         self.assertPayrollEqual(ira_line.amount, -self.EE_LIMIT_CATCHUP)
         er_ira_line = payslip.line_ids.filtered(lambda l: l.code == 'ER_IRA_MATCH')
         self.assertTrue(er_ira_line)
-        self.assertPayrollEqual(er_ira_line.amount, -ira_line.amount)
+        self.assertPayrollEqual(er_ira_line.amount, ira_line.amount)
         common.process_payslip(payslip)
 
         # Note that the company limit is higher than what is possible by 'match'
