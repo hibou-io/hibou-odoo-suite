@@ -26,3 +26,6 @@
 [submodule "external/hibou-oca/connector"]
 	path = external/hibou-oca/connector
 	url = https://github.com/hibou-io/oca-connector.git
+[submodule "external/hibou-oca/account-fiscal-rule"]
+	path = external/hibou-oca/account-fiscal-rule
+	url = https://github.com/hibou-io/oca-account-fiscal-rule.git
