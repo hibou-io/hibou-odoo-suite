@@ -27,6 +27,22 @@
                      "-u", "sale",
                      "--test-enable", "--no-xmlrpc", "--stop-after-init"],
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: server",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": [],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: reload foreground server",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-reload.py",
+            "args": [],
+            "console": "integratedTerminal"
         }
     ]
 }
