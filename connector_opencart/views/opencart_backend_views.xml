@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_opencart_backend_form" model="ir.ui.view">
+        <field name="name">opencart.backend.form</field>
+        <field name="model">opencart.backend</field>
+        <field name="arch" type="xml">
+            <form string="Opencart Backend">
+                <header>
+                    <button name="synchronize_metadata"
+                        type="object"
+                        class="oe_highlight"
+                        string="Synchronize Metadata"/>
+                </header>
+                <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" class="oe_inline" />
+                    </h1>
+                    <group name="opencart" string="Opencart Configuration">
+                        <notebook name="api">
+                            <page string="API" name="api">
+                                <group colspan="4" col="4">
+                                    <field name="base_url"/>
+                                    <field name="restadmin_token" password="1"/>
+                                    <field name="server_offset_hours"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </group>
+                    <group name="main_configuration" string="Main Configuration">
+                        <group name="order_configuration" string="Order Defaults">
+                            <field name="warehouse_id"/>
+                            <field name="analytic_account_id"/>
+                            <field name="fiscal_position_id"/>
+                            <field name="team_id"/>
+                            <field name="sale_prefix"/>
+                            <field name="scheduler_order_import_running" invisible="1" />
+                            <field name="scheduler_order_import"/>
+                            <p attrs="{'invisible': [('scheduler_order_import_running', '=', True)]}" class="text-danger" colspan="2">
+                                The automatic scheduler is not currently enabled.
+                            </p>
+                            <p attrs="{'invisible': [('scheduler_order_import_running', '=', False)]}" class="text-success" colspan="2">
+                                The automatic scheduler is enabled.
+                            </p>
+                        </group>
+                        <group name="product_configuration" string="Product Defaults">
+                            <field name="product_categ_id"/>
+                            <field name="coupon_product_id"/>
+                            <field name="so_require_product_setup"/>
+                        </group>
+                    </group>
+                    <notebook name="import_config">
+                        <page name="import" string="Imports">
+                            <p class="oe_grey oe_inline">
+                                By clicking on the buttons,
+                                you will initiate the synchronizations
+                                with Opencart.
+                                Note that the import or exports
+                                won't be done directly,
+                                they will create 'Jobs'
+                                executed as soon as possible.
+                            </p>
+                            <p class="oe_grey oe_inline">
+                                Once imported,
+                                some types of records,
+                                like the products or categories,
+                                need a manual review.
+                                You will find the list
+                                of the new records to review
+                                in the menu 'Connectors > Checkpoint'.
+                            </p>
+                            <group name="import_since">
+                                <field name="import_orders_after_date"/>
+                                <field name="import_orders_after_id"/>
+                                <button name="import_sale_orders"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Import in background"/>
+                            </group>
+
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_opencart_backend_tree" model="ir.ui.view">
+        <field name="name">opencart.backend.tree</field>
+        <field name="model">opencart.backend</field>
+        <field name="arch" type="xml">
+            <tree string="Opencart Backend">
+                <field name="name"/>
+                <field name="import_orders_after_id"/>
+                <field name="import_orders_after_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_opencart_backend" model="ir.actions.act_window">
+        <field name="name">Opencart Backends</field>
+        <field name="res_model">opencart.backend</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_opencart_backend_tree"/>
+    </record>
+
+    <menuitem id="menu_opencart_root"
+        parent="connector.menu_connector_root"
+        name="Opencart"
+        sequence="10"
+        groups="connector.group_connector_manager"/>
+
+    <menuitem id="menu_opencart_backend"
+        name="Backends"
+        parent="menu_opencart_root"
+        sequence="10"
+        action="action_opencart_backend"/>
+
+    <!-- Store -->
+    <record id="view_opencart_store_form" model="ir.ui.view">
+        <field name="name">opencart.store.form</field>
+        <field name="model">opencart.store</field>
+        <field name="arch" type="xml">
+            <form string="Opencart Store">
+                <header>
+                </header>
+                <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" class="oe_inline" />
+                    </h1>
+                    <group name="main_configuration" string="Override Configuration">
+                        <group name="order_configuration" string="Order Defaults">
+                            <field name="enable_order_import" />
+                            <field name="warehouse_id"/>
+                            <field name="analytic_account_id"/>
+                            <field name="fiscal_position_id"/>
+                            <field name="team_id"/>
+                            <field name="sale_prefix"/>
+                            <field name="coupon_product_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_opencart_store_tree" model="ir.ui.view">
+        <field name="name">opencart.store.tree</field>
+        <field name="model">opencart.store</field>
+        <field name="arch" type="xml">
+            <tree string="Opencart Store">
+                <field name="name"/>
+                <field name="backend_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_opencart_store" model="ir.actions.act_window">
+        <field name="name">Opencart Stores</field>
+        <field name="res_model">opencart.store</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_opencart_store_tree"/>
+    </record>
+
+    <menuitem id="menu_opencart_store"
+        name="Stores"
+        parent="menu_opencart_root"
+        sequence="20"
+        action="action_opencart_store"/>
+
+</odoo>
