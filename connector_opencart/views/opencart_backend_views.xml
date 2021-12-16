@@ -102,7 +102,6 @@
     <record id="action_opencart_backend" model="ir.actions.act_window">
         <field name="name">Opencart Backends</field>
         <field name="res_model">opencart.backend</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_opencart_backend_tree"/>
     </record>
@@ -162,7 +161,6 @@
     <record id="action_opencart_store" model="ir.actions.act_window">
         <field name="name">Opencart Stores</field>
         <field name="res_model">opencart.store</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_opencart_store_tree"/>
     </record>

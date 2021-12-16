@@ -1,5 +1,4 @@
-# © 2019 Hibou Corp.
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# © 2019-2021 Hibou Corp.
 
 """
 
@@ -100,6 +99,8 @@ class OpencartImporter(AbstractComponent):
                     'Dependency import of %s(%s) has been ignored.',
                     binding_model._name, external_id
                 )
+            # Or the binding may not have its external_id set if you raise an exception.
+            self.env['base'].flush()
             return True
         if binding_model == 'opencart.product.template' and record.backend_id.so_require_product_setup:
             # Though this is not the "right" place to do this,
