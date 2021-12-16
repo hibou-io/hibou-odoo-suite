@@ -1,8 +1,6 @@
-# © 2019 Hibou Corp.
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# © 2019-2021 Hibou Corp.
 
 from odoo import api, models, fields
-from odoo.addons.queue_job.job import job, related_action
 
 
 class OpencartBinding(models.AbstractModel):
@@ -27,8 +25,6 @@ class OpencartBinding(models.AbstractModel):
         ('opencart_uniq', 'unique(backend_id, external_id)', 'A binding already exists for this Opencart ID.'),
     ]
 
-    @job(default_channel='root.opencart')
-    @related_action(action='related_action_opencart_link')
     @api.model
     def import_batch(self, backend, filters=None):
         """ Prepare the import of records modified on Opencart """
@@ -38,8 +34,6 @@ class OpencartBinding(models.AbstractModel):
             importer = work.component(usage='batch.importer')
             return importer.run(filters=filters)
 
-    @job(default_channel='root.opencart')
-    @related_action(action='related_action_opencart_link')
     @api.model
     def import_record(self, backend, external_id, force=False):
         """ Import a Opencart record """

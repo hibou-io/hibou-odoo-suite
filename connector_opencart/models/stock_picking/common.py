@@ -1,8 +1,6 @@
-# © 2019 Hibou Corp.
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# © 2019-2021 Hibou Corp.
 
 from odoo import api, models, fields, _
-from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import RetryableJobError
 
@@ -21,9 +19,6 @@ class OpencartStockPicking(models.Model):
                                        string='Opencart Sale Order',
                                        ondelete='set null')
 
-    @job(default_channel='root.opencart')
-    @related_action(action='related_action_unwrap_binding')
-    @api.multi
     def export_picking_done(self):
         """ Export a complete or partial delivery order. """
         self.ensure_one()

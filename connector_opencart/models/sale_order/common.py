@@ -1,11 +1,9 @@
-# © 2019 Hibou Corp.
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# © 2019-2021 Hibou Corp.
 
 import odoo.addons.decimal_precision as dp
 
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import RetryableJobError
 
@@ -32,7 +30,6 @@ class OpencartSaleOrder(models.Model):
         digits=dp.get_precision('Account')
     )
 
-    @job(default_channel='root.opencart')
     @api.model
     def import_batch(self, backend, filters=None):
         """ Prepare the import of Sales Orders from Opencart """

@@ -1,5 +1,4 @@
-# © 2019 Hibou Corp.
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# © 2019-2021 Hibou Corp.
 
 
 from logging import getLogger
@@ -8,7 +7,6 @@ from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.addons.connector.models.checkpoint import add_checkpoint
 from ...components.api.opencart import Opencart
 
 _logger = getLogger(__name__)
@@ -97,7 +95,6 @@ class OpencartBackend(models.Model):
             backend.scheduler_order_import_running = bool(sched_action.active)
 
     @contextmanager
-    @api.multi
     def work_on(self, model_name, **kwargs):
         self.ensure_one()
         opencart_api = Opencart(self.base_url, self.restadmin_token)
@@ -105,28 +102,27 @@ class OpencartBackend(models.Model):
         with _super.work_on(model_name, opencart_api=opencart_api, **kwargs) as work:
             yield work
 
-    @api.multi
     def add_checkpoint(self, record):
         self.ensure_one()
         record.ensure_one()
-        return add_checkpoint(self.env, record._name, record.id,
-                              self._name, self.id)
+        user = self.env.user
+        if 'user_id' in record and record.user_id:
+            user = record.user_id
+        if 'odoo_id' in record:
+            return record.odoo_id.activity_schedule(
+                act_type_xmlid='connector_opencart.checkpoint',
+                user_id=user.id)
+        return record.activity_schedule(
+            act_type_xmlid='connector_opencart.checkpoint',
+            user_id=user.id)
 
-    @api.multi
     def find_checkpoint(self, record):
         self.ensure_one()
         record.ensure_one()
-        checkpoint_model = self.env['connector.checkpoint']
-        model_model = self.env['ir.model']
-        model = model_model.search([('model', '=', record._name)], limit=1)
-        return checkpoint_model.search([
-            ('backend_id', '=', '%s,%s' % (self._name, self.id)),
-            ('model_id', '=', model.id),
-            ('record_id', '=', record.id),
-            ('state', '=', 'need_review'),
-        ], limit=1)
+        if 'odoo_id' in record:
+            return record.odoo_id.activity_search(act_type_xmlids='connector_opencart.checkpoint')
+        return record.activity_search(act_type_xmlids='connector_opencart.checkpoint')
 
-    @api.multi
     def synchronize_metadata(self):
         try:
             for backend in self:
@@ -148,12 +144,10 @@ class OpencartBackend(models.Model):
         ])
         return backends.import_sale_orders()
 
-    @api.multi
     def import_sale_orders(self):
         self._import_sale_orders_after_date()
         return True
 
-    @api.multi
     def _import_after_id(self, model_name, after_id_field):
         for backend in self:
             after_id = backend[after_id_field]
@@ -162,7 +156,6 @@ class OpencartBackend(models.Model):
                 filters={'after_id': after_id}
             )
 
-    @api.multi
     def _import_sale_orders_after_date(self):
         for backend in self:
             date = backend.date_to_opencart(backend.import_orders_after_date)
