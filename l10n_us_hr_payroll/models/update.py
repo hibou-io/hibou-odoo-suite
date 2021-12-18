@@ -1,7 +1,7 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
 import datetime
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class PublisherWarrantyContract(models.AbstractModel):
@@ -24,3 +24,9 @@ class PublisherWarrantyContract(models.AbstractModel):
         except:
             pass
         return modules
+    
+    @api.model
+    def hibou_payroll_modules_to_update(self):
+        res = super().hibou_payroll_modules_to_update()
+        res.append('l10n_us_hr_payroll')
+        return res
