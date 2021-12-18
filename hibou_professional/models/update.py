@@ -42,8 +42,8 @@ class PublisherWarrantyContract(models.AbstractModel):
         allow_message = get_param('database.hibou_allow_message')
 
         return {
-            'expiration_date': get_param('database.hibou_professional_expiration_date'),
-            'expiration_reason': get_param('database.hibou_professional_expiration_reason'),
+            'expiration_date': expiration_date,
+            'expiration_reason': expiration_reason,
             'expiring': expiring,
             'expired': expired,
             'professional_code': get_param('database.hibou_professional_code'),
