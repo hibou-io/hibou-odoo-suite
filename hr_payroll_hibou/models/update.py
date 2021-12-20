@@ -1,4 +1,5 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 import requests
 import json
 
@@ -14,11 +15,12 @@ class HRPayrollPublisherUpdate(models.Model):
     def _default_request_modules(self):
         request_modules = self.env.context.get('default_request_modules')
         if not request_modules:
-            request_modules = '\n'.join(self.env['publisher_warranty.contract'].hibou_payroll_modules_installed())
+            request_modules = '\n'.join(self.env['publisher_warranty.contract'].hibou_payroll_modules_to_update())
         return request_modules
     
     state = fields.Selection([
         ('draft', 'Draft'),
+        ('result', 'Result'),
         ('done', 'Done'),
         ('error', 'Error'),
     ], default='draft')
@@ -28,7 +30,15 @@ class HRPayrollPublisherUpdate(models.Model):
     result = fields.Text(readonly=True)
     parameter_codes_retrieved = fields.Text(readonly=True)
     parameter_codes_missing = fields.Text(readonly=True)
-    error = fields.Text()
+    error = fields.Text(readonly=True)
+    
+    @api.model
+    def cron_payroll_update(self):
+        update = self.create({})
+        if update.request_modules:
+            update.button_send()
+        else:
+            update.unlink()
     
     def button_send(self):
         self.ensure_one()
@@ -50,6 +60,13 @@ class HRPayrollPublisherUpdate(models.Model):
         self.write({
             'state': 'error',
             'error': message,
+        })
+    
+    def set_result(self, result):
+        self.write({
+            'state': 'result',
+            'result': result,
+            'error': False,
         })
     
     def button_process_result(self):
@@ -90,7 +107,7 @@ class HRPayrollPublisherUpdate(models.Model):
             self.write({
                 'state': 'done',
                 'error': '',
-                'parameter_codes_retrieved': '\n'.join(c for c, p in parameter_map.items() if p),
+                'parameter_codes_retrieved': '\n'.join(c for c, p in parameter_map.items()),
                 'parameter_codes_missing': '\n'.join(c for c, p in parameter_map.items() if not p),
             })
         except Exception as e:
@@ -119,13 +136,15 @@ class PublisherWarrantyContract(models.AbstractModel):
             raise UserError('Hibou Professional Subscription Missing, please setup your subscription.')
         
         if self.env.context.get('test_payroll_update_result'):
-            update_request.result = self.env.context.get('dummy_payroll_update_result')
+            update_request.set_result(self.env.context.get('test_payroll_update_result'))
             return
         
-        # TODO REMOVE
-        raise Exception('TESTS')
         try:
-            update_request.result = self._hibou_payroll_update(update_request.request_modules)
+            res = self._hibou_payroll_update(update_request.request_modules)
+            if res.get('error'):
+                update_request.set_error_state(str(res.get('error')))
+            else:
+                update_request.set_result(json.dumps(res))
         except Exception as e:
             update_request.set_error_state(str(e))
         
