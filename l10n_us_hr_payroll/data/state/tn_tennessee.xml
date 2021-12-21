@@ -6,13 +6,11 @@
         <field name="code">us_tn_suta_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <record id="rule_parameter_us_tn_suta_wage_base_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">7000.00</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_tn_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_tn_suta_wage_base_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">7000.00</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_tn_suta_wage_base"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Rate -->
     <record id="rule_parameter_us_tn_suta_rate" model="hr.rule.parameter">
