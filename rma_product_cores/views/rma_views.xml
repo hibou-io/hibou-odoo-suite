@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- RMA -->
+    <record id="view_rma_rma_form_product_cores" model="ir.ui.view">
+        <field name="name">rma.rma.form.product_cores</field>
+        <field name="model">rma.rma</field>
+        <field name="inherit_id" ref="rma.view_rma_rma_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='template_id']" position="after">
+                <br/>
+                <button string="Add lines" type="object" name="action_add_product_core_lines" attrs="{'invisible': ['|', ('template_usage', 'not in', ('product_core_sale')), ('state', '!=', 'draft')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
