@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="rule_parameter_ca_fed_tax_rate" model="hr.rule.parameter">
+        <field name="name">CA Federal Tax Rate</field>
+        <field name="code">ca_fed_tax_rate</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+
+    <data noupdate="1">
+        <record id="rule_parameter_ca_fed_tax_rate_2021_01" model="hr.rule.parameter.value">
+            <field name="parameter_value">[
+                (      0, 0.1500,      0.00),
+                (  49020, 0.2050,   2696.00),
+                (  98040, 0.2600,   8088.00),
+                ( 151978, 0.2900,  12648.00),
+                ( 216511, 0.3300,  21308.00),
+                (  'inf', 0.3300,  21308.00),
+            ]</field>
+            <field name="rule_parameter_id" ref="rule_parameter_ca_fed_tax_rate"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
+    </data>
+
+    <record id="res_partner_ca_fed" model="res.partner">
+        <field name="name">CA Federal - Canada Revenue Agency - Federal Income Tax</field>
+    </record>
+
+    <!-- Categories -->
+    <record id="hr_payroll_category_ee_fed_cpp" model="hr.salary.rule.category">
+        <field name="name">EE: Canada Pension Plan</field>
+        <field name="code">EE_CA_CPP</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_category_ee_fed_ei" model="hr.salary.rule.category">
+        <field name="name">EE: CA Employment Insurance</field>
+        <field name="code">EE_CA_EI</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_category_ee_fed_fit" model="hr.salary.rule.category">
+        <field name="name">EE: Federal Income Tax Withholding</field>
+        <field name="code">EE_CA_FIT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <!-- Rules -->
+    <record id="hr_payroll_rule_ee_fed_cpp" model="hr.salary.rule">
+        <field name="sequence" eval="181"/>
+        <field name="struct_id" ref="hr_ca_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_fed_cpp"/>
+        <field name="name">EE: Canada Pension Plan</field>
+        <field name="code">EE_CA_CPP</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = ca_cpp(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = ca_cpp(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_ca_fed"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_fed_ei" model="hr.salary.rule">
+        <field name="sequence" eval="186"/>
+        <field name="struct_id" ref="hr_ca_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_fed_ei"/>
+        <field name="name">EE: CA Employment Insurance</field>
+        <field name="code">EE_CA_EI</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = ca_ei(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = ca_ei(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_ca_fed"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+    <record id="hr_payroll_rule_ee_fed_fit" model="hr.salary.rule">
+        <field name="sequence" eval="195"/>
+        <field name="struct_id" ref="hr_ca_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_fed_fit"/>
+        <field name="name">EE: CA Federal Income Tax</field>
+        <field name="code">EE_CA_FIT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = ca_fit_federal_income_tax_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = ca_fit_federal_income_tax_withholding(payslip, categories, worked_days, inputs)</field>
+        <field name="partner_id" ref="res_partner_ca_fed"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>
