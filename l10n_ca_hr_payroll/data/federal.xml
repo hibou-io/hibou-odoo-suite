@@ -6,43 +6,189 @@
         <field name="code">ca_fed_tax_rate</field>
         <field name="country_id" ref="base.ca"/>
     </record>
+    <record id="rule_parameter_ca_fed_tax_rate_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+            (      0, 0.1500,      0.00),
+            (  49020, 0.2050,   2696.00),
+            (  98040, 0.2600,   8088.00),
+            ( 151978, 0.2900,  12648.00),
+            ( 216511, 0.3300,  21308.00),
+            (  'inf', 0.3300,  21308.00),
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_tax_rate"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
 
-    <data noupdate="1">
-        <record id="rule_parameter_ca_fed_tax_rate_2021_01" model="hr.rule.parameter.value">
-            <field name="parameter_value">[
-                (      0, 0.1500,      0.00),
-                (  49020, 0.2050,   2696.00),
-                (  98040, 0.2600,   8088.00),
-                ( 151978, 0.2900,  12648.00),
-                ( 216511, 0.3300,  21308.00),
-                (  'inf', 0.3300,  21308.00),
-            ]</field>
-            <field name="rule_parameter_id" ref="rule_parameter_ca_fed_tax_rate"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_ca_fed_k1" model="hr.rule.parameter">
+        <field name="name">CA Federal Personal Tax Credit Rate (K1)</field>
+        <field name="code">ca_fed_k1</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_fed_k1_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.15</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_k1"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
 
+    <record id="rule_parameter_ca_fed_k2" model="hr.rule.parameter">
+        <field name="name">CA Federal Pension &amp; EI Credit Rate (K1)</field>
+        <field name="code">ca_fed_k2</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_fed_k2_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.15</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_k2"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ca_fed_k2_pc_max" model="hr.rule.parameter">
+        <field name="name">CA Federal Pension Credit Maximum (K2)</field>
+        <field name="code">ca_fed_k2_pc_max</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_fed_k2_pc_max_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">3166.45</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_k2_pc_max"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ca_fed_k2_pei_max" model="hr.rule.parameter">
+        <field name="name">CA Federal Pension Credit Maximum (K2)</field>
+        <field name="code">ca_fed_k2_pei_max</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_fed_k2_pei_max_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">889.54</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_k2_pei_max"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ca_fed_k2q_pc_max" model="hr.rule.parameter">
+        <field name="name">CA Quebec Federal Pension Credit Maximum (K2Q)</field>
+        <field name="code">ca_fed_k2q_pc_max</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_fed_k2q_pc_max_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">3427.90</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_k2q_pc_max"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ca_fed_k2q_pei_max" model="hr.rule.parameter">
+        <field name="name">CA Quebec Federal Pension Credit Maximum (K2Q)</field>
+        <field name="code">ca_fed_k2q_pei_max</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_fed_k2q_pei_max_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">664.34</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_k2q_pei_max"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ca_fed_k2q_pie" model="hr.rule.parameter">
+        <field name="name">CA Quebec Insurable Earnings Credit Rate (K2Q)</field>
+        <field name="code">ca_fed_k2q_pie</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_fed_k2q_pie_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.00494</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_k2q_pie"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ca_fed_k2q_pie_max" model="hr.rule.parameter">
+        <field name="name">CA Quebec Insurable Earnings Credit Maximum (K2Q)</field>
+        <field name="code">ca_fed_k2q_pie_max</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_fed_k2q_pie_max_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">412.49</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_k2q_pie_max"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ca_fed_k4" model="hr.rule.parameter">
+        <field name="name">CA Nonrefundable Tax Credit Rate (K4)</field>
+        <field name="code">ca_fed_k4</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_fed_k4_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.15</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_k4"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+
+    <record id="rule_parameter_ca_fed_k4" model="hr.rule.parameter">
+        <field name="name">CA Employment Amount Rate (K4)</field>
+        <field name="code">ca_fed_k4</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_fed_k4_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.15</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_k4"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ca_fed_cea" model="hr.rule.parameter">
+        <field name="name">CA Employment Amount (CEA)</field>
+        <field name="code">ca_fed_cea</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_fed_cea_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">1257.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_cea"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ca_fed_lcf_max" model="hr.rule.parameter">
+        <field name="name">CA LCF Max</field>
+        <field name="code">ca_fed_lcf_max</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_fed_lcf_max_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">750.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_lcf_max"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ca_fed_lcf_rate" model="hr.rule.parameter">
+        <field name="name">CA LCF Rate</field>
+        <field name="code">ca_fed_lcf_rate</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_fed_lcf_rate_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">15.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_lcf_rate"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ca_fed_t1q" model="hr.rule.parameter">
+        <field name="name">CA T1 Quebec Rate</field>
+        <field name="code">ca_fed_t1q</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_fed_t1q_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.165</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_t1q"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ca_fed_t1_outside" model="hr.rule.parameter">
+        <field name="name">CA T1 Outside Rate</field>
+        <field name="code">ca_fed_t1_outside</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_fed_t1_outside_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.48</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_t1_outside"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+
+    <!-- Partner -->
     <record id="res_partner_ca_fed" model="res.partner">
         <field name="name">CA Federal - Canada Revenue Agency - Federal Income Tax</field>
-    </record>
-
-    <!-- Categories -->
-    <record id="hr_payroll_category_ee_fed_cpp" model="hr.salary.rule.category">
-        <field name="name">EE: Canada Pension Plan</field>
-        <field name="code">EE_CA_CPP</field>
-        <field name="parent_id" ref="hr_payroll.DED"/>
-    </record>
-
-    <record id="hr_payroll_category_ee_fed_ei" model="hr.salary.rule.category">
-        <field name="name">EE: CA Employment Insurance</field>
-        <field name="code">EE_CA_EI</field>
-        <field name="parent_id" ref="hr_payroll.DED"/>
-    </record>
-
-    <record id="hr_payroll_category_ee_fed_fit" model="hr.salary.rule.category">
-        <field name="name">EE: Federal Income Tax Withholding</field>
-        <field name="code">EE_CA_FIT</field>
-        <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
 
     <!-- Rules -->

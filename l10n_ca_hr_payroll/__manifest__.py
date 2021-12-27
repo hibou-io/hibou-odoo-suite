@@ -17,6 +17,7 @@ Canada - Payroll Rules.
     'data': [
         'security/ir.model.access.csv',
         'data/base.xml',
+        'data/ded.xml',
         'data/federal.xml',
         'data/ca_cpp.xml',
         # 'views/hr_contract_views.xml',

@@ -74,8 +74,12 @@ class HRContractCanadaPayrollConfig(models.Model):
     # fed_td1_6_disability_amount = fields.Float()
     # fed_td1_7_spouse_amount = fields.Float()
     # fed_td1_8_dependant_amount = fields.Float()
+    
+    
     fed_td1_total_claim_amount = fields.Float()
     fed_td1_deduction_prescribed_zone = fields.Float()
     fed_td1_additional = fields.Float()
+    
     is_cpp_exempt = fields.Boolean()
     is_ei_exempt = fields.Boolean()
+    is_outside_ca = fields.Boolean(string='Outside Canada or beyond limits of province/territory')
