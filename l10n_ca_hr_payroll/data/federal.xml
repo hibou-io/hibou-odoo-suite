@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
-    <record id="rule_parameter_ca_fed_tax_rate" model="hr.rule.parameter">
-        <field name="name">CA Federal Tax Rate</field>
-        <field name="code">ca_fed_tax_rate</field>
-        <field name="country_id" ref="base.ca"/>
-    </record>
-    <record id="rule_parameter_ca_fed_tax_rate_2021_01" model="hr.rule.parameter.value">
-        <field name="parameter_value">[
-            (      0, 0.1500,      0.00),
-            (  49020, 0.2050,   2696.00),
-            (  98040, 0.2600,   8088.00),
-            ( 151978, 0.2900,  12648.00),
-            ( 216511, 0.3300,  21308.00),
-            (  'inf', 0.3300,  21308.00),
-        ]</field>
-        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_tax_rate"/>
-        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-    </record>
-
     <record id="rule_parameter_ca_fed_k1" model="hr.rule.parameter">
         <field name="name">CA Federal Personal Tax Credit Rate (K1)</field>
         <field name="code">ca_fed_k1</field>
@@ -127,17 +109,6 @@
     <record id="rule_parameter_ca_fed_k4_2021_01" model="hr.rule.parameter.value">
         <field name="parameter_value">0.15</field>
         <field name="rule_parameter_id" ref="rule_parameter_ca_fed_k4"/>
-        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-    </record>
-
-    <record id="rule_parameter_ca_fed_cea" model="hr.rule.parameter">
-        <field name="name">CA Employment Amount (CEA)</field>
-        <field name="code">ca_fed_cea</field>
-        <field name="country_id" ref="base.ca"/>
-    </record>
-    <record id="rule_parameter_ca_fed_cea_2021_01" model="hr.rule.parameter.value">
-        <field name="parameter_value">1257.0</field>
-        <field name="rule_parameter_id" ref="rule_parameter_ca_fed_cea"/>
         <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
     </record>
 

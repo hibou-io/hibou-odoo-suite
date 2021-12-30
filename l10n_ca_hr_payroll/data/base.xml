@@ -49,6 +49,152 @@
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
 
+    <!-- Parameter Values from Canada Files -->
+    <record id="rule_parameter_ca_rates" model="hr.rule.parameter">
+        <field name="name">CA Rates</field>
+        <field name="code">ca_rates</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_rates_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">{'AB': {'A': [0.0, 131220.0, 157464.0, 209952.0, 314928.0],
+        'KP': [0.0, 2624.0, 4199.0, 6299.0, 9448.0],
+        'V': [0.1, 0.12, 0.13, 0.14, 0.15]},
+ 'BC': {'A': [0.0, 42184.0, 84369.0, 96866.0, 117623.0, 159483.0, 222420.0],
+        'KP': [0.0, 1114.0, 3476.0, 5210.0, 8045.0, 11394.0, 19623.0],
+        'V': [0.0506, 0.077, 0.105, 0.1229, 0.147, 0.168, 0.205]},
+ 'Federal': {'A': [0.0, 49020.0, 98040.0, 151978.0, 216511.0],
+             'K': [0.0, 2696.0, 8088.0, 12648.0, 21308.0],
+             'R': [0.15, 0.205, 0.26, 0.29, 0.33]},
+ 'MB': {'A': [0.0, 33723.0, 72885.0],
+        'KP': [0.0, 658.0, 4047.0],
+        'V': [0.108, 0.1275, 0.174]},
+ 'NB': {'A': [0.0, 43835.0, 87671.0, 142534.0, 162383.0],
+        'KP': [0.0, 2253.0, 3744.0, 5625.0, 9620.0],
+        'V': [0.0968, 0.1482, 0.1652, 0.1784, 0.203]},
+ 'NL': {'A': [0.0, 38081.0, 76161.0, 135973.0, 190363.0],
+        'KP': [0.0, 2209.0, 3199.0, 5238.0, 7142.0],
+        'V': [0.087, 0.145, 0.158, 0.173, 0.183]},
+ 'NS': {'A': [0.0, 29590.0, 59180.0, 93000.0, 150000.0],
+        'KP': [0.0, 1823.0, 2841.0, 3613.0, 8863.0],
+        'V': [0.0879, 0.1495, 0.1667, 0.175, 0.21]},
+ 'NT': {'A': [0.0, 44396.0, 88796.0, 144362.0],
+        'KP0': [0.0, 1199.0, 4395.0, 7066.0],
+        'V': [0.059, 0.086, 0.122, 0.1405]},
+ 'NU': {'A': [0.0, 46740.0, 93480.0, 151978.0],
+        'KP': [0.0, 1402.0, 3272.0, 7071.0],
+        'V': [0.04, 0.07, 0.09, 0.115]},
+ 'ON': {'A': [0.0, 45142.0, 90287.0, 150000.0, 220000.0],
+        'KP': [0.0, 1851.0, 3666.0, 5166.0, 7366.0],
+        'V': [0.0505, 0.0915, 0.1116, 0.1216, 0.1316]},
+ 'PE': {'A': [0.0, 31984.0, 63969.0],
+        'KP': [0.0, 1279.0, 3134.0],
+        'V': [0.098, 0.138, 0.167]},
+ 'SK': {'A': [0.0, 45677.0, 130506.0],
+        'KP': [0.0, 914.0, 3524.0],
+        'V': [0.105, 0.125, 0.145]},
+ 'YT': {'A': [0.0, 49020.0, 98040.0, 151978.0, 500000.0],
+        'KP': [0.0, 1275.0, 3137.0, 6025.0, 17025.0],
+        'V': [0.064, 0.09, 0.109, 0.128, 0.15]}}</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_rates"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ca_rates_other" model="hr.rule.parameter">
+        <field name="name">CA Rates Other</field>
+        <field name="code">ca_rates_other</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_rates_other_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">{'AB': {'Basic amount': 19369.0},
+ 'BC': {'Basic amount': 11070.0,
+        'Index rate': 0.011,
+        'LCP amount': 2000.0,
+        'LCP rate': 0.15,
+        'S': 481.0},
+ 'Federal': {'Basic amount': 'BPAF',
+             'CEA': 1257.0,
+             'Index rate': 0.01,
+             'LCP amount': 750.0,
+             'LCP rate': 0.15},
+ 'MB': {'Basic amount': 9936.0, 'Index rate': 0.01},
+ 'NB': {'Basic amount': 10564.0,
+        'Index rate': 0.01,
+        'LCP amount': 2000.0,
+        'LCP rate': 0.2},
+ 'NL': {'Basic amount': 9536.0,
+        'Index rate': 0.004,
+        'LCP amount': 2000.0,
+        'LCP rate': 0.2},
+ 'NS': {'Basic amount': 'BPANS', 'LCP amount': 2000.0, 'LCP rate': 0.2},
+ 'NT': {'Basic amount': 15243.0, 'Index rate': 0.01},
+ 'NU': {'Basic amount': 16467.0, 'Index rate': 0.01},
+ 'ON': {'Basic amount': 10880.0,
+        'Index rate': 0.009,
+        'S': 251.0,
+        'T4 to V1': [0.0, 4874.0, 6237.0],
+        'V1 rate': [0.0, 0.2, 0.36]},
+ 'Outside Canada': {'Surtax': 0.48},
+ 'PE': {'Basic amount': 10500.0,
+        'T4 to V1': [0.0, 12500.0],
+        'V1 rate': [0.0, 0.1]},
+ 'QC': {'Abatement': 0.165},
+ 'SK': {'Basic amount': 16225.0,
+        'Index rate': 0.01,
+        'LCP amount': 875.0,
+        'LCP rate': 0.175},
+ 'YT': {'Basic amount': 'BPAYT',
+        'CEA': 1245.0,
+        'Index rate': 0.01,
+        'LCP amount': 1250.0,
+        'LCP rate': 0.25}}</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_rates_other"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ca_rates_cpp" model="hr.rule.parameter">
+        <field name="name">CA Rates CPP</field>
+        <field name="code">ca_rates_cpp</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_rates_cpp_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">{'CPP (Canada except QC)': {'Basic Exemption': 3500.0,
+                            'Employee contribution rate': 0.0545,
+                            'Employee max contribution': 3166.45,
+                            'Max contributory earnings': 58100.0,
+                            'Self-employed max contribution': 6332.9,
+                            'YMPE': 61600.0,
+                            'YMPE before rounding': 61647.97},
+ 'QPP (QC)': {'Basic Exemption': 3500.0,
+              'Employee contribution rate': 0.059,
+              'Employee max contribution': 3427.9,
+              'Max contributory earnings': 58100.0,
+              'Self-employed max contribution': 6855.8,
+              'YMPE': 61600.0,
+              'YMPE before rounding': 61647.97}}</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_rates_cpp"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ca_rates_ei" model="hr.rule.parameter">
+        <field name="name">CA Rates EI</field>
+        <field name="code">ca_rates_ei</field>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+    <record id="rule_parameter_ca_rates_ei_2021_01" model="hr.rule.parameter.value">
+        <field name="parameter_value">{'Canada except QC': {'Annual max employee premium': 889.54,
+                      'Annual max employer premium': 1245.36,
+                      'Annual max insurable earnings': 563.0,
+                      'Employee contribution rate': 0.0158,
+                      'Employer contribution rate': 0.02212},
+ 'QC': {'Annual max employee premium': 664.34,
+        'Annual max employer premium': 930.08,
+        'Annual max insurable earnings': 563.0,
+        'Employee contribution rate': 0.0118,
+        'Employer contribution rate': 0.01652}}</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ca_rates_ei"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
     <!-- Included in Gross Remuneration -->
 
 <!--    <record id="hr_payroll_category_basic_ca_salary" model="hr.salary.rule.category">-->

@@ -62,7 +62,7 @@ def ca_fit_k3_other_tax_credits(payslip, categories, worked_days, inputs):
 def ca_fit_k4_non_refunable_tax_credit(payslip, categories, worked_days, inputs):
     k4 = payslip.rule_parameter('ca_fed_k4')
     A = _compute_annual_taxable_income(payslip, categories)
-    cea = payslip.rule_parameter('ca_fed_cea')
+    cea = payslip.rule_parameter('ca_rates_other')['Federal']['CEA']
     return min(k4 * A, k4 * cea)
 
 def ca_fit_t3_annual_basic_federal_tax(payslip, categories, worked_days, inputs):    
@@ -72,12 +72,14 @@ def ca_fit_t3_annual_basic_federal_tax(payslip, categories, worked_days, inputs)
     If the result is negative, T3 = $0.
     """
     A = _compute_annual_taxable_income(payslip, categories)
-    rates = payslip.rule_parameter('ca_fed_tax_rate')
-    for annual_taxable_income, rate, federal_constant in rates:
-        annual_taxable_income = float(annual_taxable_income)
-        if A < annual_taxable_income:
+    rates = payslip.rule_parameter('ca_rates')['Federal']
+    # old style loop to peek into next values
+    rates_len = len(rates['A'])
+    for i in range(rates_len):
+        R = rates['R'][i]
+        K = rates['K'][i]
+        if (i + 1) < rates_len and A < rates['A'][i+1]:
             break
-        R, K = rate, federal_constant
     
     T3 = (R * A) - K
     T3 -= ca_fit_k1_personal_tax_credit(payslip, categories, worked_days, inputs)
@@ -97,7 +99,7 @@ def ca_fit_t1_federal_income_tax_payable(payslip, categories, worked_days, input
     amount_deducted_stock = 0.0
     # amount deducted or withheld during the year for the acquisition by the employee of approved shares of the capital stock of a prescribed labour-sponsored venture capital corporation
     # this amount could be a category, but it would need to be year to date.
-    LCF = min(750.0, 0.15 * amount_deducted_stock)  # 0.0 => amount deducted or withheld during the year for the acquisition by the employee of approved shares of the capital stock of a prescribed labour-sponsored venture capital corporation
+    LCF = min(750.0, 0.15 * amount_deducted_stock)  # 0.0 => because we hardcoded amount above, so the constants don't matter
     
     if _state_applies(payslip, 'QC'):
         t1q = payslip.rule_parameter('ca_fed_t1q')
