@@ -35,3 +35,9 @@
 [submodule "external/hibou-oca/bank-payment"]
 	path = external/hibou-oca/bank-payment
 	url = https://github.com/hibou-io/oca-bank-payment.git
+[submodule "external/hibou-oca/connector-magento"]
+	path = external/hibou-oca/connector-magento
+	url = https://github.com/hibou-io/oca-connector-magento.git
+[submodule "external/hibou-oca/product-attribute"]
+	path = external/hibou-oca/product-attribute
+	url = https://github.com/hibou-io/oca-product-attribute.git
