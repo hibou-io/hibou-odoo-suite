@@ -181,12 +181,12 @@ class RMA(models.Model):
                         else:
                             qty_remaining = 0
                         sale_line.with_context(rma_done=True).write({'product_uom_qty': sale_line_qty})
-                        sale_orders += sale_line.order_id
+                        sale_orders |= sale_line.order_id
                     if qty_remaining:
                         warnings.append((rma, rma.sale_order_id, rma_line, qty_remaining))
             # Try to invoice if we don't already have an invoice (e.g. from resetting to draft)
             if sale_orders and rma.template_id.invoice_done and not rma.invoice_ids:
-                rma.invoice_ids += rma._sale_invoice_done(sale_orders)
+                rma.invoice_ids |= rma._sale_invoice_done(sale_orders)
         if warnings:
             return {'warning': _('Could not reduce all ordered qty:\n %s' % '\n'.join(
                 ['%s %s %s : %s' % (w[0].name, w[1].name, w[2].product_id.display_name, w[3]) for w in warnings]))}
