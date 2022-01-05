@@ -15,6 +15,10 @@ class AccountReconcileModel(models.Model):
     """
     def _apply_rules(self, st_lines, excluded_ids=None, partner_map=None):
         ''' Apply criteria to get candidates for all reconciliation models.
+
+        This function is called in enterprise by the reconciliation widget to match
+        the statement lines with the available candidates (using the reconciliation models).
+
         :param st_lines:        Account.bank.statement.lines recordset.
         :param excluded_ids:    Account.move.lines to exclude.
         :param partner_map:     Dict mapping each line with new partner eventually.
