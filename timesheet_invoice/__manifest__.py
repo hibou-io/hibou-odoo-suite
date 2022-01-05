@@ -1,6 +1,6 @@
 {
     'name': 'Timesheet Invoice',
-    'version': '14.0.1.0.0',
+    'version': '15.0.1.0.0',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'website': 'https://hibou.io/',
     'license': 'AGPL-3',
