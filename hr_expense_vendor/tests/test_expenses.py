@@ -31,7 +31,11 @@ class TestCheckVendor(TestExpenseCommon):
         expense = expense_form.save()
 
         action_submit_expenses = expense.action_submit_expenses()
-        expense_sheet = self.env[action_submit_expenses['res_model']].browse(action_submit_expenses['res_id'])
+        expense_sheet_form = Form(self.env[action_submit_expenses['res_model']].with_context(**action_submit_expenses.get('context', {})))
+        expense_sheet = expense_sheet_form.save()
+        
+        self.assertEqual(expense_sheet.state, 'draft', 'Expense is not in Draft state')
+        expense_sheet.action_submit_sheet()
 
         self.assertEqual(expense_sheet.state, 'submit', 'Expense is not in Submitted state')
         # Approve
