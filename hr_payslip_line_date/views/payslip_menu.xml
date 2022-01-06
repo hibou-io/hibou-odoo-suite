@@ -2,14 +2,15 @@
 
 <odoo>
     
-    <act_window id="action_payslip"
-                name="Payslip List"
-                res_model="hr.payslip.line"
-                view_mode="tree,pivot" />
+    <record id="action_payslip_lines" model="ir.actions.act_window">
+        <field name="name">Payslip Lines</field>
+        <field name="res_model">hr.payslip.line</field>
+        <field name="view_mode">tree,pivot</field>
+    </record>
     
     <menuitem id="payslip_reporting_view"
               name="Payslip Lines"
               parent="hr_payroll.menu_hr_payroll_report"
-              action="action_payslip" />
+              action="action_payslip_lines" />
     
 </odoo>
