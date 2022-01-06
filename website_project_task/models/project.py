@@ -1,5 +1,5 @@
 from odoo import api, exceptions, fields, models, _
-from werkzeug.urls import url_encode
+
 
 class ProjectTask(models.Model):
     _name = 'project.task'
