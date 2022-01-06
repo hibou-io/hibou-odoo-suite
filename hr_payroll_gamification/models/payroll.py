@@ -1,32 +1,29 @@
-from odoo import api, fields, models
+from odoo import api, Command, fields, models
 
 
 class Payslip(models.Model):
     _inherit = 'hr.payslip'
-
-    @api.onchange('employee_id', 'struct_id', 'contract_id', 'date_from', 'date_to')
-    def _onchange_employee(self):
-        res = super()._onchange_employee()
-        if self.state == 'draft':
-            self._input_badges()
-        return res
-
-    def _input_badges(self):
+    
+    @api.depends('employee_id', 'contract_id', 'struct_id', 'date_from', 'date_to', 'struct_id')
+    def _compute_input_line_ids(self):
+        res = super()._compute_input_line_ids()
         badge_type = self.env.ref('hr_payroll_gamification.badge_other_input', raise_if_not_found=False)
         if not badge_type:
-            return
-
-        amount = self._get_input_badges()
-        if not amount:
-            return
-
-        lines_to_keep = self.input_line_ids.filtered(lambda x: x.input_type_id != badge_type)
-        input_lines_vals = [(5, 0, 0)] + [(4, line.id, False) for line in lines_to_keep]
-        input_lines_vals.append((0, 0, {
-            'amount': amount,
-            'input_type_id': badge_type,
-        }))
-        self.update({'input_line_ids': input_lines_vals})
+            return res
+        for slip in self:
+            amount = slip._get_input_badges()
+            if not amount:
+                continue
+            slip.update({
+                'input_line_ids': [
+                    Command.create({
+                        'name': badge_type.name or 'Badges',
+                        'amount': amount,
+                        'input_type_id': badge_type.id,
+                    }),
+                ],
+            })
+        return res
 
     def _get_input_badges(self):
         amount = 0.0

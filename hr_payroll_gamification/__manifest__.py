@@ -1,7 +1,7 @@
 {
     'name': 'Payroll Gamification',
     'description': 'Payroll Gamification',
-    'version': '13.0.1.0.1',
+    'version': '15.0.1.0.0',
     'website': 'https://hibou.io/',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'license': 'AGPL-3',
@@ -15,6 +15,6 @@
     ],
     'depends': [
         'hr_gamification',
-        'hr_payroll',
+        'hr_payroll_hibou',
     ],
 }

@@ -1,32 +1,19 @@
-from odoo.tests import common
+from odoo.addons.hr_payroll_hibou.tests import common
 from odoo import fields
 from datetime import date
 
 
-class TestPayroll(common.TransactionCase):
+class TestPayslip(common.TestPayslip):
 
     def setUp(self):
-        super(TestPayroll, self).setUp()
-        self.wage = 21.50
-        self.employee = self.env['hr.employee'].create({
-            'birthday': '1985-03-14',
-            'country_id': self.ref('base.us'),
-            'department_id': self.ref('hr.dep_rd'),
-            'gender': 'male',
-            'name': 'Jared',
-            'user_id': self.env.user.id,
-        })
-        self.contract = self.env['hr.contract'].create({
-            'name': 'test',
-            'employee_id': self.employee.id,
-            'type_id': self.ref('hr_contract.hr_contract_type_emp'),
-            'struct_id': self.ref('hr_payroll.structure_base'),
-            'resource_calendar_id': self.ref('resource.resource_calendar_std'),
-            'wage': self.wage,
-            'date_start': '2018-01-01',
-            'state': 'open',
-            'schedule_pay': 'monthly',
-        })
+        super(TestPayslip, self).setUp()
+        self.wage = 2000.00
+        self.structure = self.env.ref('hr_payroll.structure_002')
+        self.structure_type = self.structure.type_id
+        self.structure_type.wage_type = 'monthly'
+        self.employee = self._createEmployee()
+        self.employee.user_id = self.env.user
+        self.contract = self._createContract(self.employee, wage=self.wage)
 
     def test_badge_amounts(self):
         badge = self.env['gamification.badge'].create({
@@ -37,17 +24,13 @@ class TestPayroll(common.TransactionCase):
     def test_badge_payroll(self):
         additional_wage = 5.0
         additional_wage_period = 15.0
-        payslip = self.env['hr.payslip'].create({
-            'employee_id': self.employee.id,
-            'contract_id': self.contract.id,
-            'date_from': '2018-01-01',
-            'date_to': '2018-01-31',
-        })
-        self.assertEqual(payslip._get_input_badges(self.contract, date(2018, 1, 1), date(2018, 1, 31)), 0.0)
+        payslip = self._createPayslip(self.employee,
+                                      '2018-01-01',
+                                      '2018-01-31',
+                                      )
         payslip.compute_sheet()
-        basic = payslip.details_by_salary_rule_category.filtered(lambda l: l.code == 'GROSS')
-        self.assertTrue(basic)
-        self.assertEqual(basic.total, self.wage)
+        cats = self._getCategories(payslip)
+        self.assertEqual(cats['BASIC'], self.wage)
 
         badge = self.env['gamification.badge'].create({
             'name': 'test',
@@ -79,44 +62,25 @@ class TestPayroll(common.TransactionCase):
         self.assertEqual(self.employee.badge_ids, badge_user + badge_user_period)
 
         # Includes only one badge
-        payslip = self.env['hr.payslip'].create({
-            'employee_id': self.employee.id,
-            'date_from': '2018-01-01',
-            'date_to': '2018-01-31',
-        })
-        # This is crazy, but...
-        res = payslip.onchange_employee_id(date(2018, 1, 1), date(2018, 1, 31), employee_id=self.employee.id, contract_id=self.contract.id)
-        del res['value']['line_ids']
-        res['value']['input_line_ids'] = [(0, 0, l) for l in res['value']['input_line_ids']]
-        res['value']['worked_days_line_ids'] = [(0, 0, l) for l in res['value']['worked_days_line_ids']]
-        payslip.write(res['value'])
+        payslip = self._createPayslip(self.employee,
+                                      '2018-01-01',
+                                      '2018-01-31',)
         self.assertTrue(payslip.input_line_ids)
+        input_line = payslip.input_line_ids.filtered(lambda l: l.name == 'Badges')
+        self.assertTrue(input_line)
+        self.assertEqual(input_line.amount, additional_wage)
         payslip.compute_sheet()
+        cats = self._getCategories(payslip)
+        self.assertEqual(cats['BASIC'], self.wage + additional_wage)
 
-        self.assertEqual(payslip._get_input_badges(self.contract, date(2018, 1, 1), date(2018, 1, 31)), additional_wage)
-
-        basic = payslip.details_by_salary_rule_category.filtered(lambda l: l.code == 'GROSS')
-        self.assertTrue(basic)
-        self.assertEqual(basic.total, self.wage + additional_wage)
-
+         
         # Include both Badges
-        payslip = self.env['hr.payslip'].create({
-            'employee_id': self.employee.id,
-            'date_from': '2018-02-01',
-            'date_to': '2018-02-25',  # Feb...
-        })
-        # This is crazy, but...
-        res = payslip.onchange_employee_id(date(2018, 2, 1), date(2018, 2, 25), employee_id=self.employee.id,
-                                           contract_id=self.contract.id)
-        del res['value']['line_ids']
-        res['value']['input_line_ids'] = [(0, 0, l) for l in res['value']['input_line_ids']]
-        res['value']['worked_days_line_ids'] = [(0, 0, l) for l in res['value']['worked_days_line_ids']]
-        payslip.write(res['value'])
-        self.assertTrue(payslip.input_line_ids)
+        payslip = self._createPayslip(self.employee,
+                                '2018-02-01',
+                                '2018-02-25',)
+        input_line = payslip.input_line_ids.filtered(lambda l: l.name == 'Badges')
+        self.assertTrue(input_line)
+        self.assertEqual(input_line.amount, additional_wage + additional_wage_period)
         payslip.compute_sheet()
-
-        self.assertEqual(payslip._get_input_badges(self.contract, date(2018, 2, 1), date(2018, 2, 25)), additional_wage + additional_wage_period)
-
-        basic = payslip.details_by_salary_rule_category.filtered(lambda l: l.code == 'GROSS')
-        self.assertTrue(basic)
-        self.assertEqual(basic.total, self.wage + additional_wage + additional_wage_period)
+        cats = self._getCategories(payslip)
+        self.assertEqual(cats['BASIC'], self.wage + additional_wage + additional_wage_period)
