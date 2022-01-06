@@ -12,6 +12,7 @@ class TestRMA(common.TransactionCase):
     def setUp(self):
         super(TestRMA, self).setUp()
         self.product1 = self.env.ref('product.product_product_24')
+        self.product2 = self.env.ref('product.product_product_25')
         self.template_missing = self.env.ref('rma.template_missing_item')
         self.template_return = self.env.ref('rma.template_picking_return')
         self.template_rtv = self.env.ref('rma.template_rtv')
