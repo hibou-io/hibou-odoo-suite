@@ -178,18 +178,18 @@ class TestRMASale(TestRMA):
             'invoice_done': True,
             'sale_order_warranty': True,
             'in_to_refund': True,
-            'so_decrement_order_qty': False,  # invoice on decremented delivered not decremented order
+            'so_decrement_order_qty': True,
             'next_rma_template_id': self.template_rtv.id,
         })
 
         validity = 100  # eligible for 100 days
         warranty_validity = validity + 100  # eligible for 200 days
 
-        self.product1.write({
+        (self.product1 + self.product2).write({
             'rma_sale_validity': validity,
             'rma_sale_warranty_validity': warranty_validity,
             'type': 'product',
-            'invoice_policy': 'delivery',
+            'invoice_policy': 'order',
             'tracking': 'serial',
             'standard_price': 1.5,
         })
@@ -199,12 +199,20 @@ class TestRMASale(TestRMA):
             'partner_invoice_id': self.partner1.id,
             'partner_shipping_id': self.partner1.id,
             'user_id': self.user1.id,
-            'order_line': [(0, 0, {
-                'product_id': self.product1.id,
-                'product_uom_qty': 1.0,
-                'product_uom': self.product1.uom_id.id,
-                'price_unit': 10.0,
-            })]
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product1.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': self.product1.uom_id.id,
+                    'price_unit': 10.0,
+                }),
+                (0, 0, {
+                    'product_id': self.product2.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': self.product2.uom_id.id,
+                    'price_unit': 10.0,
+                }),
+            ],
         })
         order.action_confirm()
         self.assertTrue(order.state in ('sale', 'done'))
@@ -221,8 +229,8 @@ class TestRMASale(TestRMA):
         # Do not allow warranty return.
         self.product1.rma_sale_warranty_validity = -1
         wizard = self.env['rma.sale.make.lines'].with_user(self.user1).create({'rma_id': rma.id})
-        self.assertEqual(wizard.line_ids.qty_delivered, 0.0)
-        wizard.line_ids.product_uom_qty = 1.0
+        self.assertEqual(wizard.line_ids.mapped('qty_delivered'), [0.0, 0.0])
+        wizard.line_ids.write({'product_uom_qty': 1.0})
 
         with self.assertRaises(UserError):
             wizard.add_lines()
@@ -232,32 +240,49 @@ class TestRMASale(TestRMA):
         original_date_order = order.date_order
         order.write({'date_order': original_date_order - timedelta(days=warranty_validity+1)})
         wizard = self.env['rma.sale.make.lines'].with_user(self.user1).create({'rma_id': rma.id})
-        self.assertEqual(wizard.line_ids.qty_delivered, 0.0)
-        wizard.line_ids.product_uom_qty = 1.0
+        self.assertEqual(wizard.line_ids.mapped('qty_delivered'), [0.0, 0.0])
+        wizard.line_ids.write({'product_uom_qty': 1.0})
         with self.assertRaises(UserError):
             wizard.add_lines()
 
         # Allows returns due to date, due to warranty option
         order.write({'date_order': original_date_order - timedelta(days=validity+1)})
         wizard = self.env['rma.sale.make.lines'].with_user(self.user1).create({'rma_id': rma.id})
-        self.assertEqual(wizard.line_ids.qty_delivered, 0.0)
-        wizard.line_ids.product_uom_qty = 1.0
+        self.assertEqual(wizard.line_ids.mapped('qty_delivered'), [0.0, 0.0])
+        wizard.line_ids.write({'product_uom_qty': 1.0})
         wizard.add_lines()
 
         # finish outbound so that we can invoice.
         order.picking_ids.action_assign()
-        pack_opt = order.picking_ids.move_line_ids[0]
-        lot = self.env['stock.production.lot'].create({
-            'product_id': self.product1.id,
-            'name': 'X100',
-            'product_uom_id': self.product1.uom_id.id,
-            'company_id': self.env.user.company_id.id,
-        })
-        pack_opt.qty_done = 1.0
-        pack_opt.lot_id = lot
+        lots_created = self.env['stock.production.lot']
+        for stock_move in order.picking_ids.move_lines:
+            move_line = stock_move.move_line_ids
+            if not move_line:
+                stock_move.write({
+                    'move_line_ids': [(0, 0, {
+                        'move_id': stock_move.id,
+                        'location_id': stock_move.location_id.id,
+                        'location_dest_id': stock_move.location_dest_id.id,
+                        'product_uom_id': stock_move.product_id.uom_id.id,
+                        'product_id': stock_move.product_id.id,
+                    })]
+                })
+                move_line = stock_move.move_line_ids
+            self.assertTrue(move_line)
+            lot = lots_created.create({
+                'product_id': move_line.product_id.id,
+                'name': 'X100-%s' % (move_line.id, ),
+                'product_uom_id': move_line.product_id.uom_id.id,
+                'company_id': self.env.user.company_id.id,
+            })
+            lots_created += lot
+            move_line.qty_done = 1.0
+            move_line.lot_id = lot
+        
+        self.assertEqual(order.picking_ids.state, 'assigned')
         order.picking_ids.button_validate()
         self.assertEqual(order.picking_ids.state, 'done')
-        self.assertEqual(order.order_line.qty_delivered, 1.0)
+        self.assertEqual(order.order_line.mapped('qty_delivered'), [1.0, 1.0])
 
         # Invoice the order so that only the core product is invoiced at the end...
         self.assertFalse(order.invoice_ids)
@@ -267,13 +292,15 @@ class TestRMASale(TestRMA):
         self.assertTrue(order.invoice_ids)
         order_invoice = order.invoice_ids
 
-        self.assertEqual(rma.lines.product_id, self.product1)
+        self.assertEqual(rma.lines.product_id, (self.product1 + self.product2))
         rma.action_confirm()
         self.assertTrue(rma.in_picking_id)
         self.assertEqual(rma.in_picking_id.state, 'assigned')
-        pack_opt = rma.in_picking_id.move_line_ids[0]
-        pack_opt.lot_id = lot.id
-        pack_opt.qty_done = 1.0
+        
+        for pack_opt, lot in zip(rma.in_picking_id.move_line_ids, lots_created):
+            pack_opt.qty_done = 1.0
+            pack_opt.lot_id = lot
+    
         rma.in_picking_id.button_validate()
         self.assertEqual(rma.in_picking_id.state, 'done')
         order.flush()
@@ -287,7 +314,8 @@ class TestRMASale(TestRMA):
         sale_line = rma_invoice.invoice_line_ids.filtered(lambda l: l.sale_line_ids)
         so_line = sale_line.sale_line_ids
         self.assertTrue(sale_line)
-        self.assertEqual(sale_line.price_unit, so_line.price_unit)
+        self.assertEqual(sale_line.mapped('price_unit'), so_line.mapped('price_unit'))
+        self.assertEqual(sale_line.mapped('quantity'), [1.0, 1.0])
 
         # Invoices do not have their anglo-saxon cost lines until they post
         order_invoice._post(soft=False)
