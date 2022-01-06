@@ -7,14 +7,30 @@ class ProjectTask(models.Model):
     line_ids = fields.One2many('project.task.line', 'task_id', string='Todo List')
     subtask_count_done = fields.Integer(compute='_compute_subtask_count', string="Sub-task Done count")
 
+    @api.depends('child_ids')
     def _compute_subtask_count(self):
         for task in self:
-            task.subtask_count = self.search_count([('id', 'child_of', task.id), ('id', '!=', task.id)])
-            if task.subtask_count:
-                task.subtask_count_done = self.search_count([('id', 'child_of', task.id), ('id', '!=', task.id),
-                                                             ('stage_id.fold', '=', True)])
-            else:
-                task.subtask_count_done = 0
+            subtasks = task._get_all_subtasks()
+            task.subtask_count = len(subtasks)
+            task.subtask_count_done = len(subtasks.filtered(lambda t: t.stage_id.is_closed))
+    
+    def action_subtask(self):
+        action = self.env.ref('project.action_view_all_task').read()[0]
+
+        # display all subtasks of current task
+        action['domain'] = [('id', 'child_of', self.id), ('id', '!=', self.id)]
+
+        ctx = dict(self.env.context)
+        ctx = {k: v for k, v in ctx.items() if not k.startswith('search_default_')}
+        ctx.update({
+            'default_name': self.env.context.get('name', self.name) + ':',
+            'default_parent_id': self.id,  # will give default subtask field in `default_get`
+            'default_company_id': self.env.company.id,
+        })
+
+        action['context'] = ctx
+
+        return action
 
 
 class ProjectTaskLine(models.Model):
