@@ -7,6 +7,7 @@
     'license': 'AGPL-3',
     'category': 'Human Resources',
     'depends': [
+        'project',
         'hr_timesheet',
         'hr_work_entry',
     ],
