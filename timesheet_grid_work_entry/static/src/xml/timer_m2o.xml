@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Refactor this into widgets.xml for consistency ? -->
+
+<templates>
+
+<template t-name="timesheet_grid_work_entry.timer_project_task" t-inherit="timesheet_grid.timer_project_task" class="d-inline-flex timer_m2o">
+    <xpath expr="//div[hasclass('px-2')]" position="after">
+        <div class="px-2 flex-grow-1">
+            <div class="timer_work_type_id my-auto"/>
+        </div>
+    </xpath>
+</template>
+
+</templates>
