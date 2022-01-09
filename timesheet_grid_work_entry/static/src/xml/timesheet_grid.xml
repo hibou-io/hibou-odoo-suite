@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    
+    <t t-name="timesheet_grid_work_entry.GridRenderer" t-inherit="web_grid.GridRenderer" t-inherit-mode="extension" owl="1">
+        <xpath expr="//TimerHeaderComponent" position="attributes">
+            <attribute name="workTypeId">stateTimer.workTypeId</attribute>
+            <attribute name="t-on-timer-edit-work-type">_onSetWorkType</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="timesheet_grid_work_entry.timer_header" t-inherit="timesheet_grid.timer_header" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('input_m2o')]/div" position="after">
+            <div class="px-2">
+                <span t-esc="props.workTypeName"/>
+            </div>
+        </xpath>
+        <xpath expr="//TimerHeaderM2OAdapter" position="attributes">
+            <attribute name="Component">TimerHeaderM2OWorkEntry</attribute>
+            <attribute name="widgetArgs">[props.projectId, props.taskId, props.workTypeId, props.projectWarning]</attribute>
+        </xpath>
+    </t>
+
+</templates>

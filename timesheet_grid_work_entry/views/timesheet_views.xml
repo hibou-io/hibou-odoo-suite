@@ -14,4 +14,19 @@
         </field>
     </record>
 
+    <record id="timesheet_view_grid_inherit" model="ir.ui.view">
+        <field name="name">account.analytic.line.grid.project.inherit</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="timesheet_grid.timesheet_view_grid"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='task_id']" position="after">
+                <!-- <field name="work_type_id"
+                       type="row"
+                       domain="[('allow_timesheet', '=', True)]"
+                       /> -->
+                <field name="work_type_id" type="row"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
