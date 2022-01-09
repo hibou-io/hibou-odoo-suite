@@ -43,6 +43,14 @@
             "program": "/opt/odoo/hibou-suite/odoo-reload.py",
             "args": [],
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: reload foreground server, Kill Others",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-reload.py",
+            "args": ["KILL_OTHER"],
+            "console": "integratedTerminal"
         }
     ]
 }
