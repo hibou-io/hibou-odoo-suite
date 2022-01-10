@@ -15,7 +15,7 @@ class ProjectTask(models.Model):
             task.subtask_count_done = len(subtasks.filtered(lambda t: t.stage_id.is_closed))
     
     def action_subtask(self):
-        action = self.env.ref('project.action_view_all_task').read()[0]
+        action = self.env.ref('project.action_view_all_task').sudo().read()[0]
 
         # display all subtasks of current task
         action['domain'] = [('id', 'child_of', self.id), ('id', '!=', self.id)]
