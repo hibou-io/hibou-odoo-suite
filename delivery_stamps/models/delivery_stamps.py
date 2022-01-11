@@ -418,7 +418,7 @@ class ProviderStamps(models.Model):
                                                   customs=customs)
                         package_labels.append((txn_id, label))
             except WebFault as e:
-                _logger.warn(e)
+                _logger.warning(e)
                 if package_labels:
                     for name, label in package_labels:
                         body = _(u'Cancelling due to error: ', label.TrackingNumber)
