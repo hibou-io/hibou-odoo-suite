@@ -407,7 +407,7 @@ class ProviderGSO(models.Model):
 
         try:
             result = service.get_rates_and_transit_time(request_body)
-            # _logger.warn('GSO result:\n%s' % result)
+            # _logger.warning('GSO result:\n%s' % result)
         except HTTPError as e:
             _logger.error(e)
             return [{
