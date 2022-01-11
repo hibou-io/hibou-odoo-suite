@@ -35,7 +35,6 @@ class TestUpdate(common.TransactionCase):
         update.button_send()
         self.assertEqual(update.state, 'done')
         self.assertEqual(update.parameter_codes_retrieved, '')
-        self.assertEqual(update.parameter_codes_missing, '')
         
         # Reset to a degree.
         update = update.with_context(test_payroll_update_result='{"payroll_parameter_values":[["missing_code", "2021-01-01", "5.0"]]}')
@@ -45,8 +44,7 @@ class TestUpdate(common.TransactionCase):
         })
         update.button_send()
         self.assertEqual(update.state, 'done')
-        self.assertEqual(update.parameter_codes_retrieved, 'missing_code')
-        self.assertEqual(update.parameter_codes_missing, 'missing_code')
+        self.assertEqual(update.parameter_codes_retrieved, 'missing_code (MISSING)')
 
         # Actually add to a rule.
         test_parameter = self.env['hr.rule.parameter'].create({
@@ -61,7 +59,6 @@ class TestUpdate(common.TransactionCase):
         update.button_send()
         self.assertEqual(update.state, 'done')
         self.assertEqual(update.parameter_codes_retrieved, 'test_parameter_1')
-        self.assertEqual(update.parameter_codes_missing, '')
         self.assertTrue(test_parameter.parameter_version_ids)
         self.assertEqual(test_parameter.parameter_version_ids.parameter_value, '5.0')
         self.assertEqual(str(test_parameter.parameter_version_ids.date_from), '2021-01-01')
@@ -77,3 +74,20 @@ class TestUpdate(common.TransactionCase):
         update.button_send()
         # doesn't make a new one, updates existing...
         self.assertEqual(test_parameter.parameter_version_ids.parameter_value, '5.0')
+        
+        # Test that we can lock the parameter
+        test_parameter.parameter_version_ids.write({
+            'parameter_value': 'locked',
+        })
+        test_parameter.write({
+            'update_locked': True,
+        })
+        self.assertEqual(test_parameter.parameter_version_ids.parameter_value, 'locked')
+        update.write({
+            'state': 'draft',
+            'result': '',
+        })
+        update.button_send()
+        # doesn't make a new one, updates existing...
+        self.assertEqual(test_parameter.parameter_version_ids.parameter_value, 'locked')
+        self.assertEqual(update.parameter_codes_retrieved, 'test_parameter_1 (LOCKED)')

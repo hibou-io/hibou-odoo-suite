@@ -29,7 +29,6 @@ class HRPayrollPublisherUpdate(models.Model):
                                           'error': [('readonly', True)]})
     result = fields.Text(readonly=True)
     parameter_codes_retrieved = fields.Text(readonly=True)
-    parameter_codes_missing = fields.Text(readonly=True)
     error = fields.Text(readonly=True)
     
     @api.model
@@ -88,7 +87,7 @@ class HRPayrollPublisherUpdate(models.Model):
                 if code not in parameter_map:
                     parameter_map[code] = parameter_model.search([('code', '=', code)], limit=1)
                 parameter = parameter_map[code]
-                if not parameter:
+                if not parameter or parameter.update_locked:
                     continue
                 # watch out for versions of Odoo where this is not datetime.date
                 parameter_version = parameter.parameter_version_ids.filtered(lambda p: p.date_from == date_from)
@@ -107,8 +106,7 @@ class HRPayrollPublisherUpdate(models.Model):
             self.write({
                 'state': 'done',
                 'error': '',
-                'parameter_codes_retrieved': '\n'.join(c for c, p in parameter_map.items()),
-                'parameter_codes_missing': '\n'.join(c for c, p in parameter_map.items() if not p),
+                'parameter_codes_retrieved': '\n'.join('%s%s' % (c, '' if p and not p.update_locked else ' (LOCKED)' if p.update_locked else ' (MISSING)') for c, p in parameter_map.items()),
             })
         except Exception as e:
             self.set_error_state(str(e))

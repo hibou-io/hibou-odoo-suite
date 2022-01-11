@@ -34,8 +34,7 @@
                         </group>
                         <group name="parameter_codes" string="Parameter Codes">
                             <field name="parameter_codes_retrieved" />
-                            <field name="parameter_codes_missing" />
-                            <p colspan="2">Note missing codes probably means code upgrades are required.</p>
+                            <p colspan="2">Note missing codes probably means code upgrades are required. Locked codes are only locked in this database.</p>
                         </group>
                         <group name="result" string="Result" groups="base.group_no_one" colspan="4">
                             <field name="result" nolabel="1" colspan="4" />
