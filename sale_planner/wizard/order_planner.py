@@ -10,7 +10,7 @@ _logger = getLogger(__name__)
 try:
     from uszipcode import SearchEngine
 except ImportError:
-    _logger.warn('module "uszipcode" cannot be loaded, falling back to Google API')
+    _logger.warning('module "uszipcode" cannot be loaded, falling back to Google API')
     SearchEngine = None
 
 from odoo import api, fields, models
@@ -229,7 +229,7 @@ class SaleOrderMakePlan(models.TransientModel):
             if isinstance(sub_options, str):
                 sub_options = loads(sub_options)
             if not isinstance(sub_options, dict):
-                _logger.warn('Cannot apply option with corrupt sub_options')
+                _logger.warning('Cannot apply option with corrupt sub_options')
                 return False
             order_lines = order.order_line
             for wh_id, wh_vals in sub_options.items():
@@ -762,7 +762,7 @@ class SaleOrderMakePlan(models.TransientModel):
                         if rate.get('date_delivered'):
                             date_delivered = rate.get('date_delivered')
                     else:
-                        _logger.warn('returning None because carrier: ' + str(carrier))
+                        _logger.warning('returning None because carrier: ' + str(carrier))
                         return None
             else:
                 carrier = carrier.available_carriers(order_fake.partner_shipping_id)
