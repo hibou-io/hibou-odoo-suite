@@ -31,7 +31,7 @@ def admin_auth_generate_login(env, user):
 
     base_url = str(config.search([('key', '=', 'web.base.url')], limit=1).value)
 
-    _logger.warn('login url for user id: ' + u + ' original user id: ' + o)
+    _logger.warning('login url for user id: ' + u + ' original user id: ' + o)
 
     return base_url + '/auth_admin?u=' + u + '&e=' + e + '&o=' + o + '&h=' + h.hexdigest()
 
@@ -86,7 +86,7 @@ class ResUsers(models.Model):
             return super(ResUsers, self)._check_credentials(password, env)
         except exceptions.AccessDenied:
             if request and hasattr(request, 'session') and request.session.get('auth_admin'):
-                _logger.warn('_check_credentials for user id: ' + \
+                _logger.warning('_check_credentials for user id: ' + \
                              str(request.session.uid) + ' original user id: ' + str(request.session.auth_admin))
             else:
                 raise
