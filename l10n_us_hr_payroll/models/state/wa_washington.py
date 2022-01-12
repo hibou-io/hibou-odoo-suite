@@ -27,6 +27,8 @@ def wa_washington_fml_ee(payslip, categories, worked_days, inputs):
     return _wa_washington_fml(payslip, categories, worked_days, inputs, inner_rate='us_wa_fml_rate_ee')
 
 def wa_washington_cares_ee(payslip, categories, worked_days, inputs):
+    if not _state_applies(payslip, 'WA'):
+        return 0.0, 0.0
     wage = categories.GROSS
     rate = payslip.rule_parameter('us_wa_cares_rate_ee')
     # Rate assumed positive percentage!
