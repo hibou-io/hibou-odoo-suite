@@ -70,6 +70,18 @@
         <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
     </record>
 
+    <record id="rule_parameter_us_wa_cares_rate_ee" model="hr.rule.parameter">
+        <field name="name">US WA Washington Cares (Employee)</field>
+        <field name="code">us_wa_cares_rate_ee</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <!-- didn't exist but helpful to back date for tests -->
+    <record id="rule_parameter_us_wa_cares_rate_ee_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_wa_cares_rate_ee"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
     <!-- Partners and Contribution Registers -->
     <record id="res_partner_us_wa_dor" model="res.partner">
         <field name="name">US Washington - Employment Security Department (Unemployment)</field>
@@ -133,6 +145,21 @@
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result, result_rate = wa_washington_fml_ee(payslip, categories, worked_days,
             inputs)
+        </field>
+        <field name="partner_id" ref="res_partner_us_wa_dor_fml"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+    <record id="hr_payroll_rule_ee_us_wa_cares" model="hr.salary.rule">
+        <field name="sequence" eval="197"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">EE: US WA Washington State Cares</field>
+        <field name="code">EE_US_WA_CARES</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result, _ = wa_washington_cares_ee(payslip, categories, worked_days, inputs)
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = wa_washington_cares_ee(payslip, categories, worked_days, inputs)
         </field>
         <field name="partner_id" ref="res_partner_us_wa_dor_fml"/>
         <field name="appears_on_payslip" eval="True"/>
