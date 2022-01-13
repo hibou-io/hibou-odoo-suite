@@ -6,19 +6,11 @@
         <field name="code">us_mi_suta_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <record id="rule_parameter_us_mi_suta_wage_base_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">9000.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_mi_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-        <!-- https://taxnews.ey.com/news/2020-2141-michigan-sui-taxable-wage-base-expected-to-increase-for-2021-due-to-covid-19s-depletion-of-ui-trust-fund#:~:text=Michigan%20employers%20should%20expect%20to,be%20used%20by%20delinquent%20employers. -->
-        <record id="rule_parameter_us_mi_suta_wage_base_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">9500.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_mi_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_mi_suta_wage_base_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">9000.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_mi_suta_wage_base"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Rate -->
     <record id="rule_parameter_us_mi_suta_rate" model="hr.rule.parameter">
@@ -27,7 +19,6 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <!-- same for 2021 https://www.michigan.gov/leo/0,5863,7-336-94422_97241_89981_90255-502287-  -,00.html -->
         <record id="rule_parameter_us_mi_suta_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">2.7</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_mi_suta_rate"/>
@@ -40,21 +31,11 @@
         <field name="code">us_mi_sit_exemption_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <record id="rule_parameter_us_mi_sit_exemption_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">4750.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_mi_sit_exemption_rate"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-        <!-- https://www.michigan.gov/documents/taxes/446_711611_7.pdf -->
-        <record id="rule_parameter_us_mi_sit_exemption_rate_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">4900.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_mi_sit_exemption_rate"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
-    </data>
-
-    <!-- todo: income tax rate https://www.michigan.gov/taxes/0,4676,7-238-43519_43531-  -  -,00.html -->
+    <record id="rule_parameter_us_mi_sit_exemption_rate_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">4750.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_mi_sit_exemption_rate"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Partners and Contribution Registers -->
     <record id="res_partner_us_mi_dor" model="res.partner">
