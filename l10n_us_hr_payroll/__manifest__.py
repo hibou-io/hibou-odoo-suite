@@ -3,7 +3,7 @@
 {
     'name': 'United States of America - Payroll',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '13.0.2020.0.0',
+    'version': '13.0.2022.0.0',
     'category': 'Payroll Localization',
     'depends': [
         'hr_payroll',

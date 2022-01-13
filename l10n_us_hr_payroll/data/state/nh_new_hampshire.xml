@@ -6,14 +6,11 @@
         <field name="code">us_nh_suta_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <!-- same for 2021 https://www.nhes.nh.gov/services/employers/claimtax.htm#:~:text=The%20Taxable%20Wage%20Base%20remains%20at%20%2414%2C000.&text=The%20state%20and%20federal%20governments,determine%20eligibility%20for%20unemployment%20benefits. -->
-        <record id="rule_parameter_us_nh_suta_wage_base_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">14000.00</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_nh_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_nh_suta_wage_base_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">14000.00</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_nh_suta_wage_base"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Rate -->
     <record id="rule_parameter_us_nh_suta_rate" model="hr.rule.parameter">
@@ -26,11 +23,6 @@
             <field name="parameter_value">1.2</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_nh_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-        <record id="rule_parameter_us_nh_suta_rate_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">2.7</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_nh_suta_rate"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 

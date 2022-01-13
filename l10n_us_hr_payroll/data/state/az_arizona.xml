@@ -6,15 +6,12 @@
         <field name="code">us_az_suta_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-<!--        page 7 https://des.az.gov/sites/default/files/legacy/dl/UIB-1240A.pdf?time=1610036751652-->
-<!--        no change in 2021-->
-        <record id="rule_parameter_us_az_suta_wage_base_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">7000.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_az_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_az_suta_wage_base_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">7000.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_az_suta_wage_base"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
 
     <!-- Rate -->
     <record id="rule_parameter_us_az_suta_rate" model="hr.rule.parameter">
@@ -23,8 +20,6 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-<!--        unchanged for 2021-->
-<!--        https://des.az.gov/services/employment/unemployment-employer/employment-taxes-calculating-unemployment-taxes-->
         <record id="rule_parameter_us_az_suta_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">2.0</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_az_suta_rate"/>
@@ -32,7 +27,6 @@
         </record>
     </data>
 
-<!--    todo: income tax https://azdor.gov/forms/individual/form-140-x-y-tables-->
 
     <!-- Partners and Contribution Registers -->
     <record id="res_partner_us_az_dor" model="res.partner">
