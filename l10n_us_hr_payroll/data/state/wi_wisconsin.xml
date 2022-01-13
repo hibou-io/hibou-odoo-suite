@@ -37,6 +37,17 @@
         <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
     </record>
 
+    <record id="rule_parameter_us_wi_sit_deduction_rate" model="hr.rule.parameter">
+        <field name="name">US WI Wisconsin SIT Deduction Rate</field>
+        <field name="code">us_wi_sit_deduction_rate</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+    <record id="rule_parameter_us_wi_sit_deduction_rate_2021" model="hr.rule.parameter.value">
+        <field name="parameter_value">False</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_wi_sit_deduction_rate"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
     <record id="rule_parameter_us_wi_sit_tax_rate" model="hr.rule.parameter">
         <field name="name">US WI Wisconsin SIT Tax Rate</field>
         <field name="code">us_wi_sit_tax_rate</field>
