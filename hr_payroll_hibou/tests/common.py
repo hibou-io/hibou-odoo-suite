@@ -126,11 +126,9 @@ class TestPayslip(common.TransactionCase):
             'date_from': date_from,
             'date_to': date_to
         })
-        # Included in hr.payslip.action_refresh_from_work_entries() as ov 14.0 EE
-        # slip._onchange_employee()
-        # as is the 'compute' that is almost always called immediaately after
+        slip._onchange_employee()
         if not skip_compute:
-            slip.action_refresh_from_work_entries()
+            slip.compute_sheet()
         return slip
 
     def _getCategories(self, payslip):

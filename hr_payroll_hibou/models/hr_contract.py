@@ -17,4 +17,4 @@ class HrContract(models.Model):
     def _get_contract_wage_field(self, work_type=None):
         if self.wage_type == 'hourly':
             return 'hourly_wage'
-        return super()._get_contract_wage_field()
+        return 'wage'

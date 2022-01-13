@@ -58,6 +58,6 @@
 
     <menuitem id="menu_hr_payroll_configuration_updates" name="Payroll Updates"
               action="action_payroll_updates"
-              sequence="20" parent="hr_work_entry_contract_enterprise.menu_hr_payroll_configuration"/>
+              sequence="20" parent="hr_payroll.menu_hr_payroll_configuration"/>
 
 </odoo>

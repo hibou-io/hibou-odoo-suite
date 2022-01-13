@@ -8,7 +8,7 @@ class HrPayrollStructure(models.Model):
 
     schedule_pay = fields.Selection(selection_add=[
         ('semi-monthly', 'Semi-monthly'),
-    ], ondelete={'semi-monthly': 'set null'})
+    ])
 
 
 class HrPayrollStructureType(models.Model):
