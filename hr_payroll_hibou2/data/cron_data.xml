@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <!-- Cron jobs -->
+        <record model="ir.cron" id="payroll_publisher_update_cron">
+            <field name="name">Payroll Update: download latest parameter values/rates.</field>
+            <field name="model_id" ref="hr_payroll_hibou.model_hr_payroll_publisher_update"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_payroll_update()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="doall" eval="False"/>
+        </record>
+    </data>
+
+</odoo>

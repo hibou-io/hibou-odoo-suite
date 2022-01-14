@@ -6,7 +6,6 @@
         <field name="code">fed_940_futa_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <!-- Unchanged in 2021 https://www.irs.gov/taxtopics/tc759 -->
     <record id="rule_parameter_940_futa_wage_base_2016" model="hr.rule.parameter.value">
         <field name="parameter_value">7000.00</field>
         <field name="rule_parameter_id" ref="rule_parameter_940_futa_wage_base"/>
@@ -19,7 +18,6 @@
         <field name="code">fed_940_futa_rate_basic</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <!-- Unchanged in 2021 https://www.irs.gov/taxtopics/tc759 -->
     <record id="rule_parameter_940_futa_rate_basic_2016" model="hr.rule.parameter.value">
         <field name="parameter_value">6.0</field>
         <field name="rule_parameter_id" ref="rule_parameter_940_futa_rate_basic"/>
@@ -31,7 +29,6 @@
         <field name="code">fed_940_futa_rate_normal</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <!-- Unchanged in 2021 https://www.irs.gov/taxtopics/tc759 -->
     <record id="rule_parameter_940_futa_rate_normal_2016" model="hr.rule.parameter.value">
         <field name="parameter_value">0.6</field>
         <field name="rule_parameter_id" ref="rule_parameter_940_futa_rate_normal"/>

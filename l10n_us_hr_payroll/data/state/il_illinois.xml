@@ -6,19 +6,11 @@
         <field name="code">us_il_suta_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <record id="rule_parameter_us_il_suta_wage_base_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">12740.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_il_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-        <!-- https://www2.illinois.gov/ides/IDES%20Forms%20and%20Publications/UITaxRates.pdf -->
-        <record id="rule_parameter_us_il_suta_wage_base_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">12960.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_il_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_il_suta_wage_base_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">12740.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_il_suta_wage_base"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Rate -->
     <record id="rule_parameter_us_il_suta_rate" model="hr.rule.parameter">
@@ -32,12 +24,6 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_il_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
-        <!-- https://www2.illinois.gov/ides/IDES%20Forms%20and%20Publications/UITaxRates.pdf -->
-        <record id="rule_parameter_us_il_suta_rate_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">3.175</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_il_suta_rate"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
     </data>
 
     <record id="rule_parameter_us_il_sit_basic_allowances_rate" model="hr.rule.parameter">
@@ -45,33 +31,22 @@
         <field name="code">us_il_sit_basic_allowances_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <record id="rule_parameter_us_il_sit_basic_allowances_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">2325.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_il_sit_basic_allowances_rate"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-        <!-- page 4, step2, a: https://www2.illinois.gov/rev/forms/withholding/Documents/currentyear/il-700-t.pdf -->
-        <record id="rule_parameter_us_il_sit_basic_allowances_rate_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">2375.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_il_sit_basic_allowances_rate"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_il_sit_basic_allowances_rate_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">2325.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_il_sit_basic_allowances_rate"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <record id="rule_parameter_us_il_sit_additional_allowances_rate" model="hr.rule.parameter">
         <field name="name">US IL Illinois Additional Allowances Rate</field>
         <field name="code">us_il_sit_additional_allowances_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-         <!-- page 4, step2, b: https://www2.illinois.gov/rev/forms/withholding/Documents/currentyear/il-700-t.pdf -->
-        <record id="rule_parameter_us_il_sit_additional_allowances_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">1000.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_il_sit_additional_allowances_rate"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_il_sit_additional_allowances_rate_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">1000.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_il_sit_additional_allowances_rate"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Partners and Contribution Registers -->
     <record id="res_partner_us_il_dor" model="res.partner">

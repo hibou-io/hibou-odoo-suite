@@ -1,0 +1,212 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll_hibou
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-12 01:26+0000\n"
+"PO-Revision-Date: 2021-10-12 01:26+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields.selection,name:hr_payroll_hibou.selection__res_config_settings__payslip_sum_type__date
+msgid "Accounting Date"
+msgstr "Fecha de Contabilidad"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields,field_description:hr_payroll_hibou.field_res_config_settings__module_hr_payroll_attendance
+msgid "Attendance Entries & Overtime"
+msgstr "Entradas de Asistencias y Horas Extras"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields,help:hr_payroll_hibou.field_res_config_settings__payslip_sum_type
+msgid ""
+"Behavior for what payslips are considered during rule execution. Stock Odoo behavior would not consider a payslip starting on 2019-12-30 ending on 2020-01-07 when summing a 2020 payslip category.\n"
+"\n"
+"Accounting Date requires Payroll Accounting and will fall back to date_to as the 'closest behavior'."
+msgstr ""
+"El comportamiento que se considera en los recibos de nómina durante la ejecución de una regla. El comportamiento de Stock Odoo no considerará a un recibo de nomina a partir de 2019-12-30 y que termina en 2020-01-07 al sumar una categoría de nómina de 2020.\n"
+"\n"
+"La fecha de contabilidad requiere contabilidad de nomina y usara date_to de respaldo como el 'comportamiento más cercana'."
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields,field_description:hr_payroll_hibou.field_res_config_settings__module_hr_payroll_commission
+msgid "Commission"
+msgstr "Comisión"
+
+#. module: hr_payroll_hibou
+#: model:ir.model,name:hr_payroll_hibou.model_res_config_settings
+msgid "Config Settings"
+msgstr "Opciones de configuración"
+
+#. module: hr_payroll_hibou
+#: model_terms:ir.ui.view,arch_db:hr_payroll_hibou.res_config_settings_view_form_hibou
+msgid "Configure Matching & Limits"
+msgstr "Configurar Contribuciones & Limites"
+
+#. module: hr_payroll_hibou
+#: model_terms:ir.ui.view,arch_db:hr_payroll_hibou.res_config_settings_view_form_hibou
+msgid ""
+"Customize the behavior of what payslips are eligible when summing over date ranges in rules.\n"
+"                                    Generally, \"Date To\" or \"Accounting Date\" would be preferred in the United States and anywhere\n"
+"                                    else where the ending date on the payslip is used to calculate wage bases."
+msgstr ""
+"Personalizar el comportamiento de las nóminas elegibles al sumar rangos de fechas en las reglas.\n"
+"                                    Generalmente, \"Hasta La Fecha\" o \"Fecha Contable\" sería preferible en los Estados Unidos y en cualquier lugar\n"
+"                                    donde la fecha de finalización en la nómina se utiliza para calcular las bases salariales.."
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields.selection,name:hr_payroll_hibou.selection__res_config_settings__payslip_sum_type__date_from
+msgid "Date From"
+msgstr "Desde la Fecha"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields.selection,name:hr_payroll_hibou.selection__res_config_settings__payslip_sum_type__date_to
+msgid "Date To"
+msgstr "Hasta la Fecha"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields,field_description:hr_payroll_hibou.field_hr_payroll_structure_type__default_schedule_pay
+msgid "Default Scheduled Pay"
+msgstr "Pago Programado Predeterminado"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields,help:hr_payroll_hibou.field_hr_payroll_structure__schedule_pay
+#: model:ir.model.fields,help:hr_payroll_hibou.field_hr_payroll_structure_type__default_schedule_pay
+msgid "Defines the frequency of the wage payment."
+msgstr "Define la frecuencia del pago de salario."
+
+#. module: hr_payroll_hibou
+#: model:ir.model,name:hr_payroll_hibou.model_hr_contract
+msgid "Employee Contract"
+msgstr "Contrato del empleado"
+
+#. module: hr_payroll_hibou
+#: model_terms:ir.ui.view,arch_db:hr_payroll_hibou.res_config_settings_view_form_hibou
+msgid ""
+"Extend Attendance into Payroll with Work Types, Overtime!\n"
+"                                    <strong>Hibou Professional</strong>"
+msgstr ""
+"¡Extender asistencias en nóminas con tipos de trabajos, Horas Extra!\n"
+"                                    <strong>Hibou Profesional</strong>"
+
+#. module: hr_payroll_hibou
+#: model_terms:ir.ui.view,arch_db:hr_payroll_hibou.res_config_settings_view_form_hibou
+msgid ""
+"Extend Timesheets into Payroll with Work Types, Overtime!\n"
+"                                    <strong>Hibou Professional</strong>"
+msgstr ""
+"¡Extender hojas de asistencia en nominas con tipos de trabajos, Horas Extra!\n"
+"                                    <strong>Hibou Profesional</strong>"
+
+#. module: hr_payroll_hibou
+#: model_terms:ir.ui.view,arch_db:hr_payroll_hibou.res_config_settings_view_form_hibou
+msgid "Hibou Payroll"
+msgstr "Hibou Nómina"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields.selection,name:hr_payroll_hibou.selection__hr_contract__wage_type__hourly
+msgid "Hourly Wage"
+msgstr "Salario por Hora"
+
+#. module: hr_payroll_hibou
+#: model_terms:ir.ui.view,arch_db:hr_payroll_hibou.res_config_settings_view_form_hibou
+msgid ""
+"Pay Commissions in Payroll!\n"
+"                                    <strong>Hibou Professional</strong>"
+msgstr ""
+"¡Paga comisiones en Nómina!\n"
+"                                    <strong>Hibou Profesional</strong>"
+
+#. module: hr_payroll_hibou
+#: model:ir.model,name:hr_payroll_hibou.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Recibo de nómina"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields,field_description:hr_payroll_hibou.field_res_config_settings__module_hr_payroll_payment
+msgid "Payments & Advanced Accounting"
+msgstr "Pagos & Contabilidad Avanzada"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields,field_description:hr_payroll_hibou.field_res_config_settings__payslip_sum_type
+#: model_terms:ir.ui.view,arch_db:hr_payroll_hibou.res_config_settings_view_form_hibou
+msgid "Payslip Sum Behavior"
+msgstr "Comportamiento de la suma de recibos de nómina"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields.selection,name:hr_payroll_hibou.selection__hr_contract__wage_type__monthly
+msgid "Period Fixed Wage"
+msgstr "Periodo Salario Fijo"
+
+#. module: hr_payroll_hibou
+#: model_terms:ir.ui.view,arch_db:hr_payroll_hibou.res_config_settings_view_form_hibou
+msgid ""
+"Provide retirement plans with optional company matching.\n"
+"                                    <strong>Hibou Professional</strong>"
+msgstr ""
+"Proporcionar planes de jubilación con contribucion opcional de la compañía.\n"
+"                                    <strong>Hibou Profesional</strong>"
+
+#. module: hr_payroll_hibou
+#: model_terms:ir.ui.view,arch_db:hr_payroll_hibou.res_config_settings_view_form_hibou
+msgid ""
+"Register payments on payslips! Have control over journal entries created from\n"
+"                                    payroll to include partner details, set grouping options, and apply fiscal position\n"
+"                                    account mappings.\n"
+"                                    <strong>Hibou Professional</strong>"
+msgstr ""
+"Registrar pagos en recibos de nomina! Ten control sobre sus asientos contables creado desde\n"
+"                                    la nomina para incluir detalles del socio, establecer opciones de agrupamiento, y aplicar la asignación de cuentas\n"
+"                                    de posición fiscal.\n"
+"                                    <strong>Hibou Profesional</strong>"
+
+#. module: hr_payroll_hibou
+#: model:ir.model,name:hr_payroll_hibou.model_hr_payroll_structure
+msgid "Salary Structure"
+msgstr "Estructura salarial"
+
+#. module: hr_payroll_hibou
+#: model:ir.model,name:hr_payroll_hibou.model_hr_payroll_structure_type
+msgid "Salary Structure Type"
+msgstr "Tipo de estructura salarial"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields,field_description:hr_payroll_hibou.field_hr_payroll_structure__schedule_pay
+msgid "Scheduled Pay"
+msgstr "Pago Programado"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields.selection,name:hr_payroll_hibou.selection__hr_payroll_structure__schedule_pay__semi-monthly
+#: model:ir.model.fields.selection,name:hr_payroll_hibou.selection__hr_payroll_structure_type__default_schedule_pay__semi-monthly
+msgid "Semi-monthly"
+msgstr "Semestral"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields,field_description:hr_payroll_hibou.field_res_config_settings__module_hr_payroll_timesheet
+msgid "Timesheet Entries & Overtime"
+msgstr "Entradas de hojas de asistencias y horas extra"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields,field_description:hr_payroll_hibou.field_res_config_settings__module_l10n_us_hr_payroll
+msgid "USA Payroll"
+msgstr "Nómina de EE.UU"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields,field_description:hr_payroll_hibou.field_res_config_settings__module_l10n_us_hr_payroll_401k
+#: model_terms:ir.ui.view,arch_db:hr_payroll_hibou.res_config_settings_view_form_hibou
+msgid "USA Payroll 401k"
+msgstr "Nómina de EE.UUU 401K"
+
+#. module: hr_payroll_hibou
+#: model:ir.model.fields,field_description:hr_payroll_hibou.field_hr_contract__wage_type
+#: model:ir.model.fields,field_description:hr_payroll_hibou.field_hr_payslip__wage_type
+msgid "Wage Type"
+msgstr "Tipo de salario"
