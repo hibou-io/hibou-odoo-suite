@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_payroll_publisher_update_tree" model="ir.ui.view">
+        <field name="name">hr.payroll.publisher.update.tree</field>
+        <field name="model">hr.payroll.publisher.update</field>
+        <field name="arch" type="xml">
+            <tree string="Payroll Updates">
+                <field name="create_date"/>
+                <field name="write_date"/>
+                <field name="request_modules"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_payroll_publisher_update_form" model="ir.ui.view">
+        <field name="name">hr.payroll.publisher.update.form</field>
+        <field name="model">hr.payroll.publisher.update</field>
+        <field name="arch" type="xml">
+            <form string="Payroll Udate">
+                <header>
+                    <button name="button_send" type="object" string="Send" attrs="{'invisible': [('state', 'not in', ('draft', 'error'))]}" />
+                    <button name="button_process_result" type="object" string="Process Results" attrs="{'invisible': [('state', 'not in', ('result', 'error'))]}" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,result,done" />
+                </header>
+                <sheet>
+                    <group>
+                        <group name="general" string="General">
+                            <field name="create_date" />
+                            <field name="write_date" />
+                            <field name="request_modules" widget="text" />
+                            <field name="error" attrs="{'invisible': [('error', '=', False)]}" />
+                        </group>
+                        <group name="parameter_codes" string="Parameter Codes">
+                            <field name="parameter_codes_retrieved" />
+                            <p colspan="2">Note missing codes probably means code upgrades are required. Locked codes are only locked in this database.</p>
+                        </group>
+                        <group name="result" string="Result" groups="base.group_no_one" colspan="4">
+                            <field name="result" nolabel="1" colspan="4" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_payroll_updates" model="ir.actions.act_window">
+        <field name="name">Payroll Updates</field>
+        <field name="res_model">hr.payroll.publisher.update</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>
+                No Updates
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_hr_payroll_configuration_updates" name="Payroll Updates"
+              action="action_payroll_updates"
+              sequence="20" parent="hr_work_entry_contract_enterprise.menu_hr_payroll_configuration"/>
+
+</odoo>

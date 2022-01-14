@@ -93,6 +93,8 @@ def ca_california_state_income_withholding(payslip, categories, worked_days, inp
         elif sit_allowances > 0:
             deduction = exemption_allowances[allowance_index]
             withholding -= deduction
-
+    
+    if withholding < 0.0:
+        withholding = 0.0
     withholding += additional
     return wage, -((withholding / wage) * 100.0)

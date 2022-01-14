@@ -2,3 +2,4 @@
 
 from . import contract
 from . import payslip
+from . import update

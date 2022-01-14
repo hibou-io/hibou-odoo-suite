@@ -70,7 +70,7 @@ class AccountChartTemplate(models.Model):
             ])
             if journal:
                 if not journal.default_account_id:
-                    journal.default_account_id = accounts[SALARY_EXPENSES].id
+                    journal.default_account_id = accounts[salary_exp_code].id
                 if hasattr(journal, 'payroll_entry_type'):
                     journal.payroll_entry_type = 'grouped'
             else:
@@ -79,7 +79,7 @@ class AccountChartTemplate(models.Model):
                     'code': 'PAYR',
                     'type': 'general',
                     'company_id': company.id,
-                    'default_account_id': accounts[SALARY_EXPENSES].id,
+                    'default_account_id': accounts[salary_exp_code].id,
                 })
                 if hasattr(journal, 'payroll_entry_type'):
                     journal.payroll_entry_type = 'grouped'

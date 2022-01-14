@@ -4,3 +4,4 @@ from . import common
 
 from . import test_contract_wage_type
 from . import test_special
+from . import test_update

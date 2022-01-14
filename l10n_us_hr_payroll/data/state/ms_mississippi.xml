@@ -6,14 +6,11 @@
         <field name="code">us_ms_suta_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <!-- not changed for 2021 https://mdes.ms.gov/employer-faqs/ -->
-        <record id="rule_parameter_us_ms_suta_wage_base_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">14000.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ms_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_ms_suta_wage_base_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">14000.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_ms_suta_wage_base"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Rate -->
     <record id="rule_parameter_us_ms_suta_rate" model="hr.rule.parameter">
@@ -27,13 +24,6 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_ms_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
-        <!-- 1% for first year of new employers -->
-        <!-- https://mdes.ms.gov/employers/unemployment-tax/reporting-and-filing/unemployment-tax-rates/ -->
-        <record id="rule_parameter_us_ms_suta_rate_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">1.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ms_suta_rate"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
     </data>
 
     <record id="rule_parameter_us_ms_sit_rate" model="hr.rule.parameter">
@@ -41,51 +31,31 @@
         <field name="code">us_ms_sit_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <!-- https://www.dor.ms.gov/Documents/Computer%20Payroll%20Flowchart.pdf -->
-        <!-- Table D. -->
-        <record id="rule_parameter_us_ms_sit_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">[
-                    (  10000.00,  260.0,  0.05),
-                    (   5000.00,   60.0,  0.04),
-                    (   3000.00,    0.0,  0.03),
-                ]</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ms_sit_rate"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-        <!-- https://www.dor.ms.gov/Documents/Computer%20Payroll%20Flowchart%209-9-20.pdf -->
-        <!-- Table D. -->
-        <record id="rule_parameter_us_ms_sit_rate_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">[
-                    (  10000.00,  230.0,  0.05),
-                    (   5000.00,   30.0,  0.04),
-                    (   3000.00,    0.0,  0.03),
-                ]</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ms_sit_rate"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_ms_sit_rate_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+                (  10000.00,  260.0,  0.05),
+                (   5000.00,   60.0,  0.04),
+                (   3000.00,    0.0,  0.03),
+            ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_ms_sit_rate"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <record id="rule_parameter_us_ms_sit_deduction" model="hr.rule.parameter">
         <field name="name">US MS Mississippi SIT Deduction</field>
         <field name="code">us_ms_sit_deduction</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <!-- https://www.dor.ms.gov/Documents/Computer%20Payroll%20Flowchart.pdf -->
-        <!-- Table C. -->
-        <!-- Unchanged in 2021 https://www.dor.ms.gov/Documents/Computer%20Payroll%20Flowchart%209-9-20.pdf -->
-        <record id="rule_parameter_us_ms_sit_deduction_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">{
-                'single':             2300.0,
-                'head_of_household':  3400.0,
-                'married_dual':       2300.0,
-                'married':            4600.0,
-            }</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ms_sit_deduction"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_ms_sit_deduction_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">{
+            'single':             2300.0,
+            'head_of_household':  3400.0,
+            'married_dual':       2300.0,
+            'married':            4600.0,
+        }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_ms_sit_deduction"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Partners and Contribution Registers -->
     <record id="res_partner_us_ms_dor" model="res.partner">

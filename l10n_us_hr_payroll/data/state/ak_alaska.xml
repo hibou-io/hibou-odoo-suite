@@ -1,24 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <!-- Wage Base -->
-<!--    https://labor.alaska.gov/estax/faq/w1.htm  Rates are at same site-->
     <record id="rule_parameter_us_ak_suta_wage_base" model="hr.rule.parameter">
         <field name="name">US AK Alaska SUTA Wage Base</field>
         <field name="code">us_ak_suta_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <record id="rule_parameter_us_ak_suta_wage_base_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">41500.00</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ak_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-        <record id="rule_parameter_us_ak_suta_wage_base_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">43600.00</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ak_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_ak_suta_wage_base_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">41500.00</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_ak_suta_wage_base"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
 
     <!-- Rate -->
     <record id="rule_parameter_us_ak_suta_rate" model="hr.rule.parameter">
@@ -32,11 +25,6 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_ak_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
-        <record id="rule_parameter_us_ak_suta_rate_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">2.570</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ak_suta_rate"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
     </data>
 
     <record id="rule_parameter_us_ak_suta_ee_rate" model="hr.rule.parameter">
@@ -49,11 +37,6 @@
             <field name="parameter_value">0.500</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_ak_suta_ee_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-        <record id="rule_parameter_us_ak_suta_ee_rate_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">0.500</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ak_suta_ee_rate"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
         </record>
     </data>
 
