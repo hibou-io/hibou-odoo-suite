@@ -6,19 +6,11 @@
         <field name="code">us_wy_suta_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <record id="rule_parameter_us_wy_suta_wage_base_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">26400.00</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_wy_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-        <!-- http://wyomingworkforce.org/businesses/ui/utwb/ -->
-        <record id="rule_parameter_us_wy_suta_wage_base_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">27300.00</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_wy_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_wy_suta_wage_base_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">26400.00</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_wy_suta_wage_base"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Rate -->
     <record id="rule_parameter_us_wy_suta_rate" model="hr.rule.parameter">
@@ -27,9 +19,6 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <!-- Except as otherwise provided by law, the base rate of contributions assigned to any employer is eight and one-half percent (8.5%) -->
-        <!-- 27-3-503 (b) https://law.justia.com/codes/wyoming/2010/Title27/chapter3.html -->
-        <!-- 2020 Statuses > 20Titles > Title 27 > Chapter 3 > Article 5 > 27-3-503 > (b) -->
         <record id="rule_parameter_us_wy_suta_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">8.5</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_wy_suta_rate"/>

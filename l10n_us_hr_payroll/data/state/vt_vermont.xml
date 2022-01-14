@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <!-- Wage Base from  https://labor.vermont.gov/unemployment-insurance/ui-employers/quarterly-reporting-taxable-wage-information -->
+    <!-- Wage Base -->
     <record id="rule_parameter_us_vt_suta_wage_base" model="hr.rule.parameter">
         <field name="name">US VT Vermont SUTA Wage Base</field>
         <field name="code">us_vt_suta_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <record id="rule_parameter_us_vt_suta_wage_base_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">16100.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_vt_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-        <record id="rule_parameter_us_vt_suta_wage_base_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">14100.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_vt_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_vt_suta_wage_base_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">16100.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_vt_suta_wage_base"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Rate -->
     <record id="rule_parameter_us_vt_suta_rate" model="hr.rule.parameter">
@@ -26,7 +19,6 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <!-- Unchanged in 2021 https://labor.vermont.gov/unemployment-insurance/ui-employers/unemployment-tax-rates -->
         <record id="rule_parameter_us_vt_suta_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">1.0</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_vt_suta_rate"/>
@@ -39,230 +31,118 @@
         <field name="code">us_vt_sit_allowances_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <record id="rule_parameter_us_vt_sit_allowances_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">{
-                'weekly' :         83.65,
-                'bi-weekly' :     167.31,
-                'semi-monthly':   181.25,
-                'monthly' :       362.50,
-                'quarterly' :    1087.50,
-                'annually':      4350.00,
-            }</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_vt_sit_allowances_rate"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-        <!-- https://tax.vermont.gov/sites/tax/files/documents/GB-1210-2021.pdf -->
-        <record id="rule_parameter_us_vt_sit_allowances_rate_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">{
-                'weekly' :         84.62,
-                'bi-weekly' :     169.23,
-                'semi-monthly':   183.33,
-                'monthly' :       366.67,
-                'quarterly' :    1100.00,
-                'annually':      4400.00,
-            }</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_vt_sit_allowances_rate"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
-    </data>
-    <!-- Table based on https://tax.vermont.gov/sites/tax/files/documents/WithholdingInstructions.pdf-->
+    <record id="rule_parameter_us_vt_sit_allowances_rate_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">{
+            'weekly' :         83.65,
+            'bi-weekly' :     167.31,
+            'semi-monthly':   181.25,
+            'monthly' :       362.50,
+            'quarterly' :    1087.50,
+            'annually':      4350.00,
+        }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_vt_sit_allowances_rate"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
     <record id="rule_parameter_us_vt_sit_tax_rate" model="hr.rule.parameter">
         <field name="name">US VT Vermont SIT Tax Rate</field>
         <field name="code">us_vt_sit_tax_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <record id="rule_parameter_us_vt_sit_tax_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">{
-                'single': {
-                    'weekly': (
-                        (   60,   0.00, 0.00),
-                        (  836,   0.00, 3.35),
-                        ( 1941,  26.00, 6.60),
-                        ( 3983,  98.93, 7.60),
-                        ('inf', 254.12, 8.75),
-                    ),
-                    'bi-weekly': (
-                        (  120,   0.00, 0.00),
-                        ( 1672,   0.00, 3.35),
-                        ( 3882,  51.99, 6.60),
-                        ( 7966, 197.85, 7.60),
-                        ('inf', 508.24, 8.75),
-                    ),
-                    'semi-monthly': (
-                        (  130,   0.00, 0.00),
-                        ( 1811,   0.00, 3.35),
-                        ( 4205,  56.31, 6.60),
-                        ( 8630, 214.32, 7.60),
-                        ('inf', 550.62, 8.75),
-                    ),
-                    'monthly': (
-                        (  260,    0.00, 0.00),
-                        ( 3623,    0.00, 3.35),
-                        ( 8410,  112.66, 6.60),
-                        (17260,  428.60, 7.60),
-                        ('inf', 1101.20, 8.75),
-                    ),
-                    'quarterly': (
-                        (  781,    0.00, 0.00),
-                        (10869,    0.00, 3.35),
-                        (25231,  337.95, 6.60),
-                        (51781, 1285.84, 7.60),
-                        ('inf', 3303.64, 8.75),
-                    ),
-                    'annually': (
-                        (  3125,     0.00, 0.00),
-                        ( 43475,     0.00, 3.35),
-                        (100925,  1351.73, 6.60),
-                        (207125,  5143.43, 7.60),
-                        ( 'inf', 13214.63, 8.75),
-                    ),
-                },
-                'married': {
-                    'weekly': (
-                        (  180,   0.00, 0.00),
-                        ( 1477,   0.00, 3.35),
-                        ( 3315,  43.45, 6.60),
-                        ( 4956, 164.76, 7.60),
-                        ('inf', 289.47, 8.75),
-                    ),
-                    'bi-weekly': (
-                        (  361,   0.00, 0.00),
-                        ( 2955,   0.00, 3.35),
-                        ( 6630,  86.90, 6.60),
-                         (9913, 329.45, 7.60),
-                        ('inf', 578.96, 8.75),
-                    ),
-                    'semi-monthly': (
-                        (  391,   0.00, 0.00),
-                        ( 3201,   0.00, 3.35),
-                        ( 7182,  94.14, 6.60),
-                        (10739, 356.88, 7.60),
-                        ('inf', 627.21, 8.75),
-                    ),
-                    'monthly': (
-                        (  781,    0.00, 0.00),
-                        ( 6402,    0.00, 3.35),
-                        (14365,  188.30, 6.60),
-                        (21477,  713.86, 7.60),
-                        ('inf', 1254.37, 8.75),
-                    ),
-                    'quarterly': (
-                        ( 2344,    0.00, 0.00),
-                        (19206,    0.00, 3.35),
-                        (43094,  564.88, 6.60),
-                        (64431, 2141.49, 7.60),
-                        ('inf', 3763.10, 8.75),
-                    ),
-                    'annually': (
-                        (  9375,     0.00, 0.00),
-                        ( 76825,     0.00, 3.35),
-                        (172375,  2259.58, 6.60),
-                        (257725,  8565.88, 7.60),
-                        ( 'inf', 15052.48, 8.75),
-                    ),
-                },
-            }</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_vt_sit_tax_rate"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-        <!-- https://tax.vermont.gov/sites/tax/files/documents/GB-1210-2021.pdf -->
-        <record id="rule_parameter_us_vt_sit_tax_rate_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">{
-                'single': {
-                    'weekly': (
-                        (   61,   0.00, 0.00),
-                        (  849,   0.00, 3.35),
-                        ( 1969,  26.40, 6.60),
-                        ( 4041, 100.32, 7.60),
-                        ('inf', 257.79, 8.75),
-                    ),
-                    'bi-weekly': (
-                        (  122,   0.00, 0.00),
-                        ( 1697,   0.00, 3.35),
-                        ( 3938,  52.76, 6.60),
-                        ( 8082, 200.67, 7.60),
-                        ('inf', 515.61, 8.75),
-                    ),
-                    'semi-monthly': (
-                        (  132,   0.00, 0.00),
-                        ( 1839,   0.00, 3.35),
-                        ( 4266,  57.18, 6.60),
-                        ( 8755, 217.37, 7.60),
-                        ('inf', 558.53, 8.75),
-                    ),
-                    'monthly': (
-                        (  265,    0.00, 0.00),
-                        ( 3677,    0.00, 3.35),
-                        ( 8531,  114.30, 6.60),
-                        (17510,  434.67, 7.60),
-                        ('inf', 1117.07, 8.75),
-                    ),
-                    'quarterly': (
-                        (  794,    0.00, 0.00),
-                        (11031,    0.00, 3.35),
-                        (25594,  342.94, 6.60),
-                        (52531, 1304.10, 7.60),
-                        ('inf', 3351.31, 8.75),
-                    ),
-                    'annually': (
-                        (  3175,     0.00, 0.00),
-                        ( 44125,     0.00, 3.35),
-                        (102375,  1371.83, 6.60),
-                        (210125,  5216.33, 7.60),
-                        ( 'inf', 13405.33, 8.75),
-                    ),
-                },
-                'married': {
-                    'weekly': (
-                        (  183,   0.00, 0.00),
-                        ( 1499,   0.00, 3.35),
-                        ( 3363,  44.09, 6.60),
-                        ( 5028, 167.11, 7.60),
-                        ('inf', 293.65, 8.75),
-                    ),
-                    'bi-weekly': (
-                        (  366,   0.00, 0.00),
-                        ( 2997,   0.00, 3.35),
-                        ( 6726,  88.14, 6.60),
-                        (10057, 334.25, 7.60),
-                        ('inf', 587.41, 8.75),
-                    ),
-                    'semi-monthly': (
-                        (  397,   0.00, 0.00),
-                        ( 3247,   0.00, 3.35),
-                        ( 7286,  95.48, 6.60),
-                        (10895, 362.05, 7.60),
-                        ('inf', 636.33, 8.75),
-                    ),
-                    'monthly': (
-                        (  794,    0.00, 0.00),
-                        ( 6494,    0.00, 3.35),
-                        (14573,  190.95, 6.60),
-                        (21790,  724.16, 7.60),
-                        ('inf', 1272.66, 8.75),
-                    ),
-                    'quarterly': (
-                        ( 2381,    0.00, 0.00),
-                        (19481,    0.00, 3.35),
-                        (43719,  572.85, 6.60),
-                        (65719, 2172.56, 7.60),
-                        ('inf', 3817.96, 8.75),
-                    ),
-                    'annually': (
-                        (  9525,     0.00, 0.00),
-                        ( 77925,     0.00, 3.35),
-                        (174875,  2291.40, 6.60),
-                        (261475,  8690.10, 7.60),
-                        ( 'inf', 15271.70, 8.75),
-                    ),
-                },
-            }</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_vt_sit_tax_rate"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_vt_sit_tax_rate_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">{
+            'single': {
+                'weekly': (
+                    (   60,   0.00, 0.00),
+                    (  836,   0.00, 3.35),
+                    ( 1941,  26.00, 6.60),
+                    ( 3983,  98.93, 7.60),
+                    ('inf', 254.12, 8.75),
+                ),
+                'bi-weekly': (
+                    (  120,   0.00, 0.00),
+                    ( 1672,   0.00, 3.35),
+                    ( 3882,  51.99, 6.60),
+                    ( 7966, 197.85, 7.60),
+                    ('inf', 508.24, 8.75),
+                ),
+                'semi-monthly': (
+                    (  130,   0.00, 0.00),
+                    ( 1811,   0.00, 3.35),
+                    ( 4205,  56.31, 6.60),
+                    ( 8630, 214.32, 7.60),
+                    ('inf', 550.62, 8.75),
+                ),
+                'monthly': (
+                    (  260,    0.00, 0.00),
+                    ( 3623,    0.00, 3.35),
+                    ( 8410,  112.66, 6.60),
+                    (17260,  428.60, 7.60),
+                    ('inf', 1101.20, 8.75),
+                ),
+                'quarterly': (
+                    (  781,    0.00, 0.00),
+                    (10869,    0.00, 3.35),
+                    (25231,  337.95, 6.60),
+                    (51781, 1285.84, 7.60),
+                    ('inf', 3303.64, 8.75),
+                ),
+                'annually': (
+                    (  3125,     0.00, 0.00),
+                    ( 43475,     0.00, 3.35),
+                    (100925,  1351.73, 6.60),
+                    (207125,  5143.43, 7.60),
+                    ( 'inf', 13214.63, 8.75),
+                ),
+            },
+            'married': {
+                'weekly': (
+                    (  180,   0.00, 0.00),
+                    ( 1477,   0.00, 3.35),
+                    ( 3315,  43.45, 6.60),
+                    ( 4956, 164.76, 7.60),
+                    ('inf', 289.47, 8.75),
+                ),
+                'bi-weekly': (
+                    (  361,   0.00, 0.00),
+                    ( 2955,   0.00, 3.35),
+                    ( 6630,  86.90, 6.60),
+                        (9913, 329.45, 7.60),
+                    ('inf', 578.96, 8.75),
+                ),
+                'semi-monthly': (
+                    (  391,   0.00, 0.00),
+                    ( 3201,   0.00, 3.35),
+                    ( 7182,  94.14, 6.60),
+                    (10739, 356.88, 7.60),
+                    ('inf', 627.21, 8.75),
+                ),
+                'monthly': (
+                    (  781,    0.00, 0.00),
+                    ( 6402,    0.00, 3.35),
+                    (14365,  188.30, 6.60),
+                    (21477,  713.86, 7.60),
+                    ('inf', 1254.37, 8.75),
+                ),
+                'quarterly': (
+                    ( 2344,    0.00, 0.00),
+                    (19206,    0.00, 3.35),
+                    (43094,  564.88, 6.60),
+                    (64431, 2141.49, 7.60),
+                    ('inf', 3763.10, 8.75),
+                ),
+                'annually': (
+                    (  9375,     0.00, 0.00),
+                    ( 76825,     0.00, 3.35),
+                    (172375,  2259.58, 6.60),
+                    (257725,  8565.88, 7.60),
+                    ( 'inf', 15052.48, 8.75),
+                ),
+            },
+        }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_vt_sit_tax_rate"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Partners and Contribution Registers -->
     <record id="res_partner_us_vt_dor" model="res.partner">
