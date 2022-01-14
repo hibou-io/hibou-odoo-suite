@@ -6,14 +6,11 @@
         <field name="code">us_sd_suta_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <!-- Unchanged for 20201 https://dlr.sd.gov/ra/businesses/default.aspx#:~:text=The%20wage%20base%20for%20calendar,30%2C%202019. -->
-        <record id="rule_parameter_us_sd_suta_wage_base_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">15000.00</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_sd_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_sd_suta_wage_base_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">15000.00</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_sd_suta_wage_base"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Rate -->
     <record id="rule_parameter_us_sd_suta_rate" model="hr.rule.parameter">
@@ -22,7 +19,6 @@
         <field name="country_id" ref="base.us"/>
     </record>
     <data noupdate="1">
-        <!-- Unchanged for 20201 https://dlr.sd.gov/ra/businesses/default.aspx#:~:text=The%20wage%20base%20for%20calendar,30%2C%202019. -->
         <record id="rule_parameter_us_sd_suta_rate_2020" model="hr.rule.parameter.value">
             <field name="parameter_value">1.75</field>
             <field name="rule_parameter_id" ref="rule_parameter_us_sd_suta_rate"/>

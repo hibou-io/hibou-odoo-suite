@@ -6,19 +6,11 @@
         <field name="code">us_ut_suta_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <record id="rule_parameter_us_ut_suta_wage_base_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">36600.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ut_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-<!--        https://jobs.utah.gov/UI/Employer/Public/Questions/TaxRates.aspx#:~:text=For%202021%2C%20the%20minimum%20overall,to%20the%20overall%20tax%20rate.-->
-        <record id="rule_parameter_us_ut_suta_wage_base_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">38900.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ut_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_ut_suta_wage_base_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">36600.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_ut_suta_wage_base"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Rate -->
     <record id="rule_parameter_us_ut_suta_rate" model="hr.rule.parameter">
@@ -32,13 +24,6 @@
             <field name="rule_parameter_id" ref="rule_parameter_us_ut_suta_rate"/>
             <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
         </record>
-<!--        https://jobs.utah.gov/UI/Employer/Public/Questions/TaxRates.aspx#:~:text=For%202021%2C%20the%20minimum%20overall,to%20the%20overall%20tax%20rate.-->
-<!--        Benefit Ratio(unique to client) X Reserve Factor(1.05% for 2021) + Social Cost(.002)-->
-        <record id="rule_parameter_us_ut_suta_rate_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">0.1052</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ut_suta_rate"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
     </data>
     
     <record id="rule_parameter_us_ut_tax_rate" model="hr.rule.parameter">
@@ -46,101 +31,89 @@
         <field name="code">us_ut_tax_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-<!--        rates unchanged in 2021-->
-        <record id="rule_parameter_us_ut_tax_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">0.0495</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ut_tax_rate"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-    </data>
-    <!-- Table based on https://tax.utah.gov/forms/pubs/pub-14.pdf -->
+    <record id="rule_parameter_us_ut_tax_rate_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.0495</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_ut_tax_rate"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
     <record id="rule_parameter_us_ut_sit_allowances_rate" model="hr.rule.parameter">
         <field name="name">US UT Utah Allowances Rate</field>
         <field name="code">us_ut_sit_allowances_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <!-- Table based on https://tax.utah.gov/forms/pubs/pub-14.pdf -->
-<!--        Note at top of page 12:-->
-<!--        "Note: Use the Single column for taxpayers who file as head-of-household on their federal return." -->
-        <record id="rule_parameter_us_ut_sit_allowances_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">{
-                'single': {
-                    'weekly' :        7,
-                    'bi-weekly' :     14,
-                    'semi-monthly':   15,
-                    'monthly' :       30,
-                    'quarterly' :     90,
-                    'semi-annual':   180,
-                    'annually':      360,
-                },
-                'married': {
-                    'weekly' :        14,
-                    'bi-weekly' :     28,
-                    'semi-monthly':   30,
-                    'monthly' :       60,
-                    'quarterly' :    180,
-                    'semi-annual':   360,
-                    'annually':      720,
-                },
-                'head_household': {
-                    'weekly' :        7,
-                    'bi-weekly' :     14,
-                    'semi-monthly':   15,
-                    'monthly' :       30,
-                    'quarterly' :     90,
-                    'semi-annual':   180,
-                    'annually':      360,
-                },
-            }</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ut_sit_allowances_rate"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-    </data>
-    <!-- Table based on https://tax.utah.gov/forms/pubs/pub-14.pdf -->
+    <record id="rule_parameter_us_ut_sit_allowances_rate_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">{
+            'single': {
+                'weekly' :        7,
+                'bi-weekly' :     14,
+                'semi-monthly':   15,
+                'monthly' :       30,
+                'quarterly' :     90,
+                'semi-annual':   180,
+                'annually':      360,
+            },
+            'married': {
+                'weekly' :        14,
+                'bi-weekly' :     28,
+                'semi-monthly':   30,
+                'monthly' :       60,
+                'quarterly' :    180,
+                'semi-annual':   360,
+                'annually':      720,
+            },
+            'head_household': {
+                'weekly' :        7,
+                'bi-weekly' :     14,
+                'semi-monthly':   15,
+                'monthly' :       30,
+                'quarterly' :     90,
+                'semi-annual':   180,
+                'annually':      360,
+            },
+        }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_ut_sit_allowances_rate"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
     <record id="rule_parameter_us_ut_sit_tax_rate" model="hr.rule.parameter">
         <field name="name">US UT Utah SIT Tax Rate</field>
         <field name="code">us_ut_sit_tax_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-<!--        unchanged in 2021-->
-<!--        see page 9 line 4 and line 5 in schedules https://tax.utah.gov/forms/pubs/pub-14.pdf-->
-        <record id="rule_parameter_us_ut_sit_tax_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">{
-                'single': {
-                    'weekly': ((137, 1.3)),
-                    'bi-weekly': ((274, 1.3)),
-                    'semi-monthly': ((297, 1.3)),
-                    'monthly': ((594, 1.3)),
-                    'quarterly': ((1782, 1.3)),
-                    'semi-annual': ((3564, 1.3)),
-                    'annually': ((7128, 1.3)),
-                },
-                'married': {
-                    'weekly': ((274, 1.3)),
-                    'bi-weekly': (548, 1.3),
-                    'semi-monthly': ((594, 1.3)),
-                    'monthly': ((1188, 1.3)),
-                    'quarterly': ((3564, 1.3)),
-                    'semi-annual': ((7128, 1.3)),
-                    'annually': ((14256, 1.3)),
-                },
-                'head_household': {
-                    'weekly': ((137, 1.3)),
-                    'bi-weekly': ((274, 1.3)),
-                    'semi-monthly': ((297, 1.3)),
-                    'monthly': ((594, 1.3)),
-                    'quarterly': ((1782, 1.3)),
-                    'semi-annual': ((3564, 1.3)),
-                    'annually': ((7128, 1.3)),
-                },
-            }</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ut_sit_tax_rate"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_ut_sit_tax_rate_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">{
+            'single': {
+                'weekly': ((137, 1.3)),
+                'bi-weekly': ((274, 1.3)),
+                'semi-monthly': ((297, 1.3)),
+                'monthly': ((594, 1.3)),
+                'quarterly': ((1782, 1.3)),
+                'semi-annual': ((3564, 1.3)),
+                'annually': ((7128, 1.3)),
+            },
+            'married': {
+                'weekly': ((274, 1.3)),
+                'bi-weekly': (548, 1.3),
+                'semi-monthly': ((594, 1.3)),
+                'monthly': ((1188, 1.3)),
+                'quarterly': ((3564, 1.3)),
+                'semi-annual': ((7128, 1.3)),
+                'annually': ((14256, 1.3)),
+            },
+            'head_household': {
+                'weekly': ((137, 1.3)),
+                'bi-weekly': ((274, 1.3)),
+                'semi-monthly': ((297, 1.3)),
+                'monthly': ((594, 1.3)),
+                'quarterly': ((1782, 1.3)),
+                'semi-annual': ((3564, 1.3)),
+                'annually': ((7128, 1.3)),
+            },
+        }</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_ut_sit_tax_rate"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Partners and Contribution Registers -->
     <record id="res_partner_us_ut_dor" model="res.partner">

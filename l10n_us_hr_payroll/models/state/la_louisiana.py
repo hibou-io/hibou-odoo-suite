@@ -31,15 +31,8 @@ def la_louisiana_state_income_withholding(payslip, categories, worked_days, inpu
     dependent_rate = payslip.rule_parameter('us_la_sit_dependent_rate')
 
     annual_wage = wage * pay_periods
-
-    effect_cap = 0.0
-    multiplier = 0.0
-    if filing_status == 'single':
-        effect_cap = 12500.00
-        multiplier = 1.60
-    elif filing_status == 'married':
-        effect_cap = 25000.00
-        multiplier = 1.65
+    
+    effect_cap, multiplier = tax_table[0]
 
     after_credits_under = (2.100 / 100) * (((personal_exemptions * exemption_rate) +
                                            (dependent_exemptions * dependent_rate)) / pay_periods)
