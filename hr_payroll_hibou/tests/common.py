@@ -110,7 +110,7 @@ class TestPayslip(common.TransactionCase):
                 contract_values[key] = val
                 found = True
             if not found:
-                self._logger.warn('cannot locate attribute names "%s" on hr.contract().' % (key, ))
+                self._logger.warning('cannot locate attribute names "%s" on hr.contract().' % (key, ))
 
         self._get_contract_defaults(contract_values)
         contract = self.contract_model.create(contract_values)

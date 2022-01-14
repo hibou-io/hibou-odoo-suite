@@ -3,7 +3,7 @@
 {
     'name': 'Hibou Payroll',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '15.0.1.0.0',
+    'version': '15.0.2.0.0',
     'category': 'Payroll Localization',
     'depends': [
         'hr_payroll',
@@ -18,7 +18,11 @@ Base module for fixing specific qwerks or assumptions in the way Payroll Odoo En
 
     """,
     'data': [
+        'security/ir.model.access.csv',
+        'data/cron_data.xml',
+        'views/payroll_views.xml',
         'views/res_config_settings_views.xml',
+        'views/update_views.xml',
     ],
     'demo': [
     ],

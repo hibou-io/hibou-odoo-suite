@@ -6,19 +6,11 @@
         <field name="code">us_ky_suta_wage_base</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <record id="rule_parameter_us_ky_suta_wage_base_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">10800.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ky_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-        <!-- https://kewes.ky.gov/#:~:text=2021%20Taxable%20Wage%20Base%20Base,2021%20report%20during%20April%202021. -->
-        <record id="rule_parameter_us_ky_suta_wage_base_2021" model="hr.rule.parameter.value">
-            <field name="parameter_value">11100.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ky_suta_wage_base"/>
-            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_ky_suta_wage_base_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">10800.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_ky_suta_wage_base"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Rate -->
     <record id="rule_parameter_us_ky_suta_rate" model="hr.rule.parameter">
@@ -26,50 +18,33 @@
         <field name="code">us_ky_suta_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <!-- not changed in 2021 https://kewes.ky.gov/Documents/EMPLOYER_GUIDE.pdf -->
-        <record id="rule_parameter_us_ky_suta_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">2.7</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ky_suta_rate"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_ky_suta_rate_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">2.7</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_ky_suta_rate"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <record id="rule_parameter_us_ky_sit_standard_deduction_rate" model="hr.rule.parameter">
         <field name="name">US KY Kentucky Standard Deduction Rate</field>
         <field name="code">us_ky_sit_standard_deduction_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <data noupdate="1">
-        <!-- Data from https://revenue.ky.gov/Forms/42A003(T)%20(12-2019)%202020%20Tax%20Tables.pdf -->
-        <record id="rule_parameter_us_ky_sit_standard_deduction_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">2650</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ky_sit_standard_deduction_rate"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-        <!-- page 8 https://revenue.ky.gov/Software-Developer/Software%20Development%20Documents/2021%20Withholding%20Tax%20Tables%20-%20Computer%20Formual%2042A003(T)(12-20)(10-15-20%20DRAFT).pdf -->
-        <record id="rule_parameter_us_ky_sit_standard_deduction_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">2690</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ky_sit_standard_deduction_rate"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_ky_sit_standard_deduction_rate_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">2650</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_ky_sit_standard_deduction_rate"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <record id="rule_parameter_us_ky_sit_tax_rate" model="hr.rule.parameter">
         <field name="name">US KY Kentucky SIT Tax Rate</field>
         <field name="code">us_ky_sit_tax_rate</field>
         <field name="country_id" ref="base.us"/>
     </record>
-    <!-- Data from https://revenue.ky.gov/Forms/42A003(T)%20(12-2019)%202020%20Tax%20Tables.pdf -->
-    <data noupdate="1">
-        <!-- unchanged in 2021 -->
-        <!-- page 8 https://revenue.ky.gov/Software-Developer/Software%20Development%20Documents/2021%20Withholding%20Tax%20Tables%20-%20Computer%20Formual%2042A003(T)(12-20)(10-15-20%20DRAFT).pdf -->
-        <record id="rule_parameter_us_ky_sit_tax_rate_2020" model="hr.rule.parameter.value">
-            <field name="parameter_value">5.0</field>
-            <field name="rule_parameter_id" ref="rule_parameter_us_ky_sit_tax_rate"/>
-            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
-        </record>
-    </data>
+    <record id="rule_parameter_us_ky_sit_tax_rate_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">5.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_us_ky_sit_tax_rate"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
 
     <!-- Partners and Contribution Registers -->
     <record id="res_partner_us_ky_dor" model="res.partner">
