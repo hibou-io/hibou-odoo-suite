@@ -3,12 +3,9 @@
 from odoo import fields
 from odoo.tests import common, Form
 from odoo.addons.base_exception.tests.purchase_test import PurchaseTest, LineTest
-# from odoo.addons.base_exception.tests.test_base_exception import TestBaseException
 
 from .common import setup_test_model
 from .purchase_test import PurchaseUserTest, PurchaseTestExceptionRuleConfirm
-import logging
-_logger = logging.getLogger(__name__)
 
 
 @common.tagged("post_install", "-at_install")
@@ -102,7 +99,6 @@ class TestBaseExceptionUser(common.SavepointCase):
         )
 
     def test_purchase_order_exception_ignore(self):
-        # _logger.warning('starting test_purchase_order_exception_ignore')
         partner = self.env.ref("base.res_partner_1")
         partner.zip = False
         potest1 = self.env['base.exception.test.purchase'].with_user(self.user_test).create(
