@@ -2,7 +2,7 @@
 
 {
     'name': 'Stock Exception Rule',
-    'version': '13.0.1.0.0',
+    'version': '14.0.1.0.0',
     'author': 'Hibou Corp.',
     'license': 'OPL-1',
     'category': 'Generic Modules',
@@ -16,6 +16,7 @@ Custom exceptions on delivery orders
         'stock',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/stock_views.xml',
         'wizard/stock_exception_confirm_views.xml',
     ],

@@ -9,7 +9,10 @@ class ExceptionRule(models.Model):
     model = fields.Selection(
         selection_add=[
             ('stock.picking', 'Transfer'),
-        ]
+        ],
+        ondelete={
+            'stock.picking': 'cascade',
+        },
     )
     picking_ids = fields.Many2many(
         'stock.picking',
