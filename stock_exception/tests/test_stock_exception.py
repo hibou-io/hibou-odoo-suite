@@ -1,6 +1,6 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from odoo.tests import common
+from odoo.tests import common, Form
 
 
 class TestStockException(common.TransactionCase):
@@ -31,17 +31,13 @@ class TestStockException(common.TransactionCase):
         })
 
         # validate delivery order
-        delivery_order.button_validate()
+        action = delivery_order.button_validate()
         self.assertEqual(delivery_order.state, 'draft')
 
         # Simulation the opening of the wizard sale_exception_confirm and
         # set ignore_exception to True
-        stock_exception_confirm = self.env['stock.exception.confirm'].with_context(
-            {
-                'active_id': delivery_order.id,
-                'active_ids': [delivery_order.id],
-                'active_model': delivery_order._name
-            }).create({'ignore': True})
+        stock_exception_confirm = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        stock_exception_confirm.ignore = True
         stock_exception_confirm.action_confirm()
         self.assertTrue(delivery_order.ignore_exception)
         self.assertEqual(delivery_order.state, 'done')

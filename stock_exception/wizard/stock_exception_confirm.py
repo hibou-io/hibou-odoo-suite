@@ -6,6 +6,7 @@ from odoo import api, fields, models
 class StockExceptionConfirm(models.TransientModel):
     _name = 'stock.exception.confirm'
     _inherit = ['exception.rule.confirm']
+    _description = 'Stock Exception Confirm Wizard'
 
     related_model_id = fields.Many2one('stock.picking', 'Transfer')
 
