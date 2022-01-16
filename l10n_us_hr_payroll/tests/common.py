@@ -51,7 +51,7 @@ class TestUsPayslip(common.TestPayslip):
                 config_values[key] = val
                 found = True
             if not found:
-                self._logger.warn('cannot locate attribute names "%s" on contract or payroll config' % (key, ))
+                self._logger.warning('cannot locate attribute names "%s" on contract or payroll config' % (key, ))
 
         # US Payroll Config Defaults Should be set on the Model
         config = config_model.create(config_values)

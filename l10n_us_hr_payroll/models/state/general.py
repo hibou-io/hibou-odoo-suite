@@ -61,20 +61,20 @@ def _general_rate(payslip, wage, ytd_wage, wage_base=None, wage_start=None, rate
         else:
             result = wage
 
-        # _logger.warn('  wage_base method result: ' + str(result) + ' rate: ' + str(rate))
+        # _logger.warning('  wage_base method result: ' + str(result) + ' rate: ' + str(rate))
         return result, rate
     if wage_start:
         if ytd_wage >= wage_start:
-            # _logger.warn('  wage_start 1 method result: ' + str(wage) + ' rate: ' + str(rate))
+            # _logger.warning('  wage_start 1 method result: ' + str(wage) + ' rate: ' + str(rate))
             return wage, rate
         if ytd_wage + wage <= wage_start:
-            # _logger.warn('  wage_start 2 method result: ' + str(0.0) + ' rate: ' + str(0.0))
+            # _logger.warning('  wage_start 2 method result: ' + str(0.0) + ' rate: ' + str(0.0))
             return 0.0, 0.0
-        # _logger.warn('  wage_start 3 method result: ' + str((wage - (wage_start - ytd_wage))) + ' rate: ' + str(rate))
+        # _logger.warning('  wage_start 3 method result: ' + str((wage - (wage_start - ytd_wage))) + ' rate: ' + str(rate))
         return (wage - (wage_start - ytd_wage)), rate
 
     # If the wage doesn't have a start or a base
-    # _logger.warn('  basic result: ' + str(wage) + ' rate: ' + str(rate))
+    # _logger.warning('  basic result: ' + str(wage) + ' rate: ' + str(rate))
     return wage, rate
 
 

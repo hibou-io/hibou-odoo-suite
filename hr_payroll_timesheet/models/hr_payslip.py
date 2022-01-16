@@ -48,7 +48,7 @@ class HrPayslip(models.Model):
         return work_data
 
     def _pre_aggregate_timesheet_data(self, work_data, default_workentrytype):
-        for ts in self.timesheet_ids.sorted('id'):
+        for ts in self.timesheet_ids.sorted('create_date'):
             if ts.unit_amount:
                 ts_iso = ts.date.isocalendar()
                 timesheet_type = ts.work_type_id or default_workentrytype
