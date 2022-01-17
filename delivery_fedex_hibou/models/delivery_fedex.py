@@ -227,7 +227,7 @@ class DeliveryFedex(models.Model):
             recipient = superself.get_recipient(picking=picking)
             acc_number = superself._get_fedex_account_number(picking=picking)
             meter_number = superself._get_fedex_meter_number(picking=picking)
-            payment_acc_number = superself._get_fedex_payment_account_number()
+            payment_acc_number = superself._get_fedex_payment_account_number(picking=picking)
             order_name = superself.get_order_name(picking=picking)
             attn = superself.get_attn(picking=picking)
             residential = self._get_fedex_recipient_is_residential(recipient)
