@@ -1,9 +1,9 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from odoo.tests import Form, SavepointCase
+from odoo.tests import Form, TransactionCase
 
 
-class TestSaleException(SavepointCase):
+class TestSaleException(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
