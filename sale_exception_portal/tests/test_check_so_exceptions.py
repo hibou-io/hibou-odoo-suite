@@ -13,7 +13,7 @@ class TestCheckSOExceptions(TransactionCase):
             'active': True,
             'model': 'sale.order',
             'exception_type': 'by_py_code',
-            'code': 'failed = sale.partner_id and sale.partner_id.id == %d' % self.azure_customer.id
+            'code': 'failed = object.partner_id and object.partner_id.id == %d' % self.azure_customer.id
         })
 
         self.sale_product = self.browse_ref('product.product_product_5')
