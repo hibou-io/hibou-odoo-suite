@@ -114,7 +114,7 @@ class TestCommission(common.TransactionCase):
         receivable_line = payment.move_id.line_ids.filtered('credit')
 
         inv.js_assign_outstanding_line(receivable_line.id)
-        self.assertEqual(inv.payment_state, 'in_payment', 'Invoice is not paid.')
+        self.assertEqual(inv.payment_state, 'paid', 'Invoice is not paid.')
 
         user_commission = inv.commission_ids.filtered(lambda c: c.employee_id.id == emp.id)
         self.assertEqual(user_commission.state, 'done', 'Commission is not done.')
@@ -274,7 +274,7 @@ class TestCommission(common.TransactionCase):
         receivable_line = payment.move_id.line_ids.filtered('credit')
 
         inv.js_assign_outstanding_line(receivable_line.id)
-        self.assertEqual(inv.payment_state, 'in_payment', 'Invoice is not paid.')
+        self.assertEqual(inv.payment_state, 'paid', 'Invoice is not paid.')
 
         user_commission = inv.commission_ids.filtered(lambda c: c.employee_id.id == emp.id)
         self.assertEqual(user_commission.state, 'done', 'Commission is not done.')
