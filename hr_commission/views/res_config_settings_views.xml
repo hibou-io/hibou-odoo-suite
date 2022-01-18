@@ -7,9 +7,9 @@
         <field name="priority" eval="50"/>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='invoicing_settings']" position="after">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
                 <h2>Commissions</h2>
-                <div class="row mt16 o_settings_container" id="commission_settings" groups="account.group_account_user">
+                <div class="row mt16 o_settings_container" id="commission_settings" groups="account.group_account_manager">
                     <div class="col-xs-12 col-md-6 o_setting_box" title="These taxes are set in any new product created.">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">
