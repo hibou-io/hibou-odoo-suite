@@ -14,9 +14,11 @@ class HrAttendance(models.Model):
         if isinstance(vals_list, dict):
             vals_list = [vals_list]
 
-        payslips = self.env['hr.payslip'].sudo().browse([d.get('payslip_id', 0) for d in vals_list])
-        if any(p.state not in ('draft', 'verify') for p in payslips.exists()):
-            raise ValidationError('Cannot create attendance linked to payslip that is not draft.')
+        payslip_ids = [i for i in set([d.get('payslip_id', 0) for d in vals_list]) if i != 0]
+        if payslip_ids:
+            payslips = self.env['hr.payslip'].sudo().browse(payslip_ids)
+            if payslips.filtered(lambda p: p.state not in ('draft', 'verify')):
+                raise ValidationError('Cannot create attendance linked to payslip that is not draft.')
         return super().create(vals_list)
 
     def write(self, values):
