@@ -63,11 +63,18 @@ class HrPayslip(models.Model):
         return super(HrPayslip, self).create(vals)
 
     def _payment_values(self, amount):
+        method = self.move_id.journal_id.payroll_payment_method_id
+        if amount > 0.0:
+            method = self.move_id.journal_id.payroll_payment_method_refund_id
+        
+        method_line = self.move_id.journal_id.payroll_payment_journal_id.outbound_payment_method_line_ids.filtered(
+            lambda l: l.payment_method_id == method
+        )
         values = {
             'payment_reference': self.number,
             'ref': self.number + ' - ' + self.name,
             'journal_id': self.move_id.journal_id.payroll_payment_journal_id.id,
-            'payment_method_id': self.move_id.journal_id.payroll_payment_method_id.id,
+            'payment_method_line_id': method_line.id,
             'partner_type': 'supplier',
             'partner_id': self.employee_id.address_home_id.id,
             'payment_type': 'outbound',
@@ -77,7 +84,6 @@ class HrPayslip(models.Model):
             values.update({
                 'payment_type': 'inbound',
                 'amount': amount,
-                'payment_method_id': self.move_id.journal_id.payroll_payment_method_refund_id.id,
             })
         return values
 
