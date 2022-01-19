@@ -81,7 +81,7 @@ class FedexRequest(fedex_request.FedexRequest):
         self.RequestedShipment.Recipient.Contact = Contact
         self.RequestedShipment.Recipient.Address = Address
 
-    def add_package(self, weight_value, sequence_number=False, mode='shipping', ref=False, insurance=False):
+    def add_package(self, weight_value, sequence_number=False, mode='shipping', ref=False, insurance=False, signature_required=False):
         """
         Adds ref type of object to include.
         :param weight_value: default
@@ -89,6 +89,7 @@ class FedexRequest(fedex_request.FedexRequest):
         :param mode: default
         :param ref: NEW add CUSTOMER_REFERENCE object
         :param insurance: NEW add Insurance amount
+        :param signature_required: NEW add signature required
         :return:
         """
         package = self.client.factory.create('RequestedPackageLineItem')
@@ -108,6 +109,12 @@ class FedexRequest(fedex_request.FedexRequest):
             # TODO at some point someone might need currency here
             insured.Currency = 'USD'
             package.InsuredValue = insured
+
+        special_service = self.client.factory.create("PackageSpecialServicesRequested")
+        signature_detail = self.client.factory.create("SignatureOptionDetail")
+        signature_detail.OptionType = 'DIRECT' if signature_required else 'NO_SIGNATURE_REQUIRED'
+        special_service.SignatureOptionDetail = signature_detail
+        package.SpecialServicesRequested = special_service
 
         package.PhysicalPackaging = 'BOX'
         package.Weight = package_weight

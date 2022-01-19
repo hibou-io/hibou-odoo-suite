@@ -311,7 +311,8 @@ class DeliveryFedex(models.Model):
                         # package_length=packaging.length,
                         sequence_number=sequence,
                         ref=('%s-%d' % (order_name, sequence)),
-                        insurance=superself.get_insurance_value(picking=picking, package=package)
+                        insurance=superself.get_insurance_value(picking=picking, package=package),
+                        signature_required=superself.get_signature_required(picking=picking, package=package)
                     )
                     srm.set_master_package(net_weight, package_count, master_tracking_id=master_tracking_id)
                     request = srm.process_shipment()
@@ -385,7 +386,8 @@ class DeliveryFedex(models.Model):
                     # package_width=packaging.width,
                     # package_length=packaging.length,
                     ref=order_name,
-                    insurance=superself.get_insurance_value(picking=picking, package=picking_packages[:1])
+                    insurance=superself.get_insurance_value(picking=picking, package=picking_packages[:1]),
+                    signature_required=superself.get_signature_required(picking=picking, package=picking_packages[:1])
                 )
                 srm.set_master_package(net_weight, 1)
 
@@ -475,6 +477,7 @@ class DeliveryFedex(models.Model):
         meter_number = superself._get_fedex_meter_number(order=order, picking=picking)
         order_name = superself.get_order_name(order=order, picking=picking)
         insurance_value = superself.get_insurance_value(order=order, picking=picking, package=package)
+        signature_required = superself.get_signature_required(order=order, picking=picking, package=package)
         residential = self._get_fedex_recipient_is_residential(recipient)
         date_planned = fields.Datetime.now()
         if self.env.context.get('date_planned'):
@@ -558,7 +561,8 @@ class DeliveryFedex(models.Model):
                     # package_length=packaging.length,
                     sequence_number=1,
                     ref=('%s-%d' % (order_name, 1)),
-                    insurance=insurance_value
+                    insurance=insurance_value,
+                    signature_required=signature_required
                 )
             else:
                 # deliver all together...
@@ -576,7 +580,8 @@ class DeliveryFedex(models.Model):
                     # po_number=po_number,
                     # dept_number=dept_number,
                     ref=('%s-%d' % (order_name, 1)),
-                    insurance=insurance_value
+                    insurance=insurance_value,
+                    signature_required=signature_required
                 )
 
 
