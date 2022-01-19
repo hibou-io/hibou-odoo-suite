@@ -12,9 +12,14 @@ set -e
 #      Note that with Odoo running in the foreground, killing Odoo will kill the container.
 #    DEV_MODE=
 #      Unset to not use Theia at all.
-#
+#    
 #    DEV_MODE_PATH=/opt/odoo/addons
 #      To change the path to start Theia in, useful to get git working.
+
+if [ "$DEV_MODE_PATH" != "" ] && [ -z "$(ls -A $DEV_MODE_PATH/.theia)" ]
+then
+   cp -R /opt/odoo/hibou-suite/.theia $DEV_MODE_PATH
+fi
 
 if [ "$DEV_MODE_PATH" == "" ]
 then
