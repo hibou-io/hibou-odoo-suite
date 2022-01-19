@@ -669,7 +669,7 @@ class SaleOrderMakePlan(models.TransientModel):
         _logger.info('generate_shipping_options:: base_option: ' + str(base_option) + ' order_fake: ' + str(order_fake) + ' carriers: ' + str(carriers))
 
         if not carriers:
-            return base_option
+            return [base_option]
 
         if not base_option.get('sub_options'):
             options = []
