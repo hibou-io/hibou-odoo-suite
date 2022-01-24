@@ -17,6 +17,7 @@ RMA Product Cores - Return core products from customers.
         'rma_sale',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/portal_templates.xml',
         'views/rma_views.xml',
         'wizard/rma_lines_views.xml',
