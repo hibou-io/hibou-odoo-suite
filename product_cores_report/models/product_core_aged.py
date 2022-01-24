@@ -186,7 +186,7 @@ class ProductCoreAgedReport(models.AbstractModel):
                                     {'name': sign * qty_expired or '', 'no_format': sign * qty_expired},
                                     ],
                         'action_context': {
-                            'default_type': aml.move_id.type,
+                            'default_move_type': aml.move_id.move_type,
                             'default_journal_id': aml.move_id.journal_id.id,
                         },
                         'title_hover': self._format_aml_name(aml.name, aml.ref, aml.move_id.name),
