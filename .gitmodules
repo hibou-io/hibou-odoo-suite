@@ -19,3 +19,6 @@
 [submodule "external/hibou-oca/connector-ecommerce"]
 	path = external/hibou-oca/connector-ecommerce
 	url = https://github.com/hibou-io/oca-connector-ecommerce.git
+[submodule "external/hiboubox"]
+	path = external/hiboubox
+	url = https://gitlab.com/hibou-io/hibou-odoo/hiboubox.git
