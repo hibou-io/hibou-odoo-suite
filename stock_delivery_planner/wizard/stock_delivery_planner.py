@@ -35,6 +35,7 @@ class StockDeliveryPlanner(models.TransientModel):
                     base_carriers = base_carriers.browse(carrier_ids)
                 except:
                     pass
+        base_carriers = base_carriers.sudo()
 
         for carrier in base_carriers:
             try:
