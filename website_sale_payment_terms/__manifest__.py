@@ -2,7 +2,7 @@
     'name': 'Website Payment Terms',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'category': 'Sales',
-    'version': '14.0.1.0.0',
+    'version': '15.0.1.0.0',
     'description':
         """
 Website Payment Terms
@@ -20,8 +20,12 @@ Allow customers to choose payment terms if order total meets a configured thresh
         'security/ir.model.access.csv',
         'views/account_views.xml',
         'views/res_config_views.xml',
-        'views/web_assets.xml',
         'views/website_templates.xml',
         'views/website_views.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            '/website_sale_payment_terms/static/src/js/payment_terms.js',
+        ],
+    },
 }

@@ -4,9 +4,14 @@ from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelive
 
 class WebsiteSalePaymentTerms(WebsiteSaleDelivery):
 
+    def _get_shop_payment_values(self, order, **kwargs):
+        values = super(WebsiteSalePaymentTerms, self)._get_shop_payment_values(order, **kwargs)
+        values['amount'] = order.amount_due_today
+        return values
+
     # In case payment_term_id is set by query-string in a link (from website_sale_delivery)
-    @route(['/shop/payment'], type='http', auth="public", website=True)
-    def payment(self, **post):
+    @route('/shop/payment', type='http', auth='public', website=True, sitemap=False)
+    def shop_payment(self, **post):
         order = request.website.sale_get_order()
         payment_term_id = post.get('payment_term_id')
         if order.amount_total > request.website.payment_deposit_threshold:
@@ -19,7 +24,7 @@ class WebsiteSalePaymentTerms(WebsiteSaleDelivery):
         else:
             order.payment_term_id = False
 
-        return super(WebsiteSalePaymentTerms, self).payment(**post)
+        return super(WebsiteSalePaymentTerms, self).shop_payment(**post)
 
     # Main JS driven payment term updater.
     @route(['/shop/update_payment_term'], type='json', auth='public', methods=['POST'], website=True, csrf=False)
@@ -79,4 +84,5 @@ class WebsiteSalePaymentTerms(WebsiteSaleDelivery):
         currency = order.currency_id
         if order:
             res['amount_due_today'] = Monetary.value_to_html(order.amount_due_today, {'display_currency': currency})
+            res['amount_due_today_raw'] = order.amount_due_today
         return res
