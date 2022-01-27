@@ -8,8 +8,8 @@
         <field name="sequence">50</field>
         <field name="model">sale.order</field>
         <field name="code">
-partner = sale.partner_invoice_id.commercial_partner_id
-partner_balance = partner.credit + sale.amount_total
+partner = object.partner_invoice_id.commercial_partner_id
+partner_balance = partner.credit + object.amount_total
 if partner.credit_limit and partner.credit_limit &lt;= partner_balance:
     failed = True
         </field>
@@ -23,7 +23,7 @@ if partner.credit_limit and partner.credit_limit &lt;= partner_balance:
         <field name="sequence">50</field>
         <field name="model">sale.order</field>
         <field name="code">
-partner = sale.partner_invoice_id.commercial_partner_id
+partner = object.partner_invoice_id.commercial_partner_id
 if partner.credit_hold:
     failed = True
         </field>
@@ -37,7 +37,7 @@ if partner.credit_hold:
         <field name="sequence">55</field>
         <field name="model">sale.order</field>
         <field name="code">
-partner = sale.partner_invoice_id.commercial_partner_id
+partner = object.partner_invoice_id.commercial_partner_id
 if partner.invoice_ids.filtered(lambda i: i.state == 'posted' and i.payment_state != 'paid' and (i.invoice_date_due and str(i.invoice_date_due) &lt; str(datetime.date.today())) and i.move_type == 'out_invoice'):
     failed = True
         </field>
