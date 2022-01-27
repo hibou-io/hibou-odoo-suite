@@ -5,6 +5,7 @@ from odoo.tests import tagged, TransactionCase
 class TestWebsiteSalePaymentTerms(TransactionCase):
     def setUp(self):
         super(TestWebsiteSalePaymentTerms, self).setUp()
+        self.env.company.currency_id = self.browse_ref('base.USD')
         self.so = self.env['sale.order'].create({
             'partner_id': self.ref('base.res_partner_12'),
             'order_line': [(0, 0, {

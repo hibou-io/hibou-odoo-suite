@@ -21,7 +21,7 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
          * @override
          */
         start: function () {
-            console.log('Payment Terms V10.3');
+            console.log('Payment Terms V10.4');
             return this._super.apply(this, arguments).then(function () {
                 var available_term = $('input[name="payment_term_id"]').length;
                 if (available_term > 0) {
@@ -58,6 +58,15 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
         },
 
         /**
+         * Update the total cost according to the selected shipping method
+         * 
+         * @private
+         * @param {float} amount : The new total amount of to be paid
+         */
+        _updatePaymentAmount: function(amount){
+            core.bus.trigger('update_shipping_cost', amount);
+        },
+        /**
          * Show amount due if operation is a success
          *
          * @private
@@ -65,12 +74,10 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
          */
         _onPaymentTermUpdateAnswer: function (result) {
             if (!result.error) {
-                console.log("_onPaymentTermUpdateAnswer");
-                console.log(result);
                 // Get Payment Term note/description for modal
-                var note = result.note;
-                if (!result.note) {
-                    note = result.payment_term_name;
+                var note = $.parseHTML(result.note);
+                if (!$(note).text()) {
+                    note = $.parseHTML('<p>' + result.payment_term_name + '</p>');
                 }
 
                 // Change forms based on order payment requirement
@@ -79,12 +86,13 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
                     $('#payment_method').hide();
                     $('#non_payment_method').show();
                 } else {
+                    this._updatePaymentAmount(result.amount_due_today);
                     $('#payment_method').show();
                     $('#non_payment_method').hide();
                 }
 
                 // Open success modal with message
-                $('#payment_term_success_modal .success-modal-note').text(note);
+                $('#payment_term_success_modal .success-modal-note').html(note);
                 $('#payment_term_success_modal').modal();
             } else {
                 // Open error modal
@@ -117,7 +125,10 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
     publicWidget.registry.websiteSaleDelivery.include({
         _handleCarrierUpdateResult: function (result) {
             this._super.apply(this, arguments);
-            $('#order_due_today .monetary_field').html(result.amount_due_today);
+            if (result.amount_due_today_raw !== undefined) {
+                this._updateShippingCost(result.amount_due_today_raw);
+                $('#order_due_today .monetary_field').html(result.amount_due_today);
+            }
         },
     });
 

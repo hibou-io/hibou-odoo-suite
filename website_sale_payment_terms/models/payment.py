@@ -6,22 +6,6 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
-    def render_sale_button(self, order, submit_txt=None, render_values=None):
-        values = {
-            'partner_id': order.partner_id.id,
-            'type': self.type,
-        }
-        if render_values:
-            values.update(render_values)
-        # Not very elegant to do that here but no choice regarding the design.
-        self._log_payment_transaction_sent()
-        return self.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=submit_txt or _('Pay Now')).sudo().render(
-            self.reference,
-            order.amount_due_today,
-            order.pricelist_id.currency_id.id,
-            values=values,
-        )
-
     # Override to confirm payments totaling the amount_due_today
     def _check_amount_and_confirm_order(self):
         self.ensure_one()
