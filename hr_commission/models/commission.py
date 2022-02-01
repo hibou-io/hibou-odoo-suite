@@ -71,14 +71,14 @@ class Commission(models.Model):
             elif commission.contract_id and commission.rate_type != 'manual':
                 if commission.rate_type == 'normal':
                     commission.rate = commission.contract_id.commission_rate
-                else:
+                elif commission.rate_type == 'admin':
                     commission.rate = commission.contract_id.admin_commission_rate
 
             rounding = 2
             if commission.source_move_id:
                 rounding = commission.source_move_id.company_currency_id.rounding
                 commission.base_total = commission.source_move_id.amount_total_signed
-                commission.base_amount = commission.source_move_id.amount_for_commission()
+                commission.base_amount = commission.source_move_id.amount_for_commission(commission)
 
             amount = (commission.base_amount * commission.rate) / 100.0
             if float_is_zero(amount, precision_rounding=rounding):
@@ -126,7 +126,7 @@ class Commission(models.Model):
             else:
                 employee = employee_obj.search([('user_id', '=', move.user_id.id)], limit=1)
                 contract = employee.contract_id
-                if all((employee, contract)):
+                if all((employee, contract, contract.commission_rate)):
                     move.commission_ids += commission_obj.create({
                         'employee_id': employee.id,
                         'contract_id': contract.id,
@@ -139,7 +139,7 @@ class Commission(models.Model):
                 # Admin/Coach commission.
                 employee = employee.coach_id
                 contract = employee.contract_id
-                if all((employee, contract)):
+                if all((employee, contract, contract.admin_commission_rate)):
                     move.commission_ids += commission_obj.create({
                         'employee_id': employee.id,
                         'contract_id': contract.id,
