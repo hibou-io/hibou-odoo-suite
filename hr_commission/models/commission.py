@@ -120,8 +120,8 @@ class Commission(models.Model):
 
             if commission_structure:
                 commission_structure.create_for_source_move(move, move_amount)
-            elif move.user_id:
-                employee = employee_obj.search([('user_id', '=', move.user_id.id)], limit=1)
+            elif move.invoice_user_id:
+                employee = employee_obj.search([('user_id', '=', move.invoice_user_id.id)], limit=1)
                 contract = employee.contract_id
                 if all((employee, contract, contract.commission_rate)):
                     move.commission_ids += commission_obj.create({
