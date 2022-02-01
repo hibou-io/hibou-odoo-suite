@@ -36,7 +36,7 @@ class AccountMove(models.Model):
         self.env['hr.commission'].invoice_paid(self)
         return res
 
-    def amount_for_commission(self):
+    def amount_for_commission(self, commission=None):
         if hasattr(self, 'margin') and self.company_id.commission_amount_type == 'on_invoice_margin':
             sign = -1 if self.move_type in ['in_refund', 'out_refund'] else 1
             return self.margin * sign
