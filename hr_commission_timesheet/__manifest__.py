@@ -3,7 +3,7 @@
 {
     'name': 'Timesheet Commissions',
     'description': 'Pay commission on billed timesheets.',
-    'version': '13.0.1.0.0',
+    'version': '14.0.1.0.0',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'depends': [
         'hr_commission',
