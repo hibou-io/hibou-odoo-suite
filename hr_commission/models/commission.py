@@ -99,7 +99,7 @@ class Commission(models.Model):
         return super(Commission, self).unlink()
 
     def _filter_source_moves_for_creation(self, moves):
-        return moves.filtered(lambda i: i.user_id and not i.commission_ids)
+        return moves.filtered(lambda i: i.invoice_user_id and not i.commission_ids)
 
     def _commissions_to_confirm(self, moves):
         commissions = moves.mapped('commission_ids')
@@ -121,7 +121,7 @@ class Commission(models.Model):
             if commission_structure:
                 commission_structure.create_for_source_move(move, move_amount)
             else:
-                employee = employee_obj.search([('user_id', '=', move.user_id.id)], limit=1)
+                employee = employee_obj.search([('user_id', '=', move.invoice_user_id.id)], limit=1)
                 contract = employee.contract_id
                 if all((employee, contract)):
                     move.commission_ids += commission_obj.create({
