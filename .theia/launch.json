@@ -29,6 +29,26 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "Odoo: INIT 'hr_commission'",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["-i", "hr_commission", 
+                     "-u", "hr_commission",
+                     "--stop-after-init"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: TEST 'hr_commission'",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["-i", "hr_commission", 
+                     "-u", "hr_commission",
+                     "--test-enable", "--no-xmlrpc", "--stop-after-init"],
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Odoo: INIT 'hr_payroll_hibou'",
             "type": "python",
             "request": "launch",
@@ -62,6 +82,14 @@
             "request": "launch",
             "program": "/opt/odoo/hibou-suite/odoo-reload.py",
             "args": [],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: reload foreground server, Kill Others",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-reload.py",
+            "args": ["KILL_OTHER"],
             "console": "integratedTerminal"
         }
     ]
