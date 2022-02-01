@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_commission"
+        name="Commissions"
+        parent="sale.sale_menu_root"
+        sequence="5"
+        />
+    <menuitem id="menu_commission_commission"
+        name="Commissions"
+        parent="menu_commission"
+        sequence="10"
+        action="hr_commission.action_hr_commission"
+        />
+
+    <menuitem id="menu_commission_payments"
+        name="Commission Payments"
+        parent="menu_commission"
+        sequence="20"
+        action="hr_commission.action_hr_commission_payment"
+        />
+
+    <menuitem id="menu_commission_structure"
+        name="Commission Structures"
+        parent="menu_commission"
+        sequence="30"
+        action="hr_commission.action_commission_structure"
+        />
+
+</odoo>
