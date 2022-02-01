@@ -54,7 +54,7 @@
                 <field name="employee_id"/>
                 <field name="contract_id"/>
                 <field name="base_total" string="Invoice Total" sum="Invoice Total"/>
-                <field name="base_amount" string="Margin" sum="Margin Total"/>
+                <field name="base_amount" string="Base" sum="Base Total"/>
                 <field name="amount" string="Commission" sum="Commission Total"/>
                 <field name="state"/>
                 <field name="move_date"/>
@@ -118,16 +118,16 @@
 
     <menuitem
         action="action_hr_commission"
-        id="menu_action_account_commission_form"
-        parent="account.menu_finance_entries"
-        sequence="90"
+        id="menu_action_account_commission_root"
+        parent="account.menu_finance_receivables"
+        sequence="120"
         />
 
     <menuitem
         action="action_hr_commission"
-        id="menu_action_account_commission_form2"
-        parent="menu_action_account_commission_form"
-        sequence="90"
+        id="menu_action_account_commission_form"
+        parent="menu_action_account_commission_root"
+        sequence="10"
         />
 
     <record id="action_commission_mark_paid" model="ir.actions.server">
@@ -210,8 +210,8 @@ action = records.action_mark_paid()
     <menuitem
         action="action_hr_commission_payment"
         id="menu_action_account_commission_payment_form"
-        parent="menu_action_account_commission_form"
-        sequence="100"
+        parent="menu_action_account_commission_root"
+        sequence="10"
         />
 
     <!-- Commission Structure -->
@@ -239,5 +239,18 @@ action = records.action_mark_paid()
             </form>
         </field>
     </record>
+
+    <record id="action_commission_structure" model="ir.actions.act_window">
+        <field name="name">Commission Structures</field>
+        <field name="res_model">hr.commission.structure</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        action="action_commission_structure"
+        id="menu_action_account_commission_structure"
+        parent="menu_action_account_commission_root"
+        sequence="30"
+        />
 
 </odoo>
