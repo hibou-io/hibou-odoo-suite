@@ -1,0 +1,57 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: shell",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["shell", "--no-xmlrpc"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: TEST 'sale'",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["-i", "sale", 
+                     "-u", "sale",
+                     "--test-enable", "--no-xmlrpc", "--stop-after-init"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: server",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": [],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: reload foreground server",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-reload.py",
+            "args": [],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: reload foreground server, Kill Others",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-reload.py",
+            "args": ["KILL_OTHER"],
+            "console": "integratedTerminal"
+        }
+    ]
+}
+
