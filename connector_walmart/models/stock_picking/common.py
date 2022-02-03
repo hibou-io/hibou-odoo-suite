@@ -3,7 +3,6 @@
 
 import logging
 from odoo import api, models, fields
-from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import RetryableJobError
 
@@ -24,9 +23,6 @@ class WalmartStockPicking(models.Model):
                                        string='Walmart Sale Order',
                                        ondelete='set null')
 
-    @job(default_channel='root.walmart')
-    @related_action(action='related_action_unwrap_binding')
-    @api.multi
     def export_picking_done(self):
         """ Export a complete or partial delivery order. """
         self.ensure_one()

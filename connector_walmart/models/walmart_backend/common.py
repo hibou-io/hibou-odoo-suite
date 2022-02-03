@@ -73,7 +73,6 @@ class WalmartBackend(models.Model):
     )
 
     @contextmanager
-    @api.multi
     def work_on(self, model_name, **kwargs):
         self.ensure_one()
         walmart_api = Walmart(self.client_id, self.client_secret)
@@ -91,12 +90,10 @@ class WalmartBackend(models.Model):
         ])
         return backends.import_sale_orders()
 
-    @api.multi
     def import_sale_orders(self):
         self._import_from_date('walmart.sale.order', 'import_orders_from_date')
         return True
 
-    @api.multi
     def _import_from_date(self, model_name, from_date_field):
         import_start_time = datetime.now()
         for backend in self:

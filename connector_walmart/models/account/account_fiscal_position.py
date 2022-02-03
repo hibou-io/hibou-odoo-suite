@@ -14,7 +14,6 @@ class AccountFiscalPosition(models.Model):
 
     is_connector_walmart = fields.Boolean(string='Use Walmart Order Item Rate')
 
-    @api.multi
     def map_tax(self, taxes, product=None, partner=None, order_line=None):
 
         if not taxes or not self.is_connector_walmart:

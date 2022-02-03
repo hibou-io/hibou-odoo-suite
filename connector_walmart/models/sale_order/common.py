@@ -7,7 +7,6 @@ import odoo.addons.decimal_precision as dp
 from urllib.parse import parse_qs
 
 from odoo import models, fields, api
-from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import RetryableJobError
 
@@ -50,19 +49,16 @@ class WalmartSaleOrder(models.Model):
         required=False,
     )
 
-    @job(default_channel='root.walmart')
     @api.model
     def import_batch(self, backend, filters=None):
         """ Prepare the import of Sales Orders from Walmart """
         return super(WalmartSaleOrder, self).import_batch(backend, filters=filters)
 
-    @api.multi
     def action_confirm(self):
         for order in self:
             if order.backend_id.acknowledge_order == 'order_confirm':
                 self.with_delay().acknowledge_order(order.backend_id, order.external_id)
 
-    @job(default_channel='root.walmart')
     @api.model
     def acknowledge_order(self, backend, external_id):
         with backend.work_on(self._name) as work:
@@ -79,7 +75,6 @@ class SaleOrder(models.Model):
         string="Walmart Bindings",
     )
 
-    @api.multi
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         self.walmart_bind_ids.action_confirm()
@@ -132,8 +127,6 @@ class SaleOrderLine(models.Model):
         string="Walmart Bindings",
     )
 
-
-    @api.multi
     def _compute_tax_id(self):
         """
         This overrides core behavior because we need to get the order_line into the order
