@@ -51,9 +51,9 @@ class StockPickingAdapter(Component):
 
     def create(self, id, lines):
         api_instance = self.api_instance
-        _logger.warn('BEFORE SHIPPING %s list: %s' % (str(id), str(lines)))
-        record = api_instance.orders.ship(id, lines)
-        _logger.warn('AFTER SHIPPING RECORD: ' + str(record))
+        _logger.info('BEFORE SHIPPING %s list: %s' % (str(id), str(lines)))
+        record = api_instance.orders.create_shipment(id, lines)
+        _logger.info('AFTER SHIPPING RECORD: ' + str(record))
         if 'order' in record:
             return record['order']
         raise RetryableJobError('Shipping Order %s did not return an order response. (lines: %s)' % (str(id), str(lines)))
