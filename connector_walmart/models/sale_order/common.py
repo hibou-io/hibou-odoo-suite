@@ -4,9 +4,9 @@
 import logging
 
 import odoo.addons.decimal_precision as dp
+from urllib.parse import parse_qs
 
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError
 from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import RetryableJobError
@@ -162,20 +162,20 @@ class SaleOrderAdapter(Component):
         :return: List
         """
         if next_cursor:
-            arguments = {'nextCursor': next_cursor}
+            # next_cursor looks like '?somefield=xxx&blah=yyy'
+            arguments = parse_qs(next_cursor.strip('?'))
         else:
             arguments = {'createdStartDate': from_date.isoformat()}
 
         api_instance = self.api_instance
         orders_response = api_instance.orders.all(**arguments)
-        if 'error' in orders_response:
-            raise ValidationError(str(orders_response))
         _logger.debug(orders_response)
 
         if not 'list' in orders_response:
             return []
 
-        next = orders_response['list']['meta']['nextCursor']
+        # 'meta' may not be there (though it is in the example on the API docs even when nextCursor is none)
+        next = orders_response.get('list', {}).get('meta', {}).get('nextCursor')
         if next:
             self.env[self._apply_on].with_delay().import_batch(
                 self.backend_record,
@@ -202,10 +202,10 @@ class SaleOrderAdapter(Component):
         """ Returns the order after ack
         :rtype: dict
         """
-        _logger.warn('BEFORE ACK ' + str(id))
+        _logger.info('BEFORE ACK ' + str(id))
         api_instance = self.api_instance
         record = api_instance.orders.acknowledge(id)
-        _logger.warn('AFTER ACK RECORD: ' + str(record))
+        _logger.info('AFTER ACK RECORD: ' + str(record))
         if 'order' in record:
             return record['order']
         raise RetryableJobError('Acknowledge Order "' + str(id) + '" did not return an order response.')
