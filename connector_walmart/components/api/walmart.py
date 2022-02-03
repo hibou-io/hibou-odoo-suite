@@ -30,39 +30,61 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# © 2017 Hibou Corp. - Extended and converted to v3/JSON
-
-
 import requests
-import base64
-import time
-from uuid import uuid4
-# from lxml import etree
-# from lxml.builder import E, ElementMaker
-from json import dumps, loads
+import uuid
+import csv
+import io
+import zipfile
 
-from Crypto.Hash import SHA256
-from Crypto.PublicKey import RSA
-from Crypto.Signature import PKCS1_v1_5
+from datetime import datetime
+from requests.auth import HTTPBasicAuth
+from lxml import etree
+from lxml.builder import E, ElementMaker
 
-try:
-    from urllib.parse import urlencode
-except ImportError:
-    from urllib import urlencode
+from .exceptions import WalmartAuthenticationError
+
+
+def epoch_milliseconds(dt):
+    "Walmart accepts timestamps as epoch time in milliseconds"
+    epoch = datetime.utcfromtimestamp(0)
+    return int((dt - epoch).total_seconds() * 1000.0)
 
 
 class Walmart(object):
 
-    def __init__(self, consumer_id, channel_type, private_key):
-        self.base_url = 'https://marketplace.walmartapis.com/v3/%s'
-        self.consumer_id = consumer_id
-        self.channel_type = channel_type
-        self.private_key = private_key
-        self.session = requests.Session()
-        self.session.headers['Accept'] = 'application/json'
-        self.session.headers['WM_SVC.NAME'] = 'Walmart Marketplace'
-        self.session.headers['WM_CONSUMER.ID'] = self.consumer_id
-        self.session.headers['WM_CONSUMER.CHANNEL.TYPE'] = self.channel_type
+    def __init__(self, client_id, client_secret):
+        """To get client_id and client_secret for your Walmart Marketplace
+        visit: https://developer.walmart.com/#/generateKey
+        """
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.token = None
+        self.token_expires_in = None
+        self.base_url = "https://marketplace.walmartapis.com/v3"
+
+        session = requests.Session()
+        session.headers.update({
+            "WM_SVC.NAME": "Walmart Marketplace",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Accept": "application/json",
+        })
+        session.auth = HTTPBasicAuth(self.client_id, self.client_secret)
+        self.session = session
+
+        # Get the token required for API requests
+        self.authenticate()
+
+    def authenticate(self):
+        data = self.send_request(
+            "POST", "{}/token".format(self.base_url),
+            body={
+                "grant_type": "client_credentials",
+            },
+        )
+        self.token = data["access_token"]
+        self.token_expires_in = data["expires_in"]
+
+        self.session.headers["WM_SEC.ACCESS_TOKEN"] = self.token
 
     @property
     def items(self):
@@ -80,42 +102,70 @@ class Walmart(object):
     def orders(self):
         return Orders(connection=self)
 
-    def get_sign(self, url, method, timestamp):
-        return self.sign_data(
-            '\n'.join([self.consumer_id, url, method, timestamp]) + '\n'
-        )
+    @property
+    def report(self):
+        return Report(connection=self)
 
-    def sign_data(self, data):
-        rsakey = RSA.importKey(base64.b64decode(self.private_key))
-        signer = PKCS1_v1_5.new(rsakey)
-        digest = SHA256.new()
-        digest.update(data.encode('utf-8'))
-        sign = signer.sign(digest)
-        return base64.b64encode(sign)
+    @property
+    def feed(self):
+        return Feed(connection=self)
 
-    def get_headers(self, url, method):
-        timestamp = str(int(round(time.time() * 1000)))
+    def send_request(
+        self, method, url, params=None, body=None, json=None,
+        request_headers=None
+    ):
+        # A unique ID which identifies each API call and used to track
+        # and debug issues; use a random generated GUID for this ID
         headers = {
-            'WM_SEC.AUTH_SIGNATURE': self.get_sign(url, method, timestamp),
-            'WM_SEC.TIMESTAMP': timestamp,
-            'WM_QOS.CORRELATION_ID': str(uuid4()),
+            "WM_QOS.CORRELATION_ID": uuid.uuid4().hex,
         }
-        if method in ('POST', ):
-            headers['Content-Type'] = 'application/json'
-        return headers
+        if request_headers:
+            headers.update(request_headers)
 
-    def send_request(self, method, url, params=None, body=None):
-        encoded_url = url
-        if params:
-            encoded_url += '?%s' % urlencode(params)
-        headers = self.get_headers(encoded_url, method)
+        response = None
+        if method == "GET":
+            response = self.session.get(url, params=params, headers=headers)
+        elif method == "PUT":
+            response = self.session.put(
+                url, params=params, headers=headers, data=body
+            )
+        elif method == "POST":
+            request_params = {
+                "params": params,
+                "headers": headers,
+            }
+            if json is not None:
+                request_params["json"] = json
+            else:
+                request_params["data"] = body
+            response = self.session.post(url, **request_params)
 
-        if method == 'GET':
-            return loads(self.session.get(url, params=params, headers=headers).text)
-        elif method == 'PUT':
-            return loads(self.session.put(url, params=params, headers=headers).text)
-        elif method == 'POST':
-            return loads(self.session.post(url, data=body, headers=headers).text)
+        if response is not None:
+            try:
+                response.raise_for_status()
+            except requests.exceptions.HTTPError:
+                if response.status_code == 401:
+                    raise WalmartAuthenticationError((
+                        "Invalid client_id or client_secret. Please verify "
+                        "your credentials from https://developer.walmart."
+                        "com/#/generateKey"
+                    ))
+                elif response.status_code == 400:
+                    data = response.json()
+                    if data.get("error", [{}])[0].get("code", '') == \
+                            "INVALID_TOKEN.GMP_GATEWAY_API":
+                        # Refresh the token as the current token has expired
+                        self.authenticate()
+                        return self.send_request(
+                            method, url, params, body, request_headers
+                        )
+                raise
+        try:
+            return response.json()
+        except ValueError:
+            # In case of reports, there is no JSON response, so return the
+            # content instead which contains the actual report
+            return response.content
 
 
 class Resource(object):
@@ -128,24 +178,21 @@ class Resource(object):
 
     @property
     def url(self):
-        return self.connection.base_url % self.path
+        return "{}/{}".format(self.connection.base_url, self.path)
 
     def all(self, **kwargs):
         return self.connection.send_request(
-            method='GET', url=self.url, params=kwargs)
+            method="GET", url=self.url, params=kwargs
+        )
 
     def get(self, id):
-        url = self.url + '/%s' % id
-        return self.connection.send_request(method='GET', url=url)
+        url = "{}/{}".format(self.url, id)
+        return self.connection.send_request(method="GET", url=url)
 
     def update(self, **kwargs):
         return self.connection.send_request(
-            method='PUT', url=self.url, params=kwargs)
-
-    # def bulk_update(self, items):
-    #     url = self.connection.base_url % 'feeds?feedType=%s' % self.feedType
-    #     return self.connection.send_request(
-    #         method='POST', url=url, data=self.get_payload(items))
+            method="PUT", url=self.url, params=kwargs
+        )
 
 
 class Items(Resource):
@@ -155,6 +202,14 @@ class Items(Resource):
 
     path = 'items'
 
+    def get_items(self):
+        "Get all the items from the Item Report"
+        response = self.connection.report.all(type="item")
+        zf = zipfile.ZipFile(io.BytesIO(response), "r")
+        product_report = zf.read(zf.infolist()[0]).decode("utf-8")
+
+        return list(csv.DictReader(io.StringIO(product_report)))
+
 
 class Inventory(Resource):
     """
@@ -163,6 +218,74 @@ class Inventory(Resource):
 
     path = 'inventory'
     feedType = 'inventory'
+
+    def bulk_update(self, items):
+        """Updates the inventory for multiple items at once by creating the
+        feed on Walmart.
+
+        :param items: Items for which the inventory needs to be updated in
+        the format of:
+            [{
+                "sku": "XXXXXXXXX",
+                "availability_code": "AC",
+                "quantity": "10",
+                "uom": "EACH",
+                "fulfillment_lag_time": "1",
+            }]
+        """
+        inventory_data = []
+        for item in items:
+            data = {
+                "sku": item["sku"],
+                "quantity": {
+                    "amount": item["quantity"],
+                    "unit": item.get("uom", "EACH"),
+                },
+                "fulfillmentLagTime": item.get("fulfillment_lag_time"),
+            }
+            if item.get("availability_code"):
+                data["availabilityCode"] = item["availability_code"]
+            inventory_data.append(data)
+
+        body = {
+            "InventoryHeader": {
+                "version": "1.4",
+            },
+            "Inventory": inventory_data,
+        }
+        return self.connection.feed.create(resource="inventory", content=body)
+
+    def update_inventory(self, sku, quantity):
+        headers = {
+            'Content-Type': "application/xml"
+        }
+        return self.connection.send_request(
+            method='PUT',
+            url=self.url,
+            params={'sku': sku},
+            body=self.get_inventory_payload(sku, quantity),
+            request_headers=headers
+        )
+
+    def get_inventory_payload(self, sku, quantity):
+        element = ElementMaker(
+            namespace='http://walmart.com/',
+            nsmap={
+                'wm': 'http://walmart.com/',
+            }
+        )
+        return etree.tostring(
+            element(
+                'inventory',
+                element('sku', sku),
+                element(
+                    'quantity',
+                    element('unit', 'EACH'),
+                    element('amount', str(quantity)),
+                ),
+                element('fulfillmentLagTime', '4'),
+            ), xml_declaration=True, encoding='utf-8'
+        )
 
     def get_payload(self, items):
         return etree.tostring(
@@ -191,55 +314,53 @@ class Prices(Resource):
     feedType = 'price'
 
     def get_payload(self, items):
-        # root = ElementMaker(
-        #     nsmap={'gmp': 'http://walmart.com/'}
-        # )
-        # return etree.tostring(
-        #     root.PriceFeed(
-        #         E.PriceHeader(E('version', '1.5')),
-        #         *[E.Price(
-        #             E(
-        #                 'itemIdentifier',
-        #                 E('sku', item['sku'])
-        #             ),
-        #             E(
-        #                 'pricingList',
-        #                 E(
-        #                     'pricing',
-        #                     E(
-        #                         'currentPrice',
-        #                         E(
-        #                             'value',
-        #                             **{
-        #                                 'currency': item['currenctCurrency'],
-        #                                 'amount': item['currenctPrice']
-        #                             }
-        #                         )
-        #                     ),
-        #                     E('currentPriceType', item['priceType']),
-        #                     E(
-        #                         'comparisonPrice',
-        #                         E(
-        #                             'value',
-        #                             **{
-        #                                 'currency': item['comparisonCurrency'],
-        #                                 'amount': item['comparisonPrice']
-        #                             }
-        #                         )
-        #                     ),
-        #                     E(
-        #                         'priceDisplayCode',
-        #                         **{
-        #                             'submapType': item['displayCode']
-        #                         }
-        #                     ),
-        #                 )
-        #             )
-        #         ) for item in items]
-        #     ), xml_declaration=True, encoding='utf-8'
-        # )
-        payload = {}
-        return
+        root = ElementMaker(
+            nsmap={'gmp': 'http://walmart.com/'}
+        )
+        return etree.tostring(
+            root.PriceFeed(
+                E.PriceHeader(E('version', '1.5')),
+                *[E.Price(
+                    E(
+                        'itemIdentifier',
+                        E('sku', item['sku'])
+                    ),
+                    E(
+                        'pricingList',
+                        E(
+                            'pricing',
+                            E(
+                                'currentPrice',
+                                E(
+                                    'value',
+                                    **{
+                                        'currency': item['currenctCurrency'],
+                                        'amount': item['currenctPrice']
+                                    }
+                                )
+                            ),
+                            E('currentPriceType', item['priceType']),
+                            E(
+                                'comparisonPrice',
+                                E(
+                                    'value',
+                                    **{
+                                        'currency': item['comparisonCurrency'],
+                                        'amount': item['comparisonPrice']
+                                    }
+                                )
+                            ),
+                            E(
+                                'priceDisplayCode',
+                                **{
+                                    'submapType': item['displayCode']
+                                }
+                            ),
+                        )
+                    )
+                ) for item in items]
+            ), xml_declaration=True, encoding='utf-8'
+        )
 
 
 class Orders(Resource):
@@ -250,15 +371,21 @@ class Orders(Resource):
     path = 'orders'
 
     def all(self, **kwargs):
-        next_cursor = kwargs.pop('nextCursor', '')
-        return self.connection.send_request(
-            method='GET', url=self.url + next_cursor, params=kwargs)
-
-    def released(self, **kwargs):
-        next_cursor = kwargs.pop('nextCursor', '')
-        url = self.url + '/released'
-        return self.connection.send_request(
-            method='GET', url=url + next_cursor, params=kwargs)
+        try:
+            return super(Orders, self).all(**kwargs)
+        except requests.exceptions.HTTPError as exc:
+            if exc.response.status_code == 404:
+                # If no orders are there on walmart matching the query
+                # filters, it throws 404. In this case return an empty
+                # list to make the API consistent
+                return {
+                    "list": {
+                        "elements": {
+                            "order": [],
+                        }
+                    }
+                }
+            raise
 
     def acknowledge(self, id):
         url = self.url + '/%s/acknowledge' % id
@@ -270,138 +397,139 @@ class Orders(Resource):
             method='POST', url=url, body=self.get_cancel_payload(lines))
 
     def get_cancel_payload(self, lines):
-        """
-        {
-          "orderCancellation": {
-            "orderLines": {
-              "orderLine": [
-                {
-                  "lineNumber": "1",
-                  "orderLineStatuses": {
-                    "orderLineStatus": [
-                      {
-                        "status": "Cancelled",
-                        "cancellationReason": "CUSTOMER_REQUESTED_SELLER_TO_CANCEL",
-                        "statusQuantity": {
-                          "unitOfMeasurement": "EA",
-                          "amount": "1"
-                        }
-                      }
-                    ]
-                  }
-                }
-              ]
+        element = ElementMaker(
+            namespace='http://walmart.com/mp/orders',
+            nsmap={
+                'ns2': 'http://walmart.com/mp/orders',
+                'ns3': 'http://walmart.com/'
             }
-          }
-        }
-        :param lines:
-        :return: string
-        """
-        payload = {
-            'orderCancellation': {
-                'orderLines': [{
-                    'lineNumber': line['number'],
-                    'orderLineStatuses': {
-                        'orderLineStatus': [
-                            {
-                                'status': 'Cancelled',
-                                'cancellationReason': 'CUSTOMER_REQUESTED_SELLER_TO_CANCEL',
-                                'statusQuantity': {
-                                    'unitOfMeasurement': 'EA',
-                                    'amount': line['amount'],
-                                }
-                            }
-                        ]
-                    }
-                } for line in lines]
-            }
-        }
-        return dumps(payload)
-
-
-
-    def ship(self, id, lines):
-        url = self.url + '/%s/shipping' % id
-        return self.connection.send_request(
-            method='POST',
-            url=url,
-            body=self.get_ship_payload(lines)
+        )
+        return etree.tostring(
+            element(
+                'orderCancellation',
+                element(
+                    'orderLines',
+                    *[element(
+                        'orderLine',
+                        element('lineNumber', line),
+                        element(
+                            'orderLineStatuses',
+                            element(
+                                'orderLineStatus',
+                                element('status', 'Cancelled'),
+                                element(
+                                    'cancellationReason', 'CANCEL_BY_SELLER'),
+                                element(
+                                    'statusQuantity',
+                                    element('unitOfMeasurement', 'EACH'),
+                                    element('amount', '1')
+                                )
+                            )
+                        )
+                    ) for line in lines]
+                )
+            ), xml_declaration=True, encoding='utf-8'
         )
 
-    def get_ship_payload(self, lines):
-        """
+    def create_shipment(self, order_id, lines):
+        """Send shipping updates to Walmart
 
-        :param lines: list[ dict(number, amount, carrier, methodCode, trackingNumber, trackingUrl) ]
-        :return:
+        :param order_id: Purchase order ID of an order
+        :param lines: Order lines to be fulfilled in the format:
+            [{
+                "line_number": "123",
+                "uom": "EACH",
+                "quantity": 3,
+                "ship_time": datetime(2019, 04, 04, 12, 00, 00),
+                "other_carrier": None,
+                "carrier": "USPS",
+                "carrier_service": "Standard",
+                "tracking_number": "34567890567890678",
+                "tracking_url": "www.fedex.com",
+            }]
         """
-        """
-        {
-          "orderShipment": {
-            "orderLines": {
-              "orderLine": [
-                {
-                  "lineNumber": "1",
-                  "orderLineStatuses": {
-                    "orderLineStatus": [
-                      {
+        url = self.url + "/{}/shipping".format(order_id)
+
+        order_lines = []
+        for line in lines:
+            ship_time = line.get("ship_time", "")
+            if ship_time:
+                ship_time = epoch_milliseconds(ship_time)
+            order_lines.append({
+                "lineNumber": line["line_number"],
+                "orderLineStatuses": {
+                    "orderLineStatus": [{
                         "status": "Shipped",
                         "statusQuantity": {
-                          "unitOfMeasurement": "EA",
-                          "amount": "1"
+                            "unitOfMeasurement": line.get("uom", "EACH"),
+                            "amount": str(int(line["quantity"])),
                         },
                         "trackingInfo": {
-                          "shipDateTime": 1488480443000,
-                          "carrierName": {
-                            "otherCarrier": null,
-                            "carrier": "UPS"
-                          },
-                          "methodCode": "Express",
-                          "trackingNumber": "12345",
-                          "trackingURL": "www.fedex.com"
+                            "shipDateTime": ship_time,
+                            "carrierName": {
+                                "otherCarrier": line.get("other_carrier"),
+                                "carrier": line["carrier"],
+                            },
+                            "methodCode": line.get("carrier_service", ""),
+                            "trackingNumber": line["tracking_number"],
+                            "trackingURL": line.get("tracking_url", "")
                         }
-                      }
-                    ]
-                  }
+                    }],
                 }
-              ]
-            }
-          }
-        }
-        :param lines:
-        :return:
-        """
+            })
 
-        payload = {
+        body = {
             "orderShipment": {
                 "orderLines": {
-                    "orderLine": [
-                        {
-                            "lineNumber": str(line['number']),
-                            "orderLineStatuses": {
-                                "orderLineStatus": [
-                                    {
-                                        "status": "Shipped",
-                                        "statusQuantity": {
-                                            "unitOfMeasurement": "EA",
-                                            "amount": str(line['amount'])
-                                        },
-                                        "trackingInfo": {
-                                            "shipDateTime": line['shipDateTime'],
-                                            "carrierName": {
-                                                "otherCarrier": None,
-                                                "carrier": line['carrier']
-                                            },
-                                            "methodCode": line['methodCode'],
-                                            "trackingNumber": line['trackingNumber'],
-                                            "trackingURL": line['trackingUrl']
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    for line in lines]
+                    "orderLine": order_lines,
                 }
             }
         }
+        return self.connection.send_request(
+            method="POST",
+            url=url,
+            json=body,
+        )
 
-        return dumps(payload)
+
+class Report(Resource):
+    """
+    Get report
+    """
+
+    path = 'getReport'
+
+
+class Feed(Resource):
+    path = "feeds"
+
+    def create(self, resource, content):
+        """Creates the feed on Walmart for respective resource
+
+        Once you upload the Feed, you can use the Feed ID returned in the
+        response to track the status of the feed and the status of the
+        item within that Feed.
+
+        :param resource: The resource for which the feed needs to be created.
+        :param content: The content needed to create the Feed.
+        """
+        return self.connection.send_request(
+            method="POST",
+            url=self.url,
+            params={
+                "feedType": resource,
+            },
+            json=content,
+        )
+
+    def get_status(self, feed_id, offset=0, limit=1000):
+        "Returns the feed and item status for a specified Feed ID"
+        return self.connection.send_request(
+            method="GET",
+            url="{}/{}".format(self.url, feed_id),
+            params={
+                "includeDetails": "true",
+                "limit": limit,
+                "offset": offset,
+            },
+        )
