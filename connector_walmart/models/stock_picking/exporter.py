@@ -23,14 +23,14 @@ class WalmartPickingExporter(Component):
         """
         Normalizes picking line data into the format to export to Walmart.
         :param binding: walmart.stock.picking
-        :return: list[ dict(number, amount, carrier, methodCode, trackingNumber, trackingUrl=None) ]
+        :return: list[ dict(line_number, uom="EACH", quantity, ship_time, carrier, carrier_service, tracking_number, tracking_url=None) ]
         """
         ship_date = binding.date_done
         # in ms
-        ship_date_time = int(fields.Datetime.from_string(ship_date).strftime('%s')) * 1000
+        ship_date_time = fields.Datetime.from_string(ship_date)
         lines = []
         for line in binding.move_lines:
-            sale_line = line.procurement_id.sale_line_id
+            sale_line = line.sale_line_id
             if not sale_line.walmart_bind_ids:
                 continue
             # this is a particularly interesting way to get this,
@@ -43,19 +43,17 @@ class WalmartPickingExporter(Component):
                 continue
 
             number = walmart_sale_line.walmart_number
-            amount = 1 if line.product_qty > 0 else 0
+            amount = 1 if line.product_qty > 0 else 0  # potentially because of EACH?
             carrier = binding.carrier_id.walmart_carrier_code
-            methodCode = binding.walmart_order_id.shipping_method_code
-            trackingNumber = binding.carrier_tracking_ref
-            trackingUrl = None
+            carrier_service = binding.walmart_order_id.shipping_method_code
+            tracking_number = binding.carrier_tracking_ref
             lines.append(dict(
-                shipDateTime=ship_date_time,
-                number=number,
-                amount=amount,
+                line_number=number,
+                quantity=amount,
+                ship_time=ship_date_time,
                 carrier=carrier,
-                methodCode=methodCode,
-                trackingNumber=trackingNumber,
-                trackingUrl=trackingUrl,
+                carrier_service=carrier_service,
+                tracking_number=tracking_number,
             ))
 
         return lines
