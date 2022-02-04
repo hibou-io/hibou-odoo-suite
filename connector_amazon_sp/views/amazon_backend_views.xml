@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_amazon_backend_form" model="ir.ui.view">
+        <field name="name">amazon.backend.form</field>
+        <field name="model">amazon.backend</field>
+        <field name="arch" type="xml">
+            <form string="Amazon Backend">
+                <header>
+                </header>
+                <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" class="oe_inline" />
+                    </h1>
+                    <group name="amazon" string="Amazon Configuration">
+                        <notebook>
+                            <page string="API" name="api">
+                                <group>
+                                    <field name="api_refresh_token" />
+                                    <field name="api_lwa_client_id" />
+                                    <field name="api_lwa_client_secret" />
+                                </group>
+                                <group>
+                                    <field name="api_aws_access_key" />
+                                    <field name="api_aws_secret_key" />
+                                    <field name="api_role_arn" />
+                                    <field name="merchant_id" />
+                                    <field name="active"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </group>
+                    <group name="main_configuration" string="Main Configuration">
+                        <group name="order_configuration" string="Order Defaults">
+                            <field name="warehouse_ids" widget="many2many_tags"/>
+                            <field name="buffer_qty"/>
+                            <field name="analytic_account_id"/>
+                            <field name="fiscal_position_id"/>
+                            <field name="team_id"/>
+                            <field name="user_id"/>
+                            <field name="sale_prefix"/>
+                            <field name="payment_mode_id"/>
+                            <field name="carrier_id"/>
+                            <field name="pricelist_id"/>
+                            <field name="product_categ_id"/>
+                        </group>
+                        <group name="fba_order_configuration" string="Amazon Fulfilled">
+                            <field name="fba_warehouse_ids" widget="many2many_tags"/>
+                            <field name="fba_buffer_qty"/>
+                            <field name="fba_analytic_account_id"/>
+                            <field name="fba_fiscal_position_id"/>
+                            <field name="fba_team_id"/>
+                            <field name="fba_user_id"/>
+                            <field name="fba_sale_prefix"/>
+                            <field name="fba_payment_mode_id"/>
+                            <field name="fba_carrier_id"/>
+                            <field name="fba_pricelist_id"/>
+                        </group>
+                        <group name="automation" string="Automation">
+                            <field name="scheduler_order_import_running" invisible="1" />
+                            <field name="scheduler_order_import"/>
+                            <p attrs="{'invisible': [('scheduler_order_import_running', '=', True)]}" class="text-danger" colspan="2">
+                                The automatic scheduler is not currently enabled.
+                            </p>
+                            <p attrs="{'invisible': [('scheduler_order_import_running', '=', False)]}" class="text-success" colspan="2">
+                                The automatic scheduler is enabled.
+                            </p>
+                            <field name="scheduler_product_inventory_export_running" invisible="1" />
+                            <field name="scheduler_product_inventory_export"/>
+                            <p attrs="{'invisible': [('scheduler_product_inventory_export_running', '=', True)]}" class="text-danger" colspan="2">
+                                The automatic scheduler is not currently enabled.
+                            </p>
+                            <p attrs="{'invisible': [('scheduler_product_inventory_export_running', '=', False)]}" class="text-success" colspan="2">
+                                The automatic scheduler is enabled.
+                            </p>
+                            <field name="scheduler_product_price_export_running" invisible="1" />
+                            <field name="scheduler_product_price_export"/>
+                            <p attrs="{'invisible': [('scheduler_product_price_export_running', '=', True)]}" class="text-danger" colspan="2">
+                                The automatic scheduler is not currently enabled.
+                            </p>
+                            <p attrs="{'invisible': [('scheduler_product_price_export_running', '=', False)]}" class="text-success" colspan="2">
+                                The automatic scheduler is enabled.
+                            </p>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="import" string="Imports">
+                            <p class="oe_grey oe_inline">
+                                By clicking on the buttons,
+                                you will initiate the synchronizations
+                                with Amazon.
+                                Note that the import or exports
+                                won't be done directly,
+                                they will create 'Jobs'
+                                executed as soon as possible.
+                            </p>
+                            <p class="oe_grey oe_inline">
+                                Once imported,
+                                some types of records,
+                                like the products or categories,
+                                need a manual review.
+                                You will find the list
+                                of the new records to review
+                                in the menu 'Connectors > Checkpoint'.
+                            </p>
+                            <group>
+                                <div>
+                                    <label string="Import sale orders since" class="oe_inline"/>
+                                    <field name="import_orders_from_date"
+                                           class="oe_inline"
+                                           nolabel="1"/>
+                                </div>
+                                <button name="import_sale_orders"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Import in background"/>
+                            </group>
+
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_amazon_backend_tree" model="ir.ui.view">
+        <field name="name">amazon.backend.tree</field>
+        <field name="model">amazon.backend</field>
+        <field name="arch" type="xml">
+            <tree string="Amazon Backend">
+                <field name="name"/>
+                <field name="import_orders_from_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_amazon_backend" model="ir.actions.act_window">
+        <field name="name">Amazon Backends</field>
+        <field name="res_model">amazon.backend</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_amazon_backend_tree"/>
+    </record>
+    
+    <menuitem id="menu_amazon_root_connector"
+        parent="connector.menu_connector_root"
+        name="Amazon"
+        sequence="10"
+        groups="connector.group_connector_manager"/>
+
+    <menuitem id="menu_amazon_backend_connector"
+        name="Backends"
+        parent="menu_amazon_root_connector"
+        action="action_amazon_backend"/>
+
+    <menuitem id="menu_amazon_backend"
+        name="Backends"
+        parent="amazon_config_menu"
+        action="action_amazon_backend"/>
+
+</odoo>
