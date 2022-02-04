@@ -7,7 +7,6 @@ import odoo.addons.decimal_precision as dp
 
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import RetryableJobError
 
@@ -72,19 +71,15 @@ class AmazonSaleOrder(models.Model):
         for so in self:
             so.is_amazon_order = True
 
-    @job(default_channel='root.amazon')
     @api.model
     def import_batch(self, backend, filters=None):
         """ Prepare the import of Sales Orders from Amazon """
         return super(AmazonSaleOrder, self).import_batch(backend, filters=filters)
 
-    @job(default_channel='root.amazon', retry_pattern=SO_IMPORT_RETRY_PATTERN)
-    @related_action(action='related_action_unwrap_binding')
     @api.model
     def import_record(self, backend, external_id, force=False):
         return super().import_record(backend, external_id, force=force)
 
-    @api.multi
     def action_confirm(self):
         res = self.odoo_id.action_confirm()
         if res and hasattr(res, '__getitem__'):  # Button returned an action: we need to set active_id to the amazon sale order
@@ -96,15 +91,12 @@ class AmazonSaleOrder(models.Model):
             })
         return res
 
-    @api.multi
     def action_cancel(self):
         return self.odoo_id.action_cancel()
 
-    @api.multi
     def action_draft(self):
         return self.odoo_id.action_draft()
 
-    @api.multi
     def action_view_delivery(self):
         res = self.odoo_id.action_view_delivery()
         res.update({
@@ -115,12 +107,8 @@ class AmazonSaleOrder(models.Model):
         })
         return res
 
-    # @job(default_channel='root.amazon')
-    # @api.model
-    # def acknowledge_order(self, backend, external_id):
-    #     with backend.work_on(self._name) as work:
-    #         adapter = work.component(usage='backend.adapter')
-    #         return adapter.acknowledge_order(external_id)
+    def action_unlock(self):
+        return self.odoo_id.action_unlock()
 
 
 class SaleOrder(models.Model):
@@ -157,12 +145,6 @@ class SaleOrder(models.Model):
     def _compute_is_amazon_order(self):
         for so in self:
             so.is_amazon_order = False
-
-    # @api.multi
-    # def action_confirm(self):
-    #     res = super(SaleOrder, self).action_confirm()
-    #     self.amazon_bind_ids.action_confirm()
-    #     return res
 
 
 class AmazonSaleOrderLine(models.Model):

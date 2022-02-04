@@ -50,7 +50,6 @@ class AmazonProductProduct(models.Model):
         for product in other:
             product.external_id = product.external_id
 
-    @api.multi
     def button_submit_product(self):
         backends = self.mapped('backend_id')
         for backend in backends:
@@ -58,7 +57,6 @@ class AmazonProductProduct(models.Model):
             products._submit_product()
         return 1
 
-    @api.multi
     def button_update_inventory(self):
         backends = self.mapped('backend_id')
         for backend in backends:
@@ -66,7 +64,6 @@ class AmazonProductProduct(models.Model):
             products._update_inventory()
         return 1
 
-    @api.multi
     def button_update_price(self):
         backends = self.mapped('backend_id')
         for backend in backends:

@@ -1,9 +1,8 @@
 {
     "name": "Amazon Selling Partner Connector",
-    "version": "11.0.1.0.0",
+    "version": "14.0.1.0.0",
     "depends": [
         "connector_ecommerce",
-        "sale_order_dates",
         "sale_sourced_by_line",
         "delivery_hibou",
         "sale_planner",

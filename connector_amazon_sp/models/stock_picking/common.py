@@ -3,7 +3,6 @@
 from base64 import b64encode
 
 from odoo import api, models, fields, _
-from odoo.addons.queue_job.job import job, related_action
 from odoo.addons.component.core import Component
 
 import logging
@@ -24,9 +23,6 @@ class AmazonStockPicking(models.Model):
                                       string='Amazon Sale Order',
                                       ondelete='set null')
 
-    @job(default_channel='root.amazon')
-    @related_action(action='related_action_unwrap_binding')
-    @api.multi
     def export_picking_done(self):
         """ Export a complete or partial delivery order. """
         self.ensure_one()

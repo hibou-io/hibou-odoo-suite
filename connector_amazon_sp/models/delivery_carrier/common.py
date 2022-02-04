@@ -25,7 +25,7 @@ class ProviderAmazonSP(models.Model):
     delivery_type = fields.Selection(selection_add=[
         # ('amazon_sp', 'Amazon Selling Partner'),  # TODO buy shipping for regular orders?
         ('amazon_sp_mfn', 'Amazon SP Merchant Fulfillment')
-    ])
+    ], ondelete={'amazon_sp_mfn': lambda recs: recs.write({'delivery_type': 'fixed', 'fixed_price': 0})})
 
     # Fields when uploading shipping to Amazon
     amazon_sp_carrier_code = fields.Char(string='Amazon Carrier Code',

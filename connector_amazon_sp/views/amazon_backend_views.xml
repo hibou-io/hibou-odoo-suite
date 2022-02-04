@@ -106,7 +106,7 @@
                             </p>
                             <group>
                                 <div>
-                                    <label string="Import sale orders since" class="oe_inline"/>
+                                    <label for="import_orders_from_date" string="Import sale orders since" class="oe_inline"/>
                                     <field name="import_orders_from_date"
                                            class="oe_inline"
                                            nolabel="1"/>
@@ -139,7 +139,6 @@
     <record id="action_amazon_backend" model="ir.actions.act_window">
         <field name="name">Amazon Backends</field>
         <field name="res_model">amazon.backend</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_amazon_backend_tree"/>
     </record>

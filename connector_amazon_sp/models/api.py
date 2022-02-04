@@ -5,7 +5,6 @@ from Crypto.Util.Padding import pad
 from base64 import b64decode, b64encode
 
 from odoo import api
-from odoo.tools import pycompat
 
 PREFIX = 'amz_pii:'
 PREFIX_LEN = len(PREFIX)
@@ -17,7 +16,7 @@ AMZ_PII_DECRYPT_FAIL = -1
 
 def make_amz_pii_decrypt(cipher):
     def amz_pii_decrypt(value):
-        if value and isinstance(value, pycompat.string_types) and value.startswith(PREFIX):
+        if value and isinstance(value, str) and value.startswith(PREFIX):
             try:
                 to_decrypt = b64decode(value[PREFIX_LEN:])
                 # remove whitespace and `ack`
@@ -32,7 +31,7 @@ def make_amz_pii_decrypt(cipher):
 
 def make_amz_pii_encrypt(cipher):
     def amz_pii_encrypt(value):
-        if value and isinstance(value, pycompat.string_types) and not value.startswith(PREFIX):
+        if value and isinstance(value, str) and not value.startswith(PREFIX):
             try:
                 to_encrypt = value.encode()
                 to_encrypt = pad(to_encrypt, BLOCK_SIZE)
@@ -112,6 +111,7 @@ def make_amz_pii_cipher(env):
 
 
 def update(self, records, field, values):
+    """ Set the values of ``field`` for several ``records``. """
     amz_pii_decrypt = getattr(self, 'amz_pii_decrypt', None)
     amz_pii_decrypt_enabled = records.env.context.get('amz_pii_decrypt')
     if not amz_pii_decrypt and amz_pii_decrypt_enabled:
@@ -120,8 +120,10 @@ def update(self, records, field, values):
         for i, value in enumerate(values):
             values[i] = amz_pii_decrypt(value)
 
-    key = records.env.cache_key(field)
-    self._data[key][field].update(pycompat.izip(records._ids, values))
+    field_cache = self._data[field]
+    if field.depends_context:
+        field_cache = field_cache.setdefault(records.env.cache_key(field), {})
+    field_cache.update(zip(records._ids, values))
 
 
 def _start_amz_pii_decrypt(self, env):

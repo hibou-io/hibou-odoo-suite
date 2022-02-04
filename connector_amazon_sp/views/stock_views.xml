@@ -8,10 +8,11 @@
         </xpath>
     </template>
 
-    <template id="report_delivery_document_inherit" inherit_id="stock.report_delivery_document">
-        <xpath expr="//div[@name='customer_address']" position="attributes">
-            <attribute name="t-if">not o.has_amazon_pii()</attribute>
-        </xpath>
-    </template>
+    <!-- xpath error -->
+<!--    <template id="report_delivery_document_inherit" inherit_id="stock.report_delivery_document">-->
+<!--        <xpath expr="//div[@name='customer_address']" position="attributes">-->
+<!--            <attribute name="t-if">not o.has_amazon_pii()</attribute>-->
+<!--        </xpath>-->
+<!--    </template>-->
 
 </odoo>

@@ -124,7 +124,6 @@ class AmazonBackend(models.Model):
     )
 
     @contextmanager
-    @api.multi
     def work_on(self, model_name, **kwargs):
         self.ensure_one()
         amazon_api = self.get_wrapped_api()
@@ -180,12 +179,10 @@ class AmazonBackend(models.Model):
         for backend in backends:
             self.env['amazon.product.product'].update_price(backend)
 
-    @api.multi
     def import_sale_orders(self):
         self._import_from_date('amazon.sale.order', 'import_orders_from_date')
         return True
 
-    @api.multi
     def _import_from_date(self, model_name, from_date_field):
         import_start_time = datetime.now().replace(microsecond=0) - timedelta(seconds=IMPORT_DELTA_BUFFER)
         for backend in self:

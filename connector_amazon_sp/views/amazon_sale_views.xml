@@ -41,7 +41,7 @@
                 <field name="effective_date"/>
                 <field name="date_planned"/>
                 <field name="requested_date"/>
-                <field name="confirmation_date"/>
+                <field name="date_order"/>
                 <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
                 <field name="total_amount" sum="Amazon Total Tax Included" widget="monetary" string="Amazon Total"/>
                 <field name="currency_id" invisible="1"/>
@@ -51,45 +51,44 @@
         </field>
     </record>
 
-    <record id="view_amazon_order_form" model="ir.ui.view">
-        <field name="name">amazon.sale.order.form</field>
-        <field name="model">amazon.sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
-        <field name="mode">primary</field>
-        <field name="arch" type="xml">
-            <xpath expr="//header" position="replace">
-                <header>
-                    <button name="action_confirm" id="action_confirm" string="Confirm Sale" class="btn-primary" type="object" attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}"/>
-                    <button name="action_cancel" states="draft,sent,sale" type="object" string="Cancel"/>
-                    <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
-                    <button name="action_unlock" type="object" string="Unlock" states="done" groups="sales_team.group_sale_manager"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
-                </header>
-            </xpath>
-            <xpath expr="//sheet/group/group[1]" position="inside">
-                <field name="fulfillment_channel"/>
-                <field name="is_prime"/>
-                <field name="is_business_order"/>
-                <field name="is_global_express_enabled"/>
-                <field name="is_premium"/>
-                <field name="is_sold_by_ab"/>
-            </xpath>
-            <xpath expr="//sheet/group/group[2]" position="inside">
-                <field name="ship_service_level"/>
-                <field name="ship_service_level_category"/>
-                <field name="marketplace"/>
-                <field name="order_type"/>
-            </xpath>
-            <xpath expr="//field[@name='amount_total']" position="after">
-                <field name="total_amount" string="Amazon Total" widget="monetary"/>
-            </xpath>
-        </field>
-    </record>
+<!--    <record id="view_amazon_order_form" model="ir.ui.view">-->
+<!--        <field name="name">amazon.sale.order.form</field>-->
+<!--        <field name="model">amazon.sale.order</field>-->
+<!--        <field name="inherit_id" ref="sale.view_order_form"/>-->
+<!--        <field name="mode">primary</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//header" position="replace">-->
+<!--                <header>-->
+<!--                    <button name="action_confirm" id="action_confirm" string="Confirm Sale" class="btn-primary" type="object" attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}"/>-->
+<!--                    <button name="action_cancel" states="draft,sent,sale" type="object" string="Cancel"/>-->
+<!--                    <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>-->
+<!--                    <button name="action_unlock" type="object" string="Unlock" states="done" groups="sales_team.group_sale_manager"/>-->
+<!--                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>-->
+<!--                </header>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//sheet/group/group[1]" position="inside">-->
+<!--                <field name="fulfillment_channel"/>-->
+<!--                <field name="is_prime"/>-->
+<!--                <field name="is_business_order"/>-->
+<!--                <field name="is_global_express_enabled"/>-->
+<!--                <field name="is_premium"/>-->
+<!--                <field name="is_sold_by_ab"/>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//sheet/group/group[2]" position="inside">-->
+<!--                <field name="ship_service_level"/>-->
+<!--                <field name="ship_service_level_category"/>-->
+<!--                <field name="marketplace"/>-->
+<!--                <field name="order_type"/>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='amount_total']" position="after">-->
+<!--                <field name="total_amount" string="Amazon Total" widget="monetary"/>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
 
     <record id="action_amazon_orders" model="ir.actions.act_window">
         <field name="name">Amazon SP Orders</field>
         <field name="res_model">amazon.sale.order</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_amazon_order_tree"/>
     </record>

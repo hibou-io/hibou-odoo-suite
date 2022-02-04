@@ -5,7 +5,6 @@ from base64 import b64encode, b64decode
 from json import loads, dumps
 
 from odoo import models, fields, api
-from odoo.addons.queue_job.job import job
 from odoo.addons.component.core import Component
 from odoo.addons.queue_job.exception import RetryableJobError
 
@@ -59,8 +58,6 @@ class AmazonFeed(models.Model):
                                                 string='Listing',
                                                 ondelete='set null')
 
-    @api.multi
-    @job(default_channel='root.amazon')
     def submit_feed(self):
         for feed in self:
             api_instance = feed.backend_id.get_wrapped_api()
@@ -80,8 +77,6 @@ class AmazonFeed(models.Model):
                 # The rest will be delayed 30 min each
                 feed.with_delay(priority=100).check_feed()
 
-    @api.multi
-    @job(default_channel='root.amazon', retry_pattern=FEED_RETRY_PATTERN)
     def check_feed(self):
         for feed in self.filtered('external_id'):
             api_instance = feed.backend_id.get_wrapped_api()
@@ -106,7 +101,6 @@ class AmazonFeed(models.Model):
                     # queue a job to process the response
                     feed.with_delay(priority=10).process_feed_result()
 
-    @job(default_channel='root.amazon')
     def process_feed_result(self):
         for feed in self:
             pass
