@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_feed_form" model="ir.ui.view">
+        <field name="name">amazon.feed.form</field>
+        <field name="model">amazon.feed</field>
+        <field name="arch" type="xml">
+            <form string="Amazon Feed">
+                <header>
+                    <button name="submit_feed" string="Submit" type="object" states="new" class="btn-primary"/>
+                    <button name="submit_feed" string="Re-Submit" type="object" states="submitted,error_on_submit" />
+                    <button name="check_feed" string="Check Feed" type="object" states="submitted" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,submitted"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <group>
+                        <group>
+                            <field name="external_id" readonly="1"/>
+                            <field name="type" readonly="1"/>
+                            <field name="content_type" readonly="1"/>
+                            <field name="data" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="create_date" readonly="1"/>
+                            <field name="write_date" readonly="1"/>
+                            <field name="backend_id" required="1"/>
+                            <field name="response" readonly="1"/>
+                            <field name="amazon_state" readonly="1"/>
+                            <field name="amazon_stock_picking_id" attrs="{'invisible': [('amazon_stock_picking_id', '=', False)]}"/>
+                            <field name="amazon_product_product_id" attrs="{'invisible': [('amazon_product_product_id', '=', False)]}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_feed_tree" model="ir.ui.view">
+        <field name="name">amazon.feed.tree</field>
+        <field name="model">amazon.feed</field>
+        <field name="arch" type="xml">
+            <tree string="Amazon Feeds" decoration-muted="amazon_state=='DONE'">
+                <field name="create_date" readonly="1"/>
+                <field name="write_date" readonly="1"/>
+                <field name="external_id"/>
+                <field name="type"/>
+                <field name="backend_id"/>
+                <field name="state"/>
+                <field name="amazon_state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_amazon_feed" model="ir.actions.act_window">
+        <field name="name">Amazon SP Feeds</field>
+        <field name="res_model">amazon.feed</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_amazon_feed"
+        name="Feeds"
+        action="action_amazon_feed"
+        parent="amazon_feed_menu"
+        sequence="2" />
+
+</odoo>

@@ -9,6 +9,11 @@ RUN rm /etc/odoo/odoo.conf \
     && cp /opt/odoo/hibou-suite/debian/odoo.conf /etc/odoo/odoo.conf \
     ;
 
+USER 0
+RUN cd /opt/odoo/hibou-suite/external/python-amazon-sp-api \
+  && pip install .
+USER 104
+
 EXPOSE 3000
 ENV SHELL=/bin/bash \
     THEIA_DEFAULT_PLUGINS=local-dir:/opt/athene/plugins

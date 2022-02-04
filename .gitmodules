@@ -44,3 +44,6 @@
 [submodule "external/hibou-oca/pos"]
 	path = external/hibou-oca/pos
 	url = https://github.com/hibou-io/oca-pos.git
+[submodule "external/python-amazon-sp-api"]
+	path = external/python-amazon-sp-api
+	url = https://github.com/hibou-io/python-amazon-sp-api.git
