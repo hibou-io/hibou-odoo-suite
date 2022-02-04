@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_delivery_carrier_form_with_provider_amazon_sp" model="ir.ui.view">
+        <field name="name">delivery.carrier.form.provider.amazon_sp</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='destination']" position='before'>
+                <page name="amazon_sp_general" string="Amazon" attrs="{'invisible': [('delivery_type', '=', 'amazon_sp_mfn')]}">
+                    <group>
+                        <group>
+                            <field name="amazon_sp_carrier_code" string="CarrierCode" />
+                            <field name="amazon_sp_carrier_name" string="CarrierName" />
+                            <field name="amazon_sp_shipping_method" string="ShippingMethod" />
+                        </group>
+                    </group>
+                </page>
+                <page name="amazon_sp_mfn" string="Amazon SP MFN" attrs="{'invisible': [('delivery_type', '!=', 'amazon_sp_mfn')]}">
+                    <group>
+                        <p>This shipping method will pull details from a linked Sale Order.</p>
+                        <group>
+                            <field name="amazon_sp_mfn_allowed_services" attrs="{'required': [('delivery_type', '=', 'amazon_sp_mfn')]}"/>
+                        </group>
+                        <group>
+                            <field name="amazon_sp_mfn_label_formats" attrs="{'required': [('delivery_type', '=', 'amazon_sp_mfn')]}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_packaging_delivery_form_amazon_sp" model="ir.ui.view">
+        <field name="name">product.packaging.form.delivery.amazon_sp</field>
+        <field name="model">product.packaging</field>
+        <field name="inherit_id" ref="delivery.product_packaging_delivery_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='package_carrier_type']" position='after'>
+                <field name="amazon_sp_mfn_allowed_services"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
