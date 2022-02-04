@@ -41,3 +41,6 @@
 [submodule "external/hibou-oca/product-attribute"]
 	path = external/hibou-oca/product-attribute
 	url = https://github.com/hibou-io/oca-product-attribute.git
+[submodule "external/python-amazon-sp-api"]
+	path = external/python-amazon-sp-api
+	url = https://github.com/hibou-io/python-amazon-sp-api.git

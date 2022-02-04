@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Top menu item -->
+
+    <menuitem id="amazon_sale_menu_root"
+        name="Amazon SP"
+        web_icon="connector_amazon_sp,static/description/icon.png"
+        sequence="8"/>
+
+    <menuitem id="amazon_sale_order_menu"
+        name="Orders"
+        parent="amazon_sale_menu_root"
+        sequence="2"/>
+
+    <menuitem id="amazon_product_product_menu"
+        name="Listings"
+        parent="amazon_sale_menu_root"
+        sequence="20"/>
+
+    <menuitem id="amazon_feed_menu"
+        name="Feeds"
+        parent="amazon_sale_menu_root"
+        sequence="50"/>
+
+    <menuitem id="amazon_config_menu"
+        name="Configuration"
+        parent="amazon_sale_menu_root"
+        sequence="100"/>
+
+</odoo>

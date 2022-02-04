@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- This view's classes/structure do not make it easy to remove without direct class -->
+    <template id="report_picking_inherit" inherit_id="stock.report_picking">
+        <xpath expr="//div[@class='page']/div[@class='row']/div[2]" position="attributes">
+            <attribute name="t-if">not o.has_amazon_pii()</attribute>
+        </xpath>
+    </template>
+
+    <!-- xpath error -->
+<!--    <template id="report_delivery_document_inherit" inherit_id="stock.report_delivery_document">-->
+<!--        <xpath expr="//div[@name='customer_address']" position="attributes">-->
+<!--            <attribute name="t-if">not o.has_amazon_pii()</attribute>-->
+<!--        </xpath>-->
+<!--    </template>-->
+
+</odoo>
