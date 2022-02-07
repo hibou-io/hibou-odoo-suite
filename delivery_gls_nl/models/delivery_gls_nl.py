@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from .gls_nl_request import GLSNLRequest
@@ -6,8 +8,8 @@ from base64 import decodebytes
 from csv import reader as csv_reader
 
 
-class ProductPackaging(models.Model):
-    _inherit = 'product.packaging'
+class PackageType(models.Model):
+    _inherit = 'stock.package.type'
 
     package_carrier_type = fields.Selection(selection_add=[('gls_nl', 'GLS Netherlands')])
 
@@ -16,10 +18,11 @@ class ProviderGLSNL(models.Model):
     _inherit = 'delivery.carrier'
 
     GLS_NL_SOFTWARE_NAME = 'Odoo'
-    GLS_NL_SOFTWARE_VER = '12.0'
+    GLS_NL_SOFTWARE_VER = '15.0'
     GLS_NL_COUNTRY_NOT_FOUND = 'GLS_NL_COUNTRY_NOT_FOUND'
 
-    delivery_type = fields.Selection(selection_add=[('gls_nl', 'GLS Netherlands')])
+    delivery_type = fields.Selection(selection_add=[('gls_nl', 'GLS Netherlands')],
+                                     ondelete={'gls_nl': lambda recs: recs.write({'delivery_type': 'fixed', 'fixed_price': 0})})
 
     gls_nl_username = fields.Char(string='GLS NL Username', groups='base.group_system')
     gls_nl_password = fields.Char(string='GLS NL Password', groups='base.group_system')
