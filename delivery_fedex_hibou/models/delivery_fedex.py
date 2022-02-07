@@ -242,7 +242,6 @@ class DeliveryFedex(models.Model):
             payment_acc_number = superself._get_fedex_payment_account_number(picking=picking)
             order_name = superself.get_order_name(picking=picking)
             attn = superself.get_attn(picking=picking)
-            insurance_value = superself.get_insurance_value(picking=picking)
             residential = self._get_fedex_recipient_is_residential(recipient)
 
             srm.web_authentication_detail(superself.fedex_developer_key, superself.fedex_developer_password)
@@ -337,7 +336,8 @@ class DeliveryFedex(models.Model):
                         dept_number=dept_number,
                         # reference=picking.display_name,
                         reference=('%s-%d' % (order_name, sequence)),  # above "reference" is new in 13.0, using new name but old value
-                        insurance=insurance_value,
+                        insurance=superself.get_insurance_value(picking=picking, package=package),
+                        signature_required=superself.get_signature_required(picking=picking, package=package)
                     )
                     srm.set_master_package(net_weight, package_count, master_tracking_id=master_tracking_id)
                     request = srm.process_shipment()
@@ -418,7 +418,8 @@ class DeliveryFedex(models.Model):
                     dept_number=dept_number,
                     # reference=picking.display_name,
                     reference=order_name,  # above "reference" is new in 13.0, using new name but old value
-                    insurance=insurance_value,
+                    insurance=superself.get_insurance_value(picking=picking, package=picking_packages[:1]),
+                    signature_required=superself.get_signature_required(picking=picking, package=picking_packages[:1])
                 )
                 srm.set_master_package(net_weight, 1)
 
@@ -515,7 +516,8 @@ class DeliveryFedex(models.Model):
         acc_number = superself._get_fedex_account_number(order=order, picking=picking)
         meter_number = superself._get_fedex_meter_number(order=order, picking=picking)
         order_name = superself.get_order_name(order=order, picking=picking)
-        insurance_value = superself.get_insurance_value(order=order, picking=picking)
+        insurance_value = superself.get_insurance_value(order=order, picking=picking, package=package)
+        signature_required = superself.get_signature_required(order=order, picking=picking, package=package)
         residential = self._get_fedex_recipient_is_residential(recipient)
         date_planned = fields.Datetime.now()
         if self.env.context.get('date_planned'):
@@ -599,7 +601,8 @@ class DeliveryFedex(models.Model):
                     # po_number=po_number,
                     # dept_number=dept_number,
                     reference=('%s-%d' % (order_name, 1)),
-                    insurance=insurance_value
+                    insurance=insurance_value,
+                    signature_required=signature_required
                 )
             else:
                 # deliver all together...
@@ -617,7 +620,8 @@ class DeliveryFedex(models.Model):
                     # po_number=po_number,
                     # dept_number=dept_number,
                     reference=('%s-%d' % (order_name, 1)),
-                    insurance=insurance_value
+                    insurance=insurance_value,
+                    signature_required=signature_required
                 )
 
 
