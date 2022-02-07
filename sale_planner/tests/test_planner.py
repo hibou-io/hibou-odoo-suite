@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from odoo.tests import common
 from datetime import datetime, timedelta
 from json import loads as json_decode
