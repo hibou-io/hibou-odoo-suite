@@ -28,8 +28,10 @@ class TestDeliveryHibou(common.TransactionCase):
 
         # Assign values to new Carrier
         test_insurance_value = 600
+        test_sig_req_value = 300
         test_procurement_priority = '1'
         self.carrier.automatic_insurance_value = test_insurance_value
+        self.carrier.automatic_sig_req_value = test_sig_req_value
         self.carrier.procurement_priority = test_procurement_priority
 
 
@@ -77,7 +79,9 @@ class TestDeliveryHibou(common.TransactionCase):
 
     def test_carrier_hibou_out(self):
         test_insurance_value = 4000
+        test_sig_req_value = 4000
         self.carrier.automatic_insurance_value = test_insurance_value
+        self.carrier.automatic_sig_req_value = test_sig_req_value
 
         picking_out = self.env.ref('stock.outgoing_shipment_main_warehouse')
         picking_out.action_assign()
@@ -94,21 +98,29 @@ class TestDeliveryHibou(common.TransactionCase):
         # The 'value' is assumed to be all of the product value from the initial demand.
         self.assertEqual(picking_out.declared_value(), 15.0 * 3300.0)
         self.assertEqual(picking_out.carrier_id.get_insurance_value(picking=picking_out), picking_out.declared_value())
+        self.assertTrue(picking_out.carrier_id.get_signature_required(picking=picking_out))
 
         # Workflow where user explicitly opts out of insurance on the picking level.
         picking_out.require_insurance = 'no'
+        picking_out.require_signature = 'no'
         self.assertEqual(picking_out.carrier_id.get_insurance_value(picking=picking_out), 0.0)
+        self.assertFalse(picking_out.carrier_id.get_signature_required(picking=picking_out))
         picking_out.require_insurance = 'auto'
+        picking_out.require_signature = 'auto'
 
         # Lets choose to only delivery one piece at the moment.
         # This does not meet the minimum on the carrier to have insurance value.
         picking_out.move_line_ids.qty_done = 1.0
         self.assertEqual(picking_out.declared_value(), 3300.0)
         self.assertEqual(picking_out.carrier_id.get_insurance_value(picking=picking_out), 0.0)
+        self.assertFalse(picking_out.carrier_id.get_signature_required(picking=picking_out))
         # Workflow where user opts in to insurance.
         picking_out.require_insurance = 'yes'
+        picking_out.require_signature = 'yes'
         self.assertEqual(picking_out.carrier_id.get_insurance_value(picking=picking_out), 3300.0)
+        self.assertTrue(picking_out.carrier_id.get_signature_required(picking=picking_out))
         picking_out.require_insurance = 'auto'
+        picking_out.require_signature = 'auto'
 
         # Test with picking having 3rd party account.
         self.assertEqual(picking_out.carrier_id.get_third_party_account(picking=picking_out), None)
@@ -135,9 +147,9 @@ class TestDeliveryHibou(common.TransactionCase):
         picking_in.carrier_id = self.carrier
         # This relies heavily on the 'stock' demo data.
         # Should only have a single move_line_ids and it should not be done at all.
-        self.assertEqual(picking_in.move_line_ids.mapped('qty_done'), [0.0, 0.0, 0.0])
-        self.assertEqual(picking_in.move_line_ids.mapped('product_uom_qty'), [35.0, 10.0, 12.0])
-        self.assertEqual(picking_in.move_line_ids.mapped('product_id.standard_price'), [55.0, 35.0, 1700.0])
+        self.assertEqual(picking_in.move_line_ids.mapped('qty_done'), [0.0])
+        self.assertEqual(picking_in.move_line_ids.mapped('product_uom_qty'), [35.0])
+        self.assertEqual(picking_in.move_line_ids.mapped('product_id.standard_price'), [55.0])
 
         self.assertEqual(picking_in.carrier_id._classify_picking(picking=picking_in), 'in')
         self.assertEqual(picking_in.carrier_id.get_shipper_company(picking=picking_in),

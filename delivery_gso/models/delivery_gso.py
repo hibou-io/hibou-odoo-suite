@@ -187,14 +187,6 @@ class ProviderGSO(models.Model):
             request_body['Shipment'].update(self._gso_make_shipper_address(from_, company))
             request_body['Shipment'].update(self._gso_make_ship_address(to))
 
-            # Automatic insurance at $100.0
-            insurance_value = sudoself.get_insurance_value(picking=picking)
-            if insurance_value:
-                request_body['Shipment']['SignatureCode'] = 'SIG_REQD'
-                if insurance_value > 100.0:
-                    # Documentation says to set DeclaredValue ONLY if over $100.00
-                    request_body['Shipment']['DeclaredValue'] = insurance_value
-
             cost = 0.0
             labels = {
                 'thermal': [],
@@ -209,6 +201,20 @@ class ProviderGSO(models.Model):
             if picking_packages:
                 # Every package will be a transaction
                 for package in picking_packages:
+                    # Use Sale Order Number or fall back to Picking
+                    shipment_ref = (picking.sale_id.name if picking.sale_id else picking.name) + '-' + package.name
+                    insurance_value = sudoself.get_insurance_value(picking=picking, package=package)
+                    if insurance_value > 100.0:
+                        # Documentation says to set DeclaredValue ONLY if over $100.00
+                        request_body['Shipment']['DeclaredValue'] = insurance_value
+                    elif 'DeclaredValue' in request_body['Shipment']:
+                        del request_body['Shipment']['DeclaredValue']
+
+                    if sudoself.get_signature_required(picking=picking, package=package):
+                        request_body['Shipment']['SignatureCode'] = 'SIG_REQD'
+                    else:
+                        request_body['Shipment']['SignatureCode'] = 'SIG_NOT_REQD'
+
                     request_body['Shipment']['Weight'] = self._gso_convert_weight(package.shipping_weight)
                     request_body['Shipment'].update(self._gso_get_package_dimensions(package))
                     request_body['Shipment']['ShipmentReference'] = package.name
@@ -227,9 +233,10 @@ class ProviderGSO(models.Model):
                         raise ValidationError(e)
             elif not package_carriers:
                 # ship the whole picking
+                shipment_ref = picking.sale_id.name if picking.sale_id else picking.name
                 request_body['Shipment']['Weight'] = self._gso_convert_weight(picking.shipping_weight)
                 request_body['Shipment'].update(self._gso_get_package_dimensions())
-                request_body['Shipment']['ShipmentReference'] = picking.name
+                request_body['Shipment']['ShipmentReference'] = shipment_ref
                 request_body['Shipment']['TrackingNumber'] = self._gso_create_tracking_number(picking.name)
                 try:
                     response = service.post_shipment(request_body)
@@ -356,7 +363,7 @@ class ProviderGSO(models.Model):
         try:
             service = sudoself._get_gso_service()
         except HTTPError as e:
-            _logger.error(e)
+            # _logger.error(e)
             return [{
                 'success': False,
                 'price': 0.0,
@@ -400,7 +407,7 @@ class ProviderGSO(models.Model):
             result = service.get_rates_and_transit_time(request_body)
             # _logger.warn('GSO result:\n%s' % result)
         except HTTPError as e:
-            _logger.error(e)
+            # _logger.error(e)
             return [{
                 'success': False,
                 'price': 0.0,

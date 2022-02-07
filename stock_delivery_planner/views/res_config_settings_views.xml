@@ -18,7 +18,7 @@
                             For example, you should add 1 FedEx carrier here and let us build up the
                             rates for your other FedEx shipping methods.
                         </div>
-                        <field name="stock_delivery_planner_base_carrier_ids" class="oe_inline" />
+                        <field name="stock_delivery_planner_base_carrier_ids" class="oe_inline"  options="{'no_create_edit': True, 'no_create': True}" />
                     </div>
                 </div>
             </xpath>
