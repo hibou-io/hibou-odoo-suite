@@ -713,3 +713,28 @@ class DeliveryFedex(models.Model):
                                ('fedex_service_type', '=', service_code)
                                ], limit=1)
         return carrier
+
+    def fedex_cancel_shipment(self, picking):
+        # Overriddent to use the correct account numbers for cancelling
+        request = FedexRequest(self.log_xml, request_type="shipping", prod_environment=self.prod_environment)
+        superself = self.sudo()
+        request.web_authentication_detail(superself.fedex_developer_key, superself.fedex_developer_password)
+        acc_number = superself._get_fedex_account_number(picking=picking)
+        meter_number = superself._get_fedex_meter_number(picking=picking)
+        request.client_detail(acc_number, meter_number)
+        request.transaction_detail(picking.id)
+
+        master_tracking_id = picking.carrier_tracking_ref.split(',')[0]
+        request.set_deletion_details(master_tracking_id)
+        result = request.delete_shipment()
+
+        warnings = result.get('warnings_message')
+        if warnings:
+            _logger.info(warnings)
+
+        if result.get('delete_success') and not result.get('errors_message'):
+            picking.message_post(body=_(u'Shipment #%s has been cancelled', master_tracking_id))
+            picking.write({'carrier_tracking_ref': '',
+                           'carrier_price': 0.0})
+        else:
+            raise UserError(result['errors_message'])
