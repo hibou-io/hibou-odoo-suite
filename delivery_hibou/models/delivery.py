@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.tools.float_utils import float_compare
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.exceptions import UserError
 
@@ -23,7 +24,7 @@ class DeliveryCarrier(models.Model):
         value = 0.0
         if order:
             if order.order_line:
-                value = sum(order.order_line.filtered(lambda l: l.type != 'service').mapped('price_subtotal'))
+                value = sum(order.order_line.filtered(lambda l: l.product_id.type != 'service').mapped('price_subtotal'))
             else:
                 return value
         if picking:
@@ -272,27 +273,30 @@ class DeliveryCarrier(models.Model):
 class ChooseDeliveryPackage(models.TransientModel):
     _inherit = 'choose.delivery.package'
 
-    package_declared_value = fields.Float(string='Declared Value',
-                                          default=lambda self: self._default_package_declared_value())
+    package_declared_value = fields.Float(string='Declared Value')
     package_require_insurance = fields.Boolean(string='Require Insurance')
     package_require_signature = fields.Boolean(string='Require Signature')
 
-    def _default_package_declared_value(self):
-        # guard for install
-        if not self.env.context.get('active_id'):
-            return 0.0
-        if self.env.context.get('default_stock_quant_package_id'):
-            stock_quant_package = self.env['stock.quant.package'].browse(self.env.context['default_stock_quant_package_id'])
-            return stock_quant_package.package_declared_value
-        else:
-            picking_id = self.env['stock.picking'].browse(self.env.context['active_id'])
-            move_line_ids = [po for po in picking_id.move_line_ids if po.qty_done > 0 and not po.result_package_id]
-            total_value = sum([po.qty_done * po.product_id.standard_price for po in move_line_ids])
-            return total_value
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super().default_get(fields_list)
+        if 'package_declared_value' in fields_list:
+            picking_id = defaults.get('picking_id', self.env.context.get('default_picking_id'))
+            picking = self.env['stock.picking'].browse(picking_id)
+            move_line_ids = picking.move_line_ids.filtered(lambda m:
+                float_compare(m.qty_done, 0.0, precision_rounding=m.product_uom_id.rounding) > 0
+                and not m.result_package_id
+            )
+            total_value = 0.0
+            for ml in move_line_ids:
+                qty = ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+                total_value += qty * ml.product_id.standard_price
+            defaults['package_declared_value'] = total_value
+        return defaults
 
     @api.onchange('package_declared_value')
     def _onchange_package_declared_value(self):
-        picking = self.env['stock.picking'].browse(self.env.context['active_id'])
+        picking = self.picking_id
         value = self.package_declared_value
         if picking.require_insurance == 'auto':
             self.package_require_insurance = value and picking.carrier_id.automatic_insurance_value and value >= picking.carrier_id.automatic_insurance_value
@@ -304,10 +308,29 @@ class ChooseDeliveryPackage(models.TransientModel):
             self.package_require_signature = picking.require_signature == 'yes'
 
     def put_in_pack(self):
-        super().put_in_pack()
-        if self.stock_quant_package_id:
-            self.stock_quant_package_id.write({
-                'declared_value': self.package_declared_value,
-                'require_insurance': self.package_require_insurance,
-                'require_signature': self.package_require_signature,
-            })
+        # Copied because `delivery_package` is not retained by reference or returned...
+        picking_move_lines = self.picking_id.move_line_ids
+        if not self.picking_id.picking_type_id.show_reserved:
+            picking_move_lines = self.picking_id.move_line_nosuggest_ids
+
+        move_line_ids = picking_move_lines.filtered(lambda ml:
+            float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
+            and not ml.result_package_id
+        )
+        if not move_line_ids:
+            move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
+                                 precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
+                                 precision_rounding=ml.product_uom_id.rounding) == 0)
+
+        delivery_package = self.picking_id._put_in_pack(move_line_ids)
+        # write shipping weight and product_packaging on 'stock_quant_package' if needed
+        if self.delivery_packaging_id:
+            delivery_package.packaging_id = self.delivery_packaging_id
+            if self.shipping_weight:
+                delivery_package.shipping_weight = self.shipping_weight
+        # Hibou : Fill additional fields.
+        delivery_package.write({
+            'declared_value': self.package_declared_value,
+            'require_insurance': self.package_require_insurance,
+            'require_signature': self.package_require_signature,
+        })

@@ -95,8 +95,8 @@ class FedexRequest(fedex_request.FedexRequest):
             insured.Currency = 'USD'
             package.InsuredValue = insured
 
-        special_service = self.client.factory.create("PackageSpecialServicesRequested")
-        signature_detail = self.client.factory.create("SignatureOptionDetail")
+        special_service = self.factory.PackageSpecialServicesRequested()
+        signature_detail = self.factory.SignatureOptionDetail()
         signature_detail.OptionType = 'DIRECT' if signature_required else 'NO_SIGNATURE_REQUIRED'
         special_service.SignatureOptionDetail = signature_detail
         package.SpecialServicesRequested = special_service

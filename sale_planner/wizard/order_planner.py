@@ -28,7 +28,11 @@ class FakeCollection():
             yield v
 
     def filtered(self, f):
-        return filter(f, self.vals)
+        return self.__class__([v for v in self.vals if f(v)])
+
+    def mapped(self, s):
+        # note this only maps to one level and doesn't really support recordset
+        return [v[s] for v in self.vals]
 
     def sudo(self, *args, **kwargs):
         return self
@@ -699,7 +703,7 @@ class SaleOrderMakePlan(models.TransientModel):
                     if has_error:
                         continue
                     order_fake.warehouse_id = warehouses.filtered(lambda wh: wh.id == wh_id)
-                    order_fake.order_line = FakeCollection(filter(lambda line: line.product_id.id in wh_vals['product_ids'], original_order_fake_order_line))
+                    order_fake.order_line = FakeCollection(list(filter(lambda line: line.product_id.id in wh_vals['product_ids'], original_order_fake_order_line)))
                     wh_carrier_options = self._generate_shipping_carrier_option(wh_vals, order_fake, carrier)
                     if not wh_carrier_options:
                         has_error = True

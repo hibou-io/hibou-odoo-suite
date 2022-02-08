@@ -26,7 +26,7 @@ class ProviderUPS(models.Model):
             if not third_party_account.delivery_type == 'ups':
                 raise ValidationError('Non-UPS Shipping Account indicated during UPS shipment.')
             return True
-        if order and self.ups_bill_my_account and order.ups_carrier_account:
+        if order and order.ups_bill_my_account and order.ups_carrier_account:
             return True
         return False
 
@@ -53,10 +53,10 @@ class ProviderUPS(models.Model):
             return third_party_account.name
         if order and order.ups_carrier_account:
             return order.ups_carrier_account
-        if picking and picking.picking_type_id.warehouse_id.ups_shipper_number:
-            return picking.picking_type_id.warehouse_id.ups_shipper_number
         if picking and picking.sale_id.ups_carrier_account:
             return picking.sale_id.ups_carrier_account
+        if picking and picking.picking_type_id.warehouse_id.ups_shipper_number:
+            return picking.picking_type_id.warehouse_id.ups_shipper_number
         return self.ups_shipper_number
 
     def _get_ups_carrier_account(self, picking):
