@@ -26,7 +26,7 @@ class ProviderUPS(models.Model):
             if not third_party_account.delivery_type == 'ups':
                 raise ValidationError('Non-UPS Shipping Account indicated during UPS shipment.')
             return True
-        if order and self.ups_bill_my_account and order.ups_carrier_account:
+        if order and order.ups_bill_my_account and order.partner_ups_carrier_account:
             return True
         return False
 
@@ -51,12 +51,12 @@ class ProviderUPS(models.Model):
             if not third_party_account.delivery_type == 'ups':
                 raise ValidationError('Non-UPS Shipping Account indicated during UPS shipment.')
             return third_party_account.name
-        if order and order.ups_carrier_account:
-            return order.ups_carrier_account
+        if order and order.partner_ups_carrier_account:
+            return order.partner_ups_carrier_account
+        if picking and picking.sale_id.partner_ups_carrier_account:
+            return picking.sale_id.partner_ups_carrier_account
         if picking and picking.picking_type_id.warehouse_id.ups_shipper_number:
             return picking.picking_type_id.warehouse_id.ups_shipper_number
-        if picking and picking.sale_id.ups_carrier_account:
-            return picking.sale_id.ups_carrier_account
         return self.ups_shipper_number
 
     def _get_ups_carrier_account(self, picking):
@@ -127,7 +127,7 @@ class ProviderUPS(models.Model):
                     'error_message': check_value,
                     'warning_message': False}
 
-        ups_service_type = order.ups_service_type or self.ups_default_service_type
+        ups_service_type = self.ups_default_service_type
         result = srm.get_shipping_price(
             shipment_info=shipment_info, packages=packages, shipper=shipper_company, ship_from=shipper_warehouse,
             ship_to=recipient, packaging_type=self.ups_default_packaging_id.shipper_package_code, service_type=ups_service_type,
@@ -204,10 +204,7 @@ class ProviderUPS(models.Model):
                 'itl_currency_code': self.env.user.company_id.currency_id.name,
                 'phone': recipient.mobile or recipient.phone,
             }
-            if picking.sale_id and picking.sale_id.carrier_id != picking.carrier_id:
-                ups_service_type = picking.carrier_id.ups_default_service_type or picking.ups_service_type or superself.ups_default_service_type
-            else:
-                ups_service_type = picking.ups_service_type or superself.ups_default_service_type
+            ups_service_type = picking.carrier_id.ups_default_service_type
 
             # Hibou Delivery
             ups_carrier_account = superself._get_ups_carrier_account(picking)
@@ -353,7 +350,7 @@ class ProviderUPS(models.Model):
                      'warning_message': False,
                      }]
         # We now use Shop if we send multi=True
-        ups_service_type = (order.ups_service_type or self.ups_default_service_type) if order else self.ups_default_service_type
+        ups_service_type = self.ups_default_service_type
         result = srm.get_shipping_price(
             shipment_info=shipment_info, packages=packages, shipper=shipper_company, ship_from=shipper_warehouse,
             ship_to=recipient, packaging_type=self.ups_default_packaging_id.shipper_package_code, service_type=ups_service_type,

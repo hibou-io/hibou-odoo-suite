@@ -38,6 +38,8 @@ class DeliveryFedex(models.Model):
             if not third_party_account.delivery_type == 'fedex':
                 raise ValidationError('Non-FedEx Shipping Account indicated during FedEx shipment.')
             return third_party_account.name
+        if picking and picking.picking_type_id.warehouse_id.fedex_account_number:
+            return picking.picking_type_id.warehouse_id.fedex_account_number
         return self.fedex_account_number
 
     def _get_fedex_account_number(self, order=None, picking=None):

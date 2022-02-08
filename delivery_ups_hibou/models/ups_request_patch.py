@@ -388,9 +388,10 @@ def patched_set_package_detail(self, client, packages, packaging_type, ship_from
             if not package.PackageServiceOptions:
                 package.PackageServiceOptions = self.factory_ns2.PackageServiceOptionsType()
             if not package.PackageServiceOptions.DeclaredValue:
-                package.PackageServiceOptions.DeclaredValue = self.factory_ns2.InsuredValueType()
-                # Shipping service
-                # package.PackageServiceOptions.DeclaredValue = self.factory_ns2.PackageDeclaredValueType()
+                if request_type == 'shipping':
+                    package.PackageServiceOptions.DeclaredValue = self.factory_ns2.PackageDeclaredValueType()
+                else:
+                    package.PackageServiceOptions.DeclaredValue = self.factory_ns2.ShipperDeclaredValueType()
             package.PackageServiceOptions.DeclaredValue.MonetaryValue = p.insurance_value
             package.PackageServiceOptions.DeclaredValue.CurrencyCode = p.insurance_currency_code
         if p.signature_required:

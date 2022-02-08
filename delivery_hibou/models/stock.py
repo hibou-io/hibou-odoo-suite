@@ -164,9 +164,10 @@ class StockPicking(models.Model):
             for carrier in carriers:
                 carrier_packages = packages_with_carrier.filtered(lambda p: p.carrier_id == carrier)
                 carrier.cancel_shipment(self, packages=carrier_packages)
-                package_refs = ','.join(carrier_packages.mapped('carrier_tracking_ref'))
-                msg = "Shipment %s cancelled" % package_refs
-                picking.message_post(body=msg)
+                # Above cancel should also say which are cancelled in chatter.
+                # package_refs = ','.join(carrier_packages.mapped('carrier_tracking_ref'))
+                # msg = "Shipment %s cancelled" % package_refs
+                # picking.message_post(body=msg)
                 carrier_packages.write({'carrier_tracking_ref': False})
 
         pickings_without_package_tracking = self - pickings_with_package_tracking
