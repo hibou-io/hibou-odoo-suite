@@ -7,6 +7,9 @@ class StockQuantPackage(models.Model):
 
     carrier_id = fields.Many2one('delivery.carrier', string='Carrier')
     carrier_tracking_ref = fields.Char(string='Tracking Reference')
+    require_insurance = fields.Boolean(string='Require Insurance')
+    require_signature = fields.Boolean(string='Require Signature')
+    declared_value = fields.Float(string='Declared Value')
 
     def _get_active_picking(self):
         picking_id = self._context.get('active_id')
@@ -34,7 +37,14 @@ class StockPicking(models.Model):
             ('no', 'No'),
         ], string='Require Insurance', default='auto',
         help='If your carrier supports it, auto should be calculated off of the "Automatic Insurance Value" field.')
+    require_signature = fields.Selection([
+            ('auto', 'Automatic'),
+            ('yes', 'Yes'),
+            ('no', 'No'),
+        ], string='Require Signature', default='auto',
+        help='If your carrier supports it, auto should be calculated off of the "Automatic Signature Required Value" field.')
     package_carrier_tracking_ref = fields.Char(string='Package Tracking Numbers', compute='_compute_package_carrier_tracking_ref')
+    commercial_partner_id = fields.Many2one('res.partner', related='partner_id.commercial_partner_id')
 
     @api.depends('package_ids.carrier_tracking_ref')
     def _compute_package_carrier_tracking_ref(self):
@@ -67,8 +77,10 @@ class StockPicking(models.Model):
         res = super(StockPicking, self).create(values)
         return res
 
-    def declared_value(self):
+    def declared_value(self, package=None):
         self.ensure_one()
+        if package:
+            return package.declared_value
         cost = sum([(l.product_id.standard_price * l.qty_done) for l in self.move_line_ids] or [0.0])
         if not cost:
             # Assume Full Value
@@ -112,6 +124,8 @@ class StockPicking(models.Model):
                     tracking_numbers.append(tracking_number)
                     # Try to add tracking to the individual packages.
                     potential_tracking_numbers = tracking_number.split(',')
+                    if len(potential_tracking_numbers) == 1:
+                        potential_tracking_numbers = tracking_number.split('+')  # UPS for example...
                     if len(potential_tracking_numbers) >= len(carrier_packages):
                         for t, p in zip(potential_tracking_numbers, carrier_packages):
                             p.carrier_tracking_ref = t
@@ -150,9 +164,10 @@ class StockPicking(models.Model):
             for carrier in carriers:
                 carrier_packages = packages_with_carrier.filtered(lambda p: p.carrier_id == carrier)
                 carrier.cancel_shipment(self, packages=carrier_packages)
-                package_refs = ','.join(carrier_packages.mapped('carrier_tracking_ref'))
-                msg = "Shipment %s cancelled" % package_refs
-                picking.message_post(body=msg)
+                # Above cancel should also say which are cancelled in chatter.
+                # package_refs = ','.join(carrier_packages.mapped('carrier_tracking_ref'))
+                # msg = "Shipment %s cancelled" % package_refs
+                # picking.message_post(body=msg)
                 carrier_packages.write({'carrier_tracking_ref': False})
 
         pickings_without_package_tracking = self - pickings_with_package_tracking
