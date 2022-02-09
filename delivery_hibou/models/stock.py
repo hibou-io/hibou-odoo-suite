@@ -15,10 +15,8 @@ class StockQuantPackage(models.Model):
         picking_id = self._context.get('active_id')
         picking_model = self._context.get('active_model')
         if not picking_id or picking_model != 'stock.picking':
-            params = self._context.get('params')
-            if params:
-                picking_id = params.get('id')
-                picking_model = params.get('model')
+            picking_id = self._context.get('picking_active_id')
+            picking_model = self._context.get('picking_active_model')
             if not picking_id or picking_model != 'stock.picking':
                 raise UserError('Cannot cancel package other than through shipment/picking.')
         return self.env['stock.picking'].browse(picking_id)

@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.tools.float_utils import float_compare
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.exceptions import UserError
 
@@ -273,36 +274,46 @@ class DeliveryCarrier(models.Model):
 class ChooseDeliveryPackage(models.TransientModel):
     _inherit = 'choose.delivery.package'
 
-    package_declared_value = fields.Float(string='Declared Value',
-                                          default=lambda self: self._default_package_declared_value())
+    package_declared_value = fields.Float(string='Declared Value')
     package_require_insurance = fields.Boolean(string='Require Insurance')
     package_require_signature = fields.Boolean(string='Require Signature')
 
-    def _default_package_declared_value(self):
-        # guard for install
-        if not self.env.context.get('active_id'):
-            return 0.0
-        if self.env.context.get('default_stock_quant_package_id'):
-            stock_quant_package = self.env['stock.quant.package'].browse(self.env.context['default_stock_quant_package_id'])
-            return stock_quant_package.package_declared_value
-        else:
-            picking_id = self.env['stock.picking'].browse(self.env.context['active_id'])
-            move_line_ids = [po for po in picking_id.move_line_ids if po.qty_done > 0 and not po.result_package_id]
-            total_value = sum([po.qty_done * po.product_id.standard_price for po in move_line_ids])
-            return total_value
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super().default_get(fields_list)
+        if 'package_declared_value' in fields_list:
+            if self.env.context.get('default_picking_id'):
+                picking_id = self.env.context.get('default_picking_id')
+                package_id = self.env.context.get('default_stock_quant_package_id')
+                picking = self.env['stock.picking'].browse(picking_id)
+                move_line_ids = picking.move_line_ids.filtered(lambda m:
+                    float_compare(m.qty_done, 0.0, precision_rounding=m.product_uom_id.rounding) > 0
+                    and (not m.result_package_id or m.result_package_id.id == package_id)
+                )
+                total_value = 0.0
+                for ml in move_line_ids:
+                    qty = ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+                    total_value += qty * ml.product_id.standard_price
+                defaults['package_declared_value'] = total_value
+            elif self.env.context.get('default_stock_quant_package_id'):
+                stock_quant_package = self.env['stock.quant.package'].browse(self.env.context['default_stock_quant_package_id'])
+                defaults['package_declared_value'] = stock_quant_package.declared_value
+        return defaults
 
     @api.onchange('package_declared_value')
     def _onchange_package_declared_value(self):
-        picking = self.env['stock.picking'].browse(self.env.context['active_id'])
-        value = self.package_declared_value
-        if picking.require_insurance == 'auto':
-            self.package_require_insurance = value and picking.carrier_id.automatic_insurance_value and value >= picking.carrier_id.automatic_insurance_value
-        else:
-            self.package_require_insurance = picking.require_insurance == 'yes'
-        if picking.require_signature == 'auto':
-            self.package_require_signature = value and picking.carrier_id.automatic_sig_req_value and value >= picking.carrier_id.automatic_sig_req_value
-        else:
-            self.package_require_signature = picking.require_signature == 'yes'
+        picking_id = self.env.context.get('default_picking_id')
+        if picking_id:
+            picking = self.env['stock.picking'].browse(picking_id)
+            value = self.package_declared_value
+            if picking.require_insurance == 'auto':
+                self.package_require_insurance = value and picking.carrier_id.automatic_insurance_value and value >= picking.carrier_id.automatic_insurance_value
+            else:
+                self.package_require_insurance = picking.require_insurance == 'yes'
+            if picking.require_signature == 'auto':
+                self.package_require_signature = value and picking.carrier_id.automatic_sig_req_value and value >= picking.carrier_id.automatic_sig_req_value
+            else:
+                self.package_require_signature = picking.require_signature == 'yes'
 
     def put_in_pack(self):
         super().put_in_pack()

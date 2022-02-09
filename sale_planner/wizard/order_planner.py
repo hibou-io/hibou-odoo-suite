@@ -29,10 +29,17 @@ class FakeCollection():
             yield v
 
     def filtered(self, f):
-        return filter(f, self.vals)
+        return self.__class__([v for v in self.vals if f(v)])
+
+    def mapped(self, s):
+        # note this only maps to one level and doesn't really support recordset
+        return [v[s] for v in self.vals]
+
+    def sudo(self, *args, **kwargs):
+        return self
 
 
-class FakePartner():
+class FakePartner(FakeCollection):
     def __init__(self, **kwargs):
         """
         'delivery.carrier'.verify_carrier(contact) ->
@@ -95,7 +102,7 @@ class FakePartner():
         return getattr(self, item)
 
 
-class FakeOrderLine():
+class FakeOrderLine(FakeCollection):
     def __init__(self, **kwargs):
         """
         'delivery.carrier'.get_price_available(order) ->
@@ -324,18 +331,20 @@ class SaleOrderMakePlan(models.TransientModel):
         if domain:
             if not isinstance(domain, (list, tuple)):
                 domain = tools.safe_eval(domain)
-        else:
-            domain = []
-
         if self.env.context.get('carrier_domain'):
-            # potential bug here if this is textual
+            if not domain:
+                domain = []
             domain.extend(self.env.context.get('carrier_domain'))
+        if domain:
+            return Carrier.search(domain)
 
-        irconfig_parameter = self.env['ir.config_parameter'].sudo()
-        if irconfig_parameter.get_param('sale.order.planner.carrier_domain'):
-            domain.extend(tools.safe_eval(irconfig_parameter.get_param('sale.order.planner.carrier_domain')))
-
-        return Carrier.search(domain)
+        # no domain, use global
+        if warehouse_id:
+            warehouse = self.env['stock.warehouse'].sudo().browse(warehouse_id)
+            if warehouse.sale_planner_carrier_ids:
+                return warehouse.sale_planner_carrier_ids.sudo()
+        carrier_ids = sale_planner_carrier_ids(self.env, self.env.user.company_id)
+        return Carrier.browse(carrier_ids)
 
     def _generate_base_option(self, order_fake, policy_group):
         flag_force_closest = False
@@ -691,7 +700,7 @@ class SaleOrderMakePlan(models.TransientModel):
                     if has_error:
                         continue
                     order_fake.warehouse_id = warehouses.filtered(lambda wh: wh.id == wh_id)
-                    order_fake.order_line = FakeCollection(filter(lambda line: line.product_id.id in wh_vals['product_ids'], original_order_fake_order_line))
+                    order_fake.order_line = FakeCollection(list(filter(lambda line: line.product_id.id in wh_vals['product_ids'], original_order_fake_order_line)))
                     wh_carrier_options = self._generate_shipping_carrier_option(wh_vals, order_fake, carrier)
                     if not wh_carrier_options:
                         has_error = True
