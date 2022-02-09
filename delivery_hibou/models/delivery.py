@@ -1,4 +1,5 @@
-from odoo import fields, models, _
+from odoo import api, fields, models, _
+from odoo.tools.float_utils import float_compare
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.exceptions import UserError
 
@@ -9,6 +10,9 @@ class DeliveryCarrier(models.Model):
     automatic_insurance_value = fields.Float(string='Automatic Insurance Value',
                                              help='Will be used during shipping to determine if the '
                                                   'picking\'s value warrants insurance being added.')
+    automatic_sig_req_value = fields.Float(string='Automatic Signature Required Value',
+                                           help='Will be used during shipping to determine if the '
+                                                'picking\'s value warrants signature required being added.')
     procurement_priority = fields.Selection(PROCUREMENT_PRIORITIES,
                                             string='Procurement Priority',
                                             help='Priority for this carrier. Will affect pickings '
@@ -16,20 +20,41 @@ class DeliveryCarrier(models.Model):
 
     # Utility
 
-    def get_insurance_value(self, order=None, picking=None):
+    def get_insurance_value(self, order=None, picking=None, package=None):
         value = 0.0
         if order:
             if order.order_line:
-                value = sum(order.order_line.filtered(lambda l: l.type != 'service').mapped('price_subtotal'))
+                value = sum(order.order_line.filtered(lambda l: l.product_id.type != 'service').mapped('price_subtotal'))
             else:
                 return value
         if picking:
-            value = picking.declared_value()
-            if picking.require_insurance == 'no':
+            value = picking.declared_value(package=package)
+            if package and not package.require_insurance:
                 value = 0.0
-            elif picking.require_insurance == 'auto' and self.automatic_insurance_value and self.automatic_insurance_value > value:
-                value = 0.0
+            else:
+                if picking.require_insurance == 'no':
+                    value = 0.0
+                elif picking.require_insurance == 'auto' and self.automatic_insurance_value and self.automatic_insurance_value > value:
+                    value = 0.0
         return value
+
+    def get_signature_required(self, order=None, picking=None, package=None):
+        value = 0.0
+        if order:
+            if order.order_line:
+                value = sum(order.order_line.filtered(lambda l: l.product_id.type != 'service').mapped('price_subtotal'))
+            else:
+                return False
+        if picking:
+            value = picking.declared_value(package=package)
+            if package:
+                return package.require_signature
+            else:
+                if picking.require_signature == 'no':
+                    return False
+                elif picking.require_signature == 'yes':
+                    return True
+        return self.automatic_sig_req_value and value >= self.automatic_sig_req_value
 
     def get_third_party_account(self, order=None, picking=None):
         if order and order.shipping_account_id:
@@ -202,9 +227,9 @@ class DeliveryCarrier(models.Model):
 
         res = []
         for carrier in self:
-            carrier_packages = packages.filtered(lambda p: not p.carrier_tracking_ref and
-                                                           (not p.carrier_id or p.carrier_id == carrier) and
-                                                           p.package_type_id.package_carrier_type in (False, '', 'none', carrier.delivery_type))
+            carrier_packages = packages and packages.filtered(lambda p: not p.carrier_tracking_ref and
+                                                              (not p.carrier_id or p.carrier_id == carrier) and
+                                                              p.packaging_type_id.package_carrier_type in (False, '', 'none', carrier.delivery_type))
             if packages and not carrier_packages:
                 continue
             if hasattr(carrier, '%s_rate_shipment_multi' % self.delivery_type):
@@ -243,3 +268,70 @@ class DeliveryCarrier(models.Model):
                     })
 
             return getattr(self, '%s_cancel_shipment' % self.delivery_type)(pickings)
+
+
+class ChooseDeliveryPackage(models.TransientModel):
+    _inherit = 'choose.delivery.package'
+
+    package_declared_value = fields.Float(string='Declared Value')
+    package_require_insurance = fields.Boolean(string='Require Insurance')
+    package_require_signature = fields.Boolean(string='Require Signature')
+
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super().default_get(fields_list)
+        if 'package_declared_value' in fields_list:
+            picking = self.env['stock.picking'].browse(defaults.get('picking_id'))
+            move_line_ids = picking.move_line_ids.filtered(lambda m:
+                float_compare(m.qty_done, 0.0, precision_rounding=m.product_uom_id.rounding) > 0
+                and not m.result_package_id
+            )
+            total_value = 0.0
+            for ml in move_line_ids:
+                qty = ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+                total_value += qty * ml.product_id.standard_price
+            defaults['package_declared_value'] = total_value
+        return defaults
+
+    @api.onchange('package_declared_value')
+    def _onchange_package_declared_value(self):
+        picking = self.picking_id
+        value = self.package_declared_value
+        if picking.require_insurance == 'auto':
+            self.package_require_insurance = value and picking.carrier_id.automatic_insurance_value and value >= picking.carrier_id.automatic_insurance_value
+        else:
+            self.package_require_insurance = picking.require_insurance == 'yes'
+        if picking.require_signature == 'auto':
+            self.package_require_signature = value and picking.carrier_id.automatic_sig_req_value and value >= picking.carrier_id.automatic_sig_req_value
+        else:
+            self.package_require_signature = picking.require_signature == 'yes'
+
+    def action_put_in_pack(self):
+        # Copied because `delivery_package` is not retained by reference or returned...
+        picking_move_lines = self.picking_id.move_line_ids
+        if not self.picking_id.picking_type_id.show_reserved and not self.env.context.get('barcode_view'):
+            picking_move_lines = self.picking_id.move_line_nosuggest_ids
+
+        move_line_ids = picking_move_lines.filtered(lambda ml:
+                                                    float_compare(ml.qty_done, 0.0,
+                                                                  precision_rounding=ml.product_uom_id.rounding) > 0
+                                                    and not ml.result_package_id
+                                                    )
+        if not move_line_ids:
+            move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
+                                                                                 precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(
+                ml.qty_done, 0.0,
+                precision_rounding=ml.product_uom_id.rounding) == 0)
+
+        delivery_package = self.picking_id._put_in_pack(move_line_ids)
+        # write shipping weight and package type on 'stock_quant_package' if needed
+        if self.delivery_package_type_id:
+            delivery_package.package_type_id = self.delivery_package_type_id
+        if self.shipping_weight:
+            delivery_package.shipping_weight = self.shipping_weight
+        # Hibou : Fill additional fields.
+        delivery_package.write({
+            'declared_value': self.package_declared_value,
+            'require_insurance': self.package_require_insurance,
+            'require_signature': self.package_require_signature,
+        })
