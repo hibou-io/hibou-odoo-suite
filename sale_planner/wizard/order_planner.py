@@ -835,7 +835,7 @@ class SaleOrderMakePlan(models.TransientModel):
                 option['shipping_price'] = final_price
                 option['requested_date'] = fields.Datetime.to_string(date_delivered) if (date_delivered and isinstance(date_delivered, datetime)) else date_delivered
                 option['transit_days'] = transit_days
-                return option
+                return [option]
         except Exception as e:
             _logger.info("Exception collecting carrier rates: " + str(e))
             # Want to see more?
