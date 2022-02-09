@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='integration_level']" position="after">
                 <field name="automatic_insurance_value"/>
+                <field name="automatic_sig_req_value"/>
                 <field name="procurement_priority"/>
             </xpath>
         </field>
@@ -19,6 +20,11 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='delivery_package_type_id']" position="attributes">
                 <attribute name="domain">[]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='delivery_package_type_id']" position="after">
+                <field name="package_declared_value" />
+                <field name="package_require_insurance" />
+                <field name="package_require_signature" />
             </xpath>
         </field>
     </record>
