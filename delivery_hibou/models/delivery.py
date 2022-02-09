@@ -284,7 +284,7 @@ class ChooseDeliveryPackage(models.TransientModel):
             return 0.0
         if self.env.context.get('default_stock_quant_package_id'):
             stock_quant_package = self.env['stock.quant.package'].browse(self.env.context['default_stock_quant_package_id'])
-            return stock_quant_package.package_declared_value
+            return stock_quant_package.declared_value
         else:
             picking_id = self.env['stock.picking'].browse(self.env.context['active_id'])
             move_line_ids = [po for po in picking_id.move_line_ids if po.qty_done > 0 and not po.result_package_id]
@@ -293,7 +293,7 @@ class ChooseDeliveryPackage(models.TransientModel):
 
     @api.onchange('package_declared_value')
     def _onchange_package_declared_value(self):
-        picking = self.env['stock.picking'].browse(self.env.context['active_id'])
+        picking = self.env['stock.picking'].browse(self.env.context.get('active_id', 0))
         value = self.package_declared_value
         if picking.require_insurance == 'auto':
             self.package_require_insurance = value and picking.carrier_id.automatic_insurance_value and value >= picking.carrier_id.automatic_insurance_value
