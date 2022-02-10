@@ -38,6 +38,8 @@ class DeliveryFedex(models.Model):
             if not third_party_account.delivery_type == 'fedex':
                 raise ValidationError('Non-FedEx Shipping Account indicated during FedEx shipment.')
             return third_party_account.name
+        if picking and picking.picking_type_id.warehouse_id.fedex_account_number:
+            return picking.picking_type_id.warehouse_id.fedex_account_number
         return self.fedex_account_number
 
     def _get_fedex_account_number(self, order=None, picking=None):
@@ -74,7 +76,7 @@ class DeliveryFedex(models.Model):
     Overrides to use Hibou Delivery methods to get shipper etc. and to add 'transit_days' to result.
     """
     def fedex_rate_shipment(self, order):
-        max_weight = self._fedex_convert_weight(self.fedex_default_packaging_id.max_weight, self.fedex_weight_unit)
+        max_weight = self._fedex_convert_weight(self.fedex_default_package_type_id.max_weight, self.fedex_weight_unit)
         price = 0.0
         is_india = order.partner_shipping_id.country_id.code == 'IN' and order.company_id.partner_id.country_id.code == 'IN'
 
@@ -113,11 +115,11 @@ class DeliveryFedex(models.Model):
         srm.shipment_request(
             self.fedex_droppoff_type,
             self.fedex_service_type,
-            self.fedex_default_packaging_id.shipper_package_code,
+            self.fedex_default_package_type_id.shipper_package_code,
             self.fedex_weight_unit,
             self.fedex_saturday_delivery,
         )
-        pkg = self.fedex_default_packaging_id
+        pkg = self.fedex_default_package_type_id
 
         srm.set_currency(_convert_curr_iso_fdx(order_currency.name))
         srm.set_shipper(shipper_company, shipper_warehouse)
@@ -242,7 +244,6 @@ class DeliveryFedex(models.Model):
             payment_acc_number = superself._get_fedex_payment_account_number(picking=picking)
             order_name = superself.get_order_name(picking=picking)
             attn = superself.get_attn(picking=picking)
-            insurance_value = superself.get_insurance_value(picking=picking)
             residential = self._get_fedex_recipient_is_residential(recipient)
 
             srm.web_authentication_detail(superself.fedex_developer_key, superself.fedex_developer_password)
@@ -250,7 +251,7 @@ class DeliveryFedex(models.Model):
 
             srm.transaction_detail(picking.id)
 
-            package_type = picking_packages and picking_packages[0].packaging_id.shipper_package_code or self.fedex_default_packaging_id.shipper_package_code
+            package_type = picking_packages and picking_packages[0].package_type_id.shipper_package_code or self.fedex_default_package_type_id.shipper_package_code
             srm.shipment_request(self.fedex_droppoff_type, self.fedex_service_type, package_type, self.fedex_weight_unit, self.fedex_saturday_delivery)
             srm.set_currency(_convert_curr_iso_fdx(picking.company_id.currency_id.name))
             srm.set_shipper(shipper_company, shipper_warehouse)
@@ -321,8 +322,8 @@ class DeliveryFedex(models.Model):
                 for sequence, package in enumerate(picking_packages, start=1):
 
                     package_weight = self._fedex_convert_weight(package.shipping_weight, self.fedex_weight_unit)
-                    packaging = package.packaging_id
-                    packaging_code = packaging.shipper_package_code if (packaging.package_carrier_type == 'fedex' and packaging.shipper_package_code) else self.fedex_default_packaging_id.shipper_package_code
+                    packaging = package.package_type_id
+                    packaging_code = packaging.shipper_package_code if (packaging.package_carrier_type == 'fedex' and packaging.shipper_package_code) else self.fedex_default_package_type_id.shipper_package_code
 
                     # Hibou Delivery
                     # Add more details to package.
@@ -337,7 +338,8 @@ class DeliveryFedex(models.Model):
                         dept_number=dept_number,
                         # reference=picking.display_name,
                         reference=('%s-%d' % (order_name, sequence)),  # above "reference" is new in 13.0, using new name but old value
-                        insurance=insurance_value,
+                        insurance=superself.get_insurance_value(picking=picking, package=package),
+                        signature_required=superself.get_signature_required(picking=picking, package=package)
                     )
                     srm.set_master_package(net_weight, package_count, master_tracking_id=master_tracking_id)
                     request = srm.process_shipment()
@@ -406,8 +408,8 @@ class DeliveryFedex(models.Model):
             # One package #
             ###############
             elif package_count == 1:
-                packaging = picking_packages[:1].packaging_id or self.fedex_default_packaging_id
-                packaging_code = packaging.shipper_package_code if packaging.package_carrier_type == 'fedex' else self.fedex_default_packaging_id.shipper_package_code
+                packaging = picking_packages[:1].package_type_id or self.fedex_default_package_type_id
+                packaging_code = packaging.shipper_package_code if packaging.package_carrier_type == 'fedex' else self.fedex_default_package_type_id.shipper_package_code
                 srm._add_package(
                     net_weight,
                     package_code=packaging_code,
@@ -418,7 +420,8 @@ class DeliveryFedex(models.Model):
                     dept_number=dept_number,
                     # reference=picking.display_name,
                     reference=order_name,  # above "reference" is new in 13.0, using new name but old value
-                    insurance=insurance_value,
+                    insurance=superself.get_insurance_value(picking=picking, package=picking_packages[:1]),
+                    signature_required=superself.get_signature_required(picking=picking, package=picking_packages[:1])
                 )
                 srm.set_master_package(net_weight, 1)
 
@@ -481,7 +484,7 @@ class DeliveryFedex(models.Model):
 
     def _fedex_rate_shipment_multi_package(self, order=None, picking=None, package=None):
         if order:
-            max_weight = self._fedex_convert_weight(self.fedex_default_packaging_id.max_weight, self.fedex_weight_unit)
+            max_weight = self._fedex_convert_weight(self.fedex_default_package_type_id.max_weight, self.fedex_weight_unit)
             is_india = order.partner_shipping_id.country_id.code == 'IN' and order.company_id.partner_id.country_id.code == 'IN'
             est_weight_value = sum([(line.product_id.weight * line.product_uom_qty) for line in order.order_line]) or 0.0
             weight_value = self._fedex_convert_weight(est_weight_value, self.fedex_weight_unit)
@@ -515,7 +518,8 @@ class DeliveryFedex(models.Model):
         acc_number = superself._get_fedex_account_number(order=order, picking=picking)
         meter_number = superself._get_fedex_meter_number(order=order, picking=picking)
         order_name = superself.get_order_name(order=order, picking=picking)
-        insurance_value = superself.get_insurance_value(order=order, picking=picking)
+        insurance_value = superself.get_insurance_value(order=order, picking=picking, package=package)
+        signature_required = superself.get_signature_required(order=order, picking=picking, package=package)
         residential = self._get_fedex_recipient_is_residential(recipient)
         date_planned = fields.Datetime.now()
         if self.env.context.get('date_planned'):
@@ -535,12 +539,12 @@ class DeliveryFedex(models.Model):
         srm.shipment_request(
             self.fedex_droppoff_type,
             None,  # because we want all of the rates back...
-            self.fedex_default_packaging_id.shipper_package_code,
+            self.fedex_default_package_type_id.shipper_package_code,
             self.fedex_weight_unit,
             self.fedex_saturday_delivery,
             ship_timestamp=date_planned,
         )
-        pkg = self.fedex_default_packaging_id
+        pkg = self.fedex_default_package_type_id
 
         srm.set_currency(_convert_curr_iso_fdx(order_currency.name))
         srm.set_shipper(shipper_company, shipper_warehouse)
@@ -585,8 +589,8 @@ class DeliveryFedex(models.Model):
         else:
             if package:
                 package_weight = self._fedex_convert_weight(package.shipping_weight or package.weight, self.fedex_weight_unit)
-                packaging = package.packaging_id
-                package_code = package.packaging_id.shipper_package_code if packaging.package_carrier_type == 'fedex' else self.fedex_default_packaging_id.shipper_package_code
+                packaging = package.package_type_id
+                package_code = package.package_type_id.shipper_package_code if packaging.package_carrier_type == 'fedex' else self.fedex_default_package_type_id.shipper_package_code
 
                 srm.add_package(
                     package_weight,
@@ -599,12 +603,14 @@ class DeliveryFedex(models.Model):
                     # po_number=po_number,
                     # dept_number=dept_number,
                     reference=('%s-%d' % (order_name, 1)),
-                    insurance=insurance_value
+                    insurance=insurance_value,
+                    signature_required=signature_required
                 )
+                srm.set_master_package(package_weight, 1)
             else:
                 # deliver all together...
                 package_weight = self._fedex_convert_weight(picking.shipping_weight or picking.weight, self.fedex_weight_unit)
-                packaging = self.fedex_default_packaging_id
+                packaging = self.fedex_default_package_type_id
 
                 srm.add_package(
                     package_weight,
@@ -617,8 +623,10 @@ class DeliveryFedex(models.Model):
                     # po_number=po_number,
                     # dept_number=dept_number,
                     reference=('%s-%d' % (order_name, 1)),
-                    insurance=insurance_value
+                    insurance=insurance_value,
+                    signature_required=signature_required
                 )
+                srm.set_master_package(package_weight, 1)
 
 
         # Commodities for customs declaration (international shipping)
@@ -648,7 +656,7 @@ class DeliveryFedex(models.Model):
         #                          commodity_quantity_units, commodity_harmonized_code)
         #     srm.customs_value(_convert_curr_iso_fdx(order_currency.name), total_commodities_amount, "NON_DOCUMENTS")
         #     srm.duties_payment(order.warehouse_id.partner_id.country_id.code, superself.fedex_account_number)
-
+        
         request_list = srm.rate(date_planned=date_planned, multi=True)
         result = []
         for request in request_list:
@@ -707,3 +715,28 @@ class DeliveryFedex(models.Model):
                                ('fedex_service_type', '=', service_code)
                                ], limit=1)
         return carrier
+
+    def fedex_cancel_shipment(self, picking):
+        # Overriddent to use the correct account numbers for cancelling
+        request = FedexRequest(self.log_xml, request_type="shipping", prod_environment=self.prod_environment)
+        superself = self.sudo()
+        request.web_authentication_detail(superself.fedex_developer_key, superself.fedex_developer_password)
+        acc_number = superself._get_fedex_account_number(picking=picking)
+        meter_number = superself._get_fedex_meter_number(picking=picking)
+        request.client_detail(acc_number, meter_number)
+        request.transaction_detail(picking.id)
+
+        master_tracking_id = picking.carrier_tracking_ref.split(',')[0]
+        request.set_deletion_details(master_tracking_id)
+        result = request.delete_shipment()
+
+        warnings = result.get('warnings_message')
+        if warnings:
+            _logger.info(warnings)
+
+        if result.get('delete_success') and not result.get('errors_message'):
+            picking.message_post(body=_(u'Shipment #%s has been cancelled', master_tracking_id))
+            picking.write({'carrier_tracking_ref': '',
+                           'carrier_price': 0.0})
+        else:
+            raise UserError(result['errors_message'])

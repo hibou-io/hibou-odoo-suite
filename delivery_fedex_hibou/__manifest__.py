@@ -1,6 +1,6 @@
 {
     'name': 'Hibou Fedex Shipping',
-    'version': '14.0.1.1.0',
+    'version': '15.0.1.0.0',
     'category': 'Stock',
     'author': "Hibou Corp.",
     'license': 'OPL-1',
