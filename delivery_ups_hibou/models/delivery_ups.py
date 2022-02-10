@@ -11,15 +11,34 @@ _logger = logging.getLogger(__name__)
 class ProviderUPS(models.Model):
     _inherit = 'delivery.carrier'
 
+    def _get_ups_signature_required_type(self, order=None, picking=None, package=None):
+        # '3' for Adult Sig.
+        return '2'
+
+    def _get_ups_signature_required(self, order=None, picking=None, package=None):
+        if self.get_signature_required(order=order, picking=picking, package=package):
+            return self._get_ups_signature_required_type(order=order, picking=picking, package=package)
+        return False
+
     def _get_ups_is_third_party(self, order=None, picking=None):
         third_party_account = self.get_third_party_account(order=order, picking=picking)
         if third_party_account:
             if not third_party_account.delivery_type == 'ups':
                 raise ValidationError('Non-UPS Shipping Account indicated during UPS shipment.')
             return True
-        if order and self.ups_bill_my_account and order.ups_carrier_account:
+        if order and order.ups_bill_my_account and order.partner_ups_carrier_account:
             return True
         return False
+
+    def _get_main_ups_account_number(self, order=None, picking=None):
+        wh = None
+        if order:
+            wh = order.warehouse_id
+        if picking:
+            wh = picking.picking_type_id.warehouse_id
+        if wh and wh.ups_shipper_number:
+            return wh.ups_shipper_number
+        return self.ups_shipper_number
 
     def _get_ups_account_number(self, order=None, picking=None):
         """
@@ -32,25 +51,33 @@ class ProviderUPS(models.Model):
             if not third_party_account.delivery_type == 'ups':
                 raise ValidationError('Non-UPS Shipping Account indicated during UPS shipment.')
             return third_party_account.name
-        if order and order.ups_carrier_account:
-            return order.ups_carrier_account
-        if picking and picking.sale_id.ups_carrier_account:
-            return picking.sale_id.ups_carrier_account
+        if order and order.partner_ups_carrier_account:
+            return order.partner_ups_carrier_account
+        if picking and picking.sale_id.partner_ups_carrier_account:
+            return picking.sale_id.partner_ups_carrier_account
+        if picking and picking.picking_type_id.warehouse_id.ups_shipper_number:
+            return picking.picking_type_id.warehouse_id.ups_shipper_number
         return self.ups_shipper_number
 
     def _get_ups_carrier_account(self, picking):
         # 3rd party billing should return False if not used.
         account = self._get_ups_account_number(picking=picking)
-        return account if account != self.ups_shipper_number else False
+        return account if account not in (self.ups_shipper_number, picking.picking_type_id.warehouse_id.ups_shipper_number) else False
 
     """
     Overrides to use Hibou Delivery methods to get shipper etc. and to add 'transit_days' to result.
     """
     def ups_rate_shipment(self, order):
         superself = self.sudo()
-        srm = UPSRequest(self.log_xml, superself.ups_username, superself.ups_passwd, superself.ups_shipper_number, superself.ups_access_number, self.prod_environment)
+        # Hibou Shipping
+        signature_required = superself._get_ups_signature_required(order=order)
+        insurance_value = superself.get_insurance_value(order=order)
+        currency = order.currency_id or order.company_id.currency_id
+        insurance_currency_code = currency.name
+
+        srm = UPSRequest(self.log_xml, superself.ups_username, superself.ups_passwd, superself._get_main_ups_account_number(order=order), superself.ups_access_number, self.prod_environment)
         ResCurrency = self.env['res.currency']
-        max_weight = self.ups_default_packaging_id.max_weight
+        max_weight = self.ups_default_package_type_id.max_weight
         packages = []
         total_qty = 0
         total_weight = 0
@@ -63,11 +90,14 @@ class ProviderUPS(models.Model):
             last_package_weight = total_weight % max_weight
 
             for seq in range(total_package):
-                packages.append(Package(self, max_weight))
+                packages.append(Package(self, max_weight,
+                                        insurance_value=insurance_value, insurance_currency_code=insurance_currency_code, signature_required=signature_required))
             if last_package_weight:
-                packages.append(Package(self, last_package_weight))
+                packages.append(Package(self, last_package_weight,
+                                        insurance_value=insurance_value, insurance_currency_code=insurance_currency_code, signature_required=signature_required))
         else:
-            packages.append(Package(self, total_weight))
+            packages.append(Package(self, total_weight,
+                                    insurance_value=insurance_value, insurance_currency_code=insurance_currency_code, signature_required=signature_required))
 
         shipment_info = {
             'total_qty': total_qty  # required when service type = 'UPS Worldwide Express Freight'
@@ -97,10 +127,10 @@ class ProviderUPS(models.Model):
                     'error_message': check_value,
                     'warning_message': False}
 
-        ups_service_type = order.ups_service_type or self.ups_default_service_type
+        ups_service_type = self.ups_default_service_type
         result = srm.get_shipping_price(
             shipment_info=shipment_info, packages=packages, shipper=shipper_company, ship_from=shipper_warehouse,
-            ship_to=recipient, packaging_type=self.ups_default_packaging_id.shipper_package_code, service_type=ups_service_type,
+            ship_to=recipient, packaging_type=self.ups_default_package_type_id.shipper_package_code, service_type=ups_service_type,
             saturday_delivery=self.ups_saturday_delivery, cod_info=cod_info, date_planned=date_planned)
 
         if result.get('error_message'):
@@ -130,24 +160,38 @@ class ProviderUPS(models.Model):
     def ups_send_shipping(self, pickings):
         res = []
         superself = self.sudo()
-        srm = UPSRequest(self.log_xml, superself.ups_username, superself.ups_passwd, superself.ups_shipper_number, superself.ups_access_number, self.prod_environment)
         ResCurrency = self.env['res.currency']
         for picking in pickings:
+            srm = UPSRequest(self.log_xml, superself.ups_username, superself.ups_passwd, superself._get_main_ups_account_number(picking=picking), superself.ups_access_number, self.prod_environment)
             # Hibou Delivery
             shipper_company = superself.get_shipper_company(picking=picking)
             shipper_warehouse = superself.get_shipper_warehouse(picking=picking)
             recipient = superself.get_recipient(picking=picking)
+            currency = picking.sale_id.currency_id if picking.sale_id else picking.company_id.currency_id
+            insurance_currency_code = currency.name
+
+            picking_packages = picking.package_ids
+            package_carriers = picking_packages.mapped('carrier_id')
+            if package_carriers:
+                # only ship ours
+                picking_packages = picking_packages.filtered(lambda p: p.carrier_id == self and not p.carrier_tracking_ref)
+
+            if not picking_packages:
+                continue
 
             packages = []
             package_names = []
-            if picking.package_ids:
+            if picking_packages:
                 # Create all packages
-                for package in picking.package_ids:
-                    packages.append(Package(self, package.shipping_weight, quant_pack=package.packaging_id, name=package.name))
+                for package in picking_packages:
+                    packages.append(Package(self, package.shipping_weight, quant_pack=package.package_type_id, name=package.name,
+                                            insurance_value=superself.get_insurance_value(picking=picking, package=package), insurance_currency_code=insurance_currency_code, signature_required=superself._get_ups_signature_required(picking=picking, package=package)))
                     package_names.append(package.name)
+
+            # what is the point of weight_bulk?
             # Create one package with the rest (the content that is not in a package)
-            if picking.weight_bulk:
-                packages.append(Package(self, picking.weight_bulk))
+            # if picking.weight_bulk:
+            #     packages.append(Package(self, picking.weight_bulk))
 
             invoice_line_total = 0
             for move in picking.move_lines:
@@ -160,10 +204,7 @@ class ProviderUPS(models.Model):
                 'itl_currency_code': self.env.user.company_id.currency_id.name,
                 'phone': recipient.mobile or recipient.phone,
             }
-            if picking.sale_id and picking.sale_id.carrier_id != picking.carrier_id:
-                ups_service_type = picking.carrier_id.ups_default_service_type or picking.ups_service_type or superself.ups_default_service_type
-            else:
-                ups_service_type = picking.ups_service_type or superself.ups_default_service_type
+            ups_service_type = picking.carrier_id.ups_default_service_type
 
             # Hibou Delivery
             ups_carrier_account = superself._get_ups_carrier_account(picking)
@@ -181,7 +222,7 @@ class ProviderUPS(models.Model):
             if check_value:
                 raise UserError(check_value)
 
-            package_type = picking.package_ids and picking.package_ids[0].packaging_id.shipper_package_code or self.ups_default_packaging_id.shipper_package_code
+            package_type = picking_packages and picking_packages[0].package_type_id.shipper_package_code or self.ups_default_package_type_id.shipper_package_code
             srm.send_shipping(
                 shipment_info=shipment_info, packages=packages, shipper=shipper_company, ship_from=shipper_warehouse,
                 ship_to=recipient, packaging_type=package_type, service_type=ups_service_type, duty_payment=picking.carrier_id.ups_duty_payment,
@@ -235,14 +276,16 @@ class ProviderUPS(models.Model):
             return rates
 
     def _ups_rate_shipment_multi_package(self, order=None, picking=None, package=None):
-        # TODO package here is ignored, it should not be (UPS is not multi-rating capable until we can get rates for a single package)
         superself = self.sudo()
-        srm = UPSRequest(self.log_xml, superself.ups_username, superself.ups_passwd, superself.ups_shipper_number, superself.ups_access_number, self.prod_environment)
+        srm = UPSRequest(self.log_xml, superself.ups_username, superself.ups_passwd, superself._get_main_ups_account_number(order=order, picking=picking), superself.ups_access_number, self.prod_environment)
         ResCurrency = self.env['res.currency']
-        max_weight = self.ups_default_packaging_id.max_weight
+        max_weight = self.ups_default_package_type_id.max_weight
         packages = []
         if order:
+            insurance_value = superself.get_insurance_value(order=order)
+            signature_required = superself._get_ups_signature_required(order=order)
             currency = order.currency_id
+            insurance_currency_code = currency.name
             company = order.company_id
             date_order = order.date_order or fields.Date.today()
             total_qty = 0
@@ -256,19 +299,27 @@ class ProviderUPS(models.Model):
                 last_package_weight = total_weight % max_weight
 
                 for seq in range(total_package):
-                    packages.append(Package(self, max_weight))
+                    packages.append(Package(self, max_weight, insurance_value=insurance_value, insurance_currency_code=insurance_currency_code, signature_required=signature_required))
                 if last_package_weight:
-                    packages.append(Package(self, last_package_weight))
+                    packages.append(Package(self, last_package_weight, insurance_value=insurance_value, insurance_currency_code=insurance_currency_code, signature_required=signature_required))
             else:
-                packages.append(Package(self, total_weight))
+                packages.append(Package(self, total_weight, insurance_value=insurance_value, insurance_currency_code=insurance_currency_code, signature_required=signature_required))
         else:
             currency = picking.sale_id.currency_id if picking.sale_id else picking.company_id.currency_id
+            insurance_currency_code = currency.name
             company = picking.company_id
             date_order = picking.sale_id.date_order or fields.Date.today() if picking.sale_id else fields.Date.today()
             # Is total quantity the number of packages or the number of items being shipped?
-            total_qty = len(picking.package_ids)
-            packages = [Package(self, package.shipping_weight) for package in picking.package_ids]
-
+            if package:
+                total_qty = 1
+                packages = [Package(self, package.shipping_weight, insurance_value=superself.get_insurance_value(picking=picking, package=package), insurance_currency_code=insurance_currency_code, signature_required=superself._get_ups_signature_required(picking=picking, package=package))]
+            elif picking.package_ids:
+                # all packages....
+                total_qty = len(picking.package_ids)
+                packages = [Package(self, package.shipping_weight, insurance_value=superself.get_insurance_value(picking=picking, package=package), insurance_currency_code=insurance_currency_code, signature_required=superself._get_ups_signature_required(picking=picking, package=package)) for package in picking.package_ids.filtered(lambda p: not p.carrier_id)]
+            else:
+                total_qty = 1
+                packages.append(Package(self, picking.shipping_weight or picking.weight, insurance_value=superself.get_insurance_value(picking=picking), insurance_currency_code=insurance_currency_code, signature_required=superself._get_ups_signature_required(picking=picking)))
 
         shipment_info = {
             'total_qty': total_qty  # required when service type = 'UPS Worldwide Express Freight'
@@ -298,19 +349,25 @@ class ProviderUPS(models.Model):
                      'error_message': check_value,
                      'warning_message': False,
                      }]
-
-        #ups_service_type = order.ups_service_type or self.ups_default_service_type
-        ups_service_type = None # See if this gets us all service types
+        # We now use Shop if we send multi=True
+        ups_service_type = self.ups_default_service_type
         result = srm.get_shipping_price(
             shipment_info=shipment_info, packages=packages, shipper=shipper_company, ship_from=shipper_warehouse,
-            ship_to=recipient, packaging_type=self.ups_default_packaging_id.shipper_package_code, service_type=ups_service_type,
+            ship_to=recipient, packaging_type=self.ups_default_package_type_id.shipper_package_code, service_type=ups_service_type,
             saturday_delivery=self.ups_saturday_delivery, cod_info=cod_info, date_planned=date_planned, multi=True)
         # Hibou Delivery
         is_third_party = self._get_ups_is_third_party(order=order, picking=picking)
 
         response = []
         for rate in result:
-            if rate.get('error_message'):
+            if isinstance(rate, str):
+                # assume error
+                response.append({
+                    'success': False, 'price': 0.0,
+                    'error_message': _('Error:\n%s') % rate,
+                    'warning_message': False,
+                })
+            elif rate.get('error_message'):
                 _logger.error('UPS error: %s' % rate['error_message'])
                 response.append({
                     'success': False, 'price': 0.0,
@@ -334,6 +391,7 @@ class ProviderUPS(models.Model):
                 if carrier:
                     response.append({
                         'carrier': carrier,
+                        'package':  package or self.env['stock.quant.package'].browse(),
                         'success': True,
                         'price': price,
                         'error_message': False,
