@@ -47,3 +47,12 @@ class StockPicking(models.Model):
             domain.extend(tools.safe_eval(irconfig_parameter.get_param('sale.order.planner.carrier_domain')))
 
         return Carrier.search(domain)
+
+
+class Warehouse(models.Model):
+    _inherit = 'stock.warehouse'
+
+    delivery_planner_carrier_ids = fields.Many2many('delivery.carrier',
+                                                    relation='delivery_planner_carrier_wh_rel',
+                                                    string='Delivery Planner Base Carriers',
+                                                    help='Overrides the global carriers.')

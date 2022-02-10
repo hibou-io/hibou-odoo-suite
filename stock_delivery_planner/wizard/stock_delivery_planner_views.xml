@@ -11,6 +11,7 @@
                     <field name="plan_option_ids" nolabel="1">
                         <tree decoration-info="selection == 'selected'"
                               decoration-muted="selection == 'deselected'"
+                              decoration-bf="days_different == 0.0"
                               default_order="package_id, price"
                               create="false" edit="false" delete="false">
                             <field name="package_id" />
