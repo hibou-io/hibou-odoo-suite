@@ -22,22 +22,28 @@ from ..models.res_config_settings import sale_planner_warehouse_ids, sale_planne
 
 class FakeCollection():
     def __init__(self, vals):
-        self.vals = vals
+        self._vals = vals
 
     def __iter__(self):
-        for v in self.vals:
+        for v in self._vals:
             yield v
 
     def filtered(self, f):
-        return self.__class__([v for v in self.vals if f(v)])
+        return self.__class__([v for v in self._vals if f(v)])
         # return filter(f, self.vals)
 
     def mapped(self, s):
         # note this only maps to one level and doesn't really support recordset
-        return [v[s] for v in self.vals]
+        return [v[s] for v in self._vals]
 
     def sudo(self, *args, **kwargs):
         return self
+    
+    def __bool__(self):
+        # FakeCollection can be empty, all subclasses cannot (currently)
+        if self.__class__ != FakeCollection:
+            return True
+        return bool(self._vals)
 
 
 class FakePartner(FakeCollection):
