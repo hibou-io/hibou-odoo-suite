@@ -1,7 +1,7 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools import safe_eval
+from odoo.exceptions import UserError, ValidationError
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -26,32 +26,37 @@ class StockDeliveryPlanner(models.TransientModel):
     def create(self, values):
         planner = super(StockDeliveryPlanner, self).create(values)
 
-        base_carriers = self.env['delivery.carrier']
-        carrier_ids = self.env['ir.config_parameter'].sudo().get_param('stock.delivery.planner.carrier_ids.%s' % (self.env.company.id, ))
-        if carrier_ids:
-            try:
-                carrier_ids = [int(c) for c in carrier_ids.split(',')]
-                base_carriers = base_carriers.browse(carrier_ids)
-            except:
-                pass
+        base_carriers = planner.picking_id.picking_type_id.warehouse_id.delivery_planner_carrier_ids
+        if not base_carriers:
+            carrier_ids = self.env['ir.config_parameter'].sudo().get_param('stock.delivery.planner.carrier_ids.%s' % (self.env.user.company_id.id, ))
+            if carrier_ids:
+                try:
+                    carrier_ids = [int(c) for c in carrier_ids.split(',')]
+                    base_carriers = base_carriers.browse(carrier_ids)
+                except:
+                    pass
+        base_carriers = base_carriers.sudo()
 
         for carrier in base_carriers:
-            rates = carrier.rate_shipment_multi(picking=planner.picking_id)
-            for rate in filter(lambda r: not r.get('success'), rates):
-                _logger.warning(rate.get('error_message'))
-            for rate in filter(lambda r: r.get('success'), rates):
-                rate = self.calculate_delivery_window(rate)
-                # added late in API dev cycle
-                package = rate.get('package') or self.env['stock.quant.package'].browse()
-                planner.plan_option_ids |= planner.plan_option_ids.create({
-                    'plan_id': self.id,
-                    'carrier_id': rate['carrier'].id,
-                    'package_id': package.id,
-                    'price': rate['price'],
-                    'date_planned': rate['date_planned'],
-                    'requested_date': rate['date_delivered'],
-                    'transit_days': rate['transit_days'],
-                })
+            try:
+                rates = carrier.rate_shipment_multi(picking=planner.picking_id)
+                for rate in filter(lambda r: not r.get('success'), rates):
+                    _logger.warning(rate.get('error_message'))
+                for rate in filter(lambda r: r.get('success'), rates):
+                    rate = self.calculate_delivery_window(rate)
+                    # added late in API dev cycle
+                    package = rate.get('package') or self.env['stock.quant.package'].browse()
+                    planner.plan_option_ids |= planner.plan_option_ids.create({
+                        'plan_id': self.id,
+                        'carrier_id': rate['carrier'].id,
+                        'package_id': package.id,
+                        'price': rate['price'],
+                        'date_planned': rate['date_planned'],
+                        'requested_date': rate.get('date_delivered', False),
+                        'transit_days': rate.get('transit_days', 0),
+                    })
+            except (UserError, ValidationError) as e:
+                _logger.warning('Exception during delivery planning. %s' % str(e))
         return planner
 
     @api.model

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+
     <record id="view_picking_form" model="ir.ui.view">
         <field name="name">stock.picking.form.inherit.delivery.planner</field>
         <field name="model">stock.picking</field>
@@ -10,4 +11,16 @@
             </xpath>
         </field>
     </record>
+
+    <record id="view_warehouse_delivery_carriers" model="ir.ui.view">
+        <field name="name">stock.warehouse.delivery.carriers</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="delivery_planner_carrier_ids" options="{'no_create_edit': True, 'no_create': True}" />
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
