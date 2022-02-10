@@ -229,7 +229,7 @@ class DeliveryCarrier(models.Model):
         for carrier in self:
             carrier_packages = packages and packages.filtered(lambda p: not p.carrier_tracking_ref and
                                                               (not p.carrier_id or p.carrier_id == carrier) and
-                                                              p.packaging_type_id.package_carrier_type in (False, '', 'none', carrier.delivery_type))
+                                                              p.package_type_id.package_carrier_type in (False, '', 'none', carrier.delivery_type))
             if packages and not carrier_packages:
                 continue
             if hasattr(carrier, '%s_rate_shipment_multi' % self.delivery_type):
