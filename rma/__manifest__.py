@@ -25,6 +25,7 @@
         'views/rma_views.xml',
         'views/stock_picking_views.xml',
         'wizard/rma_lines_views.xml',
+        'wizard/rma_make_rtv_views.xml',
     ],
     'installable': True,
     'application': True,
