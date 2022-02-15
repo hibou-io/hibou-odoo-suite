@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from math import sin, cos, sqrt, atan2, radians
 from json import dumps, loads
 from copy import deepcopy
@@ -14,6 +16,7 @@ except ImportError:
     SearchEngine = None
 
 from odoo import api, fields, models, tools
+from ..models.res_config_settings import sale_planner_warehouse_ids, sale_planner_carrier_ids
 
 
 class FakeCollection():
@@ -25,7 +28,11 @@ class FakeCollection():
             yield v
 
     def filtered(self, f):
-        return filter(f, self.vals)
+        return self.__class__([v for v in self.vals if f(v)])
+
+    def mapped(self, s):
+        # note this only maps to one level and doesn't really support recordset
+        return [v[s] for v in self.vals]
 
     def sudo(self, *args, **kwargs):
         return self
@@ -306,15 +313,17 @@ class SaleOrderMakePlan(models.TransientModel):
                 domain.append(('company_id', 'in', self.env.context['allowed_company_ids']))
 
         if self.env.context.get('warehouse_domain'):
+            if not domain:
+                domain = []
             domain.extend(self.env.context.get('warehouse_domain'))
+        if domain:
+            return warehouse.search(domain)
 
-        irconfig_parameter = self.env['ir.config_parameter'].sudo()
-        if irconfig_parameter.get_param('sale.order.planner.warehouse_domain'):
-            domain.extend(tools.safe_eval(irconfig_parameter.get_param('sale.order.planner.warehouse_domain')))
+        # no domain, use global
+        warehouse_ids = sale_planner_warehouse_ids(self.env, self.env.user.company_id)
+        return warehouse.browse(warehouse_ids)
 
-        return warehouse.search(domain)
-
-    def get_shipping_carriers(self, carrier_id=None, domain=None):
+    def get_shipping_carriers(self, carrier_id=None, domain=None, warehouse_id=None):
         Carrier = self.env['delivery.carrier'].sudo()
         if carrier_id:
             return Carrier.browse(carrier_id)
@@ -322,18 +331,20 @@ class SaleOrderMakePlan(models.TransientModel):
         if domain:
             if not isinstance(domain, (list, tuple)):
                 domain = tools.safe_eval(domain)
-        else:
-            domain = []
-
         if self.env.context.get('carrier_domain'):
-            # potential bug here if this is textual
+            if not domain:
+                domain = []
             domain.extend(self.env.context.get('carrier_domain'))
+        if domain:
+            return Carrier.search(domain)
 
-        irconfig_parameter = self.env['ir.config_parameter'].sudo()
-        if irconfig_parameter.get_param('sale.order.planner.carrier_domain'):
-            domain.extend(tools.safe_eval(irconfig_parameter.get_param('sale.order.planner.carrier_domain')))
-
-        return Carrier.search(domain)
+        # no domain, use global
+        if warehouse_id:
+            warehouse = self.env['stock.warehouse'].sudo().browse(warehouse_id)
+            if warehouse.sale_planner_carrier_ids:
+                return warehouse.sale_planner_carrier_ids.sudo()
+        carrier_ids = sale_planner_carrier_ids(self.env, self.env.user.company_id)
+        return Carrier.browse(carrier_ids)
 
     def _generate_base_option(self, order_fake, policy_group):
         flag_force_closest = False
@@ -614,6 +625,8 @@ class SaleOrderMakePlan(models.TransientModel):
         return self._find_closest_warehouse(warehouses, partner.partner_latitude, partner.partner_longitude)
 
     def _find_closest_warehouse(self, warehouses, latitude, longitude):
+        if not warehouses:
+            return warehouses
         distances = {distance(latitude, longitude, wh.partner_id.partner_latitude, wh.partner_id.partner_longitude): wh.id for wh in warehouses}
         wh_id = distances[min(distances)]
         return warehouses.filtered(lambda wh: wh.id == wh_id)
@@ -661,19 +674,19 @@ class SaleOrderMakePlan(models.TransientModel):
             policy = line.product_id.product_tmpl_id.get_planning_policy()
             if policy and policy.carrier_filter_id:
                 domain.extend(tools.safe_eval(policy.carrier_filter_id.domain))
-        carriers = self.get_shipping_carriers(base_option.get('carrier_id'), domain=domain)
+        carriers = self.get_shipping_carriers(base_option.get('carrier_id'), domain=domain, warehouse_id=base_option.get('warehouse_id'))
         _logger.info('generate_shipping_options:: base_option: ' + str(base_option) + ' order_fake: ' + str(order_fake) + ' carriers: ' + str(carriers))
 
         if not carriers:
-            return base_option
+            return [base_option]
 
         if not base_option.get('sub_options'):
             options = []
             # this locic comes from "delivery.models.sale_order.SaleOrder"
             for carrier in carriers:
-                option = self._generate_shipping_carrier_option(base_option, order_fake, carrier)
-                if option:
-                    options.append(option)
+                carrier_options = self._generate_shipping_carrier_option(base_option, order_fake, carrier)
+                if carrier_options:
+                    options += carrier_options
             if options:
                 return options
             return [base_option]
@@ -685,26 +698,40 @@ class SaleOrderMakePlan(models.TransientModel):
             for carrier in carriers:
                 new_base_option = deepcopy(base_option)
                 has_error = False
+                found_carrier_ids = set()
                 for wh_id, wh_vals in base_option['sub_options'].items():
                     if has_error:
                         continue
                     order_fake.warehouse_id = warehouses.filtered(lambda wh: wh.id == wh_id)
-                    order_fake.order_line = FakeCollection(filter(lambda line: line.product_id.id in wh_vals['product_ids'], original_order_fake_order_line))
-                    wh_option = self._generate_shipping_carrier_option(wh_vals, order_fake, carrier)
-                    if not wh_option:
+                    order_fake.order_line = FakeCollection(list(filter(lambda line: line.product_id.id in wh_vals['product_ids'], original_order_fake_order_line)))
+                    wh_carrier_options = self._generate_shipping_carrier_option(wh_vals, order_fake, carrier)
+                    if not wh_carrier_options:
                         has_error = True
                     else:
-                        new_base_option['sub_options'][wh_id] = wh_option
+                        for _option in wh_carrier_options:
+                            if _option.get('carrier_id'):
+                                found_carrier_ids.add(_option['carrier_id'])
+                        new_base_option['sub_options'][wh_id] = wh_carrier_options
 
                 if has_error:
                     continue
-                # now that we've collected, we can roll up some details.
 
-                new_base_option['carrier_id'] = carrier.id
-                new_base_option['shipping_price'] = self._get_shipping_price_for_options(new_base_option['sub_options'])
-                new_base_option['requested_date'] = self._get_max_requested_date(new_base_option['sub_options'])
-                new_base_option['transit_days'] = self._get_max_transit_days(new_base_option['sub_options'])
-                options.append(new_base_option)
+                # now that we've collected details for this carrier, we likely have more than one carrier's rates
+                _logger.info('  from ' + str(carrier) + ' found ' + str(found_carrier_ids))
+                for carrier_id in found_carrier_ids:
+                    carrier_option = deepcopy(base_option)
+                    carrier_option['carrier_id'] = False
+                    for wh_id, wh_vals in base_option['sub_options'].items():
+                        for co in new_base_option['sub_options'].get(wh_id, []):
+                            if co.get('carrier_id') == carrier_id:
+                                # we have found the rate!
+                                carrier_option['carrier_id'] = carrier_id
+                                carrier_option['sub_options'][wh_id] = co
+                    if carrier_option['carrier_id']:
+                        carrier_option['shipping_price'] = self._get_shipping_price_for_options(carrier_option['sub_options'])
+                        carrier_option['requested_date'] = self._get_max_requested_date(carrier_option['sub_options'])
+                        carrier_option['transit_days'] = self._get_max_transit_days(carrier_option['sub_options'])
+                        options.append(carrier_option)
 
             #restore values in case more processing occurs
             order_fake.warehouse_id = original_order_fake_warehouse_id
@@ -733,6 +760,8 @@ class SaleOrderMakePlan(models.TransientModel):
     def _generate_shipping_carrier_option(self, base_option, order_fake, carrier):
         # some carriers look at the order carrier_id
         order_fake.carrier_id = carrier
+        date_planned = base_option.get('date_planned')
+        order_fake.date_planned = date_planned
 
         # this logic comes from "delivery.models.sale_order.SaleOrder"
         try:
@@ -740,7 +769,9 @@ class SaleOrderMakePlan(models.TransientModel):
             date_delivered = None
             transit_days = 0
             if carrier.delivery_type not in ['fixed', 'base_on_rule']:
-                if hasattr(carrier, 'rate_shipment_date_planned'):
+                if hasattr(carrier, 'rate_shipment_multi'):
+                    result = carrier.rate_shipment_multi(order=order_fake)
+                elif hasattr(carrier, 'rate_shipment_date_planned'):
                     # New API
                     result = carrier.rate_shipment_date_planned(order_fake, base_option.get('date_planned'))
                     if result:
@@ -750,7 +781,8 @@ class SaleOrderMakePlan(models.TransientModel):
                 elif hasattr(carrier, 'get_shipping_price_for_plan'):
                     # Old API
                     result = carrier.get_shipping_price_for_plan(order_fake, base_option.get('date_planned'))
-                if result and isinstance(result, list):
+                if result and isinstance(result, list) and not isinstance(result[0], dict):
+                    # this detects the above only if it isn't a list of dictionaries (aka multi-rating result)
                     price_unit, transit_days, date_delivered = result[0]
                 elif not result:
                     rate = carrier.rate_shipment(order_fake)
@@ -772,13 +804,38 @@ class SaleOrderMakePlan(models.TransientModel):
                 if order_fake.company_id.currency_id.id != order_fake.pricelist_id.currency_id.id:
                     price_unit = order_fake.company_id.currency_id.with_context(date=order_fake.date_order).compute(price_unit, order_fake.pricelist_id.currency_id)
 
-            final_price = float(price_unit) * (1.0 + (float(carrier.margin) / 100.0))
-            option = deepcopy(base_option)
-            option['carrier_id'] = carrier.id
-            option['shipping_price'] = final_price
-            option['requested_date'] = date_delivered
-            option['transit_days'] = transit_days
-            return option
+            if result and isinstance(result, list):
+                res = []
+                for rate in result:
+                    rate_carrier = rate.get('carrier')
+                    if not rate_carrier:
+                        continue
+                    price_unit = rate['price']
+                    date_delivered = rate.get('date_delivered')
+                    transit_days = rate.get('transit_days')
+
+                    if date_planned and transit_days and not date_delivered:
+                        # compute from planned date anc current rate carrier
+                        date_delivered = rate_carrier.calculate_date_delivered(date_planned, transit_days)
+                    elif date_planned and date_delivered and not transit_days:
+                        transit_days = rate_carrier.calculate_transit_days(date_planned, date_delivered)
+
+                    final_price = float(price_unit) * (1.0 + (float(rate_carrier.margin) / 100.0))
+                    option = deepcopy(base_option)
+                    option['carrier_id'] = rate_carrier.id
+                    option['shipping_price'] = final_price
+                    option['requested_date'] = fields.Datetime.to_string(date_delivered) if (date_delivered and isinstance(date_delivered, datetime)) else date_delivered
+                    option['transit_days'] = transit_days
+                    res.append(option)
+                return res
+            else:
+                final_price = float(price_unit) * (1.0 + (float(carrier.margin) / 100.0))
+                option = deepcopy(base_option)
+                option['carrier_id'] = carrier.id
+                option['shipping_price'] = final_price
+                option['requested_date'] = fields.Datetime.to_string(date_delivered) if (date_delivered and isinstance(date_delivered, datetime)) else date_delivered
+                option['transit_days'] = transit_days
+                return [option]
         except Exception as e:
             _logger.info("Exception collecting carrier rates: " + str(e))
             # Want to see more?
@@ -795,12 +852,14 @@ class SaleOrderPlanningOption(models.TransientModel):
         def datetime_converter(o):
             if isinstance(o, datetime):
                 return str(o)
-
-        if 'sub_options' in values and not isinstance(values['sub_options'], str):
-            for wh_id, option in values['sub_options'].items():
-                if option.get('date_planned'):
-                    option['date_planned'] = str(option['date_planned'])
-            values['sub_options'] = dumps(values['sub_options'], default=datetime_converter)
+        if not isinstance(values, list):
+            values = [values]
+        for option_values in values:
+            if 'sub_options' in option_values and not isinstance(option_values['sub_options'], str):
+                for wh_id, option in option_values['sub_options'].items():
+                    if option.get('date_planned'):
+                        option['date_planned'] = str(option['date_planned'])
+                option_values['sub_options'] = dumps(option_values['sub_options'], default=datetime_converter)
         return super(SaleOrderPlanningOption, self).create(values)
 
     def _compute_sub_options_text(self):
