@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 import suds
 from datetime import datetime
 from copy import deepcopy
@@ -30,6 +32,7 @@ class FedexRequest(fedex_request.FedexRequest):
     _service_transit_days = {
         'FEDEX_2_DAY': 2,
         'FEDEX_2_DAY_AM': 2,
+        'FEDEX_3_DAY_FREIGHT': 3,
         'FIRST_OVERNIGHT': 1,
         'PRIORITY_OVERNIGHT': 1,
         'STANDARD_OVERNIGHT': 1,
@@ -72,12 +75,12 @@ class FedexRequest(fedex_request.FedexRequest):
         self.RequestedShipment.Recipient.Contact = Contact
         self.RequestedShipment.Recipient.Address = Address
 
-    def add_package(self, weight_value, package_code=False, package_height=0, package_width=0, package_length=0, sequence_number=False, mode='shipping', ref=False, insurance=False):
+    def add_package(self, weight_value, package_code=False, package_height=0, package_width=0, package_length=0, sequence_number=False, mode='shipping', ref=False, insurance=False, signature_required=False):
         # TODO remove in master and change the signature of a public method
         return self._add_package(weight_value=weight_value, package_code=package_code, package_height=package_height, package_width=package_width,
-                                 package_length=package_length, sequence_number=sequence_number, mode=mode, po_number=False, dept_number=False, ref=ref, insurance=insurance)
+                                 package_length=package_length, sequence_number=sequence_number, mode=mode, po_number=False, dept_number=False, ref=ref, insurance=insurance, signature_required=signature_required)
 
-    def _add_package(self, weight_value, package_code=False, package_height=0, package_width=0, package_length=0, sequence_number=False, mode='shipping', po_number=False, dept_number=False, ref=False, insurance=False):
+    def _add_package(self, weight_value, package_code=False, package_height=0, package_width=0, package_length=0, sequence_number=False, mode='shipping', po_number=False, dept_number=False, ref=False, insurance=False, signature_required=False):
         package = self.client.factory.create('RequestedPackageLineItem')
         package_weight = self.client.factory.create('Weight')
         package_weight.Value = weight_value
@@ -95,6 +98,12 @@ class FedexRequest(fedex_request.FedexRequest):
             # TODO at some point someone might need currency here
             insured.Currency = 'USD'
             package.InsuredValue = insured
+
+        special_service = self.client.factory.create("PackageSpecialServicesRequested")
+        signature_detail = self.client.factory.create("SignatureOptionDetail")
+        signature_detail.OptionType = 'DIRECT' if signature_required else 'NO_SIGNATURE_REQUIRED'
+        special_service.SignatureOptionDetail = signature_detail
+        package.SpecialServicesRequested = special_service
 
         package.PhysicalPackaging = 'BOX'
         if package_code == 'YOUR_PACKAGING':
@@ -200,6 +209,10 @@ class FedexRequest(fedex_request.FedexRequest):
                     # Hibou Delivery Planning
                     if hasattr(self.response.RateReplyDetails[0], 'DeliveryTimestamp') and self.response.RateReplyDetails[0].DeliveryTimestamp:
                         formatted_response['date_delivered'] = self.response.RateReplyDetails[0].DeliveryTimestamp
+                        if hasattr(self.response.RateReplyDetails[0].CommitDetails[0], 'TransitTime'):
+                            transit_days = self.response.RateReplyDetails[0].CommitDetails[0].TransitTime
+                            transit_days = self._transit_days.get(transit_days, 0)
+                            formatted_response['transit_days'] = transit_days
                     elif hasattr(self.response.RateReplyDetails[0], 'CommitDetails') and hasattr(self.response.RateReplyDetails[0].CommitDetails[0], 'CommitTimestamp'):
                         formatted_response['date_delivered'] = self.response.RateReplyDetails[0].CommitDetails[0].CommitTimestamp
                         formatted_response['transit_days'] = self._service_transit_days.get(self.response.RateReplyDetails[0].CommitDetails[0].ServiceType, 0)
@@ -219,9 +232,14 @@ class FedexRequest(fedex_request.FedexRequest):
                         # Hibou Delivery Planning
                         if hasattr(rate_reply_detail, 'DeliveryTimestamp') and rate_reply_detail.DeliveryTimestamp:
                             res['date_delivered'] = rate_reply_detail.DeliveryTimestamp
+                            res['transit_days'] = self._service_transit_days.get(rate_reply_detail.ServiceType, 0)
+                            if not res['transit_days'] and hasattr(rate_reply_detail.CommitDetails[0], 'TransitTime'):
+                                transit_days = rate_reply_detail.CommitDetails[0].TransitTime
+                                transit_days = self._transit_days.get(transit_days, 0)
+                                res['transit_days'] = transit_days
                         elif hasattr(rate_reply_detail, 'CommitDetails') and hasattr(rate_reply_detail.CommitDetails[0], 'CommitTimestamp'):
                             res['date_delivered'] = rate_reply_detail.CommitDetails[0].CommitTimestamp
-                            res['transit_days'] = self._service_transit_days.get(rate_reply_detail.CommitDetails[0].ServiceType, 0)
+                            res['transit_days'] = self._service_transit_days.get(rate_reply_detail.ServiceType, 0)
                         elif hasattr(rate_reply_detail, 'CommitDetails') and hasattr(rate_reply_detail.CommitDetails[0], 'TransitTime'):
                             transit_days = rate_reply_detail.CommitDetails[0].TransitTime
                             transit_days = self._transit_days.get(transit_days, 0)
