@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="LabelRecovery" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:error="http://www.ups.com/XMLSchema/XOLTWS/Error/v1.1" xmlns:upss="http://www.ups.com/XMLSchema/XOLTWS/UPSS/v1.0" xmlns:lbrec="http://www.ups.com/XMLSchema/XOLTWS/LBRecovery/v1.0" xmlns:tns="http://www.ups.com/WSDL/XOLTWS/LBRecovery/v1.0" targetNamespace="http://www.ups.com/WSDL/XOLTWS/LBRecovery/v1.0">
+	<wsdl:types>
+    <xsd:schema>
+      <!-- This schema defines the UPS Security header used for authorization purposes -->
+      <xsd:import namespace="http://www.ups.com/XMLSchema/XOLTWS/UPSS/v1.0" schemaLocation="UPSSecurity.xsd"/>
+      <!--  This schema defines the error detail data types returned within SOAPFaults to provide more specific information pertaining to the problem. -->
+      <xsd:import namespace="http://www.ups.com/XMLSchema/XOLTWS/Error/v1.1" schemaLocation="Error1.1.xsd"/>
+      <!-- ################## Start MCEnrollment Specific schema  ################### -->
+      <xsd:import namespace="http://www.ups.com/XMLSchema/XOLTWS/LBRecovery/v1.0" schemaLocation="LBRecovery.xsd"/>
+      <!-- ################## End MCEnrollment specific schema ##################### -->
+    </xsd:schema>   
+	</wsdl:types>
+	<wsdl:message name="LabelRecoveryRequestMessage">
+		<wsdl:part name="Body" element="lbrec:LabelRecoveryRequest"/>
+		<wsdl:part name="UPSSecurity" element="upss:UPSSecurity"/>
+	</wsdl:message>
+	<wsdl:message name="LabelRecoveryResponseMessage">
+		<wsdl:part name="Body" element="lbrec:LabelRecoveryResponse"/>
+	</wsdl:message>
+	<wsdl:message name="LabelRecoveryErrorMessage">
+		<wsdl:part name="LabelRecoveryError" element="error:Errors"/>
+	</wsdl:message>
+	<wsdl:portType name="PortType">
+		<wsdl:operation name="ProcessLabelRecovery">
+			<wsdl:input name="LabelRecoveryRequest" message="tns:LabelRecoveryRequestMessage"/>
+			<wsdl:output name="LabelRecoveryResponse" message="tns:LabelRecoveryResponseMessage"/>
+			<wsdl:fault name="LabelRecoveryError" message="tns:LabelRecoveryErrorMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="LabelRecoveryBinding" type="tns:PortType">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="ProcessLabelRecovery">
+			<soap:operation soapAction="http://onlinetools.ups.com/webservices/ShipBinding/v1.1" style="document"/>
+			<wsdl:input name="LabelRecoveryRequest">
+				<soap:body parts="Body" use="literal"/>
+				<soap:header message="tns:LabelRecoveryRequestMessage" part="UPSSecurity" use="literal">
+					<soap:headerfault message="tns:LabelRecoveryErrorMessage" part="LabelRecoveryError" use="literal"/>
+				</soap:header>
+			</wsdl:input>
+			<wsdl:output name="LabelRecoveryResponse">
+				<soap:body parts="Body" use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="LabelRecoveryError">
+				<soap:fault name="LabelRecoveryError" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="LBRecovery">
+		<wsdl:port name="Port" binding="tns:LabelRecoveryBinding">
+			<soap:address location="https://wwwcie.ups.com/webservices/LBRecovery"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
