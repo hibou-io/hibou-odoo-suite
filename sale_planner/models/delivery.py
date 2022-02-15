@@ -1,3 +1,5 @@
+# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
+
 from datetime import timedelta
 
 from odoo import api, fields, models
@@ -61,6 +63,9 @@ class DeliveryCarrier(models.Model):
 
     def calculate_transit_days(self, date_planned, date_delivered):
         self.ensure_one()
+        if not self.delivery_calendar_id:
+            return 0
+
         if isinstance(date_planned, str):
             date_planned = fields.Datetime.from_string(date_planned)
         if isinstance(date_delivered, str):
