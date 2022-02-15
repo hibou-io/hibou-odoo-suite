@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
         today_string = fields.Date.to_string(fields.Date.today())
         for order in self:
             amount = order.amount_total
-            if order.payment_term_id:
+            if order.website_id and order.amount_total > order.website_id.payment_deposit_threshold and order.payment_term_id:
                 term_amount = [amt for date_string, amt in order.payment_term_id.compute(order.amount_total) if date_string == today_string]
                 term_amount = term_amount and term_amount[0] or 0.0
                 amount = term_amount if term_amount > order.amount_total_deposit else order.amount_total_deposit
