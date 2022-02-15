@@ -508,7 +508,7 @@ class RMA(models.Model):
             lines = make_line_obj.create({
                 'rma_id': rma.id,
             })
-            action = self.env.ref('rma.action_rma_add_lines').read()[0]
+            action = self.env['ir.actions.act_window']._for_xml_id('rma.action_rma_add_lines')
             action['res_id'] = lines.id
             return action
 
