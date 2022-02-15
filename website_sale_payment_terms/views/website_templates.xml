@@ -4,7 +4,7 @@
     <!-- Payment terms list items for /shop/payment -->
     <template id="payment_term_items">
         <t t-set="partner_term" t-value="order.partner_id.property_payment_term_id"/>
-        <t t-set="selected_term" t-value="order.payment_term_id or partner_term"/>
+        <t t-set="selected_term" t-value="order.payment_term_id"/>
         <!-- Show current partners payment terms -->
         <t t-if="partner_term and partner_term not in website_terms">
             <li class="list-group-item">
