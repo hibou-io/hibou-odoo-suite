@@ -462,13 +462,17 @@ class ProviderStamps(models.Model):
             raise ValidationError(e)
 
     def stamps_rate_shipment_multi(self, order=None, picking=None, packages=None):
-        if not packages:
-            return self._stamps_rate_shipment_multi_package(order=order, picking=picking)
-        else:
-            rates = []
-            for package in packages:
-                rates += self._stamps_rate_shipment_multi_package(order=order, picking=picking, package=package)
-            return rates
+        try:
+            if not packages:
+                return self._stamps_rate_shipment_multi_package(order=order, picking=picking)
+            else:
+                rates = []
+                for package in packages:
+                    rates += self._stamps_rate_shipment_multi_package(order=order, picking=picking, package=package)
+                return rates
+        except WebFault:
+            # examples include
+            return []
 
     def _stamps_rate_shipment_multi_package(self, order=None, picking=None, package=None):
         self.ensure_one()
