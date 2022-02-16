@@ -177,7 +177,7 @@ class ProviderAmazonSP(models.Model):
                 weight, weight_unit = self._amazon_sp_mfn_convert_weight(package.shipping_weight)
                 items = self._amazon_sp_mfn_get_items_for_package(package, order)
                 # Declared value
-                inventory_value = self.get_inventory_value(picking=picking, package=package)
+                inventory_value = self.get_insurance_value(picking=picking, package=package)
                 sig_req = self.get_signature_required(picking=picking, package=package)
 
                 ShipmentRequestDetails = {
