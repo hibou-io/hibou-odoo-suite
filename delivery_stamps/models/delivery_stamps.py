@@ -5,6 +5,7 @@ from datetime import date
 from logging import getLogger
 from urllib.request import urlopen
 from suds import WebFault
+from xml.sax._exceptions import SAXParseException
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -471,7 +472,8 @@ class ProviderStamps(models.Model):
                     rates += self._stamps_rate_shipment_multi_package(order=order, picking=picking, package=package)
                 return rates
         except WebFault:
-            # examples include
+            return []
+        except SAXParseException:
             return []
 
     def _stamps_rate_shipment_multi_package(self, order=None, picking=None, package=None):
