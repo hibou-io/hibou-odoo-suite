@@ -31,6 +31,7 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     shipping_account_id = fields.Many2one('partner.shipping.account', string='Shipping Account')
+    commercial_partner_id = fields.Many2one('res.partner', related='partner_id.commercial_partner_id')
     require_insurance = fields.Selection([
             ('auto', 'Automatic'),
             ('yes', 'Yes'),
