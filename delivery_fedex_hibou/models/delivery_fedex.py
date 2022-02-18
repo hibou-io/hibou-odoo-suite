@@ -20,8 +20,7 @@ class DeliveryFedex(models.Model):
     ])
 
     def _fedex_convert_weight(self, weight, unit):
-        # dummy converter
-        return weight
+        return _convert_weight(weight, unit)
 
     def _get_fedex_is_third_party(self, order=None, picking=None):
         third_party_account = self.get_third_party_account(order=order, picking=picking)
