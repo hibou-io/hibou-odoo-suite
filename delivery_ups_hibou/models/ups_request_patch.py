@@ -165,7 +165,7 @@ def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from
                             _logger.warning('exception during the UPS Time In Transit request. ' + str(e))
                             tnt_ready = False
                             tnt_response = '-1'
-                    if tnt_ready:
+                    if tnt_ready and hasattr(tnt_response, 'TransitReponse') and hasattr(tnt_response.TransitResponse, 'ServiceSummary'):
                         for service in tnt_response.TransitResponse.ServiceSummary:
                             if TNT_CODE_MAP.get(service.Service.Code) == service_type:
                                 if hasattr(service, 'EstimatedArrival') and hasattr(service.EstimatedArrival, 'BusinessDaysInTransit'):
