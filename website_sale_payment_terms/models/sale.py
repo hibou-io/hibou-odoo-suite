@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
 
     @api.depends('amount_total', 'payment_term_id')
     def _compute_amount_due_today(self):
-        today_string = fields.Date.to_string(fields.Date.today())
+        today_string = fields.Date.to_string(fields.Date.context_today(self))
         for order in self:
             amount = order.amount_total
             if order.website_id and order.amount_total > order.website_id.payment_deposit_threshold and order.payment_term_id:
