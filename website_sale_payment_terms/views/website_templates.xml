@@ -9,6 +9,8 @@
         <t t-if="partner_term and partner_term not in website_terms">
             <li class="list-group-item">
                 <input t-att-value="partner_term.id"
+                       t-att-data-name="partner_term.name"
+                       t-att-data-note="partner_term.note"
                        t-att-data-deposit-percentage="partner_term.deposit_percentage or '0'"
                        t-att-data-deposit-flat="partner_term.deposit_flat or '0'"
                        name="payment_term_id"
@@ -23,6 +25,8 @@
         <!-- Show default option set by account.payment.term boolean -->
         <li t-foreach="website_terms" t-as="term" class="list-group-item">
             <input t-att-value="term.id"
+                   t-att-data-name="term.name"
+                   t-att-data-note="term.note"
                    t-att-data-deposit-percentage="term.deposit_percentage or '0'"
                    t-att-data-deposit-flat="term.deposit_flat or '0'"
                    t-att-id="'payment_term_%i' % term.id"
@@ -41,7 +45,7 @@
             <t t-set="website_terms" t-value="website.get_payment_terms()" />
             <t t-if="website_terms and website_sale_order.amount_total &gt; website.payment_deposit_threshold">
                 <div class="oe_payment_terms">
-                    <t t-call="website_sale_payment_terms.payment_term_success_modal"/>
+                    <t t-call="website_sale_payment_terms.payment_term_agreement_modal"/>
                     <t t-call="website_sale_payment_terms.payment_term_error_modal"/>
                     <h3 class="mb24 mt24">Payment Terms</h3>
                     <div class="card border-0">
@@ -73,9 +77,9 @@
         </xpath>
     </template>
 
-    <!-- Modal to handle success message -->
-    <template id="payment_term_success_modal">
-        <div class="modal fade" id="payment_term_success_modal" role="dialog">
+    <!-- Modal to handle agreement message -->
+    <template id="payment_term_agreement_modal">
+        <div class="modal fade" id="payment_term_agreement_modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -96,7 +100,8 @@
                         </button>
                         <button type="button"
                                 class="btn btn-default"
-                                id="btn_deny_payment_terms">Deny
+                                id="btn_deny_payment_terms"
+                                data-dismiss="modal">Deny
                         </button>
                     </div>
                 </div>
