@@ -14,16 +14,12 @@ class WebsiteSalePaymentTerms(WebsiteSaleDelivery):
     def shop_payment(self, **post):
         order = request.website.sale_get_order()
         payment_term_id = post.get('payment_term_id')
-        if order.amount_total > request.website.payment_deposit_threshold:
+        if payment_term_id:
+            payment_term_id = int(payment_term_id)
+        if order:
+            order._check_payment_term_quotation(payment_term_id)
             if payment_term_id:
-                payment_term_id = int(payment_term_id)
-            if order:
-                order._check_payment_term_quotation(payment_term_id)
-                if payment_term_id:
-                    return request.redirect("/shop/payment")
-        else:
-            order.payment_term_id = False
-
+                return request.redirect("/shop/payment")
         return super(WebsiteSalePaymentTerms, self).shop_payment(**post)
 
     # Main JS driven payment term updater.
