@@ -28,6 +28,21 @@ PATTERN_ID = r"{hex}{{8}}-{hex}{{4}}-{hex}{{4}}-{hex}{{4}}-{hex}{{12}}".format(
 RE_TRANSACTION_ID = compile(PATTERN_ID)
 
 
+# class LogPlugin(MessagePlugin):
+#     def __init__(self):
+#         self.logger = getLogger('stamps2')
+#         self.last_sent_raw = None
+#         self.last_received_raw = None
+#
+#     def sending(self, context):
+#         self.last_sent_raw = str(context.envelope)
+#         self.logger.warning(self.last_sent_raw)
+#
+#     def received(self, context):
+#         self.last_received_raw = str(context.reply)
+#         self.logger.warning(self.last_received_raw)
+
+
 class AuthenticatorPlugin(MessagePlugin):
     """Handle message authentication.
 
@@ -90,6 +105,8 @@ class BaseService(object):
         credentials.Username = configuration.username
         credentials.Password = configuration.password
         self.plugin = AuthenticatorPlugin(credentials, self.client)
+        # put in plugins=[] as well
+        # self.logplugin = LogPlugin()
         self.client.set_options(plugins=[self.plugin], port=configuration.port)
         self.logger = getLogger("stamps")
 
