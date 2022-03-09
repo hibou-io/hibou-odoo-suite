@@ -14,6 +14,12 @@ from .api.services import StampsService
 
 _logger = getLogger(__name__)
 
+STAMPS_US_APO_FPO_STATE_CODES = (
+    'AE',
+    'AP',
+    'AA',
+)
+
 STAMPS_PACKAGE_TYPES = [
     'Unknown',
     'Postcard',
@@ -52,17 +58,23 @@ class ProductPackaging(models.Model):
 class ProviderStamps(models.Model):
     _inherit = 'delivery.carrier'
 
-    delivery_type = fields.Selection(selection_add=[('stamps', 'Stamps.com (USPS)')],
+    delivery_type = fields.Selection(selection_add=[('stamps', 'Stamps.com')],
                                      ondelete={'stamps': 'set default'})
 
     stamps_username = fields.Char(string='Stamps.com Username', groups='base.group_system')
     stamps_password = fields.Char(string='Stamps.com Password', groups='base.group_system')
 
-    stamps_service_type = fields.Selection([('US-FC', 'First-Class'),
-                                            ('US-FCI', 'First-Class International'),
-                                            ('US-PM', 'Priority'),
-                                            ('US-PMI', 'Priority Mail International'),
-                                            ('US-EMI', ' Priority Mail Express International'),
+    stamps_service_type = fields.Selection([('US-FC', 'USPS First-Class'),
+                                            ('US-PM', 'USPS Priority'),
+                                            ('US-XM', 'USPS Express'),
+                                            ('US-MM', 'USPS Media Mail'),
+                                            ('US-FCI', 'USPS First-Class International'),
+                                            ('US-PMI', 'USPS Priority International'),
+                                            ('US-EMI', 'USPS Express International'),
+                                            ('SC-GPE', 'GlobalPost Economy'),
+                                            ('SC-GPP', 'GlobalPost Standard'),
+                                            ('SC-GPESS', 'GlobalPost SmartSaver Economy'),
+                                            ('SC-GPPSS', 'GlobalPost SmartSaver Standard'),
                                             ],
                                            required=True, string="Service Type", default="US-PM")
     stamps_default_packaging_id = fields.Many2one('product.packaging', string='Default Package Type')
@@ -79,7 +91,8 @@ class ProviderStamps(models.Model):
                                           ('AZpl', 'AZPL'),
                                           ('BZpl', 'BZPL'),
                                           ],
-                                         required=True, string="Image Type", default="Pdf")
+                                         required=True, string="Image Type", default="Pdf",
+                                         help='Generally PDF or ZPL are the great options.')
     stamps_addon_sc = fields.Boolean(string='Add Signature Confirmation')
     stamps_addon_dc = fields.Boolean(string='Add Delivery Confirmation')
     stamps_addon_hp = fields.Boolean(string='Add Hidden Postage')
@@ -119,7 +132,7 @@ class ProviderStamps(models.Model):
     def _stamps_convert_weight(self, weight):
         """ weight always expressed in database units (KG/LBS) """
         if self.stamps_default_packaging_id.max_weight and self.stamps_default_packaging_id.max_weight < weight:
-            raise ValidationError('Stamps cannot ship for weight: ' + str(weight) + ' kgs/lbs.')
+            raise ValidationError('Your Package Type cannot ship for weight: ' + str(weight) + ' kgs/lbs. Max: ' + str(self.stamps_default_packaging_id.max_weight))
 
         get_param = self.env['ir.config_parameter'].sudo().get_param
         product_weight_in_lbs_param = get_param('product.weight_in_lbs')
@@ -309,8 +322,9 @@ class ProviderStamps(models.Model):
             return result
         return result
 
-    def _stamps_needs_customs(self, from_partner, to_partner):
-        return from_partner.country_id.code != to_partner.country_id.code
+    def _stamps_needs_customs(self, from_partner, to_partner, picking=None):
+        return from_partner.country_id.code != to_partner.country_id.code or \
+               (to_partner.country_id.code == 'US' and to_partner.state_id.code in STAMPS_US_APO_FPO_STATE_CODES)
 
     def stamps_send_shipping(self, pickings):
         res = []
@@ -325,7 +339,7 @@ class ProviderStamps(models.Model):
             company, from_partner, to_partner = self._stamps_get_addresses_for_picking(picking)
 
             customs = None
-            if self._stamps_needs_customs(from_partner, to_partner):
+            if self._stamps_needs_customs(from_partner, to_partner, picking=picking):
                 customs = service.create_customs()
 
             try:
