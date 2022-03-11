@@ -23,10 +23,9 @@ class StockDeliveryPlanner(models.TransientModel):
             selected_options = wiz.plan_option_ids.filtered(lambda p: p.selection == 'selected')
             wiz.packages_planned = len(selected_options) == len(packages)
 
-    def create(self, values):
-        planner = super(StockDeliveryPlanner, self).create(values)
-
-        base_carriers = planner.picking_id.picking_type_id.warehouse_id.delivery_planner_carrier_ids
+    def _get_carriers(self):
+        self.ensure_one()
+        base_carriers = self.picking_id.picking_type_id.warehouse_id.delivery_planner_carrier_ids
         if not base_carriers:
             carrier_ids = self.env['ir.config_parameter'].sudo().get_param('stock.delivery.planner.carrier_ids.%s' % (self.env.user.company_id.id, ))
             if carrier_ids:
@@ -35,7 +34,11 @@ class StockDeliveryPlanner(models.TransientModel):
                     base_carriers = base_carriers.browse(carrier_ids)
                 except:
                     pass
-        base_carriers = base_carriers.sudo()
+        return base_carriers.sudo()
+
+    def create(self, values):
+        planner = super(StockDeliveryPlanner, self).create(values)
+        base_carriers = planner._get_carriers()
 
         for carrier in base_carriers:
             try:
