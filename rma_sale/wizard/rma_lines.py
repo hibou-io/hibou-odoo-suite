@@ -21,6 +21,7 @@ class RMASaleMakeLines(models.TransientModel):
     def _line_values(self, so_line):
         return {
             'rma_make_lines_id': self.id,
+            'sale_line_id': so_line.id,
             'product_id': so_line.product_id.id,
             'qty_ordered': so_line.product_uom_qty,
             'qty_delivered': so_line.qty_delivered,
@@ -49,6 +50,7 @@ class RMASaleMakeLines(models.TransientModel):
             for l in lines:
                 rma_line_obj.create({
                     'rma_id': o.rma_id.id,
+                    'sale_line_id': l.sale_line_id.id,
                     'product_id': l.product_id.id,
                     'product_uom_id': l.product_uom_id.id,
                     'product_uom_qty': l.product_uom_qty,
@@ -60,6 +62,7 @@ class RMASOMakeLinesLine(models.TransientModel):
     _description = 'RMA Sale Make Lines Line'
 
     rma_make_lines_id = fields.Many2one('rma.sale.make.lines')
+    sale_line_id = fields.Many2one('sale.order.line', string="Sale Order Line")
     product_id = fields.Many2one('product.product', string="Product")
     qty_ordered = fields.Float(string='Ordered')
     qty_invoiced = fields.Float(string='Invoiced')
