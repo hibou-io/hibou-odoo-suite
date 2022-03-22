@@ -26,6 +26,7 @@
         <field name="inherit_id" ref="hr_commission.view_hr_commission_payment_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='employee_id']" position="before">
+                <field name="pay_in_payslip" />
                 <field name="payslip_id" />
             </xpath>
         </field>
