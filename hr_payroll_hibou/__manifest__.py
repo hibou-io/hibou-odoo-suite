@@ -3,7 +3,7 @@
 {
     'name': 'Hibou Payroll',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '15.0.2.0.0',
+    'version': '15.0.2.1.0',
     'category': 'Payroll Localization',
     'depends': [
         'hr_payroll',
@@ -16,6 +16,7 @@ Hibou Payroll
 
 Base module for fixing specific qwerks or assumptions in the way Payroll Odoo Enterprise Edition behaves.
 
+2.1.0 : fixes precision error in upstream by changing `normal_wage` field from Integer to Float
     """,
     'data': [
         'security/ir.model.access.csv',

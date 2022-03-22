@@ -1,14 +1,24 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class HrPayslip(models.Model):
     _inherit = 'hr.payslip'
 
+    # normal_wage is an integer field, but that lacks precision.
+    normal_wage = fields.Float(compute='_compute_normal_wage', store=True)
     # We need to be able to support more complexity,
     # namely, that different employees will be paid by different wage types as 'salary' vs 'hourly'
     wage_type = fields.Selection(related='contract_id.wage_type')
+
+    @api.depends('contract_id')
+    def _compute_normal_wage(self):
+        with_contract = self.filtered('contract_id')
+        # fixes bug in original computation if the size of the recordset is >1
+        (self - with_contract).update({'normal_wage': 0.0})
+        for payslip in with_contract:
+            payslip.normal_wage = payslip._get_contract_wage()
 
     def get_year(self):
         """
