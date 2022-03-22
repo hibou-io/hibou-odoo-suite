@@ -13,7 +13,7 @@ Reimburse Commissions in Payslips
     """,
     'depends': [
         'hr_commission',
-        'hr_payroll',
+        'hr_payroll_hibou',
     ],
     'data': [
         'views/hr_commission_views.xml',

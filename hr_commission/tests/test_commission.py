@@ -10,6 +10,8 @@ class TestCommission(common.TransactionCase):
         super().setUp()
         self.user = self.browse_ref('base.user_demo')
         self.employee = self.browse_ref('hr.employee_qdp')  # This is the employee associated with above user.
+        # arcive all current contracts
+        self.employee.contract_ids.write({'active': False})
 
     def _createUser(self):
         return self.env['res.users'].create({
