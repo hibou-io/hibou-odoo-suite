@@ -17,47 +17,51 @@ class HrPayslip(models.Model):
         for payslip in self:
             payslip.commission_count = len(payslip.mapped('commission_payment_ids.commission_ids'))
 
-    @api.onchange('input_line_ids')
-    def _onchange_input_line_ids(self):
-        commission_type = self.env.ref('hr_payroll_commission.commission_other_input', raise_if_not_found=False)
-        if not self.input_line_ids.filtered(lambda line: line.input_type_id == commission_type):
-            self.commission_payment_ids.write({'payslip_id': False})
+    @api.model_create_multi
+    def create(self, vals_list):
+        payslips = super().create(vals_list)
+        draft_slips = payslips.filtered(lambda p: p.employee_id and p.state == 'draft')
+        if not draft_slips:
+            return payslips
+        
+        commission_payments = self.env['hr.commission.payment'].search([
+            ('employee_id', 'in', draft_slips.mapped('employee_id').ids),
+            ('pay_in_payslip', '=', True),
+            ('payslip_id', '=', False)])
+        for slip in draft_slips:
+            payslip_commission_payments = commission_payments.filtered(lambda c: c.employee_id == slip.employee_id)
+            slip.commission_payment_ids = [(5, 0, 0)] + [(4, c.id, False) for c in payslip_commission_payments]
+        return payslips
 
-    def action_refresh_from_work_entries(self):
-        res = super().action_refresh_from_work_entries()
-        for slip in self.filtered(lambda s: s.state in ('draft', 'verify')):
-            commission_payments = self.env['hr.commission.payment'].browse()
-            if slip.employee_id:
-                commission_payments = self.env['hr.commission.payment'].search([
-                    ('employee_id', '=', self.employee_id.id),
-                    ('pay_in_payslip', '=', True),
-                    ('payslip_id', '=', False)])
-            slip.commission_payment_ids = commission_payments
+    def write(self, vals):
+        res = super().write(vals)
+        if 'commission_payment_ids' in vals:
+            self._compute_commission_input_line_ids()
+        if 'input_line_ids' in vals:
+            self._update_commission()
         return res
+    
+    def _update_commission(self):
+        commission_type = self.env.ref('hr_payroll_commission.commission_other_input', raise_if_not_found=False)
+        for payslip in self:
+            if not payslip.input_line_ids.filtered(lambda line: line.input_type_id == commission_type):
+                payslip.commission_payment_ids.write({'payslip_id': False})
 
-    @api.depends('employee_id', 'contract_id', 'struct_id', 'date_from', 'date_to', 'struct_id', 'commission_payment_ids')
-    def _compute_input_line_ids(self):
-        res = super()._compute_input_line_ids()
-
+    def _compute_commission_input_line_ids(self):
         commission_type = self.env.ref('hr_payroll_commission.commission_other_input', raise_if_not_found=False)
         if not commission_type:
-            return res
-
-        for slip in self:
+            return
+        for payslip in self:
             amount = sum(self.commission_payment_ids.mapped('commission_amount'))
             if not amount:
                 continue
-            slip.update({
-                'input_line_ids': [
-                    Command.create({
-                        'name': commission_type.name or 'Commission',
-                        'amount': amount,
-                        'input_type_id': commission_type.id,
-                    }),
-                ],
-            })
-        
-        return res
+            lines_to_remove = payslip.input_line_ids.filtered(lambda x: x.input_type_id == commission_type)
+            input_lines_vals = [(2, line.id, False) for line in lines_to_remove]
+            input_lines_vals.append((0, 0, {
+                'amount': amount,
+                'input_type_id': commission_type.id
+            }))
+            payslip.update({'input_line_ids': input_lines_vals})
 
     def open_commissions(self):
         self.ensure_one()
