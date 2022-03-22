@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="view_hr_commission_payment_form_inherit" model="ir.ui.view">
-        <field name="name">hr.expense.sheet.view.form.payroll</field>
+        <field name="name">hr.commission.payment.form.payroll</field>
         <field name="model">hr.commission.payment</field>
         <field name="inherit_id" ref="hr_commission.view_hr_commission_payment_form"/>
         <field name="arch" type="xml">
@@ -16,6 +16,17 @@
                         groups="account.group_account_manager"
                         attrs="{'invisible': ['|', ('pay_in_payslip', '=', True), ('payslip_id', '!=', False)]}"
                         class="oe_highlight"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_commission_payment_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.commission.payment.tree.payroll</field>
+        <field name="model">hr.commission.payment</field>
+        <field name="inherit_id" ref="hr_commission.view_hr_commission_payment_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_id']" position="before">
+                <field name="payslip_id" />
             </xpath>
         </field>
     </record>
