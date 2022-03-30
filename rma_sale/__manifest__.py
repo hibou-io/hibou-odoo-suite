@@ -2,7 +2,7 @@
 
 {
     'name': 'Hibou RMAs for Sale Orders',
-    'version': '15.0.1.0.0',
+    'version': '15.0.1.0.1',
     'category': 'Sale',
     'author': 'Hibou Corp.',
     'license': 'OPL-1',

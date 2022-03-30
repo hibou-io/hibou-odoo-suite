@@ -560,6 +560,12 @@ class RMA(models.Model):
                 'procure_method': self.template_id.in_procure_method,
                 'to_refund': self.template_id.in_to_refund,
             }
+        
+    def _get_old_move(self, old_picking, line):
+        return old_picking.move_lines.filtered(
+            lambda ol: ol.state == 'done' and 
+                       ol.product_id == line.product_id
+        )[0]
 
     def _new_in_moves(self, old_picking, new_picking, move_update):
         lines = self.lines.filtered(lambda l: l.product_uom_qty >= 1)
@@ -568,7 +574,7 @@ class RMA(models.Model):
 
         moves = self.env['stock.move']
         for l in lines:
-            return_move = old_picking.move_lines.filtered(lambda ol: ol.state == 'done' and ol.product_id.id == l.product_id.id)[0]
+            return_move = self._get_old_move(old_picking, l)
             copy_vals = self._new_in_move_vals(l, new_picking, return_move)
             copy_vals.update(move_update)
             r = return_move.copy(copy_vals)

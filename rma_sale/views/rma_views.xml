@@ -31,6 +31,11 @@
                 <br/>
                 <button string="Add lines" type="object" name="action_add_so_lines" attrs="{'invisible': ['|', ('sale_order_id', '=', False), ('state', '!=', 'draft')]}"/>
             </xpath>
+            <xpath expr="//page/field[@name='lines']/tree/field[@name='product_uom_qty']" position="before">
+                <field name="sale_line_product_uom_qty" attrs="{'column_invisible': [('parent.sale_order_id', '=', False)]}"/>
+                <field name="sale_line_qty_delivered" attrs="{'column_invisible': [('parent.sale_order_id', '=', False)]}"/>
+                <field name="sale_line_qty_invoiced" attrs="{'column_invisible': [('parent.sale_order_id', '=', False)]}"/>
+            </xpath>
         </field>
     </record>
 

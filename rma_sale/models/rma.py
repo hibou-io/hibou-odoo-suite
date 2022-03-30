@@ -51,6 +51,7 @@ class RMATemplate(models.Model):
                             raise ValidationError(_('Product is past the return period.'))
                         lines.append((0, 0, {
                             'product_id': line.product_id.id,
+                            'sale_line_id': line.id,
                             'product_uom_id': line.product_uom.id,
                             'product_uom_qty': qty,
                         }))
@@ -164,29 +165,18 @@ class RMA(models.Model):
     def _so_action_done(self):
         warnings = []
         for rma in self:
-            sale_orders = rma.sale_order_id
             if rma.template_id.so_decrement_order_qty:
-                sale_orders = self.env['sale.order'].browse()
                 for rma_line in rma.lines:
-                    so_lines = rma.sale_order_id.order_line.filtered(lambda l: l.product_id == rma_line.product_id)
-                    qty_remaining = rma_line.product_uom_qty
-                    for sale_line in so_lines:
-                        if qty_remaining == 0:
-                            continue
-                        sale_line_qty = sale_line.product_uom_qty
-                        sale_line_qty = sale_line_qty - qty_remaining
+                    sale_line = rma_line.sale_line_id
+                    if sale_line:
+                        sale_line_qty = sale_line.product_uom_qty - rma_line.product_uom_qty
                         if sale_line_qty < 0:
-                            qty_remaining = abs(sale_line_qty)
+                            warnings.append((rma, rma.sale_order_id, rma_line, abs(sale_line_qty)))
                             sale_line_qty = 0
-                        else:
-                            qty_remaining = 0
                         sale_line.with_context(rma_done=True).write({'product_uom_qty': sale_line_qty})
-                        sale_orders |= sale_line.order_id
-                    if qty_remaining:
-                        warnings.append((rma, rma.sale_order_id, rma_line, qty_remaining))
             # Try to invoice if we don't already have an invoice (e.g. from resetting to draft)
-            if sale_orders and rma.template_id.invoice_done and not rma.invoice_ids:
-                rma.invoice_ids |= rma._sale_invoice_done(sale_orders)
+            if rma.sale_order_id and rma.template_id.invoice_done and not rma.invoice_ids:
+                rma.invoice_ids |= rma._sale_invoice_done(rma.sale_order_id)
         if warnings:
             return {'warning': _('Could not reduce all ordered qty:\n %s' % '\n'.join(
                 ['%s %s %s : %s' % (w[0].name, w[1].name, w[2].product_id.display_name, w[3]) for w in warnings]))}
@@ -263,3 +253,21 @@ class RMA(models.Model):
         new_picking = self._new_out_picking(old_picking)
         self._new_out_moves(old_picking, new_picking, {})
         return new_picking
+    
+    def _get_old_move(self, old_picking, line):
+        if self.template_usage != 'sale_order':
+            return super(RMA, self)._get_old_move(old_picking, line)
+        return old_picking.move_lines.filtered(
+            lambda ol: ol.state == 'done' and 
+                       ol.product_id == line.product_id and
+                       ol.sale_line_id == line.sale_line_id
+        )[0]
+
+
+class RMALine(models.Model):
+    _inherit = 'rma.line'
+    
+    sale_line_id = fields.Many2one('sale.order.line', 'Sale Order Line')
+    sale_line_product_uom_qty = fields.Float('Ordered', related='sale_line_id.product_uom_qty')
+    sale_line_qty_delivered = fields.Float('Delivered', related='sale_line_id.qty_delivered')
+    sale_line_qty_invoiced = fields.Float('Invoiced', related='sale_line_id.qty_invoiced')
