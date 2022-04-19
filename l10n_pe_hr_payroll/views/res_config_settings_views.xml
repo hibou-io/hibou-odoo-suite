@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_inherit" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='hr_payroll']" position="inside">
+                <div class="row mt16 o_settings_container" id="hr_payroll_accountant">
+                    <div class="col-lg-6 col-12 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Payslip Sum Behavior</span>
+                            <div class="text-muted">
+                                Customize the behavior of what payslips are eligible when summing over date ranges in rules.
+                                Generally, "Date To" or "Accounting Date" would be preferred in the United States and anywhere
+                                else where the ending date on the payslip is used to calculate wage bases.
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16" id="mail_alias_domain">
+                                    <label for="payslip_sum_type" class="col-lg-3 o_light_label"/>
+                                    <field name="payslip_sum_type"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
