@@ -50,7 +50,7 @@
         <field name="condition_select">python</field>
         <field name="condition_python">result = categories.BASIC</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result, result_rate = categories.BASIC, payslip.rule_parameter('ee_afp_pensiones')</field>
+        <field name="amount_python_compute">result, result_rate = categories.BASIC, -payslip.rule_parameter('ee_afp_pensiones')</field>
         <field name="partner_id" ref="res_partner_afp"/>
         <field name="appears_on_payslip" eval="True"/>
     </record>
@@ -64,7 +64,7 @@
         <field name="condition_select">python</field>
         <field name="condition_python">result = categories.BASIC</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result, result_rate = categories.BASIC, payslip.rule_parameter('ee_afp_seguro')</field>
+        <field name="amount_python_compute">result, result_rate = categories.BASIC, -payslip.rule_parameter('ee_afp_seguro')</field>
         <field name="partner_id" ref="res_partner_afp"/>
         <field name="appears_on_payslip" eval="True"/>
     </record>
@@ -78,7 +78,7 @@
         <field name="condition_select">python</field>
         <field name="condition_python">result = categories.BASIC</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result, result_rate = categories.BASIC, payslip.rule_parameter('ee_afp_comision')</field>
+        <field name="amount_python_compute">result, result_rate = categories.BASIC, -payslip.rule_parameter('ee_afp_comision')</field>
         <field name="partner_id" ref="res_partner_afp"/>
         <field name="appears_on_payslip" eval="True"/>
     </record>
