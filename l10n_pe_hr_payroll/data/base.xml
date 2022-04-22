@@ -29,4 +29,28 @@
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
 
+    <!-- ONP -->
+    <record id="hr_payroll_category_ee_pe_onp" model="hr.salary.rule.category">
+        <field name="name">EE: ONP</field>
+        <field name="code">EE_PE_ONP</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    <record id="hr_payroll_category_er_pe_onp" model="hr.salary.rule.category">
+        <field name="name">ER: ONP</field>
+        <field name="code">ER_PE_ONP</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <!-- IR 5TA CAT -->
+    <record id="hr_payroll_category_ee_ir_5ta_cat" model="hr.salary.rule.category">
+        <field name="name">EE: IR 5ta Cat.</field>
+        <field name="code">EE_PE_IR_5TA_CAT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+    <record id="hr_payroll_category_er_ir_5ta_cat" model="hr.salary.rule.category">
+        <field name="name">ER: IR 5ta Cat.</field>
+        <field name="code">ER_PE_IR_5TA_CAT</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
 </odoo>

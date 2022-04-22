@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Parameters -->
+    <record id="rule_parameter_pe_uit" model="hr.rule.parameter">
+        <field name="name">Peru UIT</field>
+        <field name="code">pe_uit</field>
+        <field name="country_id" ref="base.pe"/>
+    </record>
+    <record id="rule_parameter_pe_uit_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">4400.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_pe_uit"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ee_ir_5ta_cat" model="hr.rule.parameter">
+        <field name="name">EE: IR 5ta Cat.</field>
+        <field name="code">ee_ir_5ta_cat</field>
+        <field name="country_id" ref="base.pe"/>
+    </record>
+    <!-- 2015 chart -->
+    <record id="rule_parameter_ee_ir_5ta_cat_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+        (  5.0,   8.0),
+        ( 20.0,  14.0),
+        ( 35.0,  17.0),
+        ( 45.0,  20.0),
+        ('inf',  30.0),
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ee_ir_5ta_cat"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <!-- Partner -->
+    <record id="res_partner_ir_5ta_cat" model="res.partner">
+        <field name="name">IR 5ta Cat.</field>
+    </record>
+
+    <!-- EE Rules -->
+    <record id="hr_payroll_rule_ee_ir_5ta_cat" model="hr.salary.rule">
+        <field name="sequence" eval="196"/>
+        <field name="struct_id" ref="hr_payroll_structure"/>
+        <field name="category_id" ref="hr_payroll_category_ee_ir_5ta_cat"/>
+        <field name="name">EE: PE IR 5TA Cat.</field>
+        <field name="code">EE_PE_IR_5TA_CAT</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories.GROSS</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+# TODO normalize anual wage based on pay period
+uit = payslip.rule_parameter('pe_uit')
+wage = categories.GROSS
+wage_year = wage * 12.0
+# additional 2 months
+wage_year += wage * 2.0
+over_7uit = wage_year - (7.0 * uit)
+if over_7uit &lt;= 0.0:
+    result = 0.0
+else:
+    total_tax = 0.0
+    last_uit = 0.0
+    for _uit, rate in payslip.rule_parameter('ee_ir_5ta_cat'):
+        # marginal brackets
+        _uit = float(_uit)
+        if over_7uit &gt; (last_uit * uit):
+            eligible_wage = min(over_7uit, _uit * uit) - (last_uit * uit)
+            if eligible_wage &gt; 0.0:
+                total_tax += eligible_wage * (rate / 100.0)
+            else:
+                break
+        else:
+            break
+        last_uit = _uit
+    tax = -total_tax / 12.0
+    result, result_rate = wage, (tax / wage * 100.0)</field>
+        <field name="partner_id" ref="res_partner_ir_5ta_cat"/>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+</odoo>
