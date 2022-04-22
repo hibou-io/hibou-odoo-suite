@@ -5,4 +5,5 @@
 # common remains for site specific tests
 
 from . import common
-from . import test_2022
+from . import test_2020
+# from . import test_2022

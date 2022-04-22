@@ -58,7 +58,12 @@ class TestPePayslip(common.TransactionCase):
         if not 'schedule_pay' in kwargs:
             kwargs['schedule_pay'] = 'monthly'
         schedule_pay = kwargs['schedule_pay']
+        config_model = self.env['hr.contract.pe_payroll_config']
         contract_model = self.env['hr.contract']
+        config_values = {
+            'name': 'Test Config Values',
+            'employee_id': employee.id,
+        }
         contract_values = {
             'name': 'Test Contract',
             'employee_id': employee.id,
@@ -69,12 +74,18 @@ class TestPePayslip(common.TransactionCase):
             if hasattr(val, 'id'):
                 val = val.id
             found = False
+            if hasattr(config_model, key):
+                config_values[key] = val
+                found = True
             if hasattr(contract_model, key):
                 contract_values[key] = val
                 found = True
             if not found:
                 self._logger.warn('cannot locate attribute names "%s" on contract' % (key, ))
 
+        # PE Payroll Config Defaults Should be set on the Model
+        config = config_model.create(config_values)
+        contract_values['pe_payroll_config_id'] = config.id
 
         # Some Basic Defaults
         if not contract_values.get('state'):
