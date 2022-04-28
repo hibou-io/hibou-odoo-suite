@@ -3,5 +3,4 @@
 from . import hr_contract
 from . import hr_payslip
 from . import pe_payroll_config
-from . import res_config_settings
 from . import update

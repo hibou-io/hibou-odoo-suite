@@ -69,6 +69,10 @@
     <record id="input_type_bono" model="hr.payslip.input.type">
         <field name="name">Bono</field>
         <field name="code">BONO</field>
+        <field name="country_id" ref="base.pe" />
+        <field name="struct_ids" eval="[
+            (4, ref('l10n_pe_hr_payroll.hr_payroll_structure')),
+        ]" />
     </record>
 
     <record id="hr_salary_rule_bonus" model="hr.salary.rule">

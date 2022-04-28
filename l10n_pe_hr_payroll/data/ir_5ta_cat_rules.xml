@@ -31,11 +31,6 @@
         <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
     </record>
 
-    <!-- Partner -->
-    <record id="res_partner_ir_5ta_cat" model="res.partner">
-        <field name="name">IR 5ta Cat.</field>
-    </record>
-
     <!-- EE Rules -->
     <record id="hr_payroll_rule_ee_ir_5ta_cat" model="hr.salary.rule">
         <field name="sequence" eval="196"/>
@@ -55,7 +50,9 @@ wage_period = categories.GROSS
 period_additional_wage = max(wage_period - basic_wage, 0.0)
 wage_year = basic_wage * pay_periods_in_year
 # additional 2 months (July and December)
-wage_year += wage_year * (1/6)  # 2 months 2/12
+wage_2 = wage_year * (1/6)
+wage_3 = wage_2 * 0.09  # TODO paramatarize 9%  # 2 months 2/12
+wage_year += wage_2 + wage_3
 wage_year += period_additional_wage
 
 over_7uit = wage_year - (7.0 * uit)
@@ -76,9 +73,8 @@ else:
         else:
             break
         last_uit = _uit
-    tax = -total_tax / 12.0
+    tax = -total_tax / pay_periods_in_year
     result, result_rate = wage_period, (tax / wage_period * 100.0)</field>
-        <field name="partner_id" ref="res_partner_ir_5ta_cat"/>
         <field name="appears_on_payslip" eval="True"/>
     </record>
 
