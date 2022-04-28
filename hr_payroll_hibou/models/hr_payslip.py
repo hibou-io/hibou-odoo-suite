@@ -7,6 +7,22 @@ from .browsable_object import BrowsableObject, InputLine, WorkedDays, Payslips
 class HrPayslip(models.Model):
     _inherit = 'hr.payslip'
 
+    # From IRS Publication 15-T or logically (annually, bi-monthly)
+    PAY_PERIODS_IN_YEAR = {
+        'annually':        1,
+        'semi-annually':   2,
+        'quarterly':       4,
+        'bi-monthly':      6,
+        'monthly':        12,
+        'semi-monthly':   24,
+        'bi-weekly':      26,
+        'weekly':         52,
+        'daily':         260,
+    }
+
+    def get_pay_periods_in_year(self):
+        return self.PAY_PERIODS_IN_YEAR.get(self.contract_id.schedule_pay, 0)
+
     # We need to be able to support more complexity,
     # namely, that different employees will be paid by different wage types as 'salary' vs 'hourly'
     wage_type = fields.Selection(related='contract_id.wage_type')
