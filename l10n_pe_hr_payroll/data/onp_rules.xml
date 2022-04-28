@@ -13,11 +13,6 @@
         <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
     </record>
 
-    <!-- Partner -->
-    <record id="res_partner_onp" model="res.partner">
-        <field name="name">ONP</field>
-    </record>
-
     <!-- EE Rules -->
     <record id="hr_payroll_rule_ee_onp" model="hr.salary.rule">
         <field name="sequence" eval="190"/>
@@ -26,10 +21,9 @@
         <field name="name">EE: PE ONP/SNP</field>
         <field name="code">EE_PE_ONP</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = categories.GROSS and contract.pe_payroll_config_value('retirement_type') == 'onp' and rule == contract.pe_payroll_config_value('onp_rule_id')</field>
+        <field name="condition_python">result = categories.GROSS and contract.pe_payroll_config_value('retirement_type') == 'onp'</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result, result_rate = categories.GROSS, -payslip.rule_parameter('ee_onp')</field>
-        <field name="partner_id" ref="res_partner_onp"/>
         <field name="appears_on_payslip" eval="True"/>
     </record>
 

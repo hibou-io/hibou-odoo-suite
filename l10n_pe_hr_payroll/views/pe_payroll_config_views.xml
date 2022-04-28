@@ -27,15 +27,13 @@
                     <group>
                         <group name="employee" string="Employee">
                             <field name="retirement_type"/>
-                            <field name="onp_rule_id" attrs="{'invisible': [('retirement_type', '!=', 'onp')]}"/>
                             <field name="afp_type" attrs="{'invisible': [('retirement_type', '!=', 'afp')]}"/>
                             <field name="afp_comision_type" attrs="{'invisible': [('retirement_type', '!=', 'afp')]}"/>
                         </group>
                         <group name="employer" string="Employer">
                             <field name="comp_ss_type" />
-                            <field name="comp_ss_eps_rule_id" attrs="{'invisible': [('comp_ss_type', '!=', 'eps')]}"/>
-                            <field name="comp_life_insurance_rule_id" />
-                            <field name="comp_risk_insurance_rule_id" />
+                            <p attrs="{'invisible': [('comp_ss_type', '!=', 'eps')]}">Not supported. Specify rule.</p>
+                            <field name="comp_ss_eps_rule_id" attrs="{'invisible': [('comp_ss_type', '!=', 'eps')]}" />
                         </group>
                     </group>
                 </sheet>

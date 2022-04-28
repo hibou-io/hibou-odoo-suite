@@ -16,8 +16,6 @@ class HRContractPEPayrollConfig(models.Model):
         ('retired', 'Retired'),
     ], string='Retirement Type', required=True, default='afp')
     
-    onp_rule_id = fields.Many2one('hr.salary.rule', string='ONP Rule', domain=[('code', '=like', 'EE_PE_ONP%')])
-    
     # AFP Type may actually be company specific....
     afp_type = fields.Selection([
         ('habitat', 'Habitat'),
@@ -34,6 +32,6 @@ class HRContractPEPayrollConfig(models.Model):
         ('essalud', 'Essalud'),
         ('eps', 'EPS'),
     ], string='Company Social Services', default='essalud')
-    comp_ss_eps_rule_id = fields.Many2one('hr.salary.rule', string='Company Social Security EPS Rule')
-    comp_life_insurance_rule_id = fields.Many2one('hr.salary.rule', string='Company Life Insurance Rule')
-    comp_risk_insurance_rule_id = fields.Many2one('hr.salary.rule', string='Company Risk Insurance Rule')
+    comp_ss_eps_rule_id = fields.Many2one('hr.salary.rule', string='Company Social Security EPS Rule',
+                                          domain=[('code', '=like', 'ER_PE_EPS%')],
+                                          help="Rule code prefix 'ER_PE_EPS' to select here.")

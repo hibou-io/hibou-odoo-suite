@@ -26,7 +26,6 @@ Peru - Payroll Rules.
         'data/er_rules.xml',
         'views/hr_contract_views.xml',
         'views/pe_payroll_config_views.xml',
-        'views/res_config_settings_views.xml',
     ],
     'demo': [
     ],
