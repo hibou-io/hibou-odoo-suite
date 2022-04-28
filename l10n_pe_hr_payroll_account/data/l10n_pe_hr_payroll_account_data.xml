@@ -18,6 +18,8 @@
                     # pay_ir_5ta_cat='1238',
                     # pay_essalud='1239',
                     # exp_salary='1240',
+                    # exp_com='1222',
+                    # exp_bono='1223',
                     # exp_essalud='1241',
                     env['account.chart.template']._pe_configure_payroll_account_data(companies, salary_rules=records, full_reset=False)
             </field>
@@ -39,6 +41,8 @@
                     # pay_ir_5ta_cat='1238',
                     # pay_essalud='1239',
                     # exp_salary='1240',
+                    # exp_com='1222',
+                    # exp_bono='1223',
                     # exp_essalud='1241',
                     env['account.chart.template']._pe_configure_payroll_account_data(companies, salary_rules=records, full_reset=True)
             </field>
