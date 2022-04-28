@@ -22,7 +22,7 @@
     <record id="hr_payroll_rule_er_essalud" model="hr.salary.rule">
         <field name="sequence" eval="220"/>
         <field name="struct_id" ref="hr_payroll_structure"/>
-        <field name="category_id" ref="hr_payroll_category_ee_pe_afp"/>
+        <field name="category_id" ref="hr_payroll_category_er_essalud"/>
         <field name="name">ER: PE Essalud</field>
         <field name="code">ER_PE_ESSALUD</field>
         <field name="condition_select">python</field>
