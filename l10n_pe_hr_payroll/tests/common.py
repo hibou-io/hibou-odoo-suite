@@ -84,6 +84,8 @@ class TestPePayslip(common.TransactionCase):
                 self._logger.warn('cannot locate attribute names "%s" on contract' % (key, ))
 
         # PE Payroll Config Defaults Should be set on the Model
+        if 'date_hired' not in config_values:
+            config_values['date_hired'] = '2016-01-01'
         config = config_model.create(config_values)
         contract_values['pe_payroll_config_id'] = config.id
 
