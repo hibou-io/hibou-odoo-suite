@@ -9,6 +9,8 @@ class HRContractPEPayrollConfig(models.Model):
 
     name = fields.Char(string="Description")
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True)
+    date_hired = fields.Date(string='Date Hired', required=True, default=fields.Date.today,
+                             help='For calculations like IR 5TA CAT.')
     
     retirement_type = fields.Selection([
         ('afp', 'AFP'),
