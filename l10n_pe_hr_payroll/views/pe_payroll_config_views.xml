@@ -8,6 +8,7 @@
                 <field name="employee_id"/>
                 <field name="name"/>
                 <field name="retirement_type"/>
+                <field name="date_hired"/>
                 <field name="create_date"/>
                 <field name="write_date"/>
             </tree>
@@ -23,6 +24,7 @@
                     <group name="General">
                         <field name="employee_id"/>
                         <field name="name"/>
+                        <field name="date_hired"/>
                     </group>
                     <group>
                         <group name="employee" string="Employee">
