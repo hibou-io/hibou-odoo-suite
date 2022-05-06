@@ -22,6 +22,7 @@ Peru - Payroll Rules.
         'data/integration_rules.xml',
         'data/afp_rules.xml',
         'data/onp_rules.xml',
+        'data/ir_4ta_cat_rules.xml',
         'data/ir_5ta_cat_rules.xml',
         'data/er_rules.xml',
         'views/hr_contract_views.xml',

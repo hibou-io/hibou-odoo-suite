@@ -48,7 +48,7 @@
         <field name="sequence" eval="196"/>
         <field name="struct_id" ref="hr_payroll_structure"/>
         <field name="category_id" ref="hr_payroll_category_ee_ir_5ta_cat"/>
-        <field name="name">EE: PE IR 5TA Cat.</field>
+        <field name="name">EE: PE IR 5th Cat.</field>
         <field name="code">EE_PE_IR_5TA_CAT</field>
         <field name="condition_select">python</field>
         <field name="condition_python">result, _ = ir_5ta_cat(payslip, categories, worked_days, inputs, BASIC)</field>
