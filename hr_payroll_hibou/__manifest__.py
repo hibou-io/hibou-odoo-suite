@@ -3,7 +3,7 @@
 {
     'name': 'Hibou Payroll',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '13.0.2.0.0',
+    'version': '13.0.2.1.0',
     'category': 'Payroll Localization',
     'depends': [
         'hr_payroll',

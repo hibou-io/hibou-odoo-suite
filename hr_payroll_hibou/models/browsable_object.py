@@ -137,6 +137,11 @@ class Payslips(BrowsableObject):
     @property
     def paid_amount(self):
         return self.dict._get_paid_amount()
+    
+    # Hibou helper
+    @property
+    def pay_periods_in_year(self):
+        return self.dict.get_pay_periods_in_year()
 
 
 # Patch over Core

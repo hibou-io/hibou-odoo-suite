@@ -49,6 +49,26 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "Odoo: INIT 'l10n_pe_hr_payroll'",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["-i", "l10n_pe_hr_payroll", 
+                     "-u", "l10n_pe_hr_payroll",
+                     "--stop-after-init"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: TEST 'l10n_pe_hr_payroll'",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["-i", "l10n_pe_hr_payroll", 
+                     "-u", "l10n_pe_hr_payroll",
+                     "--test-enable", "--no-xmlrpc", "--stop-after-init"],
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Odoo: INIT 'hr_payroll_hibou'",
             "type": "python",
             "request": "launch",
