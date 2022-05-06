@@ -2,19 +2,32 @@
 <odoo>
 
     <record id="structure_type_employee" model="hr.payroll.structure.type">
-        <field name="name">Peru Employee</field>
+        <field name="name">Peru Employee (5ta Cat.)</field>
         <field name="default_resource_calendar_id" ref="resource.resource_calendar_std"/>
         <field name="country_id" ref="base.pe"/>
     </record>
 
     <record id="hr_payroll_structure" model="hr.payroll.structure">
-        <field name="name">Peru Employee Standard</field>
+        <field name="name">Peru Employee (5ta Cat.)</field>
         <field name="country_id" ref="base.pe"/>
         <field name="type_id" ref="l10n_pe_hr_payroll.structure_type_employee"/>
         <field name="regular_pay" eval="True"/>
         <field name="unpaid_work_entry_type_ids" eval="[
             (4, ref('hr_payroll.work_entry_type_unpaid_leave')),
         ]"/>
+    </record>
+
+    <record id="structure_type_employee_4ta_cat" model="hr.payroll.structure.type">
+        <field name="name">Peru Employee (4ta Cat.)</field>
+        <field name="default_resource_calendar_id" ref="resource.resource_calendar_std"/>
+        <field name="country_id" ref="base.pe"/>
+    </record>
+
+    <record id="hr_payroll_structure_4ta_cat" model="hr.payroll.structure">
+        <field name="name">Peru Employee (4ta Cat.)</field>
+        <field name="country_id" ref="base.pe"/>
+        <field name="type_id" ref="l10n_pe_hr_payroll.structure_type_employee_4ta_cat"/>
+        <field name="regular_pay" eval="True"/>
     </record>
 
     <!-- AFP -->
@@ -43,14 +56,21 @@
 
     <!-- IR 5TA CAT -->
     <record id="hr_payroll_category_ee_ir_5ta_cat" model="hr.salary.rule.category">
-        <field name="name">EE: IR 5ta Cat.</field>
+        <field name="name">EE: IR 5th Cat.</field>
         <field name="code">EE_PE_IR_5TA_CAT</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
     <record id="hr_payroll_category_er_ir_5ta_cat" model="hr.salary.rule.category">
-        <field name="name">ER: IR 5ta Cat.</field>
+        <field name="name">ER: IR 5th Cat.</field>
         <field name="code">ER_PE_IR_5TA_CAT</field>
         <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <!-- IR 4TA CAT -->
+    <record id="hr_payroll_category_ee_ir_4ta_cat" model="hr.salary.rule.category">
+        <field name="name">EE: IR 4th Cat.</field>
+        <field name="code">EE_PE_IR_4TA_CAT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
 
     <!-- ESSALUD-->
@@ -67,7 +87,7 @@
 
     <!-- Bonus input & rule -->
     <record id="input_type_bono" model="hr.payslip.input.type">
-        <field name="name">Bono</field>
+        <field name="name">Bonus</field>
         <field name="code">BONO</field>
         <field name="country_id" ref="base.pe" />
         <field name="struct_ids" eval="[
@@ -82,7 +102,7 @@
         <field name="amount_python_compute">result = inputs.BONO.amount if inputs.BONO else 0</field>
         <field name="code">BASIC_BONO</field>
         <field name="category_id" ref="hr_payroll.BASIC"/>
-        <field name="name">Bono</field>
+        <field name="name">Bonus</field>
         <field name="sequence" eval="25"/>
         <field name="struct_id" ref="l10n_pe_hr_payroll.hr_payroll_structure"/>
     </record>
