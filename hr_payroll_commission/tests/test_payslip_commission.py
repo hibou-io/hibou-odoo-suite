@@ -32,8 +32,8 @@ class TestCommissionPayslip(test_commission.TestCommission):
             'date_from': date.today() - timedelta(days=1),
             'date_to': date.today() + timedelta(days=14),
         })
-        payslip.action_refresh_from_work_entries()
         self.assertFalse(payslip.commission_payment_ids)
+        payslip.action_payslip_cancel()
 
         # find unpaid commission payments from super().test_commission()
         commission_payments = self.env['hr.commission.payment'].search([
@@ -44,7 +44,12 @@ class TestCommissionPayslip(test_commission.TestCommission):
         # press the button to pay it via payroll
         commission_payments.action_report_in_next_payslip()
 
-        payslip.action_refresh_from_work_entries()
+        payslip = self.env['hr.payslip'].create({
+            'name': 'test slip',
+            'employee_id': self.employee.id,
+            'date_from': date.today() - timedelta(days=1),
+            'date_to': date.today() + timedelta(days=14),
+        })
         # has attached commission payments
         self.assertTrue(payslip.commission_payment_ids)
         commission_input_lines = payslip.input_line_ids.filtered(lambda l: l.input_type_id == commission_type)
