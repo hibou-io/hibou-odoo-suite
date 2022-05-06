@@ -24,7 +24,7 @@
         <field name="sequence" eval="190"/>
         <field name="struct_id" ref="hr_payroll_structure"/>
         <field name="category_id" ref="hr_payroll_category_ee_pe_afp"/>
-        <field name="name">EE: PE AFP Pensiones</field>
+        <field name="name">EE: PE AFP Pensions</field>
         <field name="code">EE_PE_AFP_PENSIONES</field>
         <field name="condition_select">python</field>
         <field name="condition_python">result = categories.GROSS and contract.pe_payroll_config_value('retirement_type') == 'afp'</field>
@@ -37,7 +37,7 @@
         <field name="sequence" eval="191"/>
         <field name="struct_id" ref="hr_payroll_structure"/>
         <field name="category_id" ref="hr_payroll_category_ee_pe_afp"/>
-        <field name="name">EE: PE AFP Seguro</field>
+        <field name="name">EE: PE AFP Insurance</field>
         <field name="code">EE_PE_AFP_SEGURO</field>
         <field name="condition_select">python</field>
         <field name="condition_python">result = categories.GROSS and contract.pe_payroll_config_value('retirement_type') == 'afp'</field>
@@ -60,7 +60,7 @@ result, result_rate = eligible_wage, rate
         <field name="sequence" eval="192"/>
         <field name="struct_id" ref="hr_payroll_structure"/>
         <field name="category_id" ref="hr_payroll_category_ee_pe_afp"/>
-        <field name="name">EE: PE AFP Comisión Mixta</field>
+        <field name="name">EE: PE AFP Mixed Commission</field>
         <field name="code">EE_PE_AFP_COMISION_MIXTA</field>
         <field name="condition_select">python</field>
         <field name="condition_python">result = categories.GROSS and contract.pe_payroll_config_value('retirement_type') == 'afp' and contract.pe_payroll_config_value('afp_comision_type') == 'mixta'</field>
@@ -73,7 +73,7 @@ result, result_rate = eligible_wage, rate
         <field name="sequence" eval="192"/>
         <field name="struct_id" ref="hr_payroll_structure"/>
         <field name="category_id" ref="hr_payroll_category_ee_pe_afp"/>
-        <field name="name">EE: PE AFP Comisión (Non-Mixta)</field>
+        <field name="name">EE: PE AFP Comission (Non-Mixed)</field>
         <field name="code">EE_PE_AFP_COMISION_NON_MIXTA</field>
         <field name="condition_select">python</field>
         <field name="condition_python">result = categories.GROSS and contract.pe_payroll_config_value('retirement_type') == 'afp' and contract.pe_payroll_config_value('afp_comision_type') == 'non_mixta'</field>

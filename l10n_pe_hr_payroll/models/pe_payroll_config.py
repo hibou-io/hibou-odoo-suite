@@ -1,6 +1,6 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class HRContractPEPayrollConfig(models.Model):
@@ -10,7 +10,7 @@ class HRContractPEPayrollConfig(models.Model):
     name = fields.Char(string="Description")
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True)
     date_hired = fields.Date(string='Date Hired', required=True, default=fields.Date.today,
-                             help='For calculations like IR 5TA CAT.')
+                             help='For calculations like IR 5TH CAT.')
     
     retirement_type = fields.Selection([
         ('afp', 'AFP'),
@@ -26,8 +26,8 @@ class HRContractPEPayrollConfig(models.Model):
         ('profuturo', 'Profuturo'),
     ], string='AFP Type', default='profuturo')
     afp_comision_type = fields.Selection([
-        ('mixta', 'Mixta'),
-        ('non_mixta', 'Non-Mixta'),
+        ('mixta', 'Mixed'),
+        ('non_mixta', 'Non-Mixed'),
     ], string='AFP Commission Type', default='mixta')
     
     comp_ss_type = fields.Selection([
