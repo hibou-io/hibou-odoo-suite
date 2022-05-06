@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_product_product_form" model="ir.ui.view">
+        <field name="name">amazon.product.product.form</field>
+        <field name="model">amazon.product.product</field>
+        <field name="arch" type="xml">
+            <form string="Amazon Product Listing">
+                <header>
+                    <button name="button_submit_product" string="Submit Product" type="object" states="draft" class="btn-primary"/>
+                    <button name="button_submit_product" string="Update Product" type="object" states="sent" />
+                    <button name="button_update_inventory" string="Update Inventory" type="object" states="sent" class="btn-primary"/>
+                    <button name="button_update_price" string="Update Price" type="object" states="sent" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent" clickable="True"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="external_id" required="1" string="Amazon SKU"/>
+                        </h1>
+                        <h2>
+                            <field name="asin" string="ASIN"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="odoo_id" required="1" string="Product"/>
+                            <field name="default_code"/>
+                            <field name="warehouse_id" domain="['|', ('id', 'in', backend_warehouse_ids), ('id', 'in', backend_fba_warehouse_ids)]"/>
+                            <field name="buffer_qty"/>
+                        </group>
+                        <group>
+                            <field name="backend_id" required="1"/>
+                            <field name="backend_warehouse_ids" invisible="1"/>
+                            <field name="backend_fba_warehouse_ids" invisible="1"/>
+                            <field name="date_product_sent" readonly="1"/>
+                            <field name="date_inventory_sent" readonly="1"/>
+                            <field name="date_price_sent" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_amazon_product_tree" model="ir.ui.view">
+        <field name="name">amazon.product.product.tree</field>
+        <field name="model">amazon.product.product</field>
+        <field name="arch" type="xml">
+            <tree string="Amazon Listings">
+                <field name="external_id"/>
+                <field name="odoo_id"/>
+                <field name="asin"/>
+                <field name="backend_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_amazon_product_product" model="ir.actions.act_window">
+        <field name="name">Amazon SP Listings</field>
+        <field name="res_model">amazon.product.product</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_amazon_product_product"
+        name="Listings"
+        action="action_amazon_product_product"
+        parent="amazon_product_product_menu"
+        sequence="2" />
+
+    <!-- Additional Pricelist Menu -->
+    <menuitem id="menu_amazon_pricelist"
+        name="Pricelists"
+        parent="amazon_config_menu"
+        action="product.product_pricelist_action2" />
+
+</odoo>

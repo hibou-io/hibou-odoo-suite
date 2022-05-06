@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+manage_amazon_backend,amazon.backend,model_amazon_backend,connector.group_connector_manager,1,1,1,1
+manage_amazon_product_product,amazon.product.product,model_amazon_product_product,sales_team.group_sale_manager,1,1,1,1
+manage_amazon_feed,amazon.feed,model_amazon_feed,sales_team.group_sale_manager,1,1,1,1
+access_amazon_sale_order,amazon.sale.order,model_amazon_sale_order,sales_team.group_sale_salesman,1,1,1,0
+access_amazon_sale_order_line,amazon.sale.order.line,model_amazon_sale_order_line,sales_team.group_sale_salesman,1,1,1,1
+access_amazon_sale_order_manager,amazon.sale.order.manager,model_amazon_sale_order,sales_team.group_sale_manager,1,1,1,1
+access_amazon_sale_order_line_accountant,amazon.sale.order.line accountant,model_amazon_sale_order_line,account.group_account_user,1,1,0,0
+access_amazon_sale_order_accountant,amazon.sale.order.accountant,model_amazon_sale_order,account.group_account_user,1,1,0,0
+access_amazon_sale_order_invoicing_payments,amazon.sale.order,model_amazon_sale_order,account.group_account_invoice,1,1,0,0
+access_amazon_sale_order_line_invoicing_payments,amazon.sale.order.line,model_amazon_sale_order_line,account.group_account_invoice,1,1,0,0
