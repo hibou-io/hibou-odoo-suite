@@ -10,6 +10,7 @@ EXP_ESSALUD = '6271000'
 PAY_EE = '4111000'
 PAY_AFP = '4170000'
 PAY_ONP = '4032000'
+PAY_IR_4TA_CAT = '4017200'
 PAY_IR_5TA_CAT = '4017300'
 PAY_ESSALUD = '4031000'
 
@@ -29,6 +30,7 @@ class AccountChartTemplate(models.Model):
                                            pay_ee=PAY_EE,
                                            pay_afp=PAY_AFP,
                                            pay_onp=PAY_ONP,
+                                           pay_ir_4ta_cat=PAY_IR_4TA_CAT,
                                            pay_ir_5ta_cat=PAY_IR_5TA_CAT,
                                            pay_essalud=PAY_ESSALUD,
                                            exp_salary=EXP_SALARY,
@@ -40,6 +42,7 @@ class AccountChartTemplate(models.Model):
             pay_ee,
             pay_afp,
             pay_onp,
+            pay_ir_4ta_cat,
             pay_ir_5ta_cat,
             pay_essalud,
             exp_salary,
@@ -133,6 +136,7 @@ class AccountChartTemplate(models.Model):
             set_rule_accounts('EE_%', accounts[pay_ee], accounts['none'])  # initialize
             set_rule_accounts('EE_PE_AFP%', accounts[pay_afp], accounts['none'])
             set_rule_accounts('EE_PE_ONP%', accounts[pay_onp], accounts['none'])
+            set_rule_accounts('EE_PE_IR_4TA_CAT%', accounts[pay_ir_4ta_cat], accounts['none'])
             set_rule_accounts('EE_PE_IR_5TA_CAT%', accounts[pay_ir_5ta_cat], accounts['none'])
             # ER_* -> AP debit, SE credit
             set_rule_accounts('ER_%', accounts[pay_ee], accounts[exp_salary])  # initialize
