@@ -7,7 +7,7 @@ import sys
 
 PID = 1 
 PNAME = 'odoo'
-PNAME_PYTHON = ['python']
+PNAME_PYTHON = ['python', '/usr/local/bin/']
 PNAME_KILL_OTHER = [PNAME] + PNAME_PYTHON
 KILL_OTHER = sys.argv[1] == 'KILL_OTHER' if len(sys.argv) >= 2 else False
 if KILL_OTHER:
