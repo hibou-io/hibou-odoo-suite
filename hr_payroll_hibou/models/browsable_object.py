@@ -138,6 +138,10 @@ class Payslips(BrowsableObject):
     def paid_amount(self):
         return self.dict._get_paid_amount()
 
+    # Hibou helper
+    @property
+    def pay_periods_in_year(self):
+        return self.dict.get_pay_periods_in_year()
 
 # Patch over Core
 browsable_object.BrowsableObject.__init__ = BrowsableObject.__init__
@@ -149,3 +153,4 @@ browsable_object.WorkedDays.sum = WorkedDays.sum
 browsable_object.Payslips._compile_browsable_query = Payslips._compile_browsable_query
 browsable_object.Payslips.sum = Payslips.sum
 browsable_object.Payslips.sum_category = Payslips.sum_category
+browsable_object.Payslips.pay_periods_in_year = Payslips.pay_periods_in_year
