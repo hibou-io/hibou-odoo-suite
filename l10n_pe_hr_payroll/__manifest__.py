@@ -3,7 +3,7 @@
 {
     'name': 'Peru - Payroll',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '13.0.2022.0.0',
+    'version': '15.0.2022.0.0',
     'category': 'Payroll Localization',
     'depends': [
         'hr_payroll_hibou',

@@ -11,9 +11,8 @@
         <field name="name">Peru Employee (5ta Cat.)</field>
         <field name="country_id" ref="base.pe"/>
         <field name="type_id" ref="l10n_pe_hr_payroll.structure_type_employee"/>
-        <field name="regular_pay" eval="True"/>
         <field name="unpaid_work_entry_type_ids" eval="[
-            (4, ref('hr_payroll.work_entry_type_unpaid_leave')),
+            (4, ref('hr_work_entry_contract.work_entry_type_unpaid_leave')),
         ]"/>
     </record>
 
@@ -27,7 +26,6 @@
         <field name="name">Peru Employee (4ta Cat.)</field>
         <field name="country_id" ref="base.pe"/>
         <field name="type_id" ref="l10n_pe_hr_payroll.structure_type_employee_4ta_cat"/>
-        <field name="regular_pay" eval="True"/>
     </record>
 
     <!-- AFP -->
