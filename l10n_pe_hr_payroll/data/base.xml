@@ -16,6 +16,10 @@
         ]"/>
     </record>
 
+    <record id="l10n_pe_hr_payroll.structure_type_employee" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure"/>
+    </record>
+
     <record id="structure_type_employee_4ta_cat" model="hr.payroll.structure.type">
         <field name="name">Peru Employee (4ta Cat.)</field>
         <field name="default_resource_calendar_id" ref="resource.resource_calendar_std"/>
@@ -26,6 +30,10 @@
         <field name="name">Peru Employee (4ta Cat.)</field>
         <field name="country_id" ref="base.pe"/>
         <field name="type_id" ref="l10n_pe_hr_payroll.structure_type_employee_4ta_cat"/>
+    </record>
+
+    <record id="l10n_pe_hr_payroll.structure_type_employee_4ta_cat" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_4ta_cat"/>
     </record>
 
     <!-- AFP -->
