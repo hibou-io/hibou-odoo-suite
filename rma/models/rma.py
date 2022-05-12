@@ -333,9 +333,8 @@ class RMA(models.Model):
     def create(self, vals):
         if vals.get('name', _('New')) == _('New'):
             if 'company_id' in vals:
-                vals['name'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code('rma.rma') or _('New')
-            else:
-                vals['name'] = self.env['ir.sequence'].next_by_code('rma.rma') or _('New')
+                self = self.with_company(vals['company_id'])
+            vals['name'] = self.env['ir.sequence'].next_by_code('rma.rma') or _('New')
 
         # Provide defaults on create (e.g. from portal)
         if vals.get('template_id'):
