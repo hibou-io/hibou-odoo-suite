@@ -1,5 +1,6 @@
 from odoo.tools.float_utils import float_round, float_is_zero
 from odoo.addons.delivery_easypost.models.easypost_request import EasypostRequest
+from odoo.tools.float_utils import float_round, float_is_zero, float_repr
 
 # Patches to add customs lines during SO rating.
 
@@ -15,10 +16,9 @@ def _prepare_order_shipments(self, carrier, order):
     in different packages. It also ignores customs info.
     """
     # Max weight for carrier default package
-    max_weight = carrier._easypost_convert_weight(carrier.easypost_default_packaging_id.max_weight)
+    max_weight = carrier._easypost_convert_weight(carrier.easypost_default_package_type_id.max_weight)
     # Order weight
-    total_weight = carrier._easypost_convert_weight(
-        sum([(line.product_id.weight * line.product_uom_qty) for line in order.order_line if not line.display_type]))
+    total_weight = carrier._easypost_convert_weight(order._get_estimated_weight())
 
     # Create shipments
     shipments = {}
@@ -28,19 +28,15 @@ def _prepare_order_shipments(self, carrier, order):
         # Remainder for last package.
         last_shipment_weight = float_round(total_weight % max_weight, precision_digits=1)
         for shp_id in range(0, total_shipment):
-            shipments.update(self._prepare_parcel(shp_id, carrier.easypost_default_packaging_id, max_weight,
-                                                  carrier.easypost_label_file_type))
+            shipments.update(self._prepare_parcel(shp_id, carrier.easypost_default_package_type_id, max_weight, carrier.easypost_label_file_type))
             shipments.update(self._customs_info_sale_order(shp_id, order.order_line))
             shipments.update(self._options(shp_id, carrier))
         if not float_is_zero(last_shipment_weight, precision_digits=1):
-            shipments.update(
-                self._prepare_parcel(total_shipment, carrier.easypost_default_packaging_id, last_shipment_weight,
-                                     carrier.easypost_label_file_type))
+            shipments.update(self._prepare_parcel(total_shipment, carrier.easypost_default_package_type_id, last_shipment_weight, carrier.easypost_label_file_type))
             shipments.update(self._customs_info_sale_order(shp_id, order.order_line))
             shipments.update(self._options(total_shipment, carrier))
     else:
-        shipments.update(self._prepare_parcel(0, carrier.easypost_default_packaging_id, total_weight,
-                                              carrier.easypost_label_file_type))
+        shipments.update(self._prepare_parcel(0, carrier.easypost_default_package_type_id, total_weight, carrier.easypost_label_file_type))
         shipments.update(self._customs_info_sale_order(0, order.order_line))
         shipments.update(self._options(0, carrier))
     return shipments
@@ -106,7 +102,7 @@ def _customs_info(self, shipment_id, lines):
         # only need early return if one line does this
         if line.picking_id.picking_type_id.warehouse_id.partner_id.country_id.code == line.picking_id.partner_id.country_id.code:
             return {}
-
+        
         # skip service
         if line.product_id.type not in ['product', 'consu']:
             continue
@@ -114,12 +110,13 @@ def _customs_info(self, shipment_id, lines):
             unit_quantity = line.product_uom_id._compute_quantity(line.product_qty, line.product_id.uom_id, rounding_method='HALF-UP')
         else:
             unit_quantity = line.product_uom_id._compute_quantity(line.qty_done, line.product_id.uom_id, rounding_method='HALF-UP')
+        rounded_qty = max(1, float_round(unit_quantity, precision_digits=0, rounding_method='HALF-UP'))
+        rounded_qty = float_repr(rounded_qty, precision_digits=0)
         hs_code = line.product_id.hs_code or ''
-        price_unit = line.move_id.sale_line_id.price_reduce_taxinc if line.move_id.sale_line_id else line.product_id.list_price
         customs_info.update({
             'order[shipments][%d][customs_info][customs_items][%d][description]' % (shipment_id, customs_item_id): line.product_id.name,
-            'order[shipments][%d][customs_info][customs_items][%d][quantity]' % (shipment_id, customs_item_id): unit_quantity,
-            'order[shipments][%d][customs_info][customs_items][%d][value]' % (shipment_id, customs_item_id): unit_quantity * price_unit,
+            'order[shipments][%d][customs_info][customs_items][%d][quantity]' % (shipment_id, customs_item_id): rounded_qty,
+            'order[shipments][%d][customs_info][customs_items][%d][value]' % (shipment_id, customs_item_id): line.sale_price,
             'order[shipments][%d][customs_info][customs_items][%d][currency]' % (shipment_id, customs_item_id): line.picking_id.company_id.currency_id.name,
             'order[shipments][%d][customs_info][customs_items][%d][weight]' % (shipment_id, customs_item_id): line.env['delivery.carrier']._easypost_convert_weight(line.product_id.weight * unit_quantity),
             'order[shipments][%d][customs_info][customs_items][%d][origin_country]' % (shipment_id, customs_item_id): line.picking_id.picking_type_id.warehouse_id.partner_id.country_id.code,

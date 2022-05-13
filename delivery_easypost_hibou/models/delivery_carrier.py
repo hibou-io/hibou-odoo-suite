@@ -20,12 +20,13 @@ class DeliveryCarrier(models.Model):
         Once the order is purchased. It will post as message the tracking
         links and the shipping labels.
         """
-        res = []
         superself = self.sudo()
+        
+        res = []
         ep = EasypostRequest(self.sudo().easypost_production_api_key if self.prod_environment else self.sudo().easypost_test_api_key, self.log_xml)
         for picking in pickings:
             # Call Hibou delivery method to get picking type
-            if superself.easypost_return_method == 'ep':
+            if self.easypost_return_method == 'ep':
                 is_return = superself._classify_picking(picking) in ('in', 'dropship_in',)
                 result = ep.send_shipping(self, picking.partner_id, picking.picking_type_id.warehouse_id.partner_id,
                                           picking=picking, is_return=is_return)
@@ -33,8 +34,9 @@ class DeliveryCarrier(models.Model):
                 shipper = superself.get_shipper_warehouse(picking=picking)
                 recipient = superself.get_recipient(picking=picking)
                 result = ep.send_shipping(self, recipient, shipper, picking=picking)
+            
             if result.get('error_message'):
-                raise UserError(_(result['error_message']))
+                raise UserError(result['error_message'])
             rate = result.get('rate')
             if rate['currency'] == picking.company_id.currency_id.name:
                 price = float(rate['rate'])
@@ -56,16 +58,17 @@ class DeliveryCarrier(models.Model):
 
             logmessage = _("Shipment created into Easypost<br/>"
                            "<b>Tracking Numbers:</b> %s<br/>") % (carrier_tracking_link)
-            pickings.message_post(body=logmessage, attachments=labels)
+            if picking.sale_id:
+                for pick in picking.sale_id.picking_ids:
+                    pick.message_post(body=logmessage, attachments=labels)
+            else:
+                picking.message_post(body=logmessage, attachments=labels)
 
-            shipping_data = {
-                'exact_price': price,
-                'tracking_number': carrier_tracking_ref,
-            }
+            shipping_data = {'exact_price': price,
+                             'tracking_number': carrier_tracking_ref}
             res = res + [shipping_data]
             # store order reference on picking
             picking.ep_order_ref = result.get('id')
             if picking.carrier_id.return_label_on_delivery:
                 self.get_return_label(picking)
         return res
-
