@@ -28,6 +28,7 @@
                     </group>
                     <group>
                         <group name="employee" string="Employee">
+                            <field name="ee_5ta_cat_exempt"/>
                             <field name="retirement_type"/>
                             <field name="afp_type" attrs="{'invisible': [('retirement_type', '!=', 'afp')]}"/>
                             <field name="afp_comision_type" attrs="{'invisible': [('retirement_type', '!=', 'afp')]}"/>

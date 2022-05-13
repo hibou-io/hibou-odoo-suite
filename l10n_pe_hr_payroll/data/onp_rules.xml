@@ -25,6 +25,7 @@
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result, result_rate = categories.GROSS, -payslip.rule_parameter('ee_onp')</field>
         <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="partner_sunat"/>
     </record>
 
 </odoo>

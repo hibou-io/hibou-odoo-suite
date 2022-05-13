@@ -31,6 +31,7 @@
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result, result_rate = categories.GROSS, -payslip.rule_parameter('ee_afp')[contract.pe_payroll_config_value('afp_type')][4]</field>
         <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="partner_afp"/>
     </record>
 
     <record id="hr_payroll_rule_ee_afp_seguro" model="hr.salary.rule">
@@ -54,6 +55,7 @@ rate = -payslip.rule_parameter('ee_afp')[contract.pe_payroll_config_value('afp_t
 result, result_rate = eligible_wage, rate
 </field>
         <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="partner_afp"/>
     </record>
 
     <record id="hr_payroll_rule_ee_afp_comision_mixta" model="hr.salary.rule">
@@ -67,6 +69,7 @@ result, result_rate = eligible_wage, rate
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result, result_rate = categories.GROSS, -payslip.rule_parameter('ee_afp')[contract.pe_payroll_config_value('afp_type')][1]</field>
         <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="partner_afp"/>
     </record>
 
     <record id="hr_payroll_rule_ee_afp_comision_non_mixta" model="hr.salary.rule">
@@ -80,6 +83,7 @@ result, result_rate = eligible_wage, rate
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result, result_rate = categories.GROSS, -payslip.rule_parameter('ee_afp')[contract.pe_payroll_config_value('afp_type')][0]</field>
         <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="partner_afp"/>
     </record>
 
 </odoo>

@@ -3,6 +3,9 @@
 from datetime import date
 
 def ir_5ta_cat(payslip, categories, worked_days, inputs, basic_wage):
+    if payslip.dict.contract_id.pe_payroll_config_value('ee_5ta_cat_exempt'):
+        return 0.0, 0.0
+    
     pay_periods_in_year = payslip.pay_periods_in_year
     uit = payslip.rule_parameter('pe_uit')
     payslip_date_end = payslip.dict.date_to
