@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
+    <record id="partner_sunat" model="res.partner">
+        <field name="name">SUNAT</field>
+    </record>
+
+    <record id="partner_afp" model="res.partner">
+        <field name="name">AFP</field>
+    </record>
+
     <record id="structure_type_employee" model="hr.payroll.structure.type">
         <field name="name">Peru Employee (5ta Cat.)</field>
         <field name="default_resource_calendar_id" ref="resource.resource_calendar_std"/>

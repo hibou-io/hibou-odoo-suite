@@ -207,6 +207,11 @@ msgid "Exempt from 4th Cat. withholding."
 msgstr "Exento de Retención de la 4ta Cat."
 
 #. module: l10n_pe_hr_payroll
+#: model:ir.model.fields,field_description:l10n_pe_hr_payroll.field_hr_contract_pe_payroll_config__ee_5ta_cat_exempt
+msgid "Exempt from 5th Cat. withholding."
+msgstr "Exento de Retención de la 5ta Cat."
+
+#. module: l10n_pe_hr_payroll
 #: model:ir.model.fields,help:l10n_pe_hr_payroll.field_hr_contract_pe_payroll_config__date_hired
 msgid "For calculations like IR 5TH CAT."
 msgstr "Para Cálculos como IR 5TA CAT."
