@@ -4,7 +4,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from .gls_nl_request import GLSNLRequest
 from requests import HTTPError
-from base64 import decodebytes
+from base64 import decodebytes, b64decode
 from csv import reader as csv_reader
 
 
@@ -264,7 +264,10 @@ class ProviderGLSNL(models.Model):
                 for i, unit in enumerate(label['units'], 1):
                     trackings.append(unit['unitNo'])
                     uniq_nos.append(unit['uniqueNo'])
-                    attachments.append(('LabelGLSNL-%s-%s.%s' % (unit['unitNo'], i, sudoself.gls_nl_labeltype), unit['label']))
+                    label_data = unit.get('label')
+                    if label_data and sudoself.gls_nl_labeltype == 'pdf':
+                        label_data = b64decode(label_data)
+                    attachments.append(('LabelGLSNL-%s-%s.%s' % (unit['unitNo'], i, sudoself.gls_nl_labeltype), label_data))
 
                 tracking = ', '.join(set(trackings))
                 logmessage = _("Shipment created into GLS NL<br/>"
