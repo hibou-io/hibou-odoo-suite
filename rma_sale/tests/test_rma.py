@@ -377,3 +377,82 @@ class TestRMASale(TestRMA):
         rma.action_done()
         self.assertEqual(order.order_line.mapped('product_uom_qty'), [2.0, 0.0])
         self.assertEqual(order.order_line.mapped('qty_delivered'), [2.0, 0.0])
+
+    def test_50_so_line_link_replace(self):
+        # setup the template to do a swap
+        # NOTE that I did not specify require outbound template
+        out_type = self.env['stock.picking.type'].search([('name', '=', 'Delivery Orders')], limit=1)
+        self.assertTrue(out_type)
+        self.assertTrue(out_type.default_location_src_id)
+        self.template_sale_return.write({
+            'usage': 'sale_order',
+            'so_decrement_order_qty': False,
+            'invoice_done': False,
+            'create_out_picking': True,
+            'out_type_id': out_type.id,
+            'out_location_id': out_type.default_location_src_id.id,
+            'out_location_dest_id': self.template_sale_return.in_location_id.id,
+        })
+
+        self.product1.write({
+            'type': 'product',
+            'invoice_policy': 'delivery',
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner1.id,
+            'partner_invoice_id': self.partner1.id,
+            'partner_shipping_id': self.partner1.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product1.id,
+                    'product_uom_qty': 3.0,
+                    'product_uom': self.product1.uom_id.id,
+                    'price_unit': 10.0,
+                }),
+            ]
+        })
+        order.action_confirm()
+        self.assertTrue(order.state in ('sale', 'done'))
+        self.assertEqual(len(order.picking_ids), 1, 'Tests only run with single stage delivery.')
+        
+        order.picking_ids.action_assign()
+        out_moves = order.picking_ids.move_ids_without_package
+        self.assertEqual(len(out_moves), 1)
+        out_moves.quantity_done = 3.0
+        order.picking_ids.button_validate()
+        self.assertEqual(order.picking_ids.state, 'done')
+        
+        rma = self.env['rma.rma'].create({
+            'template_id': self.template_sale_return.id,
+            'partner_id': self.partner1.id,
+            'partner_shipping_id': self.partner1.id,
+            'sale_order_id': order.id,
+        })
+        self.assertEqual(rma.state, 'draft')
+        
+        wizard = self.env['rma.sale.make.lines'].with_user(self.user1).create({'rma_id': rma.id})
+        wizard.line_ids.product_uom_qty = 1.0
+        wizard.add_lines()
+
+        self.assertEqual(len(rma.lines), 1)
+        rma.action_confirm()
+        
+        self.assertEqual(rma.in_picking_id.state, 'assigned')
+        in_moves = rma.in_picking_id.move_ids_without_package
+        in_moves.quantity_done = 1
+        rma.in_picking_id.button_validate()
+        self.assertEqual(in_moves.sale_line_id, order.order_line, "Inbound stock moves not linked to SO")
+        self.assertEqual(rma.in_picking_id.state, 'done')
+        self.assertEqual(order.order_line.mapped('qty_delivered'), [2.0, ])
+        
+        self.assertEqual(rma.out_picking_id.state, 'assigned')
+        out_moves = rma.out_picking_id.move_ids_without_package
+        out_moves.quantity_done = 1
+        rma.out_picking_id.button_validate()
+        self.assertEqual(order.order_line.mapped('qty_delivered'), [3.0, ])
+        
+        rma.action_done()
+        # the outcome here is strange, but this test case was 
+        # to prevent adding a new line to the sale order. 
+        self.assertEqual(order.order_line.mapped('product_uom_qty'), [3.0, ])
+        self.assertEqual(order.order_line.mapped('qty_delivered'), [3.0, ])

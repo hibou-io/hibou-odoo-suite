@@ -104,6 +104,34 @@ class RMATemplate(models.Model):
                 return 'expired'
         return 'valid'
 
+    def _values_for_in_picking(self, rma):
+        values = super()._values_for_in_picking(rma)
+        if self.usage == 'sale_order':
+            values['move_lines'] = [(0, None, {
+                'name': rma.name + ' IN: ' + l.product_id.name_get()[0][1],
+                'product_id': l.product_id.id,
+                'product_uom_qty': l.product_uom_qty,
+                'product_uom': l.product_uom_id.id,
+                'procure_method': self.in_procure_method,
+                'to_refund': self.in_to_refund,
+                'sale_line_id': l.sale_line_id.id,
+            }) for l in rma.lines.filtered(lambda l: l.product_id.type != 'service')]
+        return values
+
+    def _values_for_out_picking(self, rma):
+        values = super()._values_for_out_picking(rma)
+        if self.usage == 'sale_order':
+            values['move_lines'] = [(0, None, {
+                'name': rma.name + ' OUT: ' + l.product_id.name_get()[0][1],
+                'product_id': l.product_id.id,
+                'product_uom_qty': l.product_uom_qty,
+                'product_uom': l.product_uom_id.id,
+                'procure_method': self.out_procure_method,
+                'to_refund': self.out_to_refund,
+                'sale_line_id': l.sale_line_id.id,
+            }) for l in rma.lines.filtered(lambda l: l.product_id.type != 'service')]
+        return values
+
 
 class RMA(models.Model):
     _inherit = 'rma.rma'
