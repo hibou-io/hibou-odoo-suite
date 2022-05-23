@@ -22,3 +22,6 @@
 [submodule "external/hiboubox"]
 	path = external/hiboubox
 	url = https://gitlab.com/hibou-io/hibou-odoo/hiboubox.git
+[submodule "external/hibou-oca/social"]
+	path = external/hibou-oca/social
+	url = https://github.com/hibou-io/oca-social.git
