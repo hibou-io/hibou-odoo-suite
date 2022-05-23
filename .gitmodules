@@ -25,3 +25,6 @@
 [submodule "external/hibou-oca/web"]
 	path = external/hibou-oca/web
 	url = https://github.com/hibou-io/oca-web.git
+[submodule "external/hibou-oca/social"]
+	path = external/hibou-oca/social
+	url = https://github.com/hibou-io/oca-social.git
