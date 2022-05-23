@@ -1,6 +1,7 @@
 {
     "workbench.colorTheme": "Hibou Dark",
     "files.exclude": {
+        "**/.var": true,
         "**/.git": true,
         "**/.svn": true,
         "**/.hg": true,
