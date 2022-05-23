@@ -77,7 +77,7 @@ class ResUsers(models.Model):
 
         login_url = admin_auth_generate_login(self.env, self)
         if login_url:
-            raise exceptions.Warning(login_url)
+            raise exceptions.UserError(login_url)
 
         return False
 
