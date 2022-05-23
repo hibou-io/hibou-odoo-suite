@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
-    <record id="view_task_form2_inherited_inherit" model="ir.ui.view">
-        <field name="name">project.task.form.inherited.inherit</field>
-        <field name="model">project.task</field>
-        <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="after">
-                <field name="work_billing_amount" widget="timesheet_uom" />
-            </xpath>
-            <xpath expr="//field[@name='timesheet_ids']/form//field[@name='unit_amount']" position="after">
-                <field name="work_billing_amount" widget="timesheet_uom" />
-            </xpath>
-        </field>
-    </record>
-
-    <template id="portal_timesheet_table_inherit" inherit_id="hr_timesheet.portal_timesheet_table">
+    <template id="report_invoice_document_inherit" inherit_id="timesheet_invoice.report_invoice_document_inherit">
         <xpath expr="//tr[@t-as='timesheet']/td[last()]" position="replace">
             <td class="text-right" t-if="not timesheet.work_type_id or timesheet.work_billing_rate == 1.0">
                 <span t-field="timesheet.unit_amount" t-options="{&quot;widget&quot;: &quot;duration&quot;, &quot;unit&quot;: &quot;hour&quot;, &quot;round&quot;: &quot;minute&quot;}"/>
