@@ -29,6 +29,7 @@ class TestSaleFlow(TestProjectBilling):
         })
 
         self.assertEqual(task.sale_line_id, timesheet1.so_line, "The timesheet should be linked to the SOL associated to the task since the pricing type of the project is task rate.")
+        self.assertEqual(timesheet1.work_billing_amount, 50.0)
 
         # create a subtask
         subtask = Task.with_context(default_project_id=self.project_task_rate.id).create({
@@ -78,6 +79,7 @@ class TestSaleFlow(TestProjectBilling):
         timesheet1.write({
             'work_type_id': double_rate_work_entry_type.id,
         })
+        self.assertEqual(timesheet1.work_billing_amount, 100.0)
         self.assertEqual(task.sale_line_id.qty_delivered, 100.0)
 
         # Ensure that a created timesheet WITHOUT a work entry type behaves
@@ -98,3 +100,4 @@ class TestSaleFlow(TestProjectBilling):
             'work_type_id': zero_rate_work_entry_type.id,
         })
         self.assertEqual(task.sale_line_id.qty_delivered, 0.0)
+        self.assertEqual(timesheet1.work_billing_amount, 0.0)
