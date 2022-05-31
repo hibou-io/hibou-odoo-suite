@@ -67,6 +67,7 @@ class ProviderGLSNL(models.Model):
         'r' key will be rows from the original that can use indexes above
         :return:
         """
+        self = self.sudo()
         datab = decodebytes(self.gls_nl_rate_id.datas)
         csv_data = datab.decode()
         csv_data = csv_data.replace('\r', '')
