@@ -18,8 +18,6 @@ class ProgramOutputView(models.TransientModel):
                                          compute='_compute_variant_count')
     product_qty = fields.Float(string='Quantity to Consume', default=1.0)
     product_uom_id = fields.Many2one('uom.uom', string='Consume Unit of Measure')
-    bom_routing_id = fields.Many2one('mrp.routing', related='bom_id.routing_id')
-    operation_id = fields.Many2one('mrp.routing.workcenter', 'Consume in Operation')
 
     @api.depends('product_tmpl_id', 'limit_possible')
     def _compute_variant_count(self):
@@ -81,6 +79,5 @@ class ProgramOutputView(models.TransientModel):
                 'product_uom_id': self.product_uom_id.id,
                 'bom_product_template_attribute_value_ids': [(4, a.id, 0)
                                                              for a in bom_product_template_attribute_value_ids],
-                'operation_id': self.operation_id.id,
             }))
         self.bom_id.write({'bom_line_ids': lines})
