@@ -8,7 +8,7 @@ class TestMRPBOMAdd(TransactionCase):
         self.attr1 = self.env['product.attribute'].create({
             'name': 'Test Attr1',
             'create_variant': 'always',
-            'type': 'radio',
+            'display_type': 'radio',
         })
         self.attr1_val1 = self.env['product.attribute.value'].create({
             'attribute_id': self.attr1.id,
@@ -22,7 +22,7 @@ class TestMRPBOMAdd(TransactionCase):
         self.attr2 = self.env['product.attribute'].create({
             'name': 'Test Attr2',
             'create_variant': 'always',
-            'type': 'radio',
+            'display_type': 'radio',
         })
         self.attr2_val1 = self.env['product.attribute.value'].create({
             'attribute_id': self.attr2.id,
