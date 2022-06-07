@@ -11,13 +11,14 @@ def forte_get_api(acquirer):
     return ForteAPI(acquirer.forte_organization_id,
                     acquirer.forte_access_id,
                     acquirer.forte_secure_key,
-                    acquirer.environment)
+                    acquirer.state)
 
 
 class PaymentAcquirerForte(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('forte', 'Forte')])
+    provider = fields.Selection(selection_add=[('forte', 'Forte')],
+                                ondelete={'forte': 'set default'})
     forte_organization_id = fields.Char(string='Organization ID')
     forte_location_id = fields.Char(string='Location ID')  # Probably move to Journal...
     forte_access_id = fields.Char(string='Access ID')
@@ -39,7 +40,6 @@ class PaymentAcquirerForte(models.Model):
         res['tokenize'].append('authorize')
         return res
 
-    @api.multi
     def forte_test_credentials(self):
         self.ensure_one()
         api = forte_get_api(self)
