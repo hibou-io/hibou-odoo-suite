@@ -56,24 +56,41 @@ class AccountPayment(models.Model):
 
     def _do_payment(self):
         self = self.with_context(payment_type=self.payment_type)
-        return super(AccountPayment, self)._do_payment()
+        return super(AccountPayment, self)._do_payment(payment_type=self.payment_type)
 
 
 class TxForte(models.Model):
     _inherit = 'payment.transaction'
+    
+    def _send_payment_request(self):
+        """ Override of payment to send a payment request to Authorize.
+
+        Note: self.ensure_one()
+
+        :return: None
+        :raise: UserError if the transaction is not linked to a token
+        """
+        
+        super()._send_payment_request()
+        if self.provider != 'forte':
+            return
+
+        res = self.forte_s2s_do_transaction()
 
     def forte_s2s_do_transaction(self, **data):
         self.ensure_one()
         api = forte_get_api(self.acquirer_id)
         location = self.acquirer_id.forte_location_id
         amount = self.amount
-        account_type = self.payment_token_id.forte_account_type
-        routing_number = self.payment_token_id.forte_routing_number
-        account_number = self.payment_token_id.forte_account_number
-        account_holder = self.payment_token_id.forte_account_holder
+            
+        account_type = self.token_id.forte_account_type
+        routing_number = self.token_id.forte_routing_number
+        account_number = self.token_id.forte_account_number
+        account_holder = self.token_id.forte_account_holder
+        
         if not self.env.context.get('payment_type'):
-            _logger.warn('Trying to do a payment with Forte and no contextual payment_type will result in an inbound transaction.')
-        if self.env.context.get('payment_type', 'inbound') == 'inbound':
+            _logger.warning('Trying to do a payment with Forte and no contextual payment_type will result in an inbound transaction.')
+        if self.env.context.get('payment_type') == 'inbound':
             resp = api.echeck_sale(location, amount, account_type, routing_number, account_number, account_holder)
         else:
             resp = api.echeck_credit(location, amount, account_type, routing_number, account_number, account_holder)
@@ -119,14 +136,3 @@ class PaymentToken(models.Model):
     forte_routing_number = fields.Char(string='Forte Routing Number', help='e.g. 021000021')
     forte_account_number = fields.Char(string='Forte Account Number', help='e.g. 000111222')
     forte_account_holder = fields.Char(string='Forte Account Holder', help='e.g. John Doe')
-    # Boilerplate for views
-    provider = fields.Selection(string='Provider', related='acquirer_id.provider')
-
-    @api.model
-    def forte_create(self, values):
-        if values.get('forte_account_number'):
-            #acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
-            #partner = self.env['res.partner'].browse(values['partner_id'])
-            # eventually check the types and account numbers
-            pass
-        return values
