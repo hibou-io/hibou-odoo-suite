@@ -1,8 +1,6 @@
 from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
-
-
 class ForteCommon(PaymentCommon):
     
     @classmethod
@@ -22,7 +20,7 @@ class ForteCommon(PaymentCommon):
         cls.acquirer = cls.forte
         cls.currency = cls.currency_usd
         cls.forte = cls.acquirer
-        cls.method = cls.env['account.payment.method'].search([('code', '=', 'electronic')], limit=1)[0]
+        cls.method = cls.env.ref('payment_forte.payment_method_forte_echeck_inbound')
         cls.journal = cls.env['account.journal'].search([], limit=1)[0]
         cls.journal.write({
             'inbound_payment_method_line_ids': [(0, 0, {
@@ -65,6 +63,8 @@ class ForteACH(ForteCommon):
                 'payment_method_line_id': self.method_line.id,
                 'amount': 22.00,
             })
+            
+            payment.action_post()
             self.assertTrue(payment.payment_transaction_id)
             self.assertEqual(payment.payment_transaction_id.amount, 22.00)
             self.assertTrue(payment.payment_transaction_id.acquirer_reference)

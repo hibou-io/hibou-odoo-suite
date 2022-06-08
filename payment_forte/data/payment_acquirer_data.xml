@@ -13,5 +13,17 @@
             <field name="forte_secure_key">dummy</field>
         </record>
 
+        <record id="payment_method_forte_echeck_inbound" model="account.payment.method">
+            <field name="name">Forte eCheck</field>
+            <field name="code">forte</field>
+            <field name="payment_type">inbound</field>
+        </record>
+
+        <record id="payment_method_forte_echeck_outbound" model="account.payment.method">
+            <field name="name">Forte eCheck</field>
+            <field name="code">forte</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
     </data>
 </odoo>
