@@ -17,12 +17,14 @@
             <field name="name">Forte eCheck</field>
             <field name="code">forte</field>
             <field name="payment_type">inbound</field>
+            <field name="forte_type">echeck</field>
         </record>
 
         <record id="payment_method_forte_echeck_outbound" model="account.payment.method">
             <field name="name">Forte eCheck</field>
             <field name="code">forte</field>
             <field name="payment_type">outbound</field>
+            <field name="forte_type">echeck</field>
         </record>
 
     </data>
