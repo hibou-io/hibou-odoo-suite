@@ -72,4 +72,3 @@ class ForteACH(ForteCommon):
             # U02 account not authorized.
             if e.name.find('U02') < 0:
                 raise e
-

@@ -2,9 +2,6 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from .forte_request import ForteAPI
 from json import dumps
-import logging
-
-_logger = logging.getLogger(__name__)
 
 
 def forte_get_api(acquirer):
@@ -51,14 +48,6 @@ class PaymentAcquirerForte(models.Model):
         return True
 
 
-class AccountPayment(models.Model):
-    _inherit = 'account.payment'
-
-    def _do_payment(self):
-        self = self.with_context(payment_type=self.payment_type)
-        return super(AccountPayment, self)._do_payment(payment_type=self.payment_type)
-
-
 class TxForte(models.Model):
     _inherit = 'payment.transaction'
     
@@ -75,9 +64,6 @@ class TxForte(models.Model):
         if self.provider != 'forte':
             return
 
-        res = self.forte_s2s_do_transaction()
-
-    def forte_s2s_do_transaction(self, **data):
         self.ensure_one()
         api = forte_get_api(self.acquirer_id)
         location = self.acquirer_id.forte_location_id
@@ -88,12 +74,17 @@ class TxForte(models.Model):
         account_number = self.token_id.forte_account_number
         account_holder = self.token_id.forte_account_holder
         
-        if not self.env.context.get('payment_type'):
+        method = self.payment_id.payment_method_id
+        # if not self.env.context.get('payment_type'):
+        if not method or not method.payment_type:
             _logger.warning('Trying to do a payment with Forte and no contextual payment_type will result in an inbound transaction.')
-        if self.env.context.get('payment_type') == 'inbound':
-            resp = api.echeck_sale(location, amount, account_type, routing_number, account_number, account_holder)
-        else:
-            resp = api.echeck_credit(location, amount, account_type, routing_number, account_number, account_holder)
+        # if self.env.context.get('payment_type') == 'inbound':
+        if method.forte_type == 'echeck':
+            if method.payment_type == 'outbound':
+                resp = api.echeck_credit(location, amount, account_type, routing_number, account_number, account_holder)
+            else:
+                resp = api.echeck_sale(location, amount, account_type, routing_number, account_number, account_holder)
+        # elif method.forte_type == 'creditcard':
 
         if resp.ok and resp.json()['response']['response_desc'] == 'APPROVED':
             ref = resp.json()['response']['authorization_code']
@@ -102,31 +93,6 @@ class TxForte(models.Model):
             result = resp.json()
             if result and result.get('response'):
                 raise ValidationError('Error: ' + dumps(result.get('response')))
-
-    def forte_s2s_do_refund(self, **data):
-        self.ensure_one()
-        api = forte_get_api(self.acquirer_id)
-        location = self.acquirer_id.forte_location_id
-        amount = self.amount
-        account_type = self.payment_token_id.forte_account_type
-        routing_number = self.payment_token_id.forte_routing_number
-        account_number = self.payment_token_id.forte_account_number
-        account_holder = self.payment_token_id.forte_account_holder
-        if not self.env.context.get('payment_type'):
-            _logger.warn('Trying to do a refund payment with Forte and no contextual payment_type will result in an inbound transaction refund.')
-        if self.env.context.get('payment_type', 'inbound') == 'inbound':
-            resp = api.echeck_credit(location, amount, account_type, routing_number, account_number, account_holder)
-        else:
-            resp = api.echeck_sale(location, amount, account_type, routing_number, account_number, account_holder)
-
-        if resp.ok and resp.json()['response']['response_desc'] == 'APPROVED':
-            ref = resp.json()['response']['authorization_code']
-            return self.write({'state': 'refunded', 'acquirer_reference': ref})
-        else:
-            result = resp.json()
-            if result and result.get('response'):
-                raise ValidationError('Error: ' + dumps(result.get('response')))
-
 
 
 class PaymentToken(models.Model):
