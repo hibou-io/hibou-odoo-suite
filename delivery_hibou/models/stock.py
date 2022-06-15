@@ -46,7 +46,7 @@ class StockPicking(models.Model):
         help='If your carrier supports it, auto should be calculated off of the "Automatic Signature Required Value" field.')
     package_carrier_tracking_ref = fields.Char(string='Package Tracking Numbers', compute='_compute_package_carrier_tracking_ref')
 
-    @api.depends('package_ids.carrier_tracking_ref')
+    @api.depends('move_line_ids.package_id.carrier_tracking_ref')
     def _compute_package_carrier_tracking_ref(self):
         for picking in self:
             package_refs = picking.package_ids.filtered('carrier_tracking_ref').mapped('carrier_tracking_ref')
