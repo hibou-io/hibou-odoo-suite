@@ -102,18 +102,21 @@ class OpencartBackend(models.Model):
         with _super.work_on(model_name, opencart_api=opencart_api, **kwargs) as work:
             yield work
 
-    def add_checkpoint(self, record):
+    def add_checkpoint(self, record, summary=''):
         self.ensure_one()
         record.ensure_one()
         user = self.env.user
+        summary = summary or self.env.context.get('checkpoint_summary', '')
         if 'user_id' in record and record.user_id:
             user = record.user_id
         if 'odoo_id' in record:
             return record.odoo_id.activity_schedule(
                 act_type_xmlid='connector_opencart.checkpoint',
+                summary=summary,
                 user_id=user.id)
         return record.activity_schedule(
             act_type_xmlid='connector_opencart.checkpoint',
+            summary=summary,
             user_id=user.id)
 
     def find_checkpoint(self, record):
