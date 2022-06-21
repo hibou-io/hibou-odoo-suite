@@ -351,7 +351,7 @@ def patched_set_package_detail(self, client, packages, packaging_type, namespace
             package.PackageServiceOptions.COD.CODAmount.CurrencyCode = cod_info['currency']
 
         package.PackageWeight.UnitOfMeasurement.Code = p.weight_unit or ''
-        package.PackageWeight.Weight = p.weight or ''
+        package.PackageWeight.Weight = p.shipping_weight or p.weight or ''
 
         # Package and shipment reference text is only allowed for shipments within
         # the USA and within Puerto Rico. This is a UPS limitation.
