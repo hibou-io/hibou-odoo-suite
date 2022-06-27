@@ -312,11 +312,11 @@ class ProviderUPS(models.Model):
             # Is total quantity the number of packages or the number of items being shipped?
             if package:
                 total_qty = 1
-                packages = [Package(self, package.shipping_weight, insurance_value=superself.get_insurance_value(picking=picking, package=package), insurance_currency_code=insurance_currency_code, signature_required=superself._get_ups_signature_required(picking=picking, package=package))]
-            elif picking.package_ids:
+                packages = [Package(self, package.shipping_weight, quant_pack=package.package_type_id, insurance_value=superself.get_insurance_value(picking=picking, package=package), insurance_currency_code=insurance_currency_code, signature_required=superself._get_ups_signature_required(picking=picking, package=package))]
+            elif picking.package_ids.filtered(lambda p: not p.carrier_id):
                 # all packages....
                 total_qty = len(picking.package_ids)
-                packages = [Package(self, package.shipping_weight, insurance_value=superself.get_insurance_value(picking=picking, package=package), insurance_currency_code=insurance_currency_code, signature_required=superself._get_ups_signature_required(picking=picking, package=package)) for package in picking.package_ids.filtered(lambda p: not p.carrier_id)]
+                packages = [Package(self, p.shipping_weight, quant_pack=p.package_type_id, insurance_value=superself.get_insurance_value(picking=picking, package=p), insurance_currency_code=insurance_currency_code, signature_required=superself._get_ups_signature_required(picking=picking, package=p)) for p in picking.package_ids.filtered(lambda p: not p.carrier_id)]
             else:
                 total_qty = 1
                 packages.append(Package(self, picking.shipping_weight or picking.weight, insurance_value=superself.get_insurance_value(picking=picking), insurance_currency_code=insurance_currency_code, signature_required=superself._get_ups_signature_required(picking=picking)))
