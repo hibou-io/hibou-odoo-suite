@@ -1,5 +1,4 @@
-# © 2019 Hibou Corp.
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# © 2019-2022 Hibou Corp.
 
 from copy import copy
 from html import unescape
@@ -253,7 +252,7 @@ class SaleOrderImporter(Component):
                 return False
         return True
 
-    def _make_partner_name(self, firstname, lastname):
+    def _make_partner_name(self, firstname, lastname, other_values=None):
         name = (str(firstname or '').strip() + ' ' + str(lastname or '').strip()).strip()
         if not name:
             return 'Undefined'
@@ -276,7 +275,7 @@ class SaleOrderImporter(Component):
                 info[k[len(info_string):]] = v
 
 
-        name = self._make_partner_name(info.get('firstname', ''), info.get('lastname', ''))
+        name = self._make_partner_name(info.get('firstname', ''), info.get('lastname', ''), other_values=info)
         street = info.get('address_1', '')
         street2 = info.get('address_2', '')
         city = info.get('city', '')
