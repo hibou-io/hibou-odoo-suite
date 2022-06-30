@@ -2,7 +2,8 @@
 
 from datetime import date
 
-def ir_5ta_cat(payslip, categories, worked_days, inputs, basic_wage):
+def ir_5ta_cat(payslip, categories, worked_days, inputs):
+    basic_wage = categories.BASIC
     if payslip.dict.contract_id.pe_payroll_config_value('ee_5ta_cat_exempt'):
         return 0.0, 0.0
     

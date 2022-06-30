@@ -51,9 +51,9 @@
         <field name="name">EE: PE IR 5th Cat.</field>
         <field name="code">EE_PE_IR_5TA_CAT</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result, _ = ir_5ta_cat(payslip, categories, worked_days, inputs, BASIC)</field>
+        <field name="condition_python">result, _ = ir_5ta_cat(payslip, categories, worked_days, inputs)</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result, result_rate = ir_5ta_cat(payslip, categories, worked_days, inputs, BASIC)</field>
+        <field name="amount_python_compute">result, result_rate = ir_5ta_cat(payslip, categories, worked_days, inputs)</field>
         <field name="appears_on_payslip" eval="True"/>
         <field name="partner_id" ref="partner_sunat"/>
     </record>
