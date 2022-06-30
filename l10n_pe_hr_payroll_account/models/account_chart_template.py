@@ -3,6 +3,7 @@
 from odoo import models
 
 EXP_SALARY = '6211000'
+EXP_EXTRA = '621100'
 EXP_COM = '6212000'
 EXP_BONO = '6213000'
 EXP_ESSALUD = '6271000'
@@ -34,6 +35,7 @@ class AccountChartTemplate(models.Model):
                                            pay_ir_5ta_cat=PAY_IR_5TA_CAT,
                                            pay_essalud=PAY_ESSALUD,
                                            exp_salary=EXP_SALARY,
+                                           exp_extra=EXP_EXTRA,
                                            exp_com=EXP_COM,
                                            exp_bono=EXP_BONO,
                                            exp_essalud=EXP_ESSALUD,
@@ -46,6 +48,7 @@ class AccountChartTemplate(models.Model):
             pay_ir_5ta_cat,
             pay_essalud,
             exp_salary,
+            exp_extra,
             exp_com,
             exp_bono,
             exp_essalud,
@@ -122,11 +125,12 @@ class AccountChartTemplate(models.Model):
 
             # BASIC* -> SALARY_EXPENSE debit account
             set_rule_accounts('BASIC%', accounts[exp_salary], accounts['none'])
-            set_rule_accounts('BASIC_COM%', accounts[exp_com], accounts['none'])
-            set_rule_accounts('BASIC_BONO%', accounts[exp_bono], accounts['none'])
-            set_rule_accounts('BASIC_BADGES%', accounts[exp_bono], accounts['none'])
+            set_rule_accounts('BASIC_EXTRA%', accounts[exp_extra], accounts['none'])
             # ALW* -> SALARY_EXPENSE debit account
             set_rule_accounts('ALW%', accounts[exp_salary], accounts['none'])
+            set_rule_accounts('ALW_COM%', accounts[exp_com], accounts['none'])
+            set_rule_accounts('ALW_BONO%', accounts[exp_bono], accounts['none'])
+            set_rule_accounts('ALW_BADGES%', accounts[exp_bono], accounts['none'])
             # EE_* -> AP debit
             set_rule_accounts('EE_%', accounts[pay_ee], accounts['none'])  # initialize
             set_rule_accounts('EE_PE_AFP%', accounts[pay_afp], accounts['none'])

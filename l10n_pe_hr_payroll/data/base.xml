@@ -99,6 +99,28 @@
         <field name="parent_id" ref="hr_payroll.COMP"/>
     </record>
 
+    <!-- Extra input & rule -->
+    <record id="input_type_extra" model="hr.payslip.input.type">
+        <field name="name">Extraordinary Wage</field>
+        <field name="code">EXTRA</field>
+        <field name="country_id" ref="base.pe" />
+        <field name="struct_ids" eval="[
+            (4, ref('l10n_pe_hr_payroll.hr_payroll_structure')),
+        ]" />
+    </record>
+
+    <record id="hr_salary_rule_extra" model="hr.salary.rule">
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs.EXTRA.amount > 0.0 if inputs.EXTRA else False</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs.EXTRA.amount if inputs.EXTRA else 0</field>
+        <field name="code">ALW_EXTRA</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Extraordinary Wage</field>
+        <field name="sequence" eval="24"/>
+        <field name="struct_id" ref="l10n_pe_hr_payroll.hr_payroll_structure"/>
+    </record>
+
     <!-- Bonus input & rule -->
     <record id="input_type_bono" model="hr.payslip.input.type">
         <field name="name">Bonus</field>
@@ -114,8 +136,8 @@
         <field name="condition_python">result = inputs.BONO.amount > 0.0 if inputs.BONO else False</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result = inputs.BONO.amount if inputs.BONO else 0</field>
-        <field name="code">BASIC_BONO</field>
-        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="code">ALW_BONO</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
         <field name="name">Bonus</field>
         <field name="sequence" eval="25"/>
         <field name="struct_id" ref="l10n_pe_hr_payroll.hr_payroll_structure"/>
