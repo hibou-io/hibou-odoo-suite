@@ -114,8 +114,8 @@
         <field name="condition_python">result = inputs.EXTRA.amount > 0.0 if inputs.EXTRA else False</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result = inputs.EXTRA.amount if inputs.EXTRA else 0</field>
-        <field name="code">BASIC_EXTRA</field>
-        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="code">ALW_EXTRA</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
         <field name="name">Extraordinary Wage</field>
         <field name="sequence" eval="24"/>
         <field name="struct_id" ref="l10n_pe_hr_payroll.hr_payroll_structure"/>

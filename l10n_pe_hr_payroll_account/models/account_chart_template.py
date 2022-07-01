@@ -125,12 +125,12 @@ class AccountChartTemplate(models.Model):
 
             # BASIC* -> SALARY_EXPENSE debit account
             set_rule_accounts('BASIC%', accounts[exp_salary], accounts['none'])
-            set_rule_accounts('BASIC_EXTRA%', accounts[exp_extra], accounts['none'])
             # ALW* -> SALARY_EXPENSE debit account
             set_rule_accounts('ALW%', accounts[exp_salary], accounts['none'])
-            set_rule_accounts('ALW_COM%', accounts[exp_com], accounts['none'])
             set_rule_accounts('ALW_BONO%', accounts[exp_bono], accounts['none'])
             set_rule_accounts('ALW_BADGES%', accounts[exp_bono], accounts['none'])
+            set_rule_accounts('ALW_COM%', accounts[exp_com], accounts['none'])
+            set_rule_accounts('ALW_EXTRA%', accounts[exp_extra], accounts['none'])
             # EE_* -> AP debit
             set_rule_accounts('EE_%', accounts[pay_ee], accounts['none'])  # initialize
             set_rule_accounts('EE_PE_AFP%', accounts[pay_afp], accounts['none'])
