@@ -66,7 +66,7 @@
                     </thead>
                     <t t-foreach="rmas" t-as="rma">
                         <tr>
-                            <td class="text-left"><a t-attf-href="/my/rma/#{rma.id}"><span t-field="rma.name"/></a></td>
+                            <td class="text-left"><a t-att-href="rma.get_portal_url()"><span t-field="rma.name"/></a></td>
                             <td><span t-field="rma.create_date"/></td>
                             <td class="rma-template">
                                 <span t-if="groupby != 'template'" t-field="rma.template_id"/>
