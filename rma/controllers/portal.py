@@ -161,7 +161,7 @@ class CustomerPortal(CustomerPortal):
                 # should be submitted to indicate that a selection has occurred.
                 rma = rma_template._portal_try_create(request.env.user, res_id, **kw)
                 if rma:
-                    return request.redirect('/my/rma/' + str(rma.id))
+                    return request.redirect(rma.get_portal_url())
         except ValidationError as e:
             error = e.name
 
