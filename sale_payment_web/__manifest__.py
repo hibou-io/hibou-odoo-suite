@@ -2,7 +2,7 @@
     'name': 'Sale Payment Web',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'category': 'Sales',
-    'version': '13.0.1.0.0',
+    'version': '14.0.1.0.0',
     'description':
         """
 Sale Payment Web
@@ -21,7 +21,8 @@ Electronic payments will create transactions and automatically reconcile on the 
     'data': [
         'security/sale_security.xml',
         'security/ir.model.access.csv',
-        'wizard/account_payment_register_views.xml',
+        'views/payment_views.xml',
         'views/sale_views.xml',
+        'wizard/account_payment_register_views.xml',
     ],
 }
