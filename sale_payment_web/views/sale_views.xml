@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="groups_id" eval="[(4, ref('group_payment_web'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_draft']" position="after">
+                <button name="action_payment_register" 
+                        type="object" 
+                        context="{'dont_redirect_to_payments': True}"
+                        string="Register Payment"/>
+            </xpath>
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="manual_amount_remaining" widget="monetary"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="manual_payment_ids" invisible="1"/>
+                <button name="action_manual_payments" string="Manual Payments" type="object" class="oe_stat_button"
+                        icon="fa-dollar" attrs="{'invisible':[('manual_payment_ids', '=', [])]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
