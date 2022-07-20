@@ -21,6 +21,7 @@ Electronic payments will create transactions and automatically reconcile on the 
     'data': [
         'security/sale_security.xml',
         'security/ir.model.access.csv',
+        'views/payment_views.xml',
         'views/sale_views.xml',
     ],
 }
