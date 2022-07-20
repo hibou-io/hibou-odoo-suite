@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_account_payment_register_form_inherit" model="ir.ui.view">
+        <field name="name">account.payment.form.multi.inherit</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field['amount']" position="after">
+                <field name="sale_order_id" invisible="1"/>
+                <field name="so_amount_remaining" attrs="{'invisible': [('sale_order_id', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

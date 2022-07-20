@@ -15,7 +15,7 @@ class AccountPaymentRegister(models.TransientModel):
 
     # amount = fields.Monetary('Amount')
     # so_amount_registered_payment = fields.Monetary(related='sale_order_id.manual_amount_registered_payment')
-    # so_amount_remaining = fields.Monetary(related='sale_order_id.manual_amount_remaining')
+    so_amount_remaining = fields.Monetary(related='sale_order_id.manual_amount_remaining')
     # so_amount_over = fields.Boolean()
 
     # @api.onchange('amount')
@@ -126,6 +126,11 @@ class AccountPaymentRegister(models.TransientModel):
             wizard.suitable_payment_token_partner_ids = (partners + commercial_partners + children_partners)._origin
             
     def _create_payment_vals_from_sale_order(self):
+        if self.amount <= 0:
+            raise UserError("You must enter a positive amount.")
+        elif self.amount > self.so_amount_remaining:
+            raise UserError("You cannot make a payment for more than the difference of the total amount and existing "
+                            "payments: %.2f" % self.so_amount_remaining)
         payment_vals = {
             'date': self.payment_date,
             'amount': self.amount,
