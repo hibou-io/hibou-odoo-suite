@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_account_payment_register_form_inherit" model="ir.ui.view">
+        <field name="name">account.payment.form.multi.inherit</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_currency_id']" position="after">
+                <field name="sale_order_id" invisible="1"/>
+                <field name="so_amount_over" invisible="1"/>
+                <field name="so_amount_remaining" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='payment_difference_handling']" position="attributes">
+                <attribute name="attrs">{'invisible': [('sale_order_id', '!=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//group[@name='group3']" position="after">
+                <group name="group_so_amount_over" attrs="{'invisible':[('so_amount_over', '=', False)]}" class="text-danger" colspan="4">
+                    <p>
+                        You cannot make a payment for more than the difference of the total amount and existing payments:
+                        <field name="so_amount_remaining"/>
+                    </p>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
