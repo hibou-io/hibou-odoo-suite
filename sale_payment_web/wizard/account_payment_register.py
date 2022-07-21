@@ -116,7 +116,7 @@ class AccountPaymentRegister(models.TransientModel):
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'partner_bank_id': self.partner_bank_id.id,
-            'payment_method_id': self.payment_method_id.id,
+            'payment_method_line_id': self.payment_method_line_id.id,
             'sale_order_id': self.sale_order_id.id,
         }
             

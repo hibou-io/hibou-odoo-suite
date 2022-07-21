@@ -6,7 +6,7 @@
         <field name="model">account.payment</field>
         <field name="inherit_id" ref="account.view_account_payment_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='move_id']" position="after">
+            <xpath expr="//field[@name='destination_journal_id']" position="after">
                 <field name="sale_order_id" attrs="{'invisible': [('state', '!=', 'draft'), ('sale_order_id', '=', False)], 'readonly': [('state', '!=', 'draft')]}" groups="account.group_account_readonly"/>
             </xpath>
         </field>
