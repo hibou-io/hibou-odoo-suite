@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-30 16:24+0000\n"
-"PO-Revision-Date: 2022-06-30 16:24+0000\n"
+"POT-Creation-Date: 2022-07-27 20:00+0000\n"
+"PO-Revision-Date: 2022-07-27 20:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -69,11 +69,6 @@ msgstr "Creado Por"
 #: model:ir.model.fields,field_description:l10n_pe_hr_payroll.field_hr_contract_pe_payroll_config__create_date
 msgid "Created on"
 msgstr "Creado En"
-
-#. module: l10n_pe_hr_payroll
-#: model:ir.model.fields,field_description:l10n_pe_hr_payroll.field_hr_contract_pe_payroll_config__date_hired
-msgid "Date Hired"
-msgstr "Fecha de Contratación"
 
 #. module: l10n_pe_hr_payroll
 #: model:ir.model.fields,field_description:l10n_pe_hr_payroll.field_hr_contract_pe_payroll_config__name

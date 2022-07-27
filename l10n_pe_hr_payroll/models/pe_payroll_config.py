@@ -9,8 +9,6 @@ class HRContractPEPayrollConfig(models.Model):
 
     name = fields.Char(string="Description")
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True)
-    date_hired = fields.Date(string='Date Hired', required=True, default=fields.Date.today,
-                             help='For calculations like IR 5TH CAT.')
     
     ee_5ta_cat_exempt = fields.Boolean(string='Exempt from 5th Cat. withholding.')
     

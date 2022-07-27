@@ -12,6 +12,7 @@ class TestPePayslip(common.TestPayslip):
         super().setUp()
         self.structure_type = self.env.ref('l10n_pe_hr_payroll.structure_type_employee')
         self.structure = self.env.ref('l10n_pe_hr_payroll.hr_payroll_structure')
+        self.structure_gratif = self.env.ref('l10n_pe_hr_payroll.hr_payroll_structure_gratif')
         self.structure_type.default_struct_id = self.structure
         # self.debug = True
         self._log('PE structue_type  %s %s and structure  %s %s' % (self.structure_type, self.structure_type.name, self.structure, self.structure.name))
@@ -52,8 +53,6 @@ class TestPePayslip(common.TestPayslip):
                 self._logger.warning('cannot locate attribute names "%s" on hr.contract().' % (key, ))
 
         # PE Payroll Config Defaults Should be set on the Model
-        if 'date_hired' not in config_values:
-            config_values['date_hired'] = '2016-01-01'
         config = config_model.create(config_values)
         contract_values['pe_payroll_config_id'] = config.id
 
