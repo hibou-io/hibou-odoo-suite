@@ -3,7 +3,7 @@
 {
     'name': 'Peru - Payroll with Accounting',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '15.0.2022.1.0',
+    'version': '15.0.2022.2.0',
     'category': 'Human Resources',
     'depends': [
         'l10n_pe_hr_payroll',

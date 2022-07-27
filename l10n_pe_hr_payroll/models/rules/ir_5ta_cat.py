@@ -31,9 +31,9 @@ def ir_5ta_cat(payslip, categories, worked_days, inputs):
     
     wage_year = (basic_wage * pay_periods_at_current) + prior_wage_year
     
-    #    IF employee's `date_hired` is in current year
+    #    IF employee's `first_contract_date` is in current year
     #    THEN we can pro-rate the period (reduce withholding)
-    date_hired = payslip.dict.contract_id.pe_payroll_config_value('date_hired')
+    date_hired = payslip.dict.contract_id.first_contract_date
     payslip_date_end = payslip.dict.date_to
     hired_in_year = date_hired.year == payslip_date_end.year
     periods_in_year_eligible = pay_periods_in_year

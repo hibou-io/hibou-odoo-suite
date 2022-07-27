@@ -21,6 +21,7 @@
                     # exp_com='1222',
                     # exp_bono='1223',
                     # exp_essalud='1241',
+                    # exp_gratif='1245',
                     env['account.chart.template']._pe_configure_payroll_account_data(companies, salary_rules=records, full_reset=False)
             </field>
         </record>
@@ -44,6 +45,7 @@
                     # exp_com='1222',
                     # exp_bono='1223',
                     # exp_essalud='1241',
+                    # exp_gratif='1245',
                     env['account.chart.template']._pe_configure_payroll_account_data(companies, salary_rules=records, full_reset=True)
             </field>
         </record>

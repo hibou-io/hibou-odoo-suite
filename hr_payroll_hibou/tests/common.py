@@ -119,13 +119,17 @@ class TestPayslip(common.TransactionCase):
         contract.structure_type_id.default_struct_id.schedule_pay = schedule_pay
         return contract
 
-    def _createPayslip(self, employee, date_from, date_to, skip_compute=False):
-        slip = self.env['hr.payslip'].create({
+    def _createPayslip(self, employee, date_from, date_to, skip_compute=False, other_values=False):
+        if not other_values:
+            other_values = {}
+        create_values = {
             'name': 'Test %s From: %s To: %s' % (employee.name, date_from, date_to),
             'employee_id': employee.id,
             'date_from': date_from,
             'date_to': date_to
-        })
+        }
+        create_values.update(other_values)
+        slip = self.env['hr.payslip'].create(create_values)
         # Included in hr.payslip.action_refresh_from_work_entries() as ov 14.0 EE
         # slip._onchange_employee()
         # as is the 'compute' that is almost always called immediaately after

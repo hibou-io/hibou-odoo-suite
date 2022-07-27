@@ -58,4 +58,51 @@
         <field name="partner_id" ref="partner_sunat"/>
     </record>
 
+    <!-- July/December Gratuity -->
+    <record id="input_type_gratif_months" model="hr.payslip.input.type">
+        <field name="name">Gratif Full Months</field>
+        <field name="code">MONTHS</field>
+        <field name="country_id" ref="base.pe" />
+        <field name="struct_ids" eval="[
+            (4, ref('l10n_pe_hr_payroll.hr_payroll_structure_gratif')),
+        ]" />
+    </record>
+
+    <record id="hr_payroll_rule_ir_5ta_cat_gratif" model="hr.salary.rule">
+        <field name="sequence" eval="80"/>
+        <field name="struct_id" ref="hr_payroll_structure_gratif"/>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Gratif</field>
+        <field name="code">ALW_GRATIF</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = payslip.paid_amount</field>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+    <record id="hr_payroll_rule_ir_5ta_cat_gratif_bono" model="hr.salary.rule">
+        <field name="sequence" eval="90"/>
+        <field name="struct_id" ref="hr_payroll_structure_gratif"/>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Gratif Bonifextra</field>
+        <field name="code">ALW_GRATIF_BONIFEXTRA</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories.ALW</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = categories.ALW, payslip.rule_parameter('er_essalud')</field>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
+    <record id="hr_payroll_rule_ir_5ta_cat_gratif_net" model="hr.salary.rule">
+        <field name="sequence" eval="200"/>
+        <field name="struct_id" ref="hr_payroll_structure_gratif"/>
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="name">Net Gratif</field>
+        <field name="code">NET</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories.BASIC + categories.ALW + categories.DED</field>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
 </odoo>

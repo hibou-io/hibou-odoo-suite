@@ -7,6 +7,7 @@ EXP_EXTRA = '621100'
 EXP_COM = '6212000'
 EXP_BONO = '6213000'
 EXP_ESSALUD = '6271000'
+EXP_GRATIF = '6214000'
 
 PAY_EE = '4111000'
 PAY_AFP = '4170000'
@@ -39,6 +40,7 @@ class AccountChartTemplate(models.Model):
                                            exp_com=EXP_COM,
                                            exp_bono=EXP_BONO,
                                            exp_essalud=EXP_ESSALUD,
+                                           exp_gratif=EXP_GRATIF,
                                            salary_rules=None, full_reset=False):
         account_codes = (
             pay_ee,
@@ -52,6 +54,7 @@ class AccountChartTemplate(models.Model):
             exp_com,
             exp_bono,
             exp_essalud,
+            exp_gratif,
         )
         pe_structures = self.env['hr.payroll.structure'].search([('country_id', '=', self.env.ref('base.pe').id)])
         journal_field_id = self.env['ir.model.fields'].search([
@@ -131,6 +134,7 @@ class AccountChartTemplate(models.Model):
             set_rule_accounts('ALW_BADGES%', accounts[exp_bono], accounts['none'])
             set_rule_accounts('ALW_COM%', accounts[exp_com], accounts['none'])
             set_rule_accounts('ALW_EXTRA%', accounts[exp_extra], accounts['none'])
+            set_rule_accounts('ALW_GRATIF%', accounts[exp_gratif], accounts['none'])
             # EE_* -> AP debit
             set_rule_accounts('EE_%', accounts[pay_ee], accounts['none'])  # initialize
             set_rule_accounts('EE_PE_AFP%', accounts[pay_afp], accounts['none'])
