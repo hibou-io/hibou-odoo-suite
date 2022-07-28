@@ -49,7 +49,8 @@ class HRPayslip(models.Model):
                     full_months += 1
         else:
             for i in range(7, 13):
-                if date_hire < date(self.date_to.year-1, i, 15):
+                # note this is run in December, so it should look at current year
+                if date_hire < date(self.date_to.year, i, 15):
                     full_months += 1
         return full_months
 
