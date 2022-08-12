@@ -1,3 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_payment_method,account.payment.method,account.model_account_payment_method,group_payment_web,1,0,0,0
-access_payment,account.payment,account.model_account_payment,group_payment_web,1,1,1,1
+access_payment_method,account.payment.method sale payment,account.model_account_payment_method,group_payment_web,1,0,0,0
+access_payment,account.payment sale payment,account.model_account_payment,group_payment_web,1,1,1,1
+access_move,account.move sale payment,account.model_account_move,group_payment_web,1,1,1,1
+access_move_line,account.move.line sale payment,account.model_account_move_line,group_payment_web,1,1,1,1
+access_account_payment_register,access.account.payment.register sale,account.model_account_payment_register,group_payment_web,1,1,1,0

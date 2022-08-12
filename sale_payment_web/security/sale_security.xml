@@ -6,4 +6,21 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+
+    <data noupdate="1">
+        <record id="account_move_rule_see_personal" model="ir.rule">
+            <field name="name">Personal Journal Entries</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="domain_force">[('move_type', '=', 'entry'), '|', ('invoice_user_id', '=', user.id), ('invoice_user_id', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('sale_payment_web.group_payment_web'))]"/>
+        </record>
+
+        <record id="account_move_line_rule_see_personal" model="ir.rule">
+            <field name="name">Personal Journal Items</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="domain_force">[('move_id.move_type', '=', 'entry'), '|', ('move_id.invoice_user_id', '=', user.id), ('move_id.invoice_user_id', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('sale_payment_web.group_payment_web'))]"/>
+        </record>
+    </data>
+
 </odoo>
