@@ -17,7 +17,7 @@ class SaleOrder(models.Model):
 
 
     def action_manual_payments(self):
-        action = self.env.ref('account.action_account_payments').read()[0]
+        action = self.env['ir.actions.act_window']._for_xml_id('account.action_account_payments')
         domain = action['domain'] or '[]'
         domain = safe_eval(domain)
         domain.append(('id', 'in', self.manual_payment_ids.ids))

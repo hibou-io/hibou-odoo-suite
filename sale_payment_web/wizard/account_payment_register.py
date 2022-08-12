@@ -125,5 +125,5 @@ class AccountPaymentRegister(models.TransientModel):
         if not self.sale_order_id:
             return super(AccountPaymentRegister, self)._create_payments()
         payments = self.env['account.payment'].create(self._create_payment_vals_from_sale_order())
-        payments.action_post()
+        payments.sudo().action_post()
         return payments
