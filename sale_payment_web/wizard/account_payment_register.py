@@ -118,6 +118,7 @@ class AccountPaymentRegister(models.TransientModel):
             'partner_bank_id': self.partner_bank_id.id,
             'payment_method_id': self.payment_method_id.id,
             'sale_order_id': self.sale_order_id.id,
+            'payment_token_id': self.payment_token_id.id,
         }
             
     def _create_payments(self):
