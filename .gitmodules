@@ -28,3 +28,6 @@
 [submodule "external/hibou-oca/social"]
 	path = external/hibou-oca/social
 	url = https://github.com/hibou-io/oca-social.git
+[submodule "external/hibou-oca/delivery-carrier"]
+	path = external/hibou-oca/delivery-carrier
+	url = https://github.com/hibou-io/oca-delivery-carrier.git
