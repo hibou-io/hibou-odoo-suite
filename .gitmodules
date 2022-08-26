@@ -28,3 +28,6 @@
 [submodule "external/hibou-oca/social"]
 	path = external/hibou-oca/social
 	url = https://github.com/hibou-io/oca-social.git
+[submodule "external/newrelic"]
+	path = external/newrelic
+	url = https://github.com/hibou-io/odoo-newrelic.git
