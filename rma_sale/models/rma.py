@@ -11,8 +11,15 @@ class SaleOrderLine(models.Model):
     def _get_protected_fields(self):
         res = super(SaleOrderLine, self)._get_protected_fields()
         context = self._context or {}
-        if context.get('rma_done') and 'product_uom_qty' in res:
-            res.remove('product_uom_qty')
+        if context.get('rma_done'):
+            if 'product_uom_qty' in res:
+                res.remove('product_uom_qty')
+            # technically used by product_cores to update related core pieces
+            if 'product_id' in res:
+                res.remove('product_id')
+            if 'product_uom' in res:
+                res.remove('product_uom')
+        return res
         return res
 
 
