@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <!-- Purolator Delivery Carriers -->
+    <record id="product_product_purolator_carrier" model="product.product">
+        <field name="name">Purolator Delivery</field>
+        <field name="default_code">Delivery_Puro</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="delivery.product_category_deliveries"/>
+        <field name="sale_ok" eval="False"/>
+        <field name="purchase_ok" eval="False"/>
+        <field name="list_price">0.0</field>
+        <field name="invoice_policy">order</field>
+      </record>
+      <record id="purolator_carrier" model="delivery.carrier">
+          <field name="name">Purolator Test Carrier</field>
+          <field name="product_id" ref="delivery_purolator.product_product_purolator_carrier"/>
+          <field name="delivery_type">purolator</field>
+      </record>
+
+</data>
+</odoo>
