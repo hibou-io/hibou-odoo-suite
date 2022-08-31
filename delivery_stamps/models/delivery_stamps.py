@@ -335,6 +335,7 @@ class ProviderStamps(models.Model):
     def stamps_send_shipping(self, pickings):
         res = []
         service = self._get_stamps_service()
+        had_customs = False
 
         for picking in pickings:
             package_labels = []
@@ -347,6 +348,7 @@ class ProviderStamps(models.Model):
             customs = None
             if self._stamps_needs_customs(from_partner, to_partner, picking=picking):
                 customs = service.create_customs()
+            had_customs = bool(had_customs or customs)
 
             try:
                 for txn_id, shipping in shippings:
@@ -458,6 +460,11 @@ class ProviderStamps(models.Model):
                     for i, url in enumerate(url_spaces, 1):
                         response = urlopen(url)
                         attachment = response.read()
+                        # Stamps.com sends labels that set the print rate (print speed) to 8 Inches per Second
+                        # this is too fast for international/customs forms that have fine detail
+                        # set it to the general minimum of 2IPS
+                        if had_customs:
+                            attachment = attachment.replace(b'^PR8,8,8\r\n', b'^PR2\r\n')
                         attachments.append(('LabelStamps-%s-%s.%s' % (label.TrackingNumber, i, self.stamps_image_type), attachment))
                     picking.message_post(body=body, attachments=attachments)
                 shipping_data = {'exact_price': carrier_price, 'tracking_number': ','.join(tracking_numbers)}
