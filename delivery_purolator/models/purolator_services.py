@@ -9,16 +9,13 @@ _logger = logging.getLogger(__name__)
 
 
 class PurolatorClient(object):
-    def __init__(self, carrier):
-        if carrier.delivery_type != 'purolator':
-            raise UserError('Invalid carrier: %s' % carrier.name)
-        self.api_key = carrier.purolator_api_key
-        self.password = carrier.purolator_password
-        self.activation_key = carrier.purolator_activation_key
-        self.account_number = carrier.purolator_account_number
-        self.service_type = carrier.purolator_service_type
+    def __init__(self, api_key, password, activation_key, account_number, is_prod):
+        self.api_key = api_key
+        self.password = password
+        self.activation_key = activation_key
+        self.account_number = account_number
         self._wsdl_base = "https://devwebservices.purolator.com"
-        if carrier.prod_environment:
+        if is_prod:
             self._wsdl_base = "https://webservices.purolator.com"
             
         session = Session()
@@ -50,7 +47,7 @@ class PurolatorClient(object):
                                        'PostalCode': string}
         :param package_type: string
         :param total_weight: float (in pounds)
-        :returns: dict
+        :returns: dict {'shipments': list, 'error': string or False}
         """
         client = self._get_client('/EWS/V2/Estimating/EstimatingService.asmx?wsdl')
         response = client.service.GetQuickEstimate(
@@ -67,17 +64,16 @@ class PurolatorClient(object):
         errors = response['body']['ResponseInformation']['Errors']
         if errors:
             return {
-                'price': 0.0,
+                'shipments': False,
                 'error': '\n'.join(['%s: %s' % (error['Code'], error['Description']) for error in errors['Error']]),
             }
         shipments = response['body']['ShipmentEstimates']['ShipmentEstimate']
-        shipment = list(filter(lambda s: s['ServiceID'] == self.service_type, shipments))
-        if shipment:
+        if shipments:
             return {
-                'price': shipment[0]['TotalPrice'],
+                'shipments': shipments,
                 'error': False,
             }
         return {
-            'price': 0.0,
-            'error': 'Purolator ServiceID not found',
+            'shipments': False,
+            'error': 'Purolator service did not return any matching rates.',
         }
