@@ -28,6 +28,9 @@ class TestPurolator(TransactionCase):
             'zip': 'V5C5A9',
         })
         self.storage_box = self.env.ref('product.product_product_6')
+        self.storage_box.weight = 1.5  # Something more reasonable
+        # Make some available
+        self.env['stock.quant']._update_available_quantity(self.storage_box, self.shipper_warehouse.lot_stock_id, 100)
         self.sale_order = self.env['sale.order'].create({
             'partner_id': self.receiver_partner.id,
             'warehouse_id': self.shipper_warehouse.id,
@@ -55,5 +58,41 @@ class TestPurolator(TransactionCase):
         carrier_express = self.env.ref('delivery_purolator.purolator_ground')
         rate_express = list(filter(lambda r: r['carrier'] == carrier_express, rates))
         rate_express = rate_express and rate_express[0]
+        self.assertFalse(rate_express['error_message'])
         self.assertGreater(rate_express['price'], 0.0)
         self.assertGreater(rate_express['transit_days'], 0)
+        self.assertEqual(rate_express['package'], self.env['stock.quant.package'].browse())
+        
+        # Multi-rating with picking
+        self.sale_order.action_confirm()
+        picking = self.sale_order.picking_ids
+        self.assertEqual(len(picking), 1)
+        rates = self.carrier.rate_shipment_multi(picking=picking)
+        rate_express = list(filter(lambda r: r['carrier'] == carrier_express, rates))
+        rate_express = rate_express and rate_express[0]
+        self.assertFalse(rate_express['error_message'])
+        self.assertGreater(rate_express['price'], 0.0)
+        self.assertGreater(rate_express['transit_days'], 0)
+        self.assertEqual(rate_express['package'], self.env['stock.quant.package'].browse())
+        
+        # Multi-rate package
+        picking.carrier_id = self.carrier
+        self.assertEqual(picking.move_lines.reserved_availability, 3.0)
+        picking.move_line_ids.qty_done = 1.0
+        context = dict(
+            current_package_carrier_type=picking.carrier_id.delivery_type,
+            default_picking_id=picking.id
+        )
+        choose_package_wizard = self.env['choose.delivery.package'].with_context(context).create({})
+        self.assertEqual(choose_package_wizard.shipping_weight, 1.5)
+        choose_package_wizard.action_put_in_pack()
+        package = picking.move_line_ids.mapped('result_package_id')
+        self.assertEqual(len(package), 1)
+        
+        rates = self.carrier.rate_shipment_multi(picking=picking, packages=package)
+        rate_express = list(filter(lambda r: r['carrier'] == carrier_express, rates))
+        rate_express = rate_express and rate_express[0]
+        self.assertFalse(rate_express['error_message'])
+        self.assertGreater(rate_express['price'], 0.0)
+        self.assertGreater(rate_express['transit_days'], 0)
+        self.assertEqual(rate_express['package'], package)

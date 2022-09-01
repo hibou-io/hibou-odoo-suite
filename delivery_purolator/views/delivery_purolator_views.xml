@@ -15,6 +15,7 @@
                             <field name="purolator_activation_key" attrs="{'required': [('delivery_type', '=', 'purolator')]}"/>
                             <field name="purolator_account_number" attrs="{'required': [('delivery_type', '=', 'purolator')]}"/>
                             <field name="purolator_service_type" attrs="{'required': [('delivery_type', '=', 'purolator')]}"/>
+                            <field name="purolator_default_package_type_id" attrs="{'required': [('delivery_type', '=', 'purolator')]}"/>
                         </group>
                     </group>
                 </page>

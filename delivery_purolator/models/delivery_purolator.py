@@ -1,7 +1,6 @@
 from odoo import fields, models, _
 from .purolator_services import PurolatorClient
 import logging
-_logger = logging.getLogger(__name__)
 
 
 PUROLATOR_SERVICES = [
@@ -80,6 +79,7 @@ class ProviderPurolator(models.Model):
     purolator_account_number = fields.Char(string='Purolator Account Number', groups='base.group_system')
     purolator_service_type = fields.Selection(selection=PUROLATOR_SERVICES,
                                               default='PurolatorGround')
+    purolator_default_package_type_id = fields.Many2one('stock.package.type', string="Purolator Package Type")
     
     def purolator_rate_shipment(self, order):
         # sudoself = self.sudo()
@@ -100,8 +100,12 @@ class ProviderPurolator(models.Model):
             self.purolator_account_number,
             self.prod_environment,
         )
-        res = client.get_quick_estimate(sender.zip, receiver_address, 'CustomerPackaging', weight)
-        _logger.warning('get_quick_estimate: %s', res)
+        res = client.get_quick_estimate(
+            sender.zip,
+            receiver_address,
+            self.purolator_default_package_type_id.shipper_package_code,
+            weight,
+        )
         if res['error']:
             return {
                 'success': False,
@@ -125,6 +129,15 @@ class ProviderPurolator(models.Model):
         }
     
     def purolator_rate_shipment_multi(self, order=None, picking=None, packages=None):
+        if not packages:
+            return self._purolator_rate_shipment_multi_package(order=order, picking=picking)
+        else:
+            rates = []
+            for package in packages:
+                rates += self._purolator_rate_shipment_multi_package(order=order, picking=picking, package=package)
+            return rates
+    
+    def _purolator_rate_shipment_multi_package(self, order=None, picking=None, package=None):
         sender = self.get_shipper_warehouse(order=order, picking=picking)
         receiver = self.get_recipient(order=order, picking=picking)
         receiver_address = {
@@ -139,10 +152,15 @@ class ProviderPurolator(models.Model):
         if self.env.context.get('date_planned'):
             date_planned = self.env.context.get('date_planned')
         
+        package_code = self.purolator_default_package_type_id.shipper_package_code
         if order:
             weight = weight_uom_id._compute_quantity(order._get_estimated_weight(), self.env.ref('uom.product_uom_lb'), round=False)
         else:
-            raise NotImplementedError
+            if package:
+                weight = package.shipping_weight
+                package_code = package.package_type_id.shipper_package_code or package_code
+            else:
+                weight = picking.shipping_weight or picking.weight
         client = PurolatorClient(
             self.purolator_api_key,
             self.purolator_password,
@@ -150,7 +168,7 @@ class ProviderPurolator(models.Model):
             self.purolator_account_number,
             self.prod_environment,
         )
-        res = client.get_quick_estimate(sender.zip, receiver_address, 'CustomerPackaging', weight)
+        res = client.get_quick_estimate(sender.zip, receiver_address, package_code, weight)
         if res['error']:
             return [{'carrier': self,
                      'success': False,
@@ -165,7 +183,7 @@ class ProviderPurolator(models.Model):
                 price = shipment['TotalPrice']
                 rates.append({
                     'carrier': carrier,
-                    # 'package': package or self.env['stock.quant.package'].browse(),
+                    'package': package or self.env['stock.quant.package'].browse(),
                     'success': True,
                     'price': price,
                     'error_message': False,

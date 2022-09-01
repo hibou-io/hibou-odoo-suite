@@ -21,6 +21,7 @@ Purolator Shipping
         'data/delivery_purolator_demo.xml',
     ],
     'data': [
+        'data/delivery_purolator_data.xml',
         'views/delivery_purolator_views.xml',
     ],
     'auto_install': False,

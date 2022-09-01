@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <record id="purolator_packaging_CustomerPackaging" model="stock.package.type">
+        <field name="name">Purolator Customer Packaging</field>
+        <field name="shipper_package_code">CustomerPackaging</field>
+        <field name="package_carrier_type">purolator</field>
+    </record>
+
+</data>
+</odoo>
