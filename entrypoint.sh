@@ -20,6 +20,10 @@ if [ "$DEV_MODE_PATH" != "" ] && [ -z "$(ls -A $DEV_MODE_PATH/.theia)" ]
 then
    cp -R /opt/odoo/hibou-suite/.theia $DEV_MODE_PATH
 fi
+if [ "$DEV_MODE_PATH" != "" ] && [ -z "$(ls -A $DEV_MODE_PATH/.pylintrc)" ]
+then
+   cp -R /opt/odoo/hibou-suite/.pylintrc $DEV_MODE_PATH
+fi
 
 if [ "$DEV_MODE_PATH" == "" ]
 then
