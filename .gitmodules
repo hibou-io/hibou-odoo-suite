@@ -31,3 +31,6 @@
 [submodule "external/hibou-oca/delivery-carrier"]
 	path = external/hibou-oca/delivery-carrier
 	url = https://github.com/hibou-io/oca-delivery-carrier.git
+[submodule "external/newrelic"]
+	path = external/newrelic
+	url = https://github.com/hibou-io/odoo-newrelic.git

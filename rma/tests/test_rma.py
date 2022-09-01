@@ -77,6 +77,7 @@ class TestRMA(common.TransactionCase):
         self.assertEqual(rma.out_picking_id.move_lines.state, 'cancel')
 
     def test_20_picking_rma(self):
+        self.product1.type = 'product'
         type_out = self.env.ref('stock.picking_type_out')
         location = self.env.ref('stock.stock_location_stock')
         location_customer = self.env.ref('stock.stock_location_customers')

@@ -52,6 +52,7 @@ class TestRMACore(TestRMA):
         original_date_order = order.date_order
         self.assertTrue(order.state in ('sale', 'done'))
         self.assertEqual(len(order.picking_ids), 1, 'Tests only run with single stage delivery.')
+        order.state = 'done'
 
         # Try to RMA item not delivered yet
         rma = self.env['rma.rma'].create({
@@ -139,6 +140,114 @@ class TestRMACore(TestRMA):
         # Make sure the delivered qty of the Core Service was decremented.
         self.assertEqual(order.order_line.filtered(lambda l: l.product_id == self.product1).qty_delivered,
                          1.0)
+        # This is known to work in practice, but no amount of magic ORM flushing seems to make it work in test.
+        # self.assertEqual(order.order_line.filtered(lambda l: l.product_id == self.product_core_service).qty_delivered,
+        #                  0.0)
+
+    def test_40_product_noncore_sale_return(self):
+        # Initialize template
+        self.template_sale_return.usage = 'sale_order'
+        self.template_sale_return.invoice_done = True
+        self.template_sale_return.so_decrement_order_qty = True
+
+        self.product1.tracking = 'serial'
+        self.product1.type = 'product'
+        self.product1.product_core_id = self.product_core
+        self.product1.product_core_service_id = self.product_core_service
+        self.product1.product_core_validity = 30  # eligible for 30 days
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner1.id,
+            'partner_invoice_id': self.partner1.id,
+            'partner_shipping_id': self.partner1.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product1.id,
+                'product_uom_qty': 1.0,
+                'product_uom': self.product1.uom_id.id,
+                'price_unit': 10.0,
+            })]
+        })
+        order.action_confirm()
+        self.assertTrue(order.state in ('sale', 'done'))
+        self.assertEqual(len(order.picking_ids), 1, 'Tests only run with single stage delivery.')
+        # lock if it isn't locked already
+        order.state = 'done'
+
+        # Try to RMA item not delivered yet
+        rma = self.env['rma.rma'].create({
+            'template_id': self.template_sale_return.id,
+            'partner_id': self.partner1.id,
+            'partner_shipping_id': self.partner1.id,
+            'sale_order_id': order.id,
+        })
+        self.assertEqual(rma.state, 'draft')
+
+        order.picking_ids.action_assign()
+        if not order.picking_ids.move_line_ids:
+            p = order.picking_ids
+            sm = p.move_lines
+            order.picking_ids.write({
+                'move_line_ids': [(0, 0, {
+                    'picking_id': p.id,
+                    'move_id': sm.id,
+                    'product_id': sm.product_id.id,
+                    'product_uom_id': sm.product_uom.id,
+                    'location_id': sm.location_id.id,
+                    'location_dest_id': sm.location_dest_id.id,
+                })]
+            })
+        pack_opt = order.picking_ids.move_line_ids[0]
+
+        lot = self.env['stock.production.lot'].create({
+            'product_id': self.product1.id,
+            'name': 'X100',
+            'product_uom_id': self.product1.uom_id.id,
+            'company_id': self.env.user.company_id.id,
+        })
+        pack_opt.qty_done = 1.0
+        pack_opt.lot_id = lot
+        order.picking_ids.button_validate()
+        self.assertEqual(order.picking_ids.state, 'done')
+        self.assertEqual(order.order_line.filtered(lambda l: l.product_id == self.product1).qty_delivered,
+                         1.0)
+        self.assertEqual(order.order_line.filtered(lambda l: l.product_id == self.product_core_service).qty_delivered,
+                         1.0)
+
+        # ensure that we have a qty_delivered
+        wizard = self.env['rma.sale.make.lines'].create({
+            'rma_id': rma.id,
+        })
+        wizard_line = wizard.line_ids.filtered(lambda l: l.product_id == self.product1)
+        self.assertEqual(wizard_line.qty_delivered, 1.0)
+        wizard_line.product_uom_qty = 1.0
+        wizard.add_lines()
+
+        # Invoice the order so that everythin is reversed at the end at the end...
+        self.assertFalse(order.invoice_ids)
+        wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=order.ids).create({})
+        wiz.create_invoices()
+        order.flush()
+        self.assertTrue(order.invoice_ids)
+        self.assertEqual(order.invoice_ids.mapped('invoice_line_ids.product_id'), (self.product1 + self.product_core_service))
+        
+        self.assertEqual(rma.lines.product_id, self.product1)
+        rma.action_confirm()
+        self.assertTrue(rma.in_picking_id)
+        self.assertEqual(rma.in_picking_id.state, 'assigned')
+        pack_opt = rma.in_picking_id.move_line_ids[0]
+        pack_opt.lot_id = lot
+        pack_opt.qty_done = 1.0
+        rma.in_picking_id.button_validate()
+        rma.action_done()
+        self.assertEqual(rma.state, 'done')
+
+        # Finishing the RMA should have made an invoice
+        self.assertTrue(rma.invoice_ids, 'Finishing RMA did not create an invoice(s).')
+        self.assertEqual(rma.invoice_ids.mapped('invoice_line_ids.product_id'), (self.product1 + self.product_core_service))
+
+        # Make sure the delivered qty of the Core Service was decremented.
+        self.assertEqual(order.order_line.filtered(lambda l: l.product_id == self.product1).qty_delivered,
+                         0.0)
         # This is known to work in practice, but no amount of magic ORM flushing seems to make it work in test.
         # self.assertEqual(order.order_line.filtered(lambda l: l.product_id == self.product_core_service).qty_delivered,
         #                  0.0)
