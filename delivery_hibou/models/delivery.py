@@ -254,7 +254,7 @@ class DeliveryCarrier(models.Model):
         else:
             if packages:
                 raise UserError(_('Cannot rate package without picking.'))
-            self = self.with_context(date_planned=(order.date_planned or fields.Datetime.now()))
+            self = self.with_context(date_planned=('date_planned' in order._fields and order.date_planned or fields.Datetime.now()))
 
         res = []
         for carrier in self:
