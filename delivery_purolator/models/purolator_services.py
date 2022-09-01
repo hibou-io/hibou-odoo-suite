@@ -4,8 +4,6 @@ from zeep import Client
 from zeep.cache import SqliteCache
 from zeep.transports import Transport
 from odoo.exceptions import UserError
-import logging
-_logger = logging.getLogger(__name__)
 
 
 class PurolatorClient(object):
@@ -33,7 +31,6 @@ class PurolatorClient(object):
             RequestReference='RatingExample',
             UserToken=self.activation_key,
         )
-        # _logger.warning('*** header_value:\n%s' % header_value)
         client.set_default_soapheaders([header_value])
         return client
             
@@ -60,7 +57,6 @@ class PurolatorClient(object):
                 'WeightUnit': 'lb',
                 },
             )
-        # _logger.warning('**** GetQuickEstimate response:\n%s', response)
         errors = response['body']['ResponseInformation']['Errors']
         if errors:
             return {

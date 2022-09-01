@@ -1,5 +1,7 @@
 from odoo import fields, models, _
 from .purolator_services import PurolatorClient
+import logging
+_logger = logging.getLogger(__name__)
 
 
 PUROLATOR_SERVICES = [
@@ -99,6 +101,7 @@ class ProviderPurolator(models.Model):
             self.prod_environment,
         )
         res = client.get_quick_estimate(sender.zip, receiver_address, 'CustomerPackaging', weight)
+        _logger.warning('get_quick_estimate: %s', res)
         if res['error']:
             return {
                 'success': False,
@@ -120,3 +123,65 @@ class ProviderPurolator(models.Model):
             'error_message': False,
             'warning_message': False,
         }
+    
+    def purolator_rate_shipment_multi(self, order=None, picking=None, packages=None):
+        sender = self.get_shipper_warehouse(order=order, picking=picking)
+        receiver = self.get_recipient(order=order, picking=picking)
+        receiver_address = {
+            'City': receiver.city,
+            'Province': receiver.state_id.code,
+            'Country': receiver.country_id.code,
+            'PostalCode': receiver.zip,
+        }
+        weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
+        
+        date_planned = fields.Datetime.now()
+        if self.env.context.get('date_planned'):
+            date_planned = self.env.context.get('date_planned')
+        
+        if order:
+            weight = weight_uom_id._compute_quantity(order._get_estimated_weight(), self.env.ref('uom.product_uom_lb'), round=False)
+        else:
+            raise NotImplementedError
+        client = PurolatorClient(
+            self.purolator_api_key,
+            self.purolator_password,
+            self.purolator_activation_key,
+            self.purolator_account_number,
+            self.prod_environment,
+        )
+        res = client.get_quick_estimate(sender.zip, receiver_address, 'CustomerPackaging', weight)
+        if res['error']:
+            return [{'carrier': self,
+                     'success': False,
+                     'price': 0.0,
+                     'error_message': _('Error:\n%s') % res['error'],
+                     'warning_message': False,
+                    }]
+        rates = []
+        for shipment in res['shipments']:
+            carrier = self.purolator_find_delivery_carrier_for_service(shipment['ServiceID'])
+            if carrier:
+                price = shipment['TotalPrice']
+                rates.append({
+                    'carrier': carrier,
+                    # 'package': package or self.env['stock.quant.package'].browse(),
+                    'success': True,
+                    'price': price,
+                    'error_message': False,
+                    'warning_message': _('TotalCharge not found.') if price == 0.0 else False,
+                    'date_planned': date_planned,
+                    'date_delivered': fields.Date.to_date(shipment['ExpectedDeliveryDate']),
+                    'transit_days': shipment['EstimatedTransitDays'],
+                    'service_code': shipment['ServiceID'],
+                })
+            
+        return rates
+    
+    def purolator_find_delivery_carrier_for_service(self, service_code):
+        if self.purolator_service_type == service_code:
+            return self
+        carrier = self.search([('delivery_type', '=', 'purolator'),
+                               ('purolator_service_type', '=', service_code)
+                               ], limit=1)
+        return carrier
