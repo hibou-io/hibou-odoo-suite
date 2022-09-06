@@ -12,6 +12,7 @@ def _quant_package_data(self, package, picking):
     # TODO do we want to call this without a package?
     if not package and picking.package_ids:
         package = picking.package_ids
+    package_type = self.carrier.ups_default_package_type_id
     currency = picking.sale_id.currency_id if picking.sale_id else picking.company_id.currency_id
     insurance_currency_code = currency.name
     res = []
@@ -21,11 +22,12 @@ def _quant_package_data(self, package, picking):
         NumOfPieces = len(package)
         # PackageWeight = sum(package.mapped('shipping_weight'))
         for p in package:
+            package_code = p.package_type_id.shipper_package_code if p.package_type_id.package_carrier_type == 'ups' else package_type.shipper_package_code
             package_data = {
                 "Description": p.name,
                 "NumOfPieces": str(NumOfPieces),
                 "Packaging": {
-                    "Code": p.package_type_id.shipper_package_code,
+                    "Code": package_code,
                     "Description": p.name,
                 },
                 "Dimensions": {
@@ -60,7 +62,6 @@ def _quant_package_data(self, package, picking):
             res.append(package_data)
         return res
 
-    package_type = self.carrier.ups_default_package_type_id
     return [{
         "Description": picking.name,
         "NumOfPieces": str(NumOfPieces),
