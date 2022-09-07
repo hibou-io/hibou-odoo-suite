@@ -2,6 +2,18 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
+class StockPackageType(models.Model):
+    _inherit = 'stock.package.type'
+    
+    use_in_package_selection = fields.Boolean()
+    package_volume = fields.Float(compute='_compute_package_volume', store=True)
+    
+    @api.depends('packaging_length', 'width', 'height')
+    def _compute_package_volume(self):
+        for pt in self:
+            pt.package_volume = pt.packaging_length * pt.width * pt.height
+
+
 class StockQuantPackage(models.Model):
     _inherit = 'stock.quant.package'
 

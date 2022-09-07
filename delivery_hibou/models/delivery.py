@@ -17,9 +17,40 @@ class DeliveryCarrier(models.Model):
                                             string='Procurement Priority',
                                             help='Priority for this carrier. Will affect pickings '
                                                  'and procurements related to this carrier.')
+    package_by_field = fields.Selection([
+        ('', 'Use Default Package Type'),
+        ('weight', 'Weight'),
+        ('volume', 'Volume'),
+    ], string='Packaging by Product Field')
+
+    # Package selection
+    def get_package_type_for_order(self, order):
+        if self.package_by_field == 'weight':
+            return self._get_package_type_for_order(order, 'max_weight', 'weight')
+        elif self.package_by_field == 'volume':
+            return self._get_package_type_for_order(order, 'package_volume', 'volume')
+        attr = getattr(self, '%s_default_packaging_id' % (self.delivery_type, ), None)
+        if attr:
+            return attr()
+        attr = getattr(self, '%s_default_package_type_id' % (self.delivery_type, ), None)
+        if attr:
+            return attr()
+        return self.env['stock.package.type']
+
+    def _get_package_type_for_order(self, order, package_type_field, product_field):
+        order_total = sum(order.order_line.filtered(lambda ol: ol.product_id.type in ('product', 'consu')).mapped(lambda ol: ol.product_id[product_field] * ol.product_uom_qty))
+        if order_total:
+            package_types = self.env['stock.package.type'].search([
+                ('package_carrier_type', 'in', ('none', False, self.delivery_type)),
+                ('use_in_package_selection', '=', True),
+            ], order=package_type_field)
+            package_type = None
+            for package_type in package_types:
+                if package_type[package_type_field] >= order_total:
+                    return package_type
+            return package_types if not package_type else package_type
 
     # Utility
-
     def get_insurance_value(self, order=None, picking=None, package=None):
         value = 0.0
         if order:
