@@ -77,6 +77,22 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "Odoo: Locust Load Testing",
+            "type": "python",
+            "request": "launch",
+            "program": "/flow/odoo/Locust/entrypoint.py",
+            "args": [
+                // -f /path/to/locustfiles.py
+                // -d more-specific-db
+                "--user", "admin",
+                "--pass", "admin",
+                "--host", "localhost",
+                "--port", "8069",
+                "--proto", "jsonrpc"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Odoo: reload foreground server",
             "type": "python",
             "request": "launch",
