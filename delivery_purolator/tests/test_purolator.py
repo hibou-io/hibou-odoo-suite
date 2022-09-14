@@ -43,8 +43,8 @@ class TestPurolator(TransactionCase):
             })],
         })
     
-    def test_00_rate_order(self):
-        # Regular Update Shipping functionality
+    def _so_pick_shipping(self):
+            # Regular Update Shipping functionality
         delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
                 'default_order_id': self.sale_order.id,
                 'default_carrier_id': self.ref('delivery_purolator.purolator_ground'),
@@ -52,7 +52,12 @@ class TestPurolator(TransactionCase):
         choose_delivery_carrier = delivery_wizard.save()
         choose_delivery_carrier.update_price()
         self.assertGreater(choose_delivery_carrier.delivery_price, 0.0, "Purolator delivery cost for this SO has not been correctly estimated.")
-        
+        choose_delivery_carrier.button_confirm()
+        self.assertEqual(self.sale_order.carrier_id, self.carrier)
+    
+    def test_00_rate_order(self):
+        self._so_pick_shipping()
+
         # Multi-rating with sale order
         rates = self.carrier.rate_shipment_multi(order=self.sale_order)
         carrier_express = self.env.ref('delivery_purolator.purolator_express')
@@ -76,7 +81,6 @@ class TestPurolator(TransactionCase):
         self.assertEqual(rate_express['package'], self.env['stock.quant.package'].browse())
         
         # Multi-rate package
-        picking.carrier_id = self.carrier
         self.assertEqual(picking.move_lines.reserved_availability, 3.0)
         picking.move_line_ids.qty_done = 1.0
         context = dict(
@@ -96,3 +100,15 @@ class TestPurolator(TransactionCase):
         self.assertGreater(rate_express['price'], 0.0)
         self.assertGreater(rate_express['transit_days'], 0)
         self.assertEqual(rate_express['package'], package)
+
+    def test_20_shipping(self):
+        self._so_pick_shipping()
+        self.sale_order.action_confirm()
+        picking = self.sale_order.picking_ids
+        self.assertEqual(picking.carrier_id, self.carrier)
+
+        # Basic case: no qty done or packages or anything at all really
+        # it makes sense to be able to do 'something' in this case even if that
+        # is just an error
+        picking.send_to_shipper()
+        self.assertTrue(picking.carrier_tracking_ref)

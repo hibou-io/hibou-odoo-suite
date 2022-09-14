@@ -211,3 +211,26 @@ class ProviderPurolator(models.Model):
                                ('purolator_account_number', '=', self.purolator_account_number),
                                ], limit=1)
         return carrier
+
+    # Picking Shipping
+    def purolator_send_shipping(self, pickings):
+        res = []
+        # service = self._get_purolator_service()
+        # had_customs = False
+
+        for picking in pickings:
+            picking_packages = self.get_to_ship_picking_packages(picking)
+            if picking_packages is None:
+                continue
+            
+            # do the shipment!
+            package_labels = []
+            for x in []:
+                res = res + [shipping_data]  # bug! fill in with appropriate data
+            picking.carrier_tracking_ref = ','.join(package_labels)
+        
+        # FIXME
+        shipping_data = {'exact_price': 1.0,
+                         'tracking_number': ''}
+        res.append(shipping_data)
+        return res
