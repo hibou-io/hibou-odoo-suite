@@ -51,6 +51,20 @@ class DeliveryCarrier(models.Model):
             return package_types if not package_type else package_type
 
     # Utility
+    def get_to_ship_picking_packages(self, picking):
+        # Will return a stock.quant.package record set if the picking has packages
+        # in the case of multi-packing and none applicable, will return None
+        # Additionally, will not return packages that have a tracking number (because they have shipped)
+        picking_packages = picking.package_ids
+        package_carriers = picking_packages.mapped('carrier_id')
+        if package_carriers:
+            # only ship ours
+            picking_packages = picking_packages.filtered(lambda p: p.carrier_id == self and not p.carrier_tracking_ref)
+
+            if package_carriers and not picking_packages:
+                return None
+        return picking_packages
+    
     def get_insurance_value(self, order=None, picking=None, package=None):
         value = 0.0
         if order:
