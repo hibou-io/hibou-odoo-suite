@@ -55,7 +55,7 @@ class TestPurolator(TransactionCase):
         
         # Multi-rating with sale order
         rates = self.carrier.rate_shipment_multi(order=self.sale_order)
-        carrier_express = self.env.ref('delivery_purolator.purolator_ground')
+        carrier_express = self.env.ref('delivery_purolator.purolator_express')
         rate_express = list(filter(lambda r: r['carrier'] == carrier_express, rates))
         rate_express = rate_express and rate_express[0]
         self.assertFalse(rate_express['error_message'])

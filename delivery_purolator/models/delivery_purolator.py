@@ -81,6 +81,10 @@ class ProviderPurolator(models.Model):
                                               default='PurolatorGround')
     purolator_default_package_type_id = fields.Many2one('stock.package.type', string="Purolator Package Type")
     
+    def _purolator_weight(self, weight):
+        weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
+        return weight_uom_id._compute_quantity(weight, self.env.ref('uom.product_uom_lb'), round=False)
+
     def purolator_rate_shipment(self, order):
         # sudoself = self.sudo()
         sender = self.get_shipper_warehouse(order=order)
@@ -91,8 +95,8 @@ class ProviderPurolator(models.Model):
             'Country': receiver.country_id.code,
             'PostalCode': receiver.zip,
         }
-        weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
-        weight = weight_uom_id._compute_quantity(order._get_estimated_weight(), self.env.ref('uom.product_uom_lb'), round=False)
+        # TODO packaging volume/length/width/height
+        weight = self._purolator_weight(order._get_estimated_weight())
         client = PurolatorClient(
             self.purolator_api_key,
             self.purolator_password,
@@ -147,20 +151,23 @@ class ProviderPurolator(models.Model):
             'PostalCode': receiver.zip,
         }
         weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
+        volume_uom_id = self.env['product.template']._get_volume_uom_id_from_ir_config_parameter()
         
         date_planned = fields.Datetime.now()
         if self.env.context.get('date_planned'):
             date_planned = self.env.context.get('date_planned')
         
+        # TODO need packaging volume/dimensions
         package_code = self.purolator_default_package_type_id.shipper_package_code
         if order:
-            weight = weight_uom_id._compute_quantity(order._get_estimated_weight(), self.env.ref('uom.product_uom_lb'), round=False)
+            weight = order._get_estimated_weight()
         else:
             if package:
                 weight = package.shipping_weight
-                package_code = package.package_type_id.shipper_package_code or package_code
+                package_code = package.package_type_id.shipper_package_code if package.package_type_id.package_carrier_type == 'purolator' else package_code
             else:
                 weight = picking.shipping_weight or picking.weight
+        weight = self._purolator_weight(weight)
         client = PurolatorClient(
             self.purolator_api_key,
             self.purolator_password,
@@ -200,6 +207,7 @@ class ProviderPurolator(models.Model):
         if self.purolator_service_type == service_code:
             return self
         carrier = self.search([('delivery_type', '=', 'purolator'),
-                               ('purolator_service_type', '=', service_code)
+                               ('purolator_service_type', '=', service_code),
+                               ('purolator_account_number', '=', self.purolator_account_number),
                                ], limit=1)
         return carrier
