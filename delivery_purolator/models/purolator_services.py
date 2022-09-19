@@ -9,11 +9,27 @@ from odoo.exceptions import UserError
 class PurolatorClient(object):
     
     # clients and factories
+    _estimating_client = None
+    @property
+    def estimating_client(self):
+        if not self._estimating_client:
+            self._estimating_client = self._get_client('/EWS/V2/Estimating/EstimatingService.asmx?wsdl',
+                                                       request_reference='Rating')
+        return self._estimating_client
+    
+    _estimating_factory = None
+    @property
+    def estimating_factory(self):
+        if not self._estimating_factory:
+            self._estimating_factory = self.estimating_client.type_factory('ns1')
+        return self._estimating_factory
+    
     _shipping_client = None
     @property
     def shipping_client(self):
         if not self._shipping_client:
-            self._shipping_client = self._get_client('/EWS/V2/Shipping/ShippingService.asmx?wsdl')
+            self._shipping_client = self._get_client('/EWS/V2/Shipping/ShippingService.asmx?wsdl',
+                                                     request_reference='Shipping')
         return self._shipping_client
 
     _shipping_factory = None
@@ -27,7 +43,9 @@ class PurolatorClient(object):
     @property
     def shipping_documents_client(self):
         if not self._shipping_documents_client:
-            self._shipping_documents_client = self._get_client('/PWS/V1/ShippingDocuments/ShippingDocumentsService.asmx?wsdl', version='1.3')
+            self._shipping_documents_client = self._get_client('/PWS/V1/ShippingDocuments/ShippingDocumentsService.asmx?wsdl',
+                                                               version='1.3',
+                                                               request_reference='ShippingDocuments')
         return self._shipping_documents_client
 
     _shipping_documents_factory = None
@@ -50,7 +68,7 @@ class PurolatorClient(object):
         session.auth = HTTPBasicAuth(self.api_key, self.password)
         self.transport = Transport(cache=SqliteCache(), session=session)
         
-    def _get_client(self, wsdl_path, version='2.0'):
+    def _get_client(self, wsdl_path, version='2.0', request_reference='RatingExample'):
         # version added because shipping documents needs a different one
         client = Client(self._wsdl_base + wsdl_path,
                         transport=self.transport)
@@ -58,8 +76,8 @@ class PurolatorClient(object):
         header_value = request_context(
             Version=version,
             Language='en',
-            GroupID='xxx',
-            RequestReference='RatingExample',  # TODO need to paramatarize this or something, doesn't make sense to shipment, maybe GroupID
+            GroupID='xxx',  # TODO should we have a GroupID?
+            RequestReference=request_reference,
             UserToken=self.activation_key,
         )
         client.set_default_soapheaders([header_value])
@@ -77,16 +95,15 @@ class PurolatorClient(object):
         :param total_weight: float (in pounds)
         :returns: dict {'shipments': list, 'error': string or False}
         """
-        client = self._get_client('/EWS/V2/Estimating/EstimatingService.asmx?wsdl')
-        response = client.service.GetQuickEstimate(
+        response = self.estimating_client.service.GetQuickEstimate(
             BillingAccountNumber=self.account_number,
             SenderPostalCode=sender_postal_code,
             ReceiverAddress=receiver_address,
             PackageType=package_type,
-            TotalWeight={  # TODO FIX/paramatarize
-                'Value': 10.0,
+            TotalWeight={
+                'Value': total_weight,
                 'WeightUnit': 'lb',
-                },
+            },
             )
         errors = response['body']['ResponseInformation']['Errors']
         if errors:
@@ -128,7 +145,7 @@ class PurolatorClient(object):
         total_pieces = len(packages) or 1
         if not packages:
             # setup default package
-            package_weight = picking.shipping_weight  # TODO need conversion (lb) below
+            package_weight = carrier.purolator_convert_weight(picking.shipping_weight)
             if package_weight < 1.0:
                 package_weight = 1.0
             total_weight_value += package_weight
@@ -154,7 +171,7 @@ class PurolatorClient(object):
             shipment.PackageInformation.PiecesInformation.Piece.append(p)
         else:
             for package in packages:
-                package_weight = package.shipping_weight  # TODO need conversion (lb) below
+                package_weight = carrier.purolator_convert_weight(package.shipping_weight)
                 if package_weight < 1.0:
                     package_weight = 1.0
                 package_type = package.package_type_id

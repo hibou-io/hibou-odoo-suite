@@ -83,13 +83,22 @@ class ProviderPurolator(models.Model):
     purolator_service_type = fields.Selection(selection=PUROLATOR_SERVICES,
                                               default='PurolatorGround')
     purolator_default_package_type_id = fields.Many2one('stock.package.type', string="Purolator Package Type")
+    purolator_label_file_type = fields.Selection([
+            ('PDF', 'PDF'),
+            ('ZPL', 'ZPL'),
+        ], default='ZPL', string="Purolator Label File Type")
     
-    def _purolator_weight(self, weight):
+    def purolator_convert_weight(self, weight):
         weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
+        return weight_uom_id._compute_quantity(weight, self.env.ref('uom.product_uom_lb'), round=False)
+    
+    def purolator_convert_length(self, length):
+        volume_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
         return weight_uom_id._compute_quantity(weight, self.env.ref('uom.product_uom_lb'), round=False)
 
     def purolator_rate_shipment(self, order):
         # sudoself = self.sudo()
+        third_party = self.purolator_third_party(order=order)
         sender = self.get_shipper_warehouse(order=order)
         receiver = self.get_recipient(order=order)
         receiver_address = {
@@ -99,15 +108,9 @@ class ProviderPurolator(models.Model):
             'PostalCode': receiver.zip,
         }
         # TODO packaging volume/length/width/height
-        weight = self._purolator_weight(order._get_estimated_weight())
-        client = PurolatorClient(
-            self.purolator_api_key,
-            self.purolator_password,
-            self.purolator_activation_key,
-            self.purolator_account_number,
-            self.prod_environment,
-        )
-        res = client.get_quick_estimate(
+        weight = self.purolator_convert_weight(order._get_estimated_weight())
+        service = self._purolator_service()
+        res = service.get_quick_estimate(
             sender.zip,
             receiver_address,
             self.purolator_default_package_type_id.shipper_package_code,
@@ -130,7 +133,7 @@ class ProviderPurolator(models.Model):
             }
         return {
             'success': True, 
-            'price': shipment[0]['TotalPrice'],
+            'price': shipment[0]['TotalPrice'] if not third_party else 0.0,
             'error_message': False,
             'warning_message': False,
         }
@@ -145,6 +148,7 @@ class ProviderPurolator(models.Model):
             return rates
     
     def _purolator_rate_shipment_multi_package(self, order=None, picking=None, package=None):
+        third_party = self.purolator_third_party(order=order, picking=picking)
         sender = self.get_shipper_warehouse(order=order, picking=picking)
         receiver = self.get_recipient(order=order, picking=picking)
         receiver_address = {
@@ -170,15 +174,9 @@ class ProviderPurolator(models.Model):
                 package_code = package.package_type_id.shipper_package_code if package.package_type_id.package_carrier_type == 'purolator' else package_code
             else:
                 weight = picking.shipping_weight or picking.weight
-        weight = self._purolator_weight(weight)
-        client = PurolatorClient(
-            self.purolator_api_key,
-            self.purolator_password,
-            self.purolator_activation_key,
-            self.purolator_account_number,
-            self.prod_environment,
-        )
-        res = client.get_quick_estimate(sender.zip, receiver_address, package_code, weight)
+        weight = self.purolator_convert_weight(weight)
+        service = self._purolator_service()
+        res = service.get_quick_estimate(sender.zip, receiver_address, package_code, weight)
         if res['error']:
             return [{'carrier': self,
                      'success': False,
@@ -195,7 +193,7 @@ class ProviderPurolator(models.Model):
                     'carrier': carrier,
                     'package': package or self.env['stock.quant.package'].browse(),
                     'success': True,
-                    'price': price,
+                    'price': price if not third_party else 0.0,
                     'error_message': False,
                     'warning_message': _('TotalCharge not found.') if price == 0.0 else False,
                     'date_planned': date_planned,
@@ -214,6 +212,14 @@ class ProviderPurolator(models.Model):
                                ('purolator_account_number', '=', self.purolator_account_number),
                                ], limit=1)
         return carrier
+    
+    def purolator_third_party(self, order=None, picking=None):
+        third_party_account = self.get_third_party_account(order=order, picking=picking)
+        if third_party_account:
+            if not third_party_account.delivery_type == 'purolator':
+                raise ValidationError('Non-Purolator Shipping Account indicated during Purolator shipment.')
+            return third_party_account.name
+        return False
     
     def _purolator_service(self):
         return PurolatorClient(
@@ -294,10 +300,15 @@ class ProviderPurolator(models.Model):
             shipment.PaymentInformation.PaymentType = 'Sender'
             shipment.PaymentInformation.RegisteredAccountNumber = self.purolator_account_number
             shipment.PaymentInformation.BillingAccountNumber = self.purolator_account_number
-            # TODO switch to 'Receiver' or 'ThirdParty' if needed
+            third_party_account = self.purolator_third_party(picking=picking)
+            # when would it be 'Receiver' ?
+            if third_party_account:
+                shipment.PaymentInformation.PaymentType = 'ThirdParty'
+                shipment.PaymentInformation.BillingAccountNumber = third_party_account
             
-            shipment_res = service.shipment_create(shipment)
-            _logger.info('purolator service.shipment_create for shipment %s resulted in %s' % (shipment, shipment_res))
+            shipment_res = service.shipment_create(shipment,
+                                                   printer_type=('Regular' if self.purolator_label_file_type == 'PDF' else 'Thermal'))
+            # _logger.info('purolator service.shipment_create for shipment %s resulted in %s' % (shipment, shipment_res))
             
             errors = shipment_res.ResponseInformation.Errors
             if errors:
@@ -312,20 +323,19 @@ class ProviderPurolator(models.Model):
                 for p, pin in zip(picking_packages, piece_pins):
                     pin = pin.Value
                     p.carrier_tracking_ref = pin
-                    doc_res = service.document_by_pin(pin)
+                    doc_res = service.document_by_pin(pin, output_type=self.purolator_label_file_type)
                     for n, blob in enumerate(self._purolator_extract_doc_blobs(doc_res), 1):
-                        document_blobs.append(('PuroPackage-%s-%s.%s' % (pin, n, 'ZPL'), blob))
+                        document_blobs.append(('PuroPackage-%s-%s.%s' % (pin, n, self.purolator_label_file_type), blob))
             else:
                 # retrieve shipment_pin document(s)
-                doc_res = service.document_by_pin(shipment_pin)
-                _logger.info('purolator service.document_by_pin for pin %s resulted in %s' % (shipment_pin, doc_res))
+                doc_res = service.document_by_pin(shipment_pin, output_type=self.purolator_label_file_type)
+                # _logger.info('purolator service.document_by_pin for pin %s resulted in %s' % (shipment_pin, doc_res))
                 for n, blob in enumerate(self._purolator_extract_doc_blobs(doc_res), 1):
-                    document_blobs.append(('PuroShipment-%s-%s.%s' % (shipment_pin, n, 'ZPL'), blob))
+                    document_blobs.append(('PuroShipment-%s-%s.%s' % (shipment_pin, n, self.purolator_label_file_type), blob))
                 
             if document_blobs:
                 logmessage = _("Shipment created in Purolator <br/> <b>Tracking Number/PIN : </b>%s") % (shipment_pin)
                 picking.message_post(body=logmessage, attachments=document_blobs)
-            
             
             picking.carrier_tracking_ref = shipment_pin
             shipping_data = {
