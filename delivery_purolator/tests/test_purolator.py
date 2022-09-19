@@ -1,5 +1,6 @@
 
 from odoo.tests.common import Form, TransactionCase
+from odoo.exceptions import UserError
 
 
 class TestPurolator(TransactionCase):
@@ -11,9 +12,18 @@ class TestPurolator(TransactionCase):
         if self.carrier.prod_environment:
             self.skipTest('Purolator Shipping configured to use production credentials, skipping tests.')
         
+        # the setup for these addresses is important as there is
+        # error handling on purolator's side
+        self.state_ca_ontario = self.env.ref('base.state_ca_on')
+        self.country_ca = self.state_ca_ontario.country_id
+        
         self.shipper_partner = self.env['res.partner'].create({
-            'name': 'Canadian Address',
+            'name': 'The Great North Ltd.',
             'zip': 'L4W5M8',
+            'street': '1234 Test St.',
+            'state_id': self.state_ca_ontario.id,
+            'country_id': self.country_ca.id,
+            'city': 'Mississauga',  # note other city will return error for this field+zip
         })
         self.shipper_warehouse = self.env['stock.warehouse'].create({
             'partner_id': self.shipper_partner.id,
@@ -23,6 +33,7 @@ class TestPurolator(TransactionCase):
         self.receiver_partner = self.env['res.partner'].create({
             'name': 'Receiver Address',
             'city': 'Burnaby',
+            'street': '1234 Test Rd.',
             'state_id': self.ref('base.state_ca_bc'),
             'country_id': self.ref('base.ca'),
             'zip': 'V5C5A9',
@@ -106,9 +117,18 @@ class TestPurolator(TransactionCase):
         self.sale_order.action_confirm()
         picking = self.sale_order.picking_ids
         self.assertEqual(picking.carrier_id, self.carrier)
+        self.assertEqual(picking.message_attachment_count, 0)
+        
+        # Test Error handling:
+        # Not having a city will result in an error
+        original_shipper_partner_city = self.shipper_partner.city
+        self.shipper_partner.city = ''
+        with self.assertRaises(UserError):
+            picking.send_to_shipper()
+        self.shipper_partner.city = original_shipper_partner_city
 
         # Basic case: no qty done or packages or anything at all really
-        # it makes sense to be able to do 'something' in this case even if that
-        # is just an error
+        # it makes sense to be able to do 'something' in this case
         picking.send_to_shipper()
         self.assertTrue(picking.carrier_tracking_ref)
+        self.assertEqual(picking.message_attachment_count, 1)  # has tracking label now

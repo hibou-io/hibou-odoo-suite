@@ -1,7 +1,10 @@
 from odoo import fields, models, _
+from odoo.exceptions import UserError
 from .purolator_services import PurolatorClient
 import logging
 
+
+_logger = logging.getLogger(__name__)
 
 PUROLATOR_SERVICES = [
     ('PurolatorExpress9AM', 'Purolator Express 9AM'),
@@ -211,26 +214,124 @@ class ProviderPurolator(models.Model):
                                ('purolator_account_number', '=', self.purolator_account_number),
                                ], limit=1)
         return carrier
+    
+    def _purolator_service(self):
+        return PurolatorClient(
+            self.purolator_api_key,
+            self.purolator_password,
+            self.purolator_activation_key,
+            self.purolator_account_number,
+            self.prod_environment,
+        )
+
+    def _purolator_address_street(self, partner):
+        # assume we don't have base_address_extended
+        street = partner.street or ''
+        street_pieces = [t.strip() for t in street.split(' ')]
+        len_street_pieces = len(street_pieces)
+        if len_street_pieces >= 3:
+            street_num = street_pieces[0]
+            street_type = street_pieces[2]
+            # TODO santize the types?  I see an example for "Douglas Road" that sends "Street"
+            return street_num, ' '.join(street_pieces[1:]), 'Street'
+        elif len_street_pieces == 2:
+            return street_pieces[0], street_pieces[1], 'Street'
+        return '', street, 'Street'
+
+    def _purolator_address_phonenumber(self, partner):
+        # TODO parse out of partner.phone or one of the many other phone numbers
+        return '1', '905', '5555555'
+        
+
+    def _purolator_fill_address(self, addr, partner):
+        addr.Name = partner.name if not partner.is_company else ''
+        addr.Company = partner.name if partner.is_company else (partner.company_name or '')
+        addr.Department = ''
+        addr.StreetNumber, addr.StreetName, addr.StreetType = self._purolator_address_street(partner)
+        # addr.City = partner.city.upper() if partner.city else ''
+        addr.City = partner.city or ''
+        addr.Province = partner.state_id.code
+        addr.Country = partner.country_id.code
+        addr.PostalCode = partner.zip
+        addr.PhoneNumber.CountryCode, addr.PhoneNumber.AreaCode, addr.PhoneNumber.Phone = self._purolator_address_phonenumber(partner)
+    
+    def _purolator_extract_doc_blobs(self, documents_result):
+        res = []
+        for d in getattr(documents_result.Documents, 'Document', []):
+            for d2 in getattr(d.DocumentDetails, 'DocumentDetail', []):
+                res.append(d2.Data)
+        return res
 
     # Picking Shipping
     def purolator_send_shipping(self, pickings):
         res = []
-        # service = self._get_purolator_service()
-        # had_customs = False
+        service = self._purolator_service()
 
         for picking in pickings:
             picking_packages = self.get_to_ship_picking_packages(picking)
             if picking_packages is None:
                 continue
             
-            # do the shipment!
-            package_labels = []
-            for x in []:
-                res = res + [shipping_data]  # bug! fill in with appropriate data
-            picking.carrier_tracking_ref = ','.join(package_labels)
+            shipment = service.shipment_request()
+            
+            # populate origin information
+            sender = self.get_shipper_warehouse(picking=picking)
+            self._purolator_fill_address(shipment.SenderInformation.Address, sender)
+            
+            receiver = self.get_recipient(picking=picking)
+            self._purolator_fill_address(shipment.ReceiverInformation.Address, receiver)
+            
+            service.shipment_add_picking_packages(shipment, self, picking, picking_packages)
+            
+            # TODO package level signature and insurance....
+            # IF we cannot do this at the package level, then we must implement it here.
+            # We may need to warn that all packages will follow the same rule.
+            # //Define OptionsInformation
+            # //ResidentialSignatureDomestic
+            # $request->Shipment->PackageInformation->OptionsInformation->Options->OptionIDValuePair->ID = "ResidentialSignatureDomestic";
+            # $request->Shipment->PackageInformation->OptionsInformation->Options->OptionIDValuePair->Value = "true";
+            
+            shipment.PaymentInformation.PaymentType = 'Sender'
+            shipment.PaymentInformation.RegisteredAccountNumber = self.purolator_account_number
+            shipment.PaymentInformation.BillingAccountNumber = self.purolator_account_number
+            # TODO switch to 'Receiver' or 'ThirdParty' if needed
+            
+            shipment_res = service.shipment_create(shipment)
+            _logger.info('purolator service.shipment_create for shipment %s resulted in %s' % (shipment, shipment_res))
+            
+            errors = shipment_res.ResponseInformation.Errors
+            if errors:
+                errors = errors.Error  # unpack container node
+                puro_errors = '\n\n'.join(['%s - %s - %s' % (e.Code, e.AdditionalInformation, e.Description) for e in errors])
+                raise UserError(_('Error(s) during Purolator Shipment Request:\n%s') % (puro_errors, ))
+            
+            document_blobs = []
+            shipment_pin = shipment_res.ShipmentPIN.Value
+            if picking_packages and getattr(shipment_res, 'PiecePINs', None):
+                piece_pins = shipment_res.PiecePINs.PIN
+                for p, pin in zip(picking_packages, piece_pins):
+                    pin = pin.Value
+                    p.carrier_tracking_ref = pin
+                    doc_res = service.document_by_pin(pin)
+                    for n, blob in enumerate(self._purolator_extract_doc_blobs(doc_res), 1):
+                        document_blobs.append(('PuroPackage-%s-%s.%s' % (pin, n, 'ZPL'), blob))
+            else:
+                # retrieve shipment_pin document(s)
+                doc_res = service.document_by_pin(shipment_pin)
+                _logger.info('purolator service.document_by_pin for pin %s resulted in %s' % (shipment_pin, doc_res))
+                for n, blob in enumerate(self._purolator_extract_doc_blobs(doc_res), 1):
+                    document_blobs.append(('PuroShipment-%s-%s.%s' % (shipment_pin, n, 'ZPL'), blob))
+                
+            if document_blobs:
+                logmessage = _("Shipment created in Purolator <br/> <b>Tracking Number/PIN : </b>%s") % (shipment_pin)
+                picking.message_post(body=logmessage, attachments=document_blobs)
+            
+            
+            picking.carrier_tracking_ref = shipment_pin
+            shipping_data = {
+                'exact_price': 0.0,  # TODO How can we know?!
+                'tracking_number': shipment_pin,
+            }
+            res.append(shipping_data)
         
-        # FIXME
-        shipping_data = {'exact_price': 1.0,
-                         'tracking_number': ''}
-        res.append(shipping_data)
         return res
