@@ -275,6 +275,12 @@ class PurolatorClient(object):
         )
         return response.body
     
+    def shipment_void(self, pin):
+        response = self.shipping_client.service.VoidShipment(
+            PIN={'Value': pin}
+        )
+        return response.body
+    
     def document_by_pin(self, pin, document_type='', output_type='ZPL'):
         # TODO document_type?
         document_criterium = self.shipping_documents_factory.ArrayOfDocumentCriteria()

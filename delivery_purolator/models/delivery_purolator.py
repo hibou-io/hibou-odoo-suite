@@ -339,5 +339,26 @@ class ProviderPurolator(models.Model):
         
         return res
 
-    # TODO cancel shipment
-    # TODO track shipment
+    def purolator_get_tracking_link(self, pickings):
+        res = []
+        for picking in pickings:
+            ref = picking.carrier_tracking_ref
+            res = res + ['https://www.purolator.com/en/shipping/tracker?pins=%s' % ref]
+        return res
+
+    def purolator_cancel_shipment(self, picking, packages=None):
+        service = self._purolator_service()
+        if packages:
+            for package in packages:
+                tracking_pin = package.carrier_tracking_ref
+                void_res = service.shipment_void(tracking_pin)
+                self._purolator_format_errors(void_res, raise_class=UserError)
+                package.write({'carrier_tracking_ref': ''})
+                picking.message_post(body=_('Package N° %s has been cancelled' % tracking_pin))
+        else:
+            tracking_pin = picking.carrier_tracking_ref
+            void_res = service.shipment_void(tracking_pin)
+            self._purolator_format_errors(void_res, raise_class=UserError)
+            picking.message_post(body=_('Shipment N° %s has been cancelled' % tracking_pin))
+        picking.write({'carrier_tracking_ref': '',
+                        'carrier_price': 0.0})

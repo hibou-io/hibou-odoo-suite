@@ -132,3 +132,7 @@ class TestPurolator(TransactionCase):
         picking.send_to_shipper()
         self.assertTrue(picking.carrier_tracking_ref)
         self.assertEqual(picking.message_attachment_count, 1)  # has tracking label now
+        
+        # Void
+        picking.cancel_shipment()
+        self.assertFalse(picking.carrier_tracking_ref)
