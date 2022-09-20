@@ -1,7 +1,11 @@
+import logging
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_compare
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.exceptions import UserError
+
+
+_logger = logging.getLogger(__name__)
 
 
 class DeliveryCarrier(models.Model):
@@ -26,19 +30,31 @@ class DeliveryCarrier(models.Model):
     # Package selection
     def get_package_type_for_order(self, order):
         if self.package_by_field == 'weight':
-            return self._get_package_type_for_order(order, 'max_weight', 'weight')
+            res = self._get_package_type_for_order(order, 'max_weight', 'weight')
+            _logger.info('  get_package_type_for_order package by weight (%s) %s' % (res.id, res.name))
+            return res
         elif self.package_by_field == 'volume':
-            return self._get_package_type_for_order(order, 'package_volume', 'volume')
+            res = self._get_package_type_for_order(order, 'package_volume', 'volume')
+            _logger.info('  get_package_type_for_order package by volume (%s) %s' % (res.id, res.name))
+            return res
         attr = getattr(self, '%s_default_packaging_id' % (self.delivery_type, ), None)
         if attr:
+            _logger.info('  get_package_type_for_order package by default_packaging_id (%s) %s' % (attr.id, attr.name))
             return attr
         attr = getattr(self, '%s_default_package_type_id' % (self.delivery_type, ), None)
         if attr:
+            _logger.info('  get_package_type_for_order package by default_package_type_id (%s) %s' % (attr.id, attr.name))
             return attr
+        _logger.info('  package by NULL')
         return self.env['stock.package.type']
 
     def _get_package_type_for_order(self, order, package_type_field, product_field):
-        order_total = sum(order.order_line.filtered(lambda ol: ol.product_id.type in ('product', 'consu')).mapped(lambda ol: ol.product_id[product_field] * ol.product_uom_qty))
+        # NOTE do not optimize this into non-loop.
+        # this may be an orderfake
+        order_total = 0.0
+        for ol in order.order_line.filtered(lambda ol: ol.product_id.type in ('product', 'consu')):
+            order_total += ol.product_id[product_field] * ol.product_uom_qty
+        _logger.info('    _get_package_type_for_order order_total ' + str(order_total))
         if order_total:
             package_types = self.env['stock.package.type'].search([
                 ('package_carrier_type', 'in', ('none', False, self.delivery_type)),
@@ -49,6 +65,7 @@ class DeliveryCarrier(models.Model):
                 if package_type[package_type_field] >= order_total:
                     return package_type
             return package_types if not package_type else package_type
+        return self.env['stock.package.type']
 
     # Utility
     def get_to_ship_picking_packages(self, picking):
@@ -268,7 +285,7 @@ class DeliveryCarrier(models.Model):
         else:
             if packages:
                 raise UserError(_('Cannot rate package without picking.'))
-            self = self.with_context(date_planned=('date_planned' in order._fields and order.date_planned or fields.Datetime.now()))
+            self = self.with_context(date_planned=('date_planned' in self.env['sale.order']._fields and order.date_planned or fields.Datetime.now()))
 
         res = []
         for carrier in self:
