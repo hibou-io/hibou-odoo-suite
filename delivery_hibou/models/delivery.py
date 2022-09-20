@@ -294,16 +294,16 @@ class DeliveryCarrier(models.Model):
                                                               p.package_type_id.package_carrier_type in (False, '', 'none', carrier.delivery_type))
             if packages and not carrier_packages:
                 continue
-            if hasattr(carrier, '%s_rate_shipment_multi' % self.delivery_type):
+            attr = getattr(carrier, '%s_rate_shipment_multi' % self.delivery_type, None)
+            if attr:
                 try:
-                    res += getattr(carrier, '%s_rate_shipment_multi' % carrier.delivery_type)(order=order,
-                                                                                                   picking=picking,
-                                                                                                   packages=carrier_packages)
+                    res += attr(order=order, picking=picking, packages=carrier_packages)
                 except TypeError:
                     # TODO remove catch if after Odoo 14
                     # This is intended to find ones that don't support packages= kwarg
-                    res += getattr(carrier, '%s_rate_shipment_multi' % carrier.delivery_type)(order=order,
-                                                                                                   picking=picking)
+                    res2 = attr(order=order, picking=picking)
+                    if res2:
+                        res += res2
 
         return res
 
@@ -314,11 +314,12 @@ class DeliveryCarrier(models.Model):
         :param packages: Optional recordset of packages (should be for this carrier)
         '''
         self.ensure_one()
-        if hasattr(self, '%s_cancel_shipment' % self.delivery_type):
+        attr = getattr(self, '%s_cancel_shipment' % self.delivery_type, None)
+        if attr:
             # No good way to tell if this method takes the kwarg for packages
             if packages:
                 try:
-                    return getattr(self, '%s_cancel_shipment' % self.delivery_type)(pickings, packages=packages)
+                    return attr(pickings, packages=packages)
                 except TypeError:
                     # we won't be able to cancel the packages properly
                     # here we will TRY to make a good call here where we put the package references into the picking
@@ -329,7 +330,7 @@ class DeliveryCarrier(models.Model):
                         'carrier_tracking_ref': tracking_ref,
                     })
 
-            return getattr(self, '%s_cancel_shipment' % self.delivery_type)(pickings)
+            return attr(pickings)
 
 
 class ChooseDeliveryPackage(models.TransientModel):
