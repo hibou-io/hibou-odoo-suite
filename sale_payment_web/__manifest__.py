@@ -15,6 +15,7 @@ Electronic payments will create transactions and automatically reconcile on the 
         """,
     'depends': [
         'payment',
+        'payment_fix_register_token',
         'sale',
     ],
     'auto_install': False,
