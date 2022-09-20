@@ -31,10 +31,10 @@ class DeliveryCarrier(models.Model):
             return self._get_package_type_for_order(order, 'package_volume', 'volume')
         attr = getattr(self, '%s_default_packaging_id' % (self.delivery_type, ), None)
         if attr:
-            return attr()
+            return attr
         attr = getattr(self, '%s_default_package_type_id' % (self.delivery_type, ), None)
         if attr:
-            return attr()
+            return attr
         return self.env['stock.package.type']
 
     def _get_package_type_for_order(self, order, package_type_field, product_field):
