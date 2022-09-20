@@ -103,10 +103,10 @@ class ProviderPurolator(models.Model):
             if res.get('carrier') == self:
                 if downgrade_response:
                     return {
-                        'success': True, 
+                        'success': res.get('success', True), 
                         'price': res.get('price', 0.0),
-                        'error_message': False,
-                        'warning_message': False,
+                        'error_message': res.get('error_message', False),
+                        'warning_message': res.get('warning_message', False),
                     }
                 return res
         return {
@@ -129,9 +129,9 @@ class ProviderPurolator(models.Model):
         errors = response_body.ResponseInformation.Errors
         if errors:
             errors = errors.Error  # unpack container node
-            puro_errors = '\n\n'.join(['%s - %s - %s' % (e.Code, e.AdditionalInformation, e.Description) for e in errors])
+            puro_errors = ['%s - %s - %s' % (e.Code, e.AdditionalInformation, e.Description) for e in errors]
             if raise_class:
-                raise raise_class(_('Error(s) during Purolator Request:\n%s') % (puro_errors, ))
+                raise raise_class(_('Error(s) during Purolator Request:\n%s') % ('\n\n'.join(puro_errors), ))
             return puro_errors
     
     def _purolator_shipment_fill_payor(self, request, picking=None, order=None):
@@ -150,12 +150,9 @@ class ProviderPurolator(models.Model):
         sender = self.get_shipper_warehouse(order=order, picking=picking)
         receiver = self.get_recipient(order=order, picking=picking)
         
-        date_planned = fields.Date.today()
+        date_planned = fields.Datetime.now()
         if self.env.context.get('date_planned'):
             date_planned = self.env.context.get('date_planned')
-            if hasattr(date_planned, 'date'):
-                # this should be a datetime
-                date_planned = date_planned.date()
         
         # create SOAP request to fill in
         shipment = service.estimate_shipment_request()
@@ -163,6 +160,8 @@ class ProviderPurolator(models.Model):
         shipment.ShowAlternativeServicesIndicator = "true"
         # indicate when we will ship this for time in transit
         shipment.ShipmentDate = str(date_planned)
+        if hasattr(date_planned, 'date'):
+            shipment.ShipmentDate = str(date_planned.date())
         
         # populate origin information
         self._purolator_fill_address(shipment.SenderInformation.Address, sender)
@@ -201,7 +200,7 @@ class ProviderPurolator(models.Model):
                     'error_message': False,
                     'warning_message': _('TotalCharge not found.') if price == 0.0 else False,
                     'date_planned': date_planned,
-                    'date_delivered': fields.Date.to_date(shipment['ExpectedDeliveryDate']),
+                    'date_delivered': fields.Datetime.to_datetime(shipment['ExpectedDeliveryDate']),
                     'transit_days': shipment['EstimatedTransitDays'],
                     'service_code': shipment['ServiceID'],
                 })
@@ -339,3 +338,6 @@ class ProviderPurolator(models.Model):
             res.append(shipping_data)
         
         return res
+
+    # TODO cancel shipment
+    # TODO track shipment
