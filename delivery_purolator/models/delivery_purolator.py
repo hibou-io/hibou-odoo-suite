@@ -93,48 +93,26 @@ class ProviderPurolator(models.Model):
         return weight_uom_id._compute_quantity(weight, self.env.ref('uom.product_uom_lb'), round=False)
     
     def purolator_convert_length(self, length):
-        volume_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
-        return weight_uom_id._compute_quantity(weight, self.env.ref('uom.product_uom_lb'), round=False)
+        raise Exception('Not implemented. Need to do math on UOM to convert less dimensions')
+        volume_uom_id = self.env['product.template']._get_volume_uom_id_from_ir_config_parameter()
+        return volume_uom_id._compute_quantity(weight, self.env.ref('uom.product_uom_lb'), round=False)
 
-    def purolator_rate_shipment(self, order):
-        # sudoself = self.sudo()
-        third_party = self.purolator_third_party(order=order)
-        sender = self.get_shipper_warehouse(order=order)
-        receiver = self.get_recipient(order=order)
-        receiver_address = {
-            'City': receiver.city,
-            'Province': receiver.state_id.code,
-            'Country': receiver.country_id.code,
-            'PostalCode': receiver.zip,
-        }
-        # TODO packaging volume/length/width/height
-        weight = self.purolator_convert_weight(order._get_estimated_weight())
-        service = self._purolator_service()
-        res = service.get_quick_estimate(
-            sender.zip,
-            receiver_address,
-            self.purolator_default_package_type_id.shipper_package_code,
-            weight,
-        )
-        if res['error']:
-            return {
-                'success': False,
-                'price': 0.0,
-                'error_message': _(res['error']),
-                'warning_message': False,
-            }
-        shipment = list(filter(lambda s: s['ServiceID'] == self.purolator_service_type, res['shipments']))
-        if not shipment:
-            return {
-                'success': False,
-                'price': 0.0,
-                'error_message': _('No rate found matching service: %s') % self.purolator_service_type,
-                'warning_message': False,
-            }
+    def purolator_rate_shipment(self, order, downgrade_response=True):
+        multi_res = self._purolator_rate_shipment_multi_package(order=order)
+        for res in multi_res:
+            if res.get('carrier') == self:
+                if downgrade_response:
+                    return {
+                        'success': True, 
+                        'price': res.get('price', 0.0),
+                        'error_message': False,
+                        'warning_message': False,
+                    }
+                return res
         return {
-            'success': True, 
-            'price': shipment[0]['TotalPrice'] if not third_party else 0.0,
-            'error_message': False,
+            'success': False,
+            'price': 0.0,
+            'error_message': _('No rate found matching service: %s') % self.purolator_service_type,
             'warning_message': False,
         }
     
@@ -147,45 +125,71 @@ class ProviderPurolator(models.Model):
                 rates += self._purolator_rate_shipment_multi_package(order=order, picking=picking, package=package)
             return rates
     
+    def _purolator_format_errors(self, response_body, raise_class=None):
+        errors = response_body.ResponseInformation.Errors
+        if errors:
+            errors = errors.Error  # unpack container node
+            puro_errors = '\n\n'.join(['%s - %s - %s' % (e.Code, e.AdditionalInformation, e.Description) for e in errors])
+            if raise_class:
+                raise raise_class(_('Error(s) during Purolator Request:\n%s') % (puro_errors, ))
+            return puro_errors
+    
+    def _purolator_shipment_fill_payor(self, request, picking=None, order=None):
+        request.PaymentInformation.PaymentType = 'Sender'
+        request.PaymentInformation.RegisteredAccountNumber = self.purolator_account_number
+        request.PaymentInformation.BillingAccountNumber = self.purolator_account_number
+        third_party_account = self.purolator_third_party(picking=picking, order=order)
+        # when would it be 'Receiver' ?
+        if third_party_account:
+            request.PaymentInformation.PaymentType = 'ThirdParty'
+            request.PaymentInformation.BillingAccountNumber = third_party_account
+    
     def _purolator_rate_shipment_multi_package(self, order=None, picking=None, package=None):
+        service = self._purolator_service()
         third_party = self.purolator_third_party(order=order, picking=picking)
         sender = self.get_shipper_warehouse(order=order, picking=picking)
         receiver = self.get_recipient(order=order, picking=picking)
-        receiver_address = {
-            'City': receiver.city,
-            'Province': receiver.state_id.code,
-            'Country': receiver.country_id.code,
-            'PostalCode': receiver.zip,
-        }
-        weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
-        volume_uom_id = self.env['product.template']._get_volume_uom_id_from_ir_config_parameter()
         
-        date_planned = fields.Datetime.now()
+        date_planned = fields.Date.today()
         if self.env.context.get('date_planned'):
             date_planned = self.env.context.get('date_planned')
+            if hasattr(date_planned, 'date'):
+                # this should be a datetime
+                date_planned = date_planned.date()
         
-        # TODO need packaging volume/dimensions
-        package_code = self.purolator_default_package_type_id.shipper_package_code
+        # create SOAP request to fill in
+        shipment = service.estimate_shipment_request()
+        # request getting more than one service back
+        shipment.ShowAlternativeServicesIndicator = "true"
+        # indicate when we will ship this for time in transit
+        shipment.ShipmentDate = str(date_planned)
+        
+        # populate origin information
+        self._purolator_fill_address(shipment.SenderInformation.Address, sender)
+        # populate destination
+        self._purolator_fill_address(shipment.ReceiverInformation.Address, receiver)
+        
         if order:
-            weight = order._get_estimated_weight()
+            service.estimate_shipment_add_sale_order_packages(shipment, self, order)
         else:
-            if package:
-                weight = package.shipping_weight
-                package_code = package.package_type_id.shipper_package_code if package.package_type_id.package_carrier_type == 'purolator' else package_code
-            else:
-                weight = picking.shipping_weight or picking.weight
-        weight = self.purolator_convert_weight(weight)
-        service = self._purolator_service()
-        res = service.get_quick_estimate(sender.zip, receiver_address, package_code, weight)
-        if res['error']:
+            service.estimate_shipment_add_picking_packages(shipment, self, picking, package)
+        
+        self._purolator_shipment_fill_payor(shipment, order=order, picking=picking)
+        
+        shipment_res = service.get_full_estimate(shipment)
+        
+        # _logger.info('_purolator_rate_shipment_multi_package called with shipment %s result %s' % (shipment, shipment_res))
+
+        errors = self._purolator_format_errors(shipment_res)
+        if errors:
             return [{'carrier': self,
                      'success': False,
                      'price': 0.0,
-                     'error_message': _('Error:\n%s') % res['error'],
+                     'error_message': '\n'.join(errors),
                      'warning_message': False,
                     }]
         rates = []
-        for shipment in res['shipments']:
+        for shipment in shipment_res.ShipmentEstimates.ShipmentEstimate:
             carrier = self.purolator_find_delivery_carrier_for_service(shipment['ServiceID'])
             if carrier:
                 price = shipment['TotalPrice']
@@ -297,24 +301,14 @@ class ProviderPurolator(models.Model):
             # $request->Shipment->PackageInformation->OptionsInformation->Options->OptionIDValuePair->ID = "ResidentialSignatureDomestic";
             # $request->Shipment->PackageInformation->OptionsInformation->Options->OptionIDValuePair->Value = "true";
             
-            shipment.PaymentInformation.PaymentType = 'Sender'
-            shipment.PaymentInformation.RegisteredAccountNumber = self.purolator_account_number
-            shipment.PaymentInformation.BillingAccountNumber = self.purolator_account_number
-            third_party_account = self.purolator_third_party(picking=picking)
-            # when would it be 'Receiver' ?
-            if third_party_account:
-                shipment.PaymentInformation.PaymentType = 'ThirdParty'
-                shipment.PaymentInformation.BillingAccountNumber = third_party_account
+            self._purolator_shipment_fill_payor(shipment, picking=picking)
             
             shipment_res = service.shipment_create(shipment,
                                                    printer_type=('Regular' if self.purolator_label_file_type == 'PDF' else 'Thermal'))
             # _logger.info('purolator service.shipment_create for shipment %s resulted in %s' % (shipment, shipment_res))
             
-            errors = shipment_res.ResponseInformation.Errors
-            if errors:
-                errors = errors.Error  # unpack container node
-                puro_errors = '\n\n'.join(['%s - %s - %s' % (e.Code, e.AdditionalInformation, e.Description) for e in errors])
-                raise UserError(_('Error(s) during Purolator Shipment Request:\n%s') % (puro_errors, ))
+            # this will raise an error alerting the user if there is an error, and no more
+            self._purolator_format_errors(shipment_res, raise_class=UserError)
             
             document_blobs = []
             shipment_pin = shipment_res.ShipmentPIN.Value

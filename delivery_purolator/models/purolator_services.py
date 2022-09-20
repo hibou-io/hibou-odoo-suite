@@ -1,3 +1,4 @@
+from math import ceil
 from requests import Session
 from requests.auth import HTTPBasicAuth
 from zeep import Client
@@ -81,7 +82,14 @@ class PurolatorClient(object):
             UserToken=self.activation_key,
         )
         client.set_default_soapheaders([header_value])
-        return client        
+        return client
+    
+    def get_full_estimate(self, shipment, show_alternative_services='true'):
+        response = self.estimating_client.service.GetFullEstimate(
+            Shipment=shipment,
+            ShowAlternativeServicesIndicator=show_alternative_services,
+        )
+        return response.body
             
     def get_quick_estimate(self, sender_postal_code, receiver_address, package_type, total_weight):
         """ Call GetQuickEstimate
@@ -123,26 +131,83 @@ class PurolatorClient(object):
         }
         
     def shipment_request(self):
-        shipment = self.shipping_factory.Shipment()
-        shipment.SenderInformation = self.shipping_factory.SenderInformation()
-        shipment.SenderInformation.Address = self.shipping_factory.Address()
-        shipment.SenderInformation.Address.PhoneNumber = self.shipping_factory.PhoneNumber()
-        shipment.ReceiverInformation = self.shipping_factory.ReceiverInformation()
-        shipment.ReceiverInformation.Address = self.shipping_factory.Address()
-        shipment.ReceiverInformation.Address.PhoneNumber = self.shipping_factory.PhoneNumber()
-        shipment.PackageInformation = self.shipping_factory.PackageInformation()
-        shipment.PackageInformation.TotalWeight = self.shipping_factory.TotalWeight()
-        shipment.PackageInformation.PiecesInformation = self.shipping_factory.ArrayOfPiece()
-        shipment.PaymentInformation = self.shipping_factory.PaymentInformation()
+        return self._shipment_request(self.shipping_factory)
+    
+    # just like above, but using estimate api
+    def estimate_shipment_request(self):
+        return self._shipment_request(self.estimating_factory)
+    
+    def _shipment_request(self, factory):
+        shipment = factory.Shipment()
+        shipment.SenderInformation = factory.SenderInformation()
+        shipment.SenderInformation.Address = factory.Address()
+        shipment.SenderInformation.Address.PhoneNumber = factory.PhoneNumber()
+        shipment.ReceiverInformation = factory.ReceiverInformation()
+        shipment.ReceiverInformation.Address = factory.Address()
+        shipment.ReceiverInformation.Address.PhoneNumber = factory.PhoneNumber()
+        shipment.PackageInformation = factory.PackageInformation()
+        shipment.PackageInformation.TotalWeight = factory.TotalWeight()
+        shipment.PackageInformation.PiecesInformation = factory.ArrayOfPiece()
+        shipment.PaymentInformation = factory.PaymentInformation()
         return shipment
     
-    def shipment_add_picking_packages(self, shipment, carrier, picking, packages):
+    def estimate_shipment_add_sale_order_packages(self, shipment, carrier, order):
+        # this could be a non-purolator package type as returned by the search functions
+        package_type = carrier.get_package_type_for_order(order)
+        shipment.PackageInformation.ServiceID = carrier.purolator_service_type
+        weight = carrier.purolator_convert_weight(order._get_estimated_weight())
+        package_type_max_weight = 0.0
+        if package_type.max_weight:
+            package_type_max_weight = carrier.purolator_convert_weight(package_type.max_weight)
+        
+        if package_type_max_weight and weight > package_type_max_weight:
+            total_pieces = ceil(weight / package_type_max_weight)
+            package_weight = weight / total_pieces
+        else:
+            total_pieces = 1
+            package_weight = weight
+            
+        if package_weight < 1.0:
+            package_weight = 1.0
+
+        total_weight_value = package_weight * total_pieces
+        for _i in range(total_pieces):
+            p = self.estimating_factory.Piece(
+                Weight={
+                    'Value': str(package_weight),
+                    'WeightUnit': 'lb',
+                },
+                Length={
+                    'Value': str(package_type.packaging_length),  # TODO need conversion
+                    'DimensionUnit': 'in', 
+                },
+                Width={
+                    'Value': str(package_type.width),  # TODO need conversion
+                    'DimensionUnit': 'in', 
+                },
+                Height={
+                    'Value': str(package_type.height),  # TODO need conversion
+                    'DimensionUnit': 'in', 
+                },
+            )
+            shipment.PackageInformation.PiecesInformation.Piece.append(p)
+        shipment.PackageInformation.TotalWeight.Value = str(weight)
+        shipment.PackageInformation.TotalWeight.WeightUnit = 'lb'
+        shipment.PackageInformation.TotalPieces = str(total_pieces)
+
+    def estimate_shipment_add_picking_packages(self, shipment, carrier, picking, packages):    
+        return self._shipment_add_picking_packages(self.estimating_factory, shipment, carrier, picking, packages)
+
+    def shipment_add_picking_packages(self, shipment, carrier, picking, packages):    
+        return self._shipment_add_picking_packages(self.shipping_factory, shipment, carrier, picking, packages)
+    
+    def _shipment_add_picking_packages(self, factory, shipment, carrier, picking, packages):
         # note that no package can be less than 1lb, so we fix that here...
         # for the package to be allowed, it must be the same service
         shipment.PackageInformation.ServiceID = carrier.purolator_service_type
         
         total_weight_value = 0.0
-        total_pieces = len(packages) or 1
+        total_pieces = len(packages or []) or 1
         if not packages:
             # setup default package
             package_weight = carrier.purolator_convert_weight(picking.shipping_weight)
@@ -150,7 +215,7 @@ class PurolatorClient(object):
                 package_weight = 1.0
             total_weight_value += package_weight
             package_type = carrier.purolator_default_package_type_id
-            p = self.shipping_factory.Piece(
+            p = factory.Piece(
                 Weight={
                     'Value': str(package_weight),
                     'WeightUnit': 'lb',
@@ -176,7 +241,7 @@ class PurolatorClient(object):
                     package_weight = 1.0
                 package_type = package.package_type_id
                 total_weight_value += package_weight
-                p = self.shipping_factory.Piece(
+                p = factory.Piece(
                     Weight={
                         'Value': str(package_weight),
                         'WeightUnit': 'lb',
