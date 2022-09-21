@@ -84,7 +84,7 @@ class DeliveryCarrier(models.Model):
             order_total += ol.product_id[product_field] * ol.product_uom_qty
         package_type_field_value = package_type[package_type_field]
         if not package_type_field_value or package_type_field_value >= order_total:
-            return 1.0
+            return 1
         return ceil(order_total / package_type_field_value)
 
     # Utility
