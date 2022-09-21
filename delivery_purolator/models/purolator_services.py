@@ -176,24 +176,17 @@ class PurolatorClient(object):
     def estimate_shipment_add_sale_order_packages(self, shipment, carrier, order):
         # this could be a non-purolator package type as returned by the search functions
         package_type = carrier.get_package_type_for_order(order)
+        total_pieces = carrier.get_package_count_for_order(order, package_type)
+        
         package_type_codes = [t.strip() for t in (package_type.shipper_package_code or '').split(',') if t.strip() in PUROLATOR_PIECE_SPECIAL_HANDLING_TYPE]
         shipment.PackageInformation.ServiceID = carrier.purolator_service_type
-        weight = carrier.purolator_convert_weight(order._get_estimated_weight())
-        package_type_max_weight = 0.0
-        if package_type.max_weight:
-            package_type_max_weight = carrier.purolator_convert_weight(package_type.max_weight)
-        
-        if package_type_max_weight and weight > package_type_max_weight:
-            total_pieces = ceil(weight / package_type_max_weight)
-            package_weight = weight / total_pieces
-        else:
-            total_pieces = 1
-            package_weight = weight
-            
+        total_weight_value = carrier.purolator_convert_weight(order._get_estimated_weight())
+        package_weight = total_weight_value / total_pieces
+        if total_weight_value < 1.0:
+            total_weight_value = 1.0
         if package_weight < 1.0:
             package_weight = 1.0
 
-        total_weight_value = package_weight * total_pieces
         for _i in range(total_pieces):
             p = self.estimating_factory.Piece(
                 Weight={
@@ -217,7 +210,7 @@ class PurolatorClient(object):
                 self._add_piece_code(self.estimating_factory, p, package_code)
                 
             shipment.PackageInformation.PiecesInformation.Piece.append(p)
-        shipment.PackageInformation.TotalWeight.Value = str(weight)
+        shipment.PackageInformation.TotalWeight.Value = str(total_weight_value)
         shipment.PackageInformation.TotalWeight.WeightUnit = 'lb'
         shipment.PackageInformation.TotalPieces = str(total_pieces)
 
