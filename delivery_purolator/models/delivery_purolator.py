@@ -7,6 +7,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+# 2022-09-21 - US Methods are known to rate, but cannot ship without additional customs/documents
 PUROLATOR_SERVICES = [
     ('PurolatorExpress9AM', 'Purolator Express 9AM'),
     ('PurolatorExpress10:30AM', 'Purolator Express 10:30AM'),
@@ -36,39 +37,41 @@ PUROLATOR_SERVICES = [
     ('PurolatorQuickShipEnvelope', 'Purolator Quick Ship Envelope'),
     ('PurolatorQuickShipPack', 'Purolator Quick Ship Pack'),
     ('PurolatorQuickShipBox', 'Purolator Quick Ship Box'),
-    ('PurolatorExpressU.S.', 'Purolator Express U.S.'),
-    ('PurolatorExpressU.S.9AM', 'Purolator Express U.S. 9AM'),
-    ('PurolatorExpressU.S.10:30AM', 'Purolator Express U.S. 10:30AM'),
-    ('PurolatorExpressU.S.12:00', 'Purolator Express U.S. 12:00'),
-    ('PurolatorExpressEnvelopeU.S.', 'Purolator Express Envelope U.S.'),
-    ('PurolatorExpressU.S.Envelope9AM', 'Purolator Express U.S. Envelope 9AM'),
-    ('PurolatorExpressU.S.Envelope10:30AM', 'Purolator Express U.S. Envelope 10:30AM'),
-    ('PurolatorExpressU.S.Envelope12:00', 'Purolator Express U.S. Envelope 12:00'),
-    ('PurolatorExpressPackU.S.', 'Purolator Express Pack U.S.'),
-    ('PurolatorExpressU.S.Pack9AM', 'Purolator Express U.S. Pack 9AM'),
-    ('PurolatorExpressU.S.Pack10:30AM', 'Purolator Express U.S. Pack 10:30AM'),
-    ('PurolatorExpressU.S.Pack12:00', 'Purolator Express U.S. Pack 12:00'),
-    ('PurolatorExpressBoxU.S.', 'Purolator Express Box U.S.'),
-    ('PurolatorExpressU.S.Box9AM', 'Purolator Express U.S. Box 9AM'),
-    ('PurolatorExpressU.S.Box10:30AM', 'Purolator Express U.S. Box 10:30AM'),
-    ('PurolatorExpressU.S.Box12:00', 'Purolator Express U.S. Box 12:00'),
-    ('PurolatorGroundU.S.', 'Purolator Ground U.S.'),
-    ('PurolatorExpressInternational', 'Purolator Express International'),
-    ('PurolatorExpressInternational9AM', 'Purolator Express International 9AM'),
-    ('PurolatorExpressInternational10:30AM', 'Purolator Express International 10:30AM'),
-    ('PurolatorExpressInternational12:00', 'Purolator Express International 12:00'),
-    ('PurolatorExpressEnvelopeInternational', 'Purolator Express Envelope International'),
-    ('PurolatorExpressInternationalEnvelope9AM', 'Purolator Express International Envelope 9AM'),
-    ('PurolatorExpressInternationalEnvelope10:30AM', 'Purolator Express International Envelope 10:30AM'),
-    ('PurolatorExpressInternationalEnvelope12:00', 'Purolator Express International Envelope 12:00'),
-    ('PurolatorExpressPackInternational', 'Purolator Express Pack International'),
-    ('PurolatorExpressInternationalPack9AM', 'Purolator Express International Pack 9AM'),
-    ('PurolatorExpressInternationalPack10:30AM', 'Purolator Express International Pack 10:30AM'),
-    ('PurolatorExpressInternationalPack12:00', 'Purolator Express International Pack 12:00'),
-    ('PurolatorExpressBoxInternational', 'Purolator Express Box International'),
-    ('PurolatorExpressInternationalBox9AM', 'Purolator Express International Box 9AM'),
-    ('PurolatorExpressInternationalBox10:30AM', 'Purolator Express International Box 10:30AM'),
-    ('PurolatorExpressInternationalBox12:00', 'Purolator Express International Box 12:00'),
+    # 2022-09-21 - US Methods are known to rate, but cannot ship without additional customs/documents
+    # ('PurolatorExpressU.S.', 'Purolator Express U.S.'),
+    # ('PurolatorExpressU.S.9AM', 'Purolator Express U.S. 9AM'),
+    # ('PurolatorExpressU.S.10:30AM', 'Purolator Express U.S. 10:30AM'),
+    # ('PurolatorExpressU.S.12:00', 'Purolator Express U.S. 12:00'),
+    # ('PurolatorExpressEnvelopeU.S.', 'Purolator Express Envelope U.S.'),
+    # ('PurolatorExpressU.S.Envelope9AM', 'Purolator Express U.S. Envelope 9AM'),
+    # ('PurolatorExpressU.S.Envelope10:30AM', 'Purolator Express U.S. Envelope 10:30AM'),
+    # ('PurolatorExpressU.S.Envelope12:00', 'Purolator Express U.S. Envelope 12:00'),
+    # ('PurolatorExpressPackU.S.', 'Purolator Express Pack U.S.'),
+    # ('PurolatorExpressU.S.Pack9AM', 'Purolator Express U.S. Pack 9AM'),
+    # ('PurolatorExpressU.S.Pack10:30AM', 'Purolator Express U.S. Pack 10:30AM'),
+    # ('PurolatorExpressU.S.Pack12:00', 'Purolator Express U.S. Pack 12:00'),
+    # ('PurolatorExpressBoxU.S.', 'Purolator Express Box U.S.'),
+    # ('PurolatorExpressU.S.Box9AM', 'Purolator Express U.S. Box 9AM'),
+    # ('PurolatorExpressU.S.Box10:30AM', 'Purolator Express U.S. Box 10:30AM'),
+    # ('PurolatorExpressU.S.Box12:00', 'Purolator Express U.S. Box 12:00'),
+    # ('PurolatorGroundU.S.', 'Purolator Ground U.S.'),
+    # 2022-09-21 - International Methods are known to rate
+    # ('PurolatorExpressInternational', 'Purolator Express International'),
+    # ('PurolatorExpressInternational9AM', 'Purolator Express International 9AM'),
+    # ('PurolatorExpressInternational10:30AM', 'Purolator Express International 10:30AM'),
+    # ('PurolatorExpressInternational12:00', 'Purolator Express International 12:00'),
+    # ('PurolatorExpressEnvelopeInternational', 'Purolator Express Envelope International'),
+    # ('PurolatorExpressInternationalEnvelope9AM', 'Purolator Express International Envelope 9AM'),
+    # ('PurolatorExpressInternationalEnvelope10:30AM', 'Purolator Express International Envelope 10:30AM'),
+    # ('PurolatorExpressInternationalEnvelope12:00', 'Purolator Express International Envelope 12:00'),
+    # ('PurolatorExpressPackInternational', 'Purolator Express Pack International'),
+    # ('PurolatorExpressInternationalPack9AM', 'Purolator Express International Pack 9AM'),
+    # ('PurolatorExpressInternationalPack10:30AM', 'Purolator Express International Pack 10:30AM'),
+    # ('PurolatorExpressInternationalPack12:00', 'Purolator Express International Pack 12:00'),
+    # ('PurolatorExpressBoxInternational', 'Purolator Express Box International'),
+    # ('PurolatorExpressInternationalBox9AM', 'Purolator Express International Box 9AM'),
+    # ('PurolatorExpressInternationalBox10:30AM', 'Purolator Express International Box 10:30AM'),
+    # ('PurolatorExpressInternationalBox12:00', 'Purolator Express International Box 12:00'),
 ]
 
 
@@ -145,6 +148,28 @@ class ProviderPurolator(models.Model):
             request.PaymentInformation.PaymentType = 'ThirdParty'
             request.PaymentInformation.BillingAccountNumber = third_party_account
     
+    def _purolator_shipment_fill_options(self, request, picking=None, order=None, packages=None):
+        # Signature can come from any package/packages
+        require_signature = False
+        if packages:
+            # if ANY package has it
+            require_signature = any(packages.mapped('require_signature'))
+        else:
+            require_signature = self.get_signature_required(order=order, picking=picking)
+        # when we support international, there is also ResidentialSignatureIntl  (and AdultSignatureRequired)
+        request.ResidentialSignatureDomestic = 'true' if require_signature else 'false'
+        
+        declared_value = 0.0
+        if packages:
+            declared_value = sum(s or 0.0 for s in packages.mapped('declared_value'))
+        else:
+            declared_value = self.get_insurance_value(picking=picking, order=order)
+        if declared_value:
+            request.DeclaredValue = str(round(declared_value, 2))
+        
+        request.DeclaredValue = str(self.get_insurance_value())
+        # _logger.info('  _purolator_shipment_fill_options set sig.req. %s set declared val. %s' % (require_signature, declared_value))
+        
     def _purolator_rate_shipment_multi_package(self, order=None, picking=None, package=None):
         service = self._purolator_service()
         third_party = self.purolator_third_party(order=order, picking=picking)
@@ -175,6 +200,7 @@ class ProviderPurolator(models.Model):
             service.estimate_shipment_add_picking_packages(shipment, self, picking, package)
         
         self._purolator_shipment_fill_payor(shipment, order=order, picking=picking)
+        self._purolator_shipment_fill_options(shipment, order=order, picking=picking, packages=package)
         
         shipment_res = service.get_full_estimate(shipment)
         
@@ -294,15 +320,8 @@ class ProviderPurolator(models.Model):
             
             service.shipment_add_picking_packages(shipment, self, picking, picking_packages)
             
-            # TODO package level signature and insurance....
-            # IF we cannot do this at the package level, then we must implement it here.
-            # We may need to warn that all packages will follow the same rule.
-            # //Define OptionsInformation
-            # //ResidentialSignatureDomestic
-            # $request->Shipment->PackageInformation->OptionsInformation->Options->OptionIDValuePair->ID = "ResidentialSignatureDomestic";
-            # $request->Shipment->PackageInformation->OptionsInformation->Options->OptionIDValuePair->Value = "true";
-            
             self._purolator_shipment_fill_payor(shipment, picking=picking)
+            self._purolator_shipment_fill_options(shipment, picking=picking, packages=picking_packages)
             
             shipment_res = service.shipment_create(shipment,
                                                    printer_type=('Regular' if self.purolator_label_file_type == 'PDF' else 'Thermal'))

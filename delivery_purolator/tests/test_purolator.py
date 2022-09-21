@@ -57,6 +57,9 @@ class TestPurolator(TransactionCase):
         # reconfigure this method so that we can set its default package to one that needs a service code
         self.delivery_carrier_ground = self.env.ref('delivery_purolator.purolator_ground')
         self.delivery_carrier_ground.purolator_default_package_type_id = self.env.ref('delivery_purolator.purolator_packaging_large_package')
+        # set a VERY low requirement for signature
+        self.delivery_carrier_ground.automatic_insurance_value = 0.1
+        self.delivery_carrier_ground.automatic_sig_req_value = 0.1
     
     def _so_pick_shipping(self):
             # Regular Update Shipping functionality
