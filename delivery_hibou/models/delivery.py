@@ -1,4 +1,5 @@
 import logging
+from math import ceil
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_compare
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
@@ -47,6 +48,14 @@ class DeliveryCarrier(models.Model):
             return attr
         _logger.info('  package by NULL')
         return self.env['stock.package.type']
+    
+    def get_package_count_for_order(self, order, package_type=None):
+        if package_type is None:
+            package_type = self.get_package_type_for_order(order)
+        
+        if self.package_by_field == 'volume':
+            return self._get_package_count_for_order(order, package_type, 'package_volume', 'volume')
+        return self._get_package_count_for_order(order, package_type, 'max_weight', 'weight')
 
     def _get_package_type_for_order(self, order, package_type_field, product_field):
         # NOTE do not optimize this into non-loop.
@@ -66,6 +75,17 @@ class DeliveryCarrier(models.Model):
                     return package_type
             return package_types if not package_type else package_type
         return self.env['stock.package.type']
+    
+    def _get_package_count_for_order(self, order, package_type, package_type_field, product_field):
+        # NOTE do not optimize this into non-loop.
+        # this may be an orderfake
+        order_total = 0.0
+        for ol in order.order_line.filtered(lambda ol: ol.product_id.type in ('product', 'consu')):
+            order_total += ol.product_id[product_field] * ol.product_uom_qty
+        package_type_field_value = package_type[package_type_field]
+        if not package_type_field_value or package_type_field_value >= order_total:
+            return 1.0
+        return ceil(order_total / package_type_field_value)
 
     # Utility
     def get_to_ship_picking_packages(self, picking):
@@ -204,7 +224,7 @@ class DeliveryCarrier(models.Model):
 
     def _get_shipper_warehouse_dropship_in(self, picking):
         if picking.sale_id:
-            picking.sale_id.partner_shipping_id
+            return picking.sale_id.partner_shipping_id
         return self._get_shipper_warehouse_dropship_in_no_sale(picking)
 
     def _get_shipper_warehouse_dropship_in_no_sale(self, picking):
