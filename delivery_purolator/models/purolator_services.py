@@ -7,6 +7,15 @@ from zeep.transports import Transport
 from odoo.exceptions import UserError
 
 
+PUROLATOR_PIECE_SPECIAL_HANDLING_TYPE = [
+    # 'AdditionalHandling',  # unknown if this is "SpecialHandling"
+    'FlatPackage',
+    'LargePackage',
+    # 'Oversized',  # unknown if this is "SpecialHandling"
+    # 'ResidentialAreaHeavyweight',  # unknown if this is "SpecialHandling"
+]
+
+
 class PurolatorClient(object):
     
     # clients and factories
@@ -151,9 +160,23 @@ class PurolatorClient(object):
         shipment.PaymentInformation = factory.PaymentInformation()
         return shipment
     
+    def _add_piece_code(self, factory, piece, code):
+        # note that we ONLY support special handling type
+        if not piece.Options:
+            piece.Options = factory.ArrayOfOptionIDValuePair()
+            piece.Options.OptionIDValuePair.append(factory.OptionIDValuePair(
+                ID='SpecialHandling',
+                Value='true',
+            ))
+        piece.Options.OptionIDValuePair.append(factory.OptionIDValuePair(
+            ID='SpecialHandlingType',
+            Value=code,
+        ))
+    
     def estimate_shipment_add_sale_order_packages(self, shipment, carrier, order):
         # this could be a non-purolator package type as returned by the search functions
         package_type = carrier.get_package_type_for_order(order)
+        package_type_codes = [t.strip() for t in (package_type.shipper_package_code or '').split(',') if t.strip() in PUROLATOR_PIECE_SPECIAL_HANDLING_TYPE]
         shipment.PackageInformation.ServiceID = carrier.purolator_service_type
         weight = carrier.purolator_convert_weight(order._get_estimated_weight())
         package_type_max_weight = 0.0
@@ -190,6 +213,9 @@ class PurolatorClient(object):
                     'DimensionUnit': 'in', 
                 },
             )
+            for package_code in package_type_codes:
+                self._add_piece_code(self.estimating_factory, p, package_code)
+                
             shipment.PackageInformation.PiecesInformation.Piece.append(p)
         shipment.PackageInformation.TotalWeight.Value = str(weight)
         shipment.PackageInformation.TotalWeight.WeightUnit = 'lb'
@@ -215,6 +241,7 @@ class PurolatorClient(object):
                 package_weight = 1.0
             total_weight_value += package_weight
             package_type = carrier.purolator_default_package_type_id
+            package_type_codes = [t.strip() for t in (package_type.shipper_package_code or '').split(',') if t.strip() in PUROLATOR_PIECE_SPECIAL_HANDLING_TYPE]
             p = factory.Piece(
                 Weight={
                     'Value': str(package_weight),
@@ -233,6 +260,9 @@ class PurolatorClient(object):
                     'DimensionUnit': 'in', 
                 },
             )
+            for package_code in package_type_codes:
+                self._add_piece_code(factory, p, package_code)
+                
             shipment.PackageInformation.PiecesInformation.Piece.append(p)
         else:
             for package in packages:
@@ -240,6 +270,11 @@ class PurolatorClient(object):
                 if package_weight < 1.0:
                     package_weight = 1.0
                 package_type = package.package_type_id
+                package_type_code = package_type.shipper_package_code or ''
+                if package_type.package_carrier_type != 'purolator':
+                    package_type_code = carrier.purolator_default_package_type_id.shipper_package_code or ''
+                package_type_codes = [t.strip() for t in package_type_code.split(',') if t.strip() in PUROLATOR_PIECE_SPECIAL_HANDLING_TYPE]
+                
                 total_weight_value += package_weight
                 p = factory.Piece(
                     Weight={
@@ -259,9 +294,9 @@ class PurolatorClient(object):
                         'DimensionUnit': 'in', 
                     },
                 )
-                # TODO p.Options.OptionIDValuePair  (ID='SpecialHandling', Value='true')
-                # can we do per-package signature requirements?
-                # Packaging specific codes?
+                for package_code in package_type_codes:
+                    self._add_piece_code(factory, p, package_code)
+                
                 shipment.PackageInformation.PiecesInformation.Piece.append(p)
         
         shipment.PackageInformation.TotalWeight.Value = str(total_weight_value)

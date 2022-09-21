@@ -1,3 +1,4 @@
+from base64 import b64decode
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 from .purolator_services import PurolatorClient
@@ -253,7 +254,8 @@ class ProviderPurolator(models.Model):
         
 
     def _purolator_fill_address(self, addr, partner):
-        addr.Name = partner.name if not partner.is_company else ''
+        # known to not work without a name
+        addr.Name = partner.name
         addr.Company = partner.name if partner.is_company else (partner.company_name or '')
         addr.Department = ''
         addr.StreetNumber, addr.StreetName, addr.StreetType = self._purolator_address_street(partner)
@@ -318,13 +320,13 @@ class ProviderPurolator(models.Model):
                     p.carrier_tracking_ref = pin
                     doc_res = service.document_by_pin(pin, output_type=self.purolator_label_file_type)
                     for n, blob in enumerate(self._purolator_extract_doc_blobs(doc_res), 1):
-                        document_blobs.append(('PuroPackage-%s-%s.%s' % (pin, n, self.purolator_label_file_type), blob))
+                        document_blobs.append(('PuroPackage-%s-%s.%s' % (pin, n, self.purolator_label_file_type), b64decode(blob)))
             else:
                 # retrieve shipment_pin document(s)
                 doc_res = service.document_by_pin(shipment_pin, output_type=self.purolator_label_file_type)
                 # _logger.info('purolator service.document_by_pin for pin %s resulted in %s' % (shipment_pin, doc_res))
                 for n, blob in enumerate(self._purolator_extract_doc_blobs(doc_res), 1):
-                    document_blobs.append(('PuroShipment-%s-%s.%s' % (shipment_pin, n, self.purolator_label_file_type), blob))
+                    document_blobs.append(('PuroShipment-%s-%s.%s' % (shipment_pin, n, self.purolator_label_file_type), b64decode(blob)))
                 
             if document_blobs:
                 logmessage = _("Shipment created in Purolator <br/> <b>Tracking Number/PIN : </b>%s") % (shipment_pin)
