@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <record id="purolator_packaging_default" model="stock.package.type">
+        <field name="name">Purolator Default</field>
+        <field name="shipper_package_code" eval=""/>
+        <field name="package_carrier_type">purolator</field>
+    </record>
+
+    <record id="purolator_packaging_large_package" model="stock.package.type">
+        <field name="name">Purolator LargePackage</field>
+        <field name="shipper_package_code">LargePackage</field>
+        <field name="package_carrier_type">purolator</field>
+    </record>
+
+    <record id="purolator_packaging_flat_package" model="stock.package.type">
+        <field name="name">Purolator FlatPackage</field>
+        <field name="shipper_package_code">FlatPackage</field>
+        <field name="package_carrier_type">purolator</field>
+    </record>
+
+</data>
+</odoo>
