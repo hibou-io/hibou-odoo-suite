@@ -14,7 +14,7 @@ class HrAttendance(models.Model):
         if isinstance(vals_list, dict):
             vals_list = [vals_list]
 
-        payslip_ids = [i for i in set([d.get('payslip_id', 0) for d in vals_list]) if i != 0]
+        payslip_ids = [i for i in set([d.get('payslip_id') or 0 for d in vals_list]) if i != 0]
         if payslip_ids:
             payslips = self.env['hr.payslip'].sudo().browse(payslip_ids)
             if payslips.filtered(lambda p: p.state not in ('draft', 'verify')):

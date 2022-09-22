@@ -14,9 +14,11 @@ class AnalyticLine(models.Model):
         if isinstance(vals_list, dict):
             vals_list = [vals_list]
 
-        payslips = self.env['hr.payslip'].sudo().browse([d.get('payslip_id', 0) for d in vals_list])
-        if any(p.state not in ('draft', 'verify') for p in payslips.exists()):
-            raise ValidationError(_('Cannot create attendance linked to payslip that is not draft.'))
+        payslip_ids = [i for i in set([d.get('payslip_id') or 0 for d in vals_list]) if i != 0]
+        if payslip_ids:
+            payslips = self.env['hr.payslip'].sudo().browse(payslip_ids)
+            if any(p.state not in ('draft', 'verify') for p in payslips):
+                raise ValidationError(_('Cannot create timesheet linked to payslip that is not draft.'))
         return super().create(vals_list)
 
     def write(self, values):
@@ -24,7 +26,7 @@ class AnalyticLine(models.Model):
         if payslip_id:
             payslip = self.env['hr.payslip'].sudo().browse(payslip_id)
             if payslip.exists().state not in ('draft', 'verify'):
-                raise ValidationError(_('Cannot modify attendance linked to payslip that is not draft.'))
+                raise ValidationError(_('Cannot modify timesheet linked to payslip that is not draft.'))
         return super().write(values)
 
     def unlink(self):
