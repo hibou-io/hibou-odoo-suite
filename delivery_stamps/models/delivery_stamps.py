@@ -418,6 +418,7 @@ class ProviderStamps(models.Model):
                             if not all((shipment_weight, customs_total_weight)):
                                 raise UserError(_('Must have a shipment and customs weight to proceed. (shipment_weight %s, customs_weight %s') % (shipment_weight, customs_total_weight))
                             customs_lines = []
+                            new_total_weight = 0.0
                             for product, values in product_values.items():
                                 line_weight_ratio = shipment_weight / customs_total_weight
                                 customs_line = service.create_customs_lines()
