@@ -7,7 +7,7 @@ from urllib.request import urlopen
 from suds import WebFault
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 from .api.config import StampsConfiguration
 from .api.services import StampsService
@@ -402,22 +402,30 @@ class ProviderStamps(models.Model):
                                     product_values[product] = {
                                         'quantity': 0.0,
                                         'value': 0.0,
+                                        'weight': 0.0,
                                     }
                                 product_values[product]['quantity'] += quantity
                                 product_values[product]['value'] += price * quantity
+                                product_values[product]['value'] += self._stamps_convert_weight(product.weight * values['quantity'])  # not rounded....
                             
-                            # Note that Stamps will not allow you to use the scale weight if it is not equal
-                            # to the sum of the customs lines.
-                            # Thus we sum the line
-                            new_total_weight = 0.0
+                            # Note that Stamps must match customs weight to the shipment itself
+                            # IF we just take the weight from the products, then we're wrong by the difference between shipping weight
+                            # IF INSTEAD we want the shipping weight to be accurate, we can ratio the weights of the customs lines.
+                            # e.g. shipping_weight = 5, customs_weight (2 items at 1lb and 3lb) = 4
+                            # to get to a shipping_weight of 5, the weights we will send will be (5/4) * 1lb and (5/4) * 3lb = 5
+                            shipment_weight = shipping.WeightLb
+                            customs_total_weight = sum(round(v['weight'], 2) for k, v in product_values.items())
+                            if not all((shipment_weight, customs_total_weight)):
+                                raise UserError(_('Must have a shipment and customs weight to proceed. (shipment_weight %s, customs_weight %s') % (shipment_weight, customs_total_weight))
                             customs_lines = []
                             for product, values in product_values.items():
+                                line_weight_ratio = shipment_weight / customs_total_weight
                                 customs_line = service.create_customs_lines()
                                 customs_line.Description = product.name
                                 customs_line.Quantity = values['quantity']
                                 customs_total += round(values['value'], 2)
                                 customs_line.Value = round(values['value'], 2)
-                                line_weight = round(self._stamps_convert_weight(product.weight * values['quantity']), 2)
+                                line_weight = round(self._stamps_convert_weight(product.weight * values['quantity']) * line_weight_ratio, 2)
                                 customs_line.WeightLb = line_weight
                                 new_total_weight += line_weight
                                 customs_line.HSTariffNumber = product.hs_code or ''
@@ -426,6 +434,7 @@ class ProviderStamps(models.Model):
                                 customs_lines.append(customs_line)
                             customs.CustomsLines.CustomsLine = customs_lines
                             shipping.DeclaredValue = round(customs_total, 2)
+                            # still set it, but it should be much closer to the original weight
                             shipping.WeightLb = round(new_total_weight, 2)
 
                         label = service.get_label(shipping,
