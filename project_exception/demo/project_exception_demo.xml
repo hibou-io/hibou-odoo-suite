@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="except_no_project_id" model="exception.rule">
+        <field name="name">No Project Id</field>
+        <field name="description">No Project Id</field>
+        <field name="sequence">50</field>
+        <field name="model">project</field>
+        <field name="code">if not project_id: failed=True</field>
+        <field name="active" eval="False"/>
+  </record>
+
+</odoo>
