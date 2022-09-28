@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="project_acceptance_email_template" model="mail.template">
+            <field name="name">Task Acceptance</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="subject">{{ object.display_name }}: Task Approval Request</field>
+            <field name="email_from">{{ (object.rating_get_rated_partner_id().email_formatted if object.rating_get_rated_partner_id() else user.email_formatted) }}</field>
+            <field name="partner_to" >{{ object.rating_get_partner_id().id }}</field>
+            <field name="body_html" type="html">
+                <div>
+                    <t t-set="access_token" t-value="object.rating_get_access_token()"/>
+                    <t t-set="partner" t-value="object.rating_get_partner_id()"/>
+                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="width:100%; margin:0px auto;">
+                    <tbody>
+                        <tr><td valign="top" style="font-size: 13px;">
+                            <t t-if="partner.name">
+                                Hello <t t-out="partner.name or ''">Brandon Freeman</t>,<br/><br/>
+                            </t>
+                            <t t-else="">
+                                Hello,<br/><br/>
+                            </t>
+                            Please take a moment to review and approve, decline or provide feedback on this task: "<strong t-out="object.display_name or ''"></strong>"
+                        </td></tr>
+                        <tr><td style="text-align: center;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" summary="o_mail_notification" style="width:100%; margin: 32px 0px 32px 0px;">
+                                <tr><td style="font-size: 13px;">
+                                    <strong>Please click on one of the below icons to indicate approval.</strong><br/>
+                                </td></tr>
+                                <tr><td style="font-size: 13px;">
+                                    <table style="width:100%;text-align:center;margin-top:2rem;">
+                                        <tr>
+                                            <td>
+                                                <!-- <a t-attf-href="/rate/{{ access_token }}/5">
+                                                    <img alt="Accepted" src="./static/src/img/square-check-solid.svg" title="Accepted"/>
+                                                </a> -->
+                                                <a role="button" class="btn btn-primary" t-attf-href="#" style="color: #ffffff"><i class="fa fa-check"/> Accepted</a>
+                                            </td>
+                                            <td>
+                                                <!-- <a t-attf-href="/rate/{{ access_token }}/3">
+                                                    <img alt="Declined" src="./static/src/img/circle-stop-solid.svg" title="Declined"/>
+                                                </a> -->
+                                                <a role="button" class="btn btn-danger" t-attf-href="#" style="color: #ffffff"> <i class="fa fa-stop-circle"/> Declined</a>
+                                            </td>
+                                            <td>
+                                                <!-- <a t-attf-href="/rate/{{ access_token }}/1">
+                                                    <img alt="Feedback" src="./static/src/img/comment-regular.svg" title="Feedback Provided"/>
+                                                </a> -->
+                                                <a role="button" class="btn btn-warning" t-attf-href="#" style="color: #ffffff"><i class="fa fa-comment"/> Feedback</a>                                                
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td></tr>
+                            </table>
+                        </td></tr>
+                        <tr><td valign="top" style="font-size: 13px;">
+                            This task will remain in the "<strong t-out="object.stage_id.name"></strong>" until the task is approved or declined.
+                            <t t-if="object.project_id.rating_status == 'stage'">
+                                <br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;">This customer survey has been sent because your task has been moved to the stage <b t-out="object.stage_id.name or ''">In progress</b></span>
+                            </t>
+                        </td></tr>
+                    </tbody>
+                    </table>
+                </div>
+            </field>
+            <field name="lang">{{ object.rating_get_partner_id().lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>
