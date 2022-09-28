@@ -406,7 +406,7 @@ class ProviderStamps(models.Model):
                                     }
                                 product_values[product]['quantity'] += quantity
                                 product_values[product]['value'] += price * quantity
-                                product_values[product]['value'] += self._stamps_convert_weight(product.weight * values['quantity'])  # not rounded....
+                                product_values[product]['weight'] += self._stamps_convert_weight(product.weight * quantity)  # not rounded so we can sum better....
                             
                             # Note that Stamps must match customs weight to the shipment itself
                             # IF we just take the weight from the products, then we're wrong by the difference between shipping weight
