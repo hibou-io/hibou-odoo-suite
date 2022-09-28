@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_task_inherit" inherit_id="project.portal_my_task">
+        <xpath expr="//div[@class='mt32']" position="before">
+            <div class="row justify-content-center text-center d-print-none pt-1 pb-4">
+                <div t-if="not sale_order_exceptions" class="col-sm-auto mt8">
+                    <!-- <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#"><i class="fa fa-check"/>Accept</a> -->
+                    <!-- <a role="button" class="btn btn-primary" t-attf-href="#" style="color: #ffffff"><i class="fa fa-check"/> Accepted</a> -->
+                    <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#" style="color: #ffffff"><i class="fa fa-check"/> Accepted</a>
+                </div>            
+                <div class="col-sm-auto mt8">
+                    <!-- <a role="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldecline" href="#"> <i class="fa fa-times"/>Decline</a> -->
+                    <a role="button" class="btn btn-danger" t-attf-href="#" style="color: #ffffff"> <i class="fa fa-stop-circle"/> Declined</a>
+                </div>
+                <div class="col-sm-auto mt8">
+                    <!-- <a role="button" class="btn btn-secondary" href="#discussion"><i class="fa fa-comment"/> Feedback</a> -->
+                    <a role="button" class="btn btn-warning" t-attf-href="#discussion" style="color: #ffffff"><i class="fa fa-comment"/> Feedback</a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
