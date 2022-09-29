@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="excep_no_phone" model="exception.rule">
+        <field name="name">No phone</field>
+        <field name="description">No phone number on customer</field>
+        <field name="sequence">50</field>
+        <field name="model">account.move</field>
+        <field name="code">if not invoice.partner_id.phone: failed=True</field>
+        <field name="active" eval="False"/>
+  </record>
+
+</odoo>
