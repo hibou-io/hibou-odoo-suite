@@ -37,15 +37,45 @@ class AccountMove(models.Model):
         return res
 
     def amount_for_commission(self, commission=None):
-        if hasattr(self, 'margin') and self.company_id.commission_amount_type == 'on_invoice_margin':
-            sign = -1 if self.move_type in ['in_refund', 'out_refund'] else 1
-            return self.margin * sign
-        elif self.company_id.commission_amount_type == 'on_invoice_untaxed':
-            return self.amount_untaxed_signed
-        return self.amount_total_signed
+        # Override to exclude ineligible products
+        amount = 0.0
+        if self.is_invoice():
+            invoice_lines = self.invoice_line_ids.filtered(lambda l: not l.product_id.no_commission)
+            if self.company_id.commission_amount_type == 'on_invoice_margin':
+                margin_threshold = float(self.env['ir.config_parameter'].sudo().get_param('commission.margin.threshold', default=0.0))
+                if margin_threshold:
+                    invoice_lines = invoice_lines.filtered(lambda l: l.margin_percent > margin_threshold)
+                sign = -1 if self.move_type in ['in_refund', 'out_refund'] else 1
+                margin = sum(invoice_lines.mapped('margin'))
+                amount = margin * sign
+            else:
+                amount = sum(invoice_lines.mapped('balance'))
+                amount = abs(amount) if self.move_type == 'entry' else -amount
+        return amount
 
     def action_cancel(self):
         res = super(AccountMove, self).action_cancel()
         for move in self:
             move.sudo().commission_ids.unlink()
         return res
+
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    margin_percent = fields.Float(string='Margin percent (%)', compute='_compute_margin_percent', digits=(3, 2))
+
+    @api.depends('margin', 'product_id', 'purchase_price', 'quantity', 'price_unit', 'price_subtotal')
+    def _compute_margin_percent(self):
+        for line in self:
+            currency = line.move_id.currency_id
+            price = line.purchase_price
+            if line.product_id and not price:
+                date = line.move_id.date if line.move_id.date else fields.Date.context_today(line.move_id)
+                from_cur = line.move_id.company_currency_id.with_context(date=date)
+                price = from_cur._convert(line.product_id.standard_price, currency, line.company_id, date, round=False)
+            total_price = price * line.quantity
+            if total_price == 0.0:
+                line.margin_percent = -1.0
+            else:
+                line.margin_percent = (line.margin / total_price) * 100.0

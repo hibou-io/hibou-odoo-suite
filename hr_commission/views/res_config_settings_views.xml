@@ -35,6 +35,10 @@
                                     <label string="Commission Base" for="commission_amount_type" class="col-md-3 o_light_label"/>
                                     <field name="commission_amount_type"/>
                                 </div>
+                                <div class="row">
+                                    <label string="Commission Margin Threshold" for="commission_margin_threshold" class="col-md-3 o_light_label"/>
+                                    <field name="commission_margin_threshold"/>
+                                </div>
                             </div>
                         </div>
                     </div>
