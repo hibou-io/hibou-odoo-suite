@@ -1,6 +1,11 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
 from datetime import date
+from pprint import pformat
+
+import logging
+_logger = logging.getLogger(__name__)
+
 
 def ir_5ta_cat(payslip, categories, worked_days, inputs):
     basic_wage = categories.BASIC
@@ -33,6 +38,8 @@ def ir_5ta_cat(payslip, categories, worked_days, inputs):
     
     #    IF employee's `first_contract_date` is in current year
     #    THEN we can pro-rate the period (reduce withholding)
+    # TODO replace with just date_from on contract or something
+    # we are told that every year new contracts will be needed
     date_hired = payslip.dict.contract_id.first_contract_date
     payslip_date_end = payslip.dict.date_to
     hired_in_year = date_hired.year == payslip_date_end.year
@@ -92,4 +99,5 @@ def ir_5ta_cat(payslip, categories, worked_days, inputs):
         return wage_period,  (remaining_tax / wage_period * 100.0)
     
     tax = -(total_tax - ytd_tax) / pay_periods_at_current
+    _logger.info('ir_5ta_cat locals: ' + str(pformat(locals())))
     return wage_period, (tax / wage_period * 100.0)
