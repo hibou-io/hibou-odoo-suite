@@ -35,7 +35,7 @@ class InputLine(BrowsableObject):
         self.__browsable_query = """
             SELECT sum(amount) as sum
             FROM hr_payslip as hp, hr_payslip_input as pi
-            WHERE hp.employee_id = %s AND hp.state = 'done'
+            WHERE hp.employee_id = %s AND hp.state in ('done', 'paid')
             AND hp.{sum_field} >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s""".format(sum_field=sum_field)
 
     def sum(self, code, from_date, to_date=None):
@@ -51,7 +51,7 @@ class WorkedDays(BrowsableObject):
         self.__browsable_query = """
             SELECT sum(number_of_days) as number_of_days, sum(number_of_hours) as number_of_hours
             FROM hr_payslip as hp, hr_payslip_worked_days as pi
-            WHERE hp.employee_id = %s AND hp.state = 'done'
+            WHERE hp.employee_id = %s AND hp.state in ('done', 'paid')
             AND hp.{sum_field} >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s""".format(sum_field=sum_field)
 
     def _sum(self, code, from_date, to_date=None):
@@ -77,7 +77,7 @@ class Payslips(BrowsableObject):
         self.__browsable_query_rule = """
             SELECT sum(case when hp.credit_note is not True then (pl.total) else (-pl.total) end)
             FROM hr_payslip as hp, hr_payslip_line as pl
-            WHERE hp.employee_id = %s AND hp.state = 'done'
+            WHERE hp.employee_id = %s AND hp.state in ('done', 'paid')
             AND hp.{sum_field} >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id AND pl.code = %s""".format(sum_field=sum_field)
         # Original (non-recursive)
         # self.__browsable_query_category = """
@@ -105,7 +105,7 @@ class Payslips(BrowsableObject):
 
             SELECT sum(case when hp.credit_note is not True then (pl.total) else (-pl.total) end)
             FROM hr_payslip as hp, hr_payslip_line as pl
-            WHERE hp.employee_id = %s AND hp.state = 'done'
+            WHERE hp.employee_id = %s AND hp.state in ('done', 'paid')
             AND hp.{sum_field} >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id
             AND pl.category_id in (SELECT id from category_ids)""".format(sum_field=sum_field)
 
