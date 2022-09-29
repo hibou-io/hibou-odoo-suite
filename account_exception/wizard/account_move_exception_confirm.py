@@ -3,12 +3,12 @@
 from odoo import api, fields, models
 
 
-class InvoiceExceptionConfirm(models.TransientModel):
-    _name = 'invoice.exception.confirm'
+class AccountMoveExceptionConfirm(models.TransientModel):
+    _name = 'account.move.exception.confirm'
     _inherit = ['exception.rule.confirm']
-    _description = 'Invoice Exception Confirm Wizard'
+    _description = 'Journal Entry Exception Confirm Wizard'
 
-    related_model_id = fields.Many2one('account.move', 'Invoice')
+    related_model_id = fields.Many2one('account.move', 'Journal Entry')
 
     def action_confirm(self):
         self.ensure_one()

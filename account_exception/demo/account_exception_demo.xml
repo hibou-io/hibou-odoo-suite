@@ -6,8 +6,8 @@
         <field name="description">No phone number on customer</field>
         <field name="sequence">50</field>
         <field name="model">account.move</field>
-        <field name="code">if not invoice.partner_id.phone: failed=True</field>
-        <field name="active" eval="False"/>
+        <field name="code">if journal_entry.move_type == 'out_customer' and not journal_entry.partner_id.phone: failed=True</field>
+        <field name="active" eval="True"/>
   </record>
 
 </odoo>

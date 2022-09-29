@@ -8,15 +8,15 @@ class ExceptionRule(models.Model):
 
     model = fields.Selection(
         selection_add=[
-            ('account.move', 'Invoice'),
+            ('account.move', 'Journal Entry'),
         ],
         ondelete={
             'account.move': 'cascade',
         },
     )
-    invoice_ids = fields.Many2many(
+    journal_entry_ids = fields.Many2many(
         'account.move',
-        string="Invoices")
+        string="Journal Entries")
 
 class AccountMove(models.Model):
     _inherit = ['account.move', 'base.exception']
@@ -26,12 +26,12 @@ class AccountMove(models.Model):
     @api.model
     def _exception_rule_eval_context(self, rec):
         res = super(AccountMove, self)._exception_rule_eval_context(rec)
-        res['invoice'] = rec
+        res['journal_entry'] = rec
         return res
 
     @api.model
     def _reverse_field(self):
-        return 'invoice_ids'
+        return 'journal_entry_ids'
 
     def action_post(self):
         self.ensure_one()
@@ -41,5 +41,5 @@ class AccountMove(models.Model):
 # TODO
     @api.model
     def _get_popup_action(self):
-        return self.env.ref('stock_exception.action_stock_exception_confirm')
+        return self.env.ref('account_exception.action_account_move_exception_confirm')
 
