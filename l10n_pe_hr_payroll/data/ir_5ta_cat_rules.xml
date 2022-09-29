@@ -80,6 +80,19 @@
         <field name="appears_on_payslip" eval="True"/>
     </record>
 
+    <record id="hr_payroll_rule_ir_5ta_cat_gratif_household" model="hr.salary.rule">
+        <field name="sequence" eval="81"/>
+        <field name="struct_id" ref="hr_payroll_structure_gratif"/>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Household Allowance</field>
+        <field name="code">ALW_GRATIF_HOUSEHOLD</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.pe_payroll_config_value('has_minor_dependent')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result, result_rate = payslip.rule_parameter('pe_min_wage'), payslip.rule_parameter('pe_minor_dependent_rate')</field>
+        <field name="appears_on_payslip" eval="True"/>
+    </record>
+
     <record id="hr_payroll_rule_ir_5ta_cat_gratif_bono" model="hr.salary.rule">
         <field name="sequence" eval="90"/>
         <field name="struct_id" ref="hr_payroll_structure_gratif"/>

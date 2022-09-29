@@ -10,6 +10,7 @@ class HRContractPEPayrollConfig(models.Model):
     name = fields.Char(string="Description")
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True)
     
+    has_minor_dependent = fields.Boolean(string='Has Minor Dependent', help='Eligible for Household Allowance')
     ee_5ta_cat_exempt = fields.Boolean(string='Exempt from 5th Cat. withholding.')
     
     retirement_type = fields.Selection([
@@ -34,6 +35,9 @@ class HRContractPEPayrollConfig(models.Model):
         ('essalud', 'Essalud'),
         ('eps', 'EPS'),
     ], string='Company Social Services', default='essalud')
+    comp_ss_eps_ee_rule_id = fields.Many2one('hr.salary.rule', string='Employee Social Security EPS Rule',
+                                             domain=[('code', '=like', 'EE_PE_EPS%')],
+                                             help="Rule code prefix 'EE_PE_EPS' to select here.")
     comp_ss_eps_rule_id = fields.Many2one('hr.salary.rule', string='Company Social Security EPS Rule',
                                           domain=[('code', '=like', 'ER_PE_EPS%')],
                                           help="Rule code prefix 'ER_PE_EPS' to select here.")
