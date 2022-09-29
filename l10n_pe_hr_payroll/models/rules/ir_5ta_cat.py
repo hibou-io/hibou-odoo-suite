@@ -99,5 +99,6 @@ def ir_5ta_cat(payslip, categories, worked_days, inputs):
         return wage_period,  (remaining_tax / wage_period * 100.0)
     
     tax = -(total_tax - ytd_tax) / pay_periods_at_current
-    _logger.info('ir_5ta_cat locals: ' + str(pformat(locals())))
+    # uncomment to see a lot of detail
+    # _logger.info('ir_5ta_cat locals: ' + str(pformat(locals())))
     return wage_period, (tax / wage_period * 100.0)
