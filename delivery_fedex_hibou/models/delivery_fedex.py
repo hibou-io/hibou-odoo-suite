@@ -691,7 +691,7 @@ class DeliveryFedex(models.Model):
             carrier = self.fedex_find_delivery_carrier_for_service(service_code)
             if carrier:
                 date_delivered = request.get('date_delivered', False)
-                if date_delivered:
+                if date_delivered and self.delivery_calendar_id.tz:
                     tz = pytz.timezone(self.delivery_calendar_id.tz)
                     date_delivered = tz.localize(date_delivered).astimezone(pytz.utc).replace(tzinfo=None)
                 result.append({'carrier': carrier,
