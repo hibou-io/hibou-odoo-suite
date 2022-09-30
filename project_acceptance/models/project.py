@@ -9,5 +9,5 @@ class ProjectProjectStage(models.Model):
 class ProjectTask(models.Model):
     _inherit = 'project.task'    
     
-    task_acceptance = fields.Selection([('accept', 'Accepted'), ('decline', 'Decline'), ('feedback', 'Feedback Provided')])
+    task_acceptance = fields.Selection([('accept', 'Accepted'), ('decline', 'Decline'), ('feedback', 'Feedback Provided')],'Task Acceptance', traking=True)
     
