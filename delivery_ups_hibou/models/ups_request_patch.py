@@ -144,8 +144,11 @@ def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from
                 res = {}
                 res['service_code'] = rated_shipment.Service.Code
                 res['currency_code'] = rated_shipment.TotalCharges.CurrencyCode
-                negotiated_rate = 'NegotiatedRateCharges' in rated_shipment and rated_shipment.NegotiatedRateCharges.TotalCharge.MonetaryValue or None
-
+                negotiated_rate = None
+                if 'NegotiatedRateCharges' in rated_shipment and rated_shipment.NegotiatedRateCharges and \
+                    'TotalCharge' in rated_shipment.NegotiatedRateCharges and rated_shipment.NegotiatedRateCharges.TotalCharge:
+                    negotiated_rate = rated_shipment.NegotiatedRateCharges.TotalCharge.MonetaryValue
+                
                 res['price'] = negotiated_rate or rated_shipment.TotalCharges.MonetaryValue
                 # Hibou Delivery
                 if hasattr(rated_shipment, 'GuaranteedDelivery') and hasattr(rated_shipment.GuaranteedDelivery, 'BusinessDaysInTransit'):
@@ -205,22 +208,27 @@ def patched_get_shipping_price(self, shipment_info, packages, shipper, ship_from
                                     break
                 result.append(res)
         else:
-            result = {}
-            result['currency_code'] = response.RatedShipment[0].TotalCharges.CurrencyCode
+            # Check if ProcessRate is not success then return reason for that
+            if response.Response.ResponseStatus.Code != "1":
+                return self.get_error_message(response.Response.ResponseStatus.Code, response.Response.ResponseStatus.Description)
+
+            rate = response.RatedShipment[0]
+            charge = rate.TotalCharges
 
             # Some users are qualified to receive negotiated rates
-            negotiated_rate = 'NegotiatedRateCharges' in response.RatedShipment[0] and response.RatedShipment[
-                0].NegotiatedRateCharges.TotalCharge.MonetaryValue or None
+            if 'NegotiatedRateCharges' in rate and rate.NegotiatedRateCharges and rate.NegotiatedRateCharges.TotalCharge.MonetaryValue:
+                charge = rate.NegotiatedRateCharges.TotalCharge
 
-            result['price'] = negotiated_rate or response.RatedShipment[0].TotalCharges.MonetaryValue
+            result = {
+                'currency_code': charge.CurrencyCode,
+                'price': charge.MonetaryValue,
+            }
             # Hibou Delivery
             if hasattr(response.RatedShipment[0], 'GuaranteedDelivery') and hasattr(response.RatedShipment[0].GuaranteedDelivery, 'BusinessDaysInTransit'):
                 result['transit_days'] = int(response.RatedShipment[0].GuaranteedDelivery.BusinessDaysInTransit)
-
             if not result.get('transit_days') and date_planned:
                 # use TNT API to
                 _logger.warning('   We would now use the TNT service. But who would show the transit days? 2')
-
         return result
 
     except Fault as e:
