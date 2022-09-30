@@ -33,13 +33,23 @@ class AccountMove(models.Model):
     def _reverse_field(self):
         return 'journal_entry_ids'
 
-    def action_post(self):
-        self.ensure_one()
-        if self.detect_exceptions():
-            return self._popup_exceptions()
-        return super().action_post()
-# TODO
     @api.model
     def _get_popup_action(self):
         return self.env.ref('account_exception.action_account_move_exception_confirm')
 
+    def write(self, vals):
+        print(f'\n\nwrite()\ncontext={self._context}\n')
+        newState = vals.get('state', '')
+        if not vals.get('ignore_exception'):
+            for journal_entry in self:
+                if journal_entry.with_context(newState=newState).detect_exceptions():
+                    return self._popup_exceptions()
+        return super().write(vals)
+
+    def detect_exceptions(self):
+        print(f'\n\ndetect_exceptions()\ncontext={self._context}\n')
+        res = False
+        if not self._context.get("detect_exceptions"):
+            self = self.with_context(detect_exceptions=True)
+            res = super(AccountMove, self).detect_exceptions()
+        return res

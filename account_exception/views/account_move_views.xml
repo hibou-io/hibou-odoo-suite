@@ -33,8 +33,8 @@
                             groups="base_exception.group_exception_rule_manager"/>
                 </div>
             </sheet>
-            <xpath expr="//field[@name='journal_id']/.." position="after">
-                <field name="ignore_exception" states="done" />
+            <xpath expr="//div[@name='journal_div']" position="after">
+                <field name="ignore_exception" />
             </xpath>
         </field>
     </record>

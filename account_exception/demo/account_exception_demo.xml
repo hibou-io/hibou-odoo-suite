@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="excep_no_phone" model="exception.rule">
+    <record id="except_no_phone" model="exception.rule">
         <field name="name">No phone</field>
         <field name="description">No phone number on customer</field>
         <field name="sequence">50</field>
         <field name="model">account.move</field>
-        <field name="code">if journal_entry.move_type == 'out_customer' and not journal_entry.partner_id.phone: failed=True</field>
+        <field name="code">failed = journal_entry.move_type == 'out_invoice' and not journal_entry.partner_id.phone</field>
         <field name="active" eval="True"/>
-  </record>
+    </record>
+
+    <record id="except_no_phone_on_post" model="exception.rule">
+        <field name="name">No phone when posting</field>
+        <field name="description">No phone when posting</field>
+        <field name="sequence">50</field>
+        <field name="model">account.move</field>
+        <field name="code">failed = journal_entry._context.get('newState') == 'posted' and journal_entry.move_type == 'out_invoice' and not journal_entry.partner_id.phone</field>
+        <field name="active" eval="True"/>
+    </record>
 
 </odoo>
