@@ -9,10 +9,15 @@
     'description': """    """,
     'depends': [
         'project',
+        # 'project_exception',
     ],
     'data': [
         'data/mail_template_data.xml',
+        # 'report/project_report.xml',
+        # 'report/project_report_template.xml',
+        # 'security/project_acceptance_security.xml',
         'views/project_portal_templates.xml',
+        'views/project_views.xml',
     ],
     'installable': True,
     'auto_install': False,

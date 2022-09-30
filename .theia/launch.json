@@ -19,6 +19,16 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "Odoo: INIT 'sale'",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["-i", "sale", 
+                     "-u", "sale",
+                     "--stop-after-init"],
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Odoo: TEST 'sale'",
             "type": "python",
             "request": "launch",
@@ -26,6 +36,16 @@
             "args": ["-i", "sale", 
                      "-u", "sale",
                      "--test-enable", "--no-xmlrpc", "--stop-after-init"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: INIT 'project_acceptance'",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["-i", "project_acceptance", 
+                     "-u", "project_acceptance",
+                     "--stop-after-init"],
             "console": "integratedTerminal"
         },
         {

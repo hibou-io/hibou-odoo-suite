@@ -34,19 +34,22 @@
                                                 <!-- <a t-attf-href="/rate/{{ access_token }}/5">
                                                     <img alt="Accepted" src="./static/src/img/square-check-solid.svg" title="Accepted"/>
                                                 </a> -->
-                                                <a role="button" class="btn btn-primary" t-attf-href="#" style="color: #ffffff"><i class="fa fa-check"/> Accepted</a>
+                                                <a role="button" class="btn btn-primary" t-attf-href="/rate/{{ access_token }}/5" style="color: #ffffff">
+                                                    <i class="fa fa-check"/> Accepted</a>
                                             </td>
                                             <td>
                                                 <!-- <a t-attf-href="/rate/{{ access_token }}/3">
                                                     <img alt="Declined" src="./static/src/img/circle-stop-solid.svg" title="Declined"/>
                                                 </a> -->
-                                                <a role="button" class="btn btn-danger" t-attf-href="#" style="color: #ffffff"> <i class="fa fa-stop-circle"/> Declined</a>
+                                                <a role="button" class="btn btn-danger" t-attf-href="/rate/{{ access_token }}/3" style="color: #ffffff">
+                                                    <i class="fa fa-stop-circle"/> Declined</a>
                                             </td>
                                             <td>
                                                 <!-- <a t-attf-href="/rate/{{ access_token }}/1">
                                                     <img alt="Feedback" src="./static/src/img/comment-regular.svg" title="Feedback Provided"/>
                                                 </a> -->
-                                                <a role="button" class="btn btn-warning" t-attf-href="#" style="color: #ffffff"><i class="fa fa-comment"/> Feedback</a>                                                
+                                                <a role="button" class="btn btn-warning" t-attf-href="/rate/{{ access_token }}/1" style="color: #ffffff">
+                                                    <i class="fa fa-comment"/> Feedback</a>                                                
                                             </td>
                                         </tr>
                                     </table>
