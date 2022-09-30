@@ -1,28 +1,28 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
 {
-    'name': 'Stock Exception Rule',
+    'name': 'Journal Entry Exception Rule',
     'version': '15.0.1.0.0',
     'author': 'Hibou Corp.',
     'license': 'OPL-1',
     'category': 'Generic Modules',
-    'summary': 'Custom exceptions on delivery orders',
+    'summary': 'Custom exceptions on Journal Entries',
     'description': """
-Custom exceptions on delivery orders
+Custom exceptions on journal entries
 """,
     'website': 'https://hibou.io/',
     'depends': [
         'base_exception_user',
-        'stock',
+        'account',
     ],
     'data': [
-        'demo/stock_exception_demo.xml',
+        # 'demo/account_exception_demo.xml',
         'security/ir.model.access.csv',
-        'views/stock_views.xml',
-        'wizard/stock_exception_confirm_views.xml',
+        'views/account_move_views.xml',
+        'wizard/account_move_exception_confirm_views.xml',
     ],
     'demo': [
-        'demo/stock_exception_demo.xml',
+        'demo/account_exception_demo.xml',
     ],
     'installable': True,
     'auto_install': False,
