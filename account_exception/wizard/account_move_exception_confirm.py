@@ -23,5 +23,4 @@ class AccountMoveExceptionConfirm(models.TransientModel):
     def _action_ignore(self):
         self.related_model_id.ignore_exception = True
         super()._action_ignore()
-        # return self.related_model_id.action_post()
-        return True
+        return self.related_model_id.action_post()

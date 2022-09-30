@@ -10,13 +10,4 @@
         <field name="active" eval="True"/>
     </record>
 
-    <record id="except_no_phone_on_post" model="exception.rule">
-        <field name="name">No phone when posting</field>
-        <field name="description">No phone when posting</field>
-        <field name="sequence">50</field>
-        <field name="model">account.move</field>
-        <field name="code">failed = journal_entry._context.get('newState') == 'posted' and journal_entry.move_type == 'out_invoice' and not journal_entry.partner_id.phone</field>
-        <field name="active" eval="True"/>
-    </record>
-
 </odoo>
