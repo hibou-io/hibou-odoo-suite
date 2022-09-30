@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_project_task_exception_confirm_project_task,project_task_exception.project_task_exception,model_project_task_exception_confirm,project.group_project_user,1,1,1,1
+access_project_task_exception_confirm_user,project.exception.confirm user,model_project_exception_confirm,project.group_project_user,1,1,1,1

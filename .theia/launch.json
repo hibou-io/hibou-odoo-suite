@@ -69,6 +69,26 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "Odoo: INIT 'project_exception'",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["-i", "project_exception", 
+                     "-u", "project_exception",
+                     "--stop-after-init"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: TEST 'project_exception'",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["-i", "project_exception", 
+                     "-u", "project_exception",
+                     "--test-enable", "--no-xmlrpc", "--stop-after-init"],
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Odoo: server",
             "type": "python",
             "request": "launch",

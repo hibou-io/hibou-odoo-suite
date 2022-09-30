@@ -12,32 +12,24 @@ class TestProjectException(common.TransactionCase):
     def test_project_task_creation_exception(self):
         exception = self.env.ref('project_exception.except_no_project_id')
         exception.active = True
-        # partner = self.env.ref('base.res_partner_12')  # Azure Interior
-        # partner.zip = False
-        # p = self.env.ref('product.product_product_6')
-        # stock_location = self.env.ref('stock.stock_location_stock')
-        # customer_location = self.env.ref('stock.stock_location_customers')
-        # self.env['stock.quant']._update_available_quantity(p, stock_location, 100)
-        # delivery_order = self.env['stock.picking'].create({
-        #     'partner_id': partner.id,
-        #     'picking_type_id': self.ref('stock.picking_type_out'),
-        #     'location_id': self.env.ref('stock.stock_location_stock').id,
-        #     'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-        #     'move_line_ids': [(0, 0, {'product_id': p.id,
-        #                               'product_uom_id': p.uom_id.id,
-        #                               'qty_done': 3.0,
-        #                               'location_id': stock_location.id,
-        #                               'location_dest_id': customer_location.id})],
-        # })
+        
+        task = self.env['project.task'].create({
+            'name': 'Test Task',
+        })
+        # Created exceptions on create.
+        self.assertTrue(task.exception_ids)
+        
+        # Will return action on write, which may or not be followed.
+        action = task.write({
+            'name': 'Test Task - Test Written',
+        })
+        self.assertTrue(task.exception_ids)
+        self.assertTrue(action)
+        self.assertEqual(action.get('res_model'), 'project.exception.confirm')
 
-        # validate delivery order
-        # action = delivery_order.button_validate()
-        # self.assertEqual(delivery_order.state, 'draft')
-
-        # Simulation the opening of the wizard sale_exception_confirm and
+        # Simulation the opening of the wizard task_exception_confirm and
         # set ignore_exception to True
-        # stock_exception_confirm = Form(self.env[action['res_model']].with_context(action['context'])).save()
-        # stock_exception_confirm.ignore = True
-        # stock_exception_confirm.action_confirm()
-        # self.assertTrue(delivery_order.ignore_exception)
-        # self.assertEqual(delivery_order.state, 'done')
+        project_exception_confirm = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        project_exception_confirm.ignore = True
+        project_exception_confirm.action_confirm()
+        self.assertTrue(task.ignore_exception)

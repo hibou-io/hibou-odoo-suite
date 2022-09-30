@@ -1,61 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <record id="action_stock_test_tree" model="ir.actions.act_window">
-        <field name="name">Stock Exception Rules</field>
+    <record id="action_project_test_tree" model="ir.actions.act_window">
+        <field name="name">Project Exception Rules</field>
         <field name="res_model">exception.rule</field>
+        <!-- What about kanban view?, because kanban is the default view type for Project -->
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="base_exception.view_exception_rule_tree"/>
-        <field name="domain">[('model', '=', 'stock.picking')]</field>
-        <field name="context">{'active_test': False, 'default_model' : 'stock.picking'}</field>
+        <field name="domain">[('model', '=', 'project.task')]</field>
+        <field name="context">{'active_test': False, 'default_model' : 'project.task'}</field>
     </record>
 
     <menuitem
-        action="action_stock_test_tree"
-        id="menu_stock_test"
+        action="action_project_test_tree"
+        id="menu_project_test"
         sequence="10"
-        parent="stock.menu_stock_config_settings"
+        parent="project.menu_project_config"
         groups="base_exception.group_exception_rule_manager"
     />
 
-    <record id="view_picking_form" model="ir.ui.view">
-        <field name="name">stock.picking.form.inherit.exception</field>
-        <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock.view_picking_form"/>
+    <record id="view_task_form2" model="ir.ui.view">
+        <field name="name">project.task.form.inherit.exception</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
             <sheet position="before">
                 <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
                      attrs="{'invisible': [('exceptions_summary','=',False)]}">
-                    <p><strong>There are exceptions blocking the confirmation of this Delivery Order:</strong></p>
+                    <p><strong>There are exceptions blocking the confirmation of this Task:</strong></p>
                     <field name="exceptions_summary"/>
                     <button name="action_ignore_exceptions" type="object" class="btn-danger"
-                            string="Ignore Exceptions" help="Click here to be able to confirm this Delivery Order regardless of the exceptions."
+                            string="Ignore Exceptions" help="Click here to be able to confirm this Task regardless of the exceptions."
                             groups="base_exception.group_exception_rule_manager"/>
                 </div>
             </sheet>
-            <xpath expr="//field[@name='origin']/.." position="inside">
-                <field name="ignore_exception" states="done" />
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="ignore_exception" />
             </xpath>
         </field>
     </record>
 
-    <record id="view_picking_tree" model="ir.ui.view">
-        <field name="name">stock.picking.tree.inherit.exception</field>
-        <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock.vpicktree"/>
+    <record id="view_task_tree2" model="ir.ui.view">
+        <field name="name">project.task.tree.inherit.exception</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_tree2"/>
         <field name="arch" type="xml">
-            <field name="state" position="after">
+            <field name="stage_id" position="after">
                 <field name="main_exception_id"/>
             </field>
         </field>
     </record>
 
-    <record id="view_picking_internal_search" model="ir.ui.view">
-        <field name="name">stock.picking.internal.search.inherit.exception</field>
-        <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock.view_picking_internal_search" />
+    <record id="view_task_search_form" model="ir.ui.view">
+        <field name="name">project.task.search.form.inherit.exception</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form" />
         <field name="arch" type="xml">
-            <filter name="backorder" position="after">
+            <filter name="inactive" position="before">
                 <separator orientation="vertical"/>
                 <filter icon="terp-emblem-important" name="tofix" string="Blocked by exceptions" domain="[('main_exception_id','!=',False)]"/>
             </filter>
