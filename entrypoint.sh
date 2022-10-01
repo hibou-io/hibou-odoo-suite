@@ -16,22 +16,23 @@ set -e
 #    DEV_MODE_PATH=/opt/odoo/addons
 #      To change the path to start Theia in, useful to get git working.
 
+if [ "$DEV_MODE_PATH" != "" ] && [ -z "$(ls -A $DEV_MODE_PATH/.theia)" ]
+then
+   cp -R /opt/odoo/hibou-suite/.theia $DEV_MODE_PATH || true
+fi
+if [ "$DEV_MODE_PATH" != "" ] && [ -z "$(ls -A $DEV_MODE_PATH/.pylintrc)" ]
+then
+   cp -R /opt/odoo/hibou-suite/.pylintrc $DEV_MODE_PATH || true
+fi
+
 if [ "$DEV_MODE_PATH" == "" ]
 then
-   export DEV_MODE_PATH=/opt/odoo
+   export DEV_MODE_PATH=/opt/odoo/hibou-suite
 fi
-
-# setup development IDE
-if [ "$DEV_MODE" == "exclusive" ]
+if [[ -x "/opt/athene/entrypoint.sh" ]]
 then
-    cd /opt/theia
-    exec node /opt/theia/src-gen/backend/main.js $DEV_MODE_PATH --hostname=0.0.0.0
-elif [ "$DEV_MODE" != "" ]
-then
-    cd /opt/theia
-    node /opt/theia/src-gen/backend/main.js $DEV_MODE_PATH --hostname=0.0.0.0 &
+  /opt/athene/entrypoint.sh
 fi
-
 
 # set the postgres database host, port, user and password according to the environment
 # and pass them as arguments to the odoo process if not present in the config file
