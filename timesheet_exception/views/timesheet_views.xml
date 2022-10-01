@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="action_timesheet_test_tree" model="ir.actions.act_window">
+        <field name="name">Timesheet Exception Rules</field>
+        <field name="res_model">exception.rule</field>        
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="base_exception.view_exception_rule_tree"/>
+        <field name="domain">[('model', '=', 'account.analytic.line')]</field>
+        <field name="context">{'active_test': False, 'default_model' : 'account.analytic.line'}</field>
+    </record>
+
+    <menuitem
+        action="action_timesheet_test_tree"
+        id="menu_timesheet_test"
+        sequence="10"
+        parent="timesheet_grid.menu_timesheet_grid_validate"
+        groups="base_exception.group_exception_rule_manager"
+    />
+
+    <record id="my_timesheet_form_view" model="ir.ui.view">
+        <field name="name">account.analytic.line.form.inherit.exception</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="timesheet_grid.timesheet_view_form"/>
+        <field name="arch" type="xml">
+            <sheet position="before">
+                <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
+                     attrs="{'invisible': [('exceptions_summary','=',False)]}">
+                    <p><strong>There are exceptions blocking the confirmation of this Timesheet:</strong></p>
+                    <field name="exceptions_summary"/>
+                    <button name="action_ignore_exceptions" type="object" class="btn-danger"
+                            string="Ignore Exceptions" help="Click here to be able to confirm this Timesheet regardless of the exceptions."
+                            groups="base_exception.group_exception_rule_manager"/>
+                </div>
+            </sheet>
+            <xpath expr="//field[@name='unit_amount']" position="after">
+                <field name="ignore_exception" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_timesheet_line_tree" model="ir.ui.view">
+        <field name="name">taccount.analytic.line.tree.inherit.exception</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="arch" type="xml">
+            <field name="unit_amount" position="after">
+                <field name="main_exception_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_timesheet_line_search" model="ir.ui.view">
+        <field name="name">taccount.analytic.line.search.form.inherit.exception</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search" />
+        <field name="arch" type="xml">
+            <filter name="validated" position="after">
+                <separator orientation="vertical"/>
+                <filter icon="terp-emblem-important" name="tofix" string="Blocked by exceptions" domain="[('main_exception_id','!=',False)]"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

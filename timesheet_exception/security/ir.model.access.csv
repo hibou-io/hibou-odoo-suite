@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+timesheet_exception.access_timesheet_exception_confirm,access_timesheet_exception_confirm,timesheet_exception.model_timesheet_exception_confirm,base.group_user,1,1,1,1
