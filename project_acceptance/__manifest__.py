@@ -9,7 +9,7 @@
     'description': """    """,
     'depends': [
         'project',
-        # 'project_exception',
+        'project_exception',
     ],
     'data': [
         'data/mail_template_data.xml',
