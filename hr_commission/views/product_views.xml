@@ -6,9 +6,12 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='group_general']" position="inside">
+            <xpath expr="//div[@name='options']" position="inside">
                 <field name="can_edit_no_commission" invisible="1"/>
-                <field name="no_commission" attrs="{'readonly': [('can_edit_no_commission', '=', False)]}"/>
+                <span class="d-inline-block">
+                            <field name="no_commission" attrs="{'readonly': [('can_edit_no_commission', '=', False)]}"/>
+                            <label for="no_commission"/>
+                        </span>
             </xpath>
         </field>
     </record>
