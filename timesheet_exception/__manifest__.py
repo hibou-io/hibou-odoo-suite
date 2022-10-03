@@ -15,13 +15,13 @@
     'depends': [
         'base_exception_user',
         'timesheet_grid',
-        'sale_timesheet' # We need to clarify if this module has to be installed/present to run the Tests
-    ],    
+        'sale_timesheet'
+    ],
     'data': [
         'security/ir.model.access.csv',
         'views/timesheet_views.xml',
         'wizard/timesheet_exception_confirm_views.xml',
-    ],    
+    ],
     'demo': [
         'demo/timesheet_exception_demo.xml',
     ],
