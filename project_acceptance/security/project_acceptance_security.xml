@@ -2,17 +2,13 @@
 <!-- <odoo noupdate="1"> -->
 <odoo>
 
-    <record id="task_acceptance_rule_" model="exception.rule">
-        <field name="name">Task Acceptance Exception Rule</field>
-        <field name="description">Task Acceptance Exception Rule</field>
+    <record id="except_no_project_id" model="exception.rule">
+        <field name="name">Task Acceptance is Blank</field>
+        <field name="description">When task stage changes and requires acceptance and task acceptance is blank</field>
         <field name="sequence">50</field>
         <field name="model">project.task</field>
-        <field name="code">
-<!-- if task.stage_id.name == 'Accept Required' and task.task_acceptance == False: failed=True  -->
-        </field>
+        <field name="code">if not task.task_acceptance and task.stage_id.requires_acceptance: failed=True</field>
         <field name="active" eval="False"/>
-        <!-- if task.stage_id.name == 'In progress' and task.task_acceptance == False: failed=True  -->
-        <!-- stage_id == 'Accept Required'  -->
     </record>
 
 </odoo>
