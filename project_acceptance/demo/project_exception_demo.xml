@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="except_no_project_id" model="exception.rule">
+        <field name="name">Task Acceptance is Blank</field>
+        <field name="description">When task stage changes and requires acceptance and task acceptance is blank</field>
+        <field name="sequence">50</field>
+        <field name="model">project.task</field>
+        <field name="code">if not task.task_acceptance and task.stage_id.requires_acceptance: failed=True</field>
+        <field name="active" eval="False"/>
+  </record>
+
+</odoo>

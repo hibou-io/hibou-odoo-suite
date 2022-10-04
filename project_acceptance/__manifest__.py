@@ -19,6 +19,9 @@
         'views/project_portal_templates.xml',
         'views/project_views.xml',
     ],
+    'demo': [
+        'demo/project_exception_demo.xml',
+    ],
     'installable': True,
     'auto_install': False,
 }
