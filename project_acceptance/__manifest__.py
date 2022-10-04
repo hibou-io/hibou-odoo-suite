@@ -8,14 +8,14 @@
     'complexity': 'easy',
     'description': """    """,
     'depends': [
-        'project',
+        # 'project',
         'project_exception',
     ],
     'data': [
         'data/mail_template_data.xml',
+        'data/project_exception_data.xml',
         # 'report/project_report.xml',
-        # 'report/project_report_template.xml',
-        'security/project_acceptance_security.xml',
+        # 'report/project_report_template.xml',        
         'views/project_portal_templates.xml',
         'views/project_views.xml',
     ],

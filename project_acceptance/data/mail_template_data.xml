@@ -25,21 +25,22 @@
                         <tr><td style="text-align: center;">
                             <table border="0" cellpadding="0" cellspacing="0" width="590" summary="o_mail_notification" style="width:100%; margin: 32px 0px 32px 0px;">
                                 <tr><td style="font-size: 13px;">
-                                    <strong>Please click on one of the below icons to indicate approval.</strong><br/>
+                                    <!-- <strong>Please click on one of the below icons to indicate approval.</strong><br/> -->
+                                    <strong>Please click on one of the below icons to go back to the portal and can confirm your selection.</strong><br/>
                                 </td></tr>
                                 <tr><td style="font-size: 13px;">
                                     <table style="width:100%;text-align:center;margin-top:2rem;">
                                         <tr>
                                             <td>
-                                                <a role="button" class="btn btn-primary" t-attf-href="/my/task/#{task.id}/accept" style="color: #ffffff">
+                                                <a role="button" class="btn btn-primary" t-attf-href="{{object.get_base_url()}}/my/task/{{object.id}}" style="color: #ffffff">
                                                     <i class="fa fa-check"/> Accepted</a>
                                             </td>
                                             <td>
-                                                <a role="button" class="btn btn-danger" t-attf-href="/my/task/#{task.id}/decline" style="color: #ffffff">
+                                                <a role="button" class="btn btn-danger" t-attf-href="{{object.get_base_url()}}/my/task/{{object.id}}" style="color: #ffffff">
                                                     <i class="fa fa-stop-circle"/> Declined</a>
                                             </td>
                                             <td>
-                                                <a role="button" class="btn btn-warning" t-attf-href="/my/task/#{task.id}/feedback" style="color: #ffffff">
+                                                <a role="button" class="btn btn-warning" t-attf-href="{{object.get_base_url()}}/my/task/{{object.id}}/#discussion" style="color: #ffffff">
                                                     <i class="fa fa-comment"/> Feedback</a>                                                
                                             </td>
                                         </tr>
@@ -47,6 +48,25 @@
                                 </td></tr>
                             </table>
                         </td></tr>
+
+                        <!-- <tr><td style="text-align: center;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" summary="o_mail_notification" style="width:100%; margin: 32px 0px 32px 0px;">
+                                <tr><td style="font-size: 13px;">
+                                    <!-- <strong>Please click on one of the below icons to indicate approval.</strong><br/> -->
+                                    <strong>Please click on to go to the portal and confirm your selection</strong><br/>
+                                </td></tr>
+                                <tr><td style="font-size: 13px;">
+                                    <table style="width:100%;text-align:center;margin-top:2rem;">
+                                        <tr>
+                                            <a role="button" class="btn btn-primary" t-attf-href="{{object.get_base_url()}}/my/task/{{object.id}}" style="color: #ffffff"> Go to the portal</a>
+                                        </tr>
+                                    </table>
+                                </td></tr>
+                            </table>
+                        </td></tr> -->
+
+
+                        
                         <tr><td valign="top" style="font-size: 13px;">
                             This task will remain in the "<strong t-out="object.stage_id.name"></strong>" until the task is approved or declined.
                             <t t-if="object.project_id.rating_status == 'stage'">
