@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- <odoo noupdate="1"> -->
 <odoo>
 
     <record id="except_no_project_id" model="exception.rule">

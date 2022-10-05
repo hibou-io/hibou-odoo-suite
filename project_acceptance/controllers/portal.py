@@ -1,12 +1,7 @@
-# import binascii
-
 from odoo import fields, http, SUPERUSER_ID, _
-# from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.http import request
 
-# from odoo.addons.portal.controllers.mail import _message_post_helper
 from odoo.addons.portal.controllers import portal
-# from odoo.addons.portal.controllers.portal import pager as portal_pager, get_records_pager
 
 
 class CustomerPortal(portal.CustomerPortal):
@@ -15,6 +10,7 @@ class CustomerPortal(portal.CustomerPortal):
     def portal_task_accept(self, task_id, access_token=None, **post):
         if request.httprequest.method == 'POST':            
             task = request.env['project.task'].browse([task_id])
+            # task.with_context('skip_detect_exceptions').write({'task_acceptance': 'accept'})
             task.sudo().ignore_exception = True
             task.sudo().task_acceptance = 'accept'
             task.sudo().ignore_exception = False
@@ -24,19 +20,21 @@ class CustomerPortal(portal.CustomerPortal):
     def portal_task_decline(self, task_id, access_token=None, **post):
         if request.httprequest.method == 'POST':
             task = request.env['project.task'].browse([task_id])
+            # task.with_context('skip_detect_exceptions').write({'task_acceptance': 'decline'})
             task.sudo().ignore_exception = True
             task.sudo().task_acceptance = 'decline'
             task.sudo().ignore_exception = False
     
-    # @http.route(['/my/task/<int:task_id>/feedback'], type='http', auth="user", website=True)
-    # def portal_task_feedback(self, task_id, access_token=None, **post):
-    #     if request.httprequest.method == 'POST':
-    #         task = request.env['project.task'].browse([task_id])
-    #         task.task_acceptance = 'feedback'
-    #         return request.redirect('/my/task/#discussion')
     
     
-        
+    ######################################################################
+    # The next code is for modal views and to sign document for acceptance
+    #####################################################################
+    # import binascii
+    # from odoo.exceptions import AccessError, MissingError, ValidationError
+    # from odoo.addons.portal.controllers.mail import _message_post_helper
+    # from odoo.addons.portal.controllers.portal import pager as portal_pager, get_records_pager
+    
     # @http.route(['/my/task/<int:task_id>'], type='http', auth="public", website=True)
     # def portal_my_task(self, task_id, access_token=None, **kw):
     #     try:
