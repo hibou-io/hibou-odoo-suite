@@ -13,15 +13,20 @@ class CustomerPortal(portal.CustomerPortal):
     
     @http.route('/my/task/<int:task_id>/accept', type='http', auth="user", website=True)
     def portal_task_accept(self, task_id, access_token=None, **post):
-        if request.httprequest.method == 'POST':
+        if request.httprequest.method == 'POST':            
             task = request.env['project.task'].browse([task_id])
-            task.sudo().task_acceptance = 'accept'        
+            task.sudo().ignore_exception = True
+            task.sudo().task_acceptance = 'accept'
+            task.sudo().ignore_exception = False
+                   
         
     @http.route(['/my/task/<int:task_id>/decline'], type='http', auth="user", website=True)
     def portal_task_decline(self, task_id, access_token=None, **post):
         if request.httprequest.method == 'POST':
             task = request.env['project.task'].browse([task_id])
+            task.sudo().ignore_exception = True
             task.sudo().task_acceptance = 'decline'
+            task.sudo().ignore_exception = False
     
     # @http.route(['/my/task/<int:task_id>/feedback'], type='http', auth="user", website=True)
     # def portal_task_feedback(self, task_id, access_token=None, **post):
