@@ -34,10 +34,10 @@ class AnalyticLine(models.Model):
     def _reverse_field(self):
         return 'timesheet_ids'
 
-    def write(self, vals):        
+    def write(self, vals):
         if not vals.get('ignore_exception'):
-            for timesheet in self:
-                if timesheet.detect_exceptions() and 'stage_id' in vals:
+            for timesheet in self:                
+                if timesheet.with_context(newVals=vals).detect_exceptions():
                     return self._popup_exceptions()
         return super().write(vals)
 

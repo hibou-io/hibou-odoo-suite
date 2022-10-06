@@ -6,7 +6,7 @@
         <field name="description">Unit amount over 8 hrs</field>
         <field name="sequence">50</field>
         <field name="model">account.analytic.line</field>
-        <field name="code">if self.unit_amount > 8: failed=True</field>
+        <field name="code">failed = self._context.get("newVals", {}).get("validated", False) == True and self.unit_amount > 8</field>
         <field name="active" eval="True"/>
     </record>
 
@@ -15,7 +15,7 @@
         <field name="description">SO delivered qty plus unit amount exceeds ordered qty</field>
         <field name="sequence">50</field>
         <field name="model">account.analytic.line</field>
-        <field name="code">if self.so_line.product_template_id.service_policy == 'ordered_timesheet' and self.so_line.qty_delivered + self.unit_amount > self.so_line.product_uom_qty: failed=True</field>
+        <field name="code">failed = self._context.get("newVals", {}).get("validated", False) == True and (self.so_line.product_template_id.service_policy == 'ordered_timesheet' and self.so_line.qty_delivered + self.unit_amount > self.so_line.product_uom_qty)</field>
         <field name="active" eval="True"/>
     </record>
 
