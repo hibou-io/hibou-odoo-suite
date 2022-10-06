@@ -31,19 +31,13 @@ class AnalyticLine(models.Model):
         return res
 
     @api.model
-    def _exception_rule_eval_context(self, rec):
-        res = super(AnalyticLine, self)._exception_rule_eval_context(rec)
-        res['timesheet'] = rec
-        return res
-
-    @api.model
     def _reverse_field(self):
         return 'timesheet_ids'
 
-    def write(self, vals):
+    def write(self, vals):        
         if not vals.get('ignore_exception'):
             for timesheet in self:
-                if timesheet.detect_exceptions():
+                if timesheet.detect_exceptions() and 'stage_id' in vals:
                     return self._popup_exceptions()
         return super().write(vals)
 

@@ -16,7 +16,7 @@ class TimesheetExceptionConfirm(models.TransientModel):
             self.related_model_id.ignore_exception = True
         res = super().action_confirm()
         if self.ignore:
-            return True
+            return self.action_validate_timesheet()
         else:
             return res
 
