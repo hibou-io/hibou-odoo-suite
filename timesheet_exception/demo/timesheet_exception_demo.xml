@@ -6,8 +6,8 @@
         <field name="description">Unit amount over 8 hrs</field>
         <field name="sequence">50</field>
         <field name="model">account.analytic.line</field>
-        <field name="code">if timesheet.unit_amount > 8: failed=True</field>
-        <field name="active" eval="False"/>
+        <field name="code">if self.unit_amount > 8: failed=True</field>
+        <field name="active" eval="True"/>
     </record>
 
     <record id="except_unit_amount_over_ordered_quantity" model="exception.rule">
@@ -15,8 +15,8 @@
         <field name="description">SO delivered qty plus unit amount exceeds ordered qty</field>
         <field name="sequence">50</field>
         <field name="model">account.analytic.line</field>
-        <field name="code">if timesheet.so_line.product_template_id.service_policy == 'ordered_timesheet' and timesheet.so_line.qty_delivered + timesheet.unit_amount > timesheet.so_line.product_uom_qty: failed=True</field>
-        <field name="active" eval="False"/>
+        <field name="code">if self.so_line.product_template_id.service_policy == 'ordered_timesheet' and self.so_line.qty_delivered + self.unit_amount > self.so_line.product_uom_qty: failed=True</field>
+        <field name="active" eval="True"/>
     </record>
 
 </odoo>
