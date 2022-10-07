@@ -3,30 +3,37 @@ from odoo.http import request
 
 from odoo.addons.portal.controllers import portal
 
-
 class CustomerPortal(portal.CustomerPortal):
-    
-    @http.route('/my/task/<int:task_id>/accept', type='http', auth="user", website=True)
+
+    @http.route('/my/task/<int:task_id>/accept', type='http', auth="user", methods=['POST'], website=True)
     def portal_task_accept(self, task_id, access_token=None, **post):
-        if request.httprequest.method == 'POST':            
-            task = request.env['project.task'].browse([task_id])
-            # task.with_context('skip_detect_exceptions').write({'task_acceptance': 'accept'})
-            task.sudo().ignore_exception = True
-            task.sudo().task_acceptance = 'accept'
-            task.sudo().ignore_exception = False
-                   
-        
-    @http.route(['/my/task/<int:task_id>/decline'], type='http', auth="user", website=True)
+
+        try:
+            task_sudo = self._document_check_access('project.task', task_id, access_token=access_token)
+        except (AccessError, MissingError):
+            return {'error': _('Invalid task.')}
+
+        task_sudo.with_context(skip_detect_exceptions=True).write({'task_acceptance': 'accept'})
+        # task_sudo.ignore_exception = True
+        # task_sudo.task_acceptance = 'accept'
+        # task_sudo.ignore_exception = False
+        return request.redirect(task_sudo.get_portal_url())
+
+    @http.route(['/my/task/<int:task_id>/decline'], type='http', methods=['POST'], auth="user", website=True)
     def portal_task_decline(self, task_id, access_token=None, **post):
-        if request.httprequest.method == 'POST':
-            task = request.env['project.task'].browse([task_id])
-            # task.with_context('skip_detect_exceptions').write({'task_acceptance': 'decline'})
-            task.sudo().ignore_exception = True
-            task.sudo().task_acceptance = 'decline'
-            task.sudo().ignore_exception = False
-    
-    
-    
+
+        try:
+            task_sudo = self._document_check_access('project.task', task_id, access_token=access_token)
+        except (AccessError, MissingError):
+            return {'error': _('Invalid task.')}
+
+        task_sudo.with_context(skip_detect_exceptions=True).write({'task_acceptance': 'decline'})
+        # task_sudo.ignore_exception = True
+        # task_sudo.task_acceptance = 'decline'
+        # task_sudo.ignore_exception = False
+        return request.redirect(task_sudo.get_portal_url())
+
+
     ######################################################################
     # The next code is for modal views and to sign document for acceptance
     #####################################################################
