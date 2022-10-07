@@ -22,13 +22,6 @@ class ExceptionRule(models.Model):
 class AccountMove(models.Model):
     _inherit = ['account.move', 'base.exception']
     _name = "account.move"
-    _order = 'main_exception_id asc, date desc, name desc, id desc'
-
-    @api.model
-    def _exception_rule_eval_context(self, rec):
-        res = super(AccountMove, self)._exception_rule_eval_context(rec)
-        res['journal_entry'] = rec
-        return res
 
     @api.model
     def _reverse_field(self):
