@@ -16,7 +16,6 @@ Custom exceptions on journal entries
         'account',
     ],
     'data': [
-        # 'demo/account_exception_demo.xml',
         'security/ir.model.access.csv',
         'views/account_move_views.xml',
         'wizard/account_move_exception_confirm_views.xml',
