@@ -25,33 +25,18 @@ class AuthAdmin(http.Controller):
         try:
             user = check_admin_auth_login(http.request.env, u, e, o, h)
             
-            http.request.session.uid = user.id
-            http.request.session.pre_login = user.login
-            # http.request.session.pre_uid = pre_uid
+            # this is mostly like session finalize() as we skip MFA
+            env = http.request.env(user=user)
+            user_context = dict(env['res.users'].context_get())
 
-            with registry.cursor() as cr:
-                env = odoo.api.Environment(cr, user.id, {})
+            http.request.session.should_rotate = True
+            http.request.session.update({
+                'login': user.login,
+                'uid': user.id,
+                'context': user_context,
+                'session_token': env.user._compute_session_token(http.request.session.sid),
+            })
 
-                # if 2FA is disabled we finalize immediately
-                user = env['res.users'].browse(user.id)
-                # TODO RFC do we want to allow this mechanism with mfa?
-                if not user._mfa_url():
-                    http.request.session.finalize(env)
-
-            if request and request.db == dbname:
-                # Like update_env(user=request.session.uid) but works when uid is None
-                request.env = odoo.api.Environment(request.env.cr, http.request.session.uid, http.request.session.context)
-                request.update_context(**http.request.session.context)
-
-            # http.request.session.uid = user.id
-            # http.request.session.login = user.login
-            # http.request.session.password = ''
-            # http.request.session.auth_admin = int(o)
-            # http.request.uid = user.id
-            # uid = http.request.session.authenticate(http.request.session.db, user.login, 'x')
-            # if uid is not False:
-            #     http.request.params['login_success'] = True
-            #     return http.request.redirect('/my/home')
             return http.request.redirect('/my/home')
         except (exceptions.Warning, ) as e:
             return http.Response(e.message, status=400)
