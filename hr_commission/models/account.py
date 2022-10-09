@@ -44,7 +44,7 @@ class AccountMove(models.Model):
             if self.company_id.commission_amount_type == 'on_invoice_margin':
                 margin_threshold = float(self.env['ir.config_parameter'].sudo().get_param('commission.margin.threshold', default=0.0))
                 if margin_threshold:
-                    invoice_lines = invoice_lines.filtered(lambda l: l.margin_percent > margin_threshold)
+                    invoice_lines = invoice_lines.filtered(lambda l: l.get_margin_percent() > margin_threshold)
                 sign = -1 if self.move_type in ['in_refund', 'out_refund'] else 1
                 margin = sum(invoice_lines.mapped('margin'))
                 amount = margin * sign
@@ -63,10 +63,7 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
-    margin_percent = fields.Float(string='Margin percent (%)', compute='_compute_margin_percent', digits=(3, 2))
-
-    @api.depends('margin', 'product_id', 'purchase_price', 'quantity', 'price_unit', 'price_subtotal')
-    def _compute_margin_percent(self):
+    def get_margin_percent(self):
         for line in self:
             currency = line.move_id.currency_id
             price = line.purchase_price
@@ -76,6 +73,6 @@ class AccountMoveLine(models.Model):
                 price = from_cur._convert(line.product_id.standard_price, currency, line.company_id, date, round=False)
             total_price = price * line.quantity
             if total_price == 0.0:
-                line.margin_percent = -1.0
+                return -1.0
             else:
-                line.margin_percent = (line.margin / total_price) * 100.0
+                return (line.margin / total_price) * 100.0
