@@ -1,6 +1,7 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
-from odoo import api, models, fields
+from odoo import api, models, fields, _
+from odoo.exceptions import UserError
 
 
 class ExceptionRule(models.Model):
@@ -41,11 +42,13 @@ class Task(models.Model):
         return 'task_ids'
 
     def write(self, vals):
-        if not vals.get('ignore_exception'):
+        if not vals.get('ignore_exception') and 'stage_id' in vals and 'project_id' not in vals:
             for task in self:
                 if task.detect_exceptions():
-                    return self._popup_exceptions()
-        return super().write(vals)
+                    raise UserError(_('Exceptions were detected.'))
+        res = super().write(vals)
+        self.detect_exceptions()
+        return res
 
     @api.model
     def _get_popup_action(self):
