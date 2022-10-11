@@ -4,19 +4,19 @@ from odoo import api, fields, models
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
-    # def _create_payment_entry(self, amount):
-    #     wizard_id = self.env.context.get('payment_wizard_id')
-    #     if wizard_id:
-    #         # wizard = self.env['account.register.payments'].browse(wizard_id)
-    #         wizard = self.env['account.payment.register'].browse(wizard_id)
-    #         assert wizard
-    #         if wizard.is_manual_disperse:
-    #             payment_amount = sum(wizard.invoice_line_ids.filtered(lambda p: p.partner_id == self.partner_id).mapped('amount'))
-    #             if amount < 0:
-    #                 payment_amount = -payment_amount
-    #             return self._create_payment_entry_manual_disperse(payment_amount, wizard)
+    def _create_payment_entry(self, amount):
+        wizard_id = self.env.context.get('payment_wizard_id')
+        if wizard_id:
+            # wizard = self.env['account.register.payments'].browse(wizard_id)
+            wizard = self.env['account.payment.register'].browse(wizard_id)
+            assert wizard
+            if wizard.is_manual_disperse:
+                payment_amount = sum(wizard.invoice_line_ids.filtered(lambda p: p.partner_id == self.partner_id).mapped('amount'))
+                if amount < 0:
+                    payment_amount = -payment_amount
+                return self._create_payment_entry_manual_disperse(payment_amount, wizard)
 
-    #     return super(AccountPayment, self)._create_payment_entry(amount)
+        return super(AccountPayment, self)._create_payment_entry(amount)
 
     def _create_payment_entry_manual_disperse(self, amount, wizard):
         # When registering payments for multiple partners at the same time, without setting
@@ -67,3 +67,9 @@ class AccountPayment(models.Model):
             aml_ids.reconcile(writeoff_acc_id, wizard.writeoff_journal_id)
 
         return move
+
+
+class AccountMove(models.Model):
+    _inherit = "account.move"
+
+    account_id = fields.Many2one('account.account', string='Account', readonly=True, states={'draft': [('readonly', False)]}, domain=[('deprecated', '=', False)], help="The partner account used for this invoice.")

@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <!-- <record id="view_account_payment_from_invoices_inherited" model="ir.ui.view">
-        <field name="name">account.register.payments.wizard.inherited</field>
-        <field name="model">account.register.payments</field>
-        <field name="inherit_id" ref="account.view_account_payment_from_invoices"/>
+
+    <record id="view_account_payment_register_form_inherit" model="ir.ui.view">
+        <field name="name">account.payment.register.form.inherited</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="payment.view_account_payment_register_form_inherit_payment"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='amount']" position="attributes">
-                <attribute name="attrs">{'readonly': [('multi', '=', True), ('is_manual_disperse', '!=', True)]}</attribute>
-            </xpath>
             <xpath expr="//field[@name='payment_method_code']" position="after">
                 <field name="is_manual_disperse"/>
             </xpath>
-            <xpath expr="//group[3]" position="attributes">
+            <xpath expr="//field[@name='amount']" position="attributes">
+                <!-- <attribute name="attrs">{'readonly': [('multi', '=', True), ('is_manual_disperse', '!=', True)]}</attribute> -->
+                <attribute name="attrs">{'readonly': [('is_manual_disperse', '!=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//group[@name='group3']" position="attributes">
                 <attribute name="attrs">{'invisible': ['|', ('payment_difference', '=', 0.0), ('is_manual_disperse', '=', True)]}</attribute>
             </xpath>
-            <xpath expr="//form/group[1]" position="after">
+            <xpath expr="//group[@name='group1']" position="after">
                 <group name="invoice_lines" attrs="{'invisible': [('is_manual_disperse', '=', False)]}">
                     <group>
                         <button type="object" name="action_fill_residual"
@@ -44,5 +46,6 @@
                 </group>
             </xpath>
         </field>
-    </record> -->
+    </record>
+
 </odoo>

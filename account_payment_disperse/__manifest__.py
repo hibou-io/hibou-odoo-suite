@@ -10,8 +10,10 @@ Pay multiple invoices with one Payment, and manually disperse the amount per inv
     'website': 'https://hibou.io/',
     'depends': [
         'account',
+        'payment',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'wizard/register_payment_wizard_views.xml',
     ],
     'installable': True,
