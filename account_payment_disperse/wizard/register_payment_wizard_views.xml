@@ -19,10 +19,8 @@
             <xpath expr="//group[@name='group1']" position="after">
                 <group name="invoice_lines" attrs="{'invisible': [('is_manual_disperse', '=', False)]}">
                     <group>
-                        <button type="object" name="action_fill_residual"
-                                string="Fill with Remaining" class="btn-default"/>
-                        <button type="object" name="action_fill_residual_due"
-                                string="Fill with Due" class="btn-default"/>
+                        <button type="object" name="action_fill_residual" string="Fill with Remaining" class="btn-default"/>
+                        <button type="object" name="action_fill_residual_due" string="Fill with Due" class="btn-default"/>
                     </group>
                     <field name="invoice_line_ids" nolabel="1">
                         <tree editable="bottom" create="false">
