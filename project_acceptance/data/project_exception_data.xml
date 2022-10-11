@@ -6,7 +6,7 @@
         <field name="description">When task stage changes and requires acceptance and task acceptance is blank</field>
         <field name="sequence">50</field>
         <field name="model">project.task</field>
-        <field name="code">if not task.task_acceptance and task.stage_id.requires_acceptance: failed=True</field>
+        <field name="code">failed = (self.stage_id.id != self._context.get('newVals', {}).get('stage_id')) and not self.task_acceptance and self.stage_id.requires_acceptance</field>
         <field name="active" eval="False"/>
     </record>
 

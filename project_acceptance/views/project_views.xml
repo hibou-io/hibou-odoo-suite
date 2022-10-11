@@ -12,12 +12,23 @@
         </field>
     </record>
 
-    <record id="view_task_type_tree" model="ir.ui.view">
+    <record id="view_task_type_inherit_tree" model="ir.ui.view">
         <field name="name">project.task.type.tree.inherit.exception</field>
         <field name="model">project.task.type</field>
         <field name="inherit_id" ref="project.task_type_tree"/>
         <field name="arch" type="xml">
             <field name="user_id" position="after">
+                <field name="requires_acceptance"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="task_type_inherit_edit" model="ir.ui.view">
+        <field name="name">project.task.type.inherit.form</field>
+        <field name="model">project.task.type</field>
+        <field name="inherit_id" ref="project.task_type_edit"/>
+        <field name="arch" type="xml">
+            <field name="is_closed" position="after">
                 <field name="requires_acceptance"/>
             </field>
         </field>

@@ -32,19 +32,13 @@ class Task(models.Model):
         return res
 
     @api.model
-    def _exception_rule_eval_context(self, rec):
-        res = super(Task, self)._exception_rule_eval_context(rec)
-        res['task'] = rec
-        return res
-
-    @api.model
     def _reverse_field(self):
         return 'task_ids'
 
     def write(self, vals):
         if not vals.get('ignore_exception') and 'stage_id' in vals and 'project_id' not in vals:
             for task in self:
-                if task.detect_exceptions():
+                if task.with_context(newVals=vals).detect_exceptions():
                     raise UserError(_('Exceptions were detected.'))
         res = super().write(vals)
         self.detect_exceptions()
@@ -56,7 +50,7 @@ class Task(models.Model):
     
     def detect_exceptions(self):
         res = False
-        if not self._context.get("detect_exceptions"):
-            self = self.with_context(detect_exceptions=True)
+        if not self._context.get("skip_detect_exceptions"):
+            self = self.with_context(skip_detect_exceptions=True)
             res = super(Task, self).detect_exceptions()
         return res

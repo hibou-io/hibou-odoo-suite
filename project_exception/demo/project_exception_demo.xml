@@ -6,8 +6,8 @@
         <field name="description">No Project Id on task</field>
         <field name="sequence">50</field>
         <field name="model">project.task</field>
-        <field name="code">if not task.project_id.name: failed=True</field>
-        <field name="active" eval="False"/>
+        <field name="code">failed = (self.stage_id.id != self._context.get('newVals', {}).get('stage_id')) and not self.project_id</field>
+        <field name="active" eval="True"/>
   </record>
 
 </odoo>
