@@ -136,9 +136,11 @@ class TestPurolator(TransactionCase):
 
         # Basic case: no qty done or packages or anything at all really
         # it makes sense to be able to do 'something' in this case
+        picking.carrier_price = 50.0
         picking.send_to_shipper()
         self.assertTrue(picking.carrier_tracking_ref)
         self.assertEqual(picking.message_attachment_count, 1)  # has tracking label now
+        self.assertEqual(picking.carrier_price, 50.0) # price is set during planning and should remain unchanged
         
         # Void
         picking.cancel_shipment()
