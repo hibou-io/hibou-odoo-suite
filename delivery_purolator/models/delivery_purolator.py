@@ -353,7 +353,7 @@ class ProviderPurolator(models.Model):
             
             picking.carrier_tracking_ref = shipment_pin
             shipping_data = {
-                'exact_price': 0.0,  # TODO How can we know?!
+                'exact_price': picking.carrier_price, # price is set during planning
                 'tracking_number': shipment_pin,
             }
             res.append(shipping_data)
