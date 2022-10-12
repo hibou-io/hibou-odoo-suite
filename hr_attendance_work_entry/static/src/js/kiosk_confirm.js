@@ -1,7 +1,6 @@
 odoo.define('hr_attendance_work_entry.kiosk_confirm', function (require) {
 "use strict";
 
-var core = require('web.core');
 var KioskConfirm = require('hr_attendance.kiosk_confirm');
 var KioskConfirmTyped = KioskConfirm.extend({
     events: _.extend({}, KioskConfirm.prototype.events, {
@@ -66,6 +65,5 @@ var KioskConfirmTyped = KioskConfirm.extend({
     },
 });
 
-core.action_registry.add('hr_attendance_kiosk_confirm', KioskConfirmTyped);
 return KioskConfirmTyped;
 });
