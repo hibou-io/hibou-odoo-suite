@@ -1,7 +1,6 @@
 odoo.define('hr_attendance_work_entry.my_attendances', function (require) {
 "use strict";
 
-var core = require('web.core');
 var MyAttendances = require('hr_attendance.my_attendances');
 
 var MyTypedAttendances = MyAttendances.extend({
@@ -42,8 +41,6 @@ var MyTypedAttendances = MyAttendances.extend({
             });
     },
 });
-
-core.action_registry.add('hr_attendance_my_attendances', MyTypedAttendances);
 
 return MyTypedAttendances;
 
