@@ -1,7 +1,11 @@
+import logging
+
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 from .forte_request import ForteAPI
-from json import dumps
+
+
+_logger = logging.getLogger(__name__)
 
 
 def forte_get_api(acquirer):
@@ -20,32 +24,12 @@ class PaymentAcquirerForte(models.Model):
     forte_location_id = fields.Char(string='Location ID')  # Probably move to Journal...
     forte_access_id = fields.Char(string='Access ID')
     forte_secure_key = fields.Char(string='Secure Key')
-
-    def _get_feature_support(self):
-        """Get advanced feature support by provider.
-
-        Each provider should add its technical in the corresponding
-        key for the following features:
-            * fees: support payment fees computations
-            * authorize: support authorizing payment (separates
-                         authorization and capture)
-            * tokenize: support saving payment data in a payment.tokenize
-                        object
-        """
-        res = super(PaymentAcquirerForte, self)._get_feature_support()
-        res['authorize'].append('authorize')
-        res['tokenize'].append('authorize')
-        return res
-
-    def forte_test_credentials(self):
+    
+    def _get_default_payment_method_id(self):
         self.ensure_one()
-        api = forte_get_api(self)
-        resp = api.test_authenticate()
-        if not resp.ok:
-            result = resp.json()
-            if result and result.get('response'):
-                raise ValidationError('Error: ' + dumps(result.get('response')))
-        return True
+        if self.provider != 'forte':
+            return super()._get_default_payment_method_id()
+        return self.env.ref('payment_forte.payment_method_forte_echeck_inbound').id
 
 
 class TxForte(models.Model):
@@ -75,24 +59,21 @@ class TxForte(models.Model):
         account_holder = self.token_id.forte_account_holder
         
         method = self.payment_id.payment_method_id
-        # if not self.env.context.get('payment_type'):
         if not method or not method.payment_type:
             _logger.warning('Trying to do a payment with Forte and no contextual payment_type will result in an inbound transaction.')
-        # if self.env.context.get('payment_type') == 'inbound':
-        if method.forte_type == 'echeck':
-            if method.payment_type == 'outbound':
-                resp = api.echeck_credit(location, amount, account_type, routing_number, account_number, account_holder)
-            else:
-                resp = api.echeck_sale(location, amount, account_type, routing_number, account_number, account_holder)
-        # elif method.forte_type == 'creditcard':
+
+        if method.payment_type == 'outbound':
+            resp = api.echeck_credit(location, amount, account_type, routing_number, account_number, account_holder)
+        else:
+            resp = api.echeck_sale(location, amount, account_type, routing_number, account_number, account_holder)
 
         if resp.ok and resp.json()['response']['response_desc'] == 'APPROVED':
             ref = resp.json()['response']['authorization_code']
             return self.write({'state': 'done', 'acquirer_reference': ref})
         else:
-            result = resp.json()
-            if result and result.get('response'):
-                raise ValidationError('Error: ' + dumps(result.get('response')))
+            result = resp.json() and resp.json().get('response')
+            if result:
+                raise UserError('Error: %s - %s' % (result.get('response_code'), result.get('response_desc')))
 
 
 class PaymentToken(models.Model):

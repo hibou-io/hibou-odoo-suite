@@ -11,4 +11,5 @@
         'data/payment_acquirer_data.xml',
     ],
     'installable': True,
+    'license': 'LGPL-3',
 }
