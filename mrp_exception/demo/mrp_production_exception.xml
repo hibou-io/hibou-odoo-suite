@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="excep_wrong_label_type" model="exception.rule">
+        <field name="name">Wrong Label Type</field>
+        <field name="description">Please, ensure thet the correct Label Type is confirmed.</field>
+        <field name="sequence">50</field>
+        <field name="model">mrp.production</field>
+        <field name="code">if production.label_type == 'ORG' and any(production.po_lot_id.order_line.mapped(lambda l: l.organic_status == 'NON-ORG')): failed=True</field>
+  </record>
+
+</odoo>
