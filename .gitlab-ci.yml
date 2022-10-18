@@ -11,7 +11,7 @@ variables:
   DOCKER_DRIVER: overlay2
   CONTAINER_IMAGE: registry.gitlab.com/hibou-io/hibou-odoo/suite
   GITLAB_BASE_URL: https://gitlab.com
-  ENTERPRISE_PROJECT_ID: 10004796
+  ENTERPRISE_PROJECT_ID: 40326521
 
 before_script:
   - RELEASE=$(echo $CI_COMMIT_REF_NAME | sed "s{.*\/\(.*\)\/.*{\1{g")
