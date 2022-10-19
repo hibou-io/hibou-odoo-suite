@@ -2,7 +2,7 @@
 
 {
     'name': 'Payment Disperse',
-    'version': '13.0.1.0.0',
+    'version': '15.0.1.0.0',
     'author': 'Hibou Corp.',
     'license': 'OPL-1',
     'category': 'Accounting',
@@ -15,6 +15,7 @@ Pay multiple invoices with one Payment, and manually disperse the amount per inv
         'account',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'wizard/register_payment_wizard_views.xml',
     ],
     'installable': True,

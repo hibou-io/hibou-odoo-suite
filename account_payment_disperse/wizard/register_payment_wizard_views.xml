@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="view_account_payment_form_multi_inherit" model="ir.ui.view">
-        <field name="name">account.payment.form.multi.inherit</field>
+    <record id="view_account_payment_register_form_inherit" model="ir.ui.view">
+        <field name="name">account.payment.register.form.inherit</field>
         <field name="model">account.payment.register</field>
-        <field name="inherit_id" ref="account.view_account_payment_form_multi"/>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='payment_date']" position="after">
-                <field name="is_manual_disperse"/>
-                <field name="amount" invisible="1" />
+                <field name="is_manual_disperse" 
+                       attrs="{'invisible': ['|', ('can_edit_wizard', '=', False), ('can_group_payments', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='payment_difference_handling']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_manual_disperse', '=', True)]}</attribute>
             </xpath>
             <xpath expr="//form/group[1]" position="after">
                 <group name="invoice_lines" attrs="{'invisible': [('is_manual_disperse', '=', False)]}">
@@ -26,8 +29,6 @@
                 </group>
                 <group name="invoice_totals" attrs="{'invisible': [('is_manual_disperse', '=', False)]}">
                     <group>
-                        <field name="requires_writeoff_account" invisible="1"/>
-                        <field name="writeoff_account_id" attrs="{'required': [('requires_writeoff_account', '=', True)]}" />
                         <field name="due_date_cutoff"/>
                         <field name="due_date_behavior"/>
                         <button type="object" name="action_fill_residual"
