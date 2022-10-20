@@ -7,6 +7,11 @@ class TestDeliveryHibou(common.TransactionCase):
         super(TestDeliveryHibou, self).setUp()
         self.partner = self.env.ref('base.res_partner_address_13')
         self.product = self.env.ref('product.product_product_7')
+        self.product.write({
+            'type': 'product',
+            'weight': 1.0,
+            'volume': 15.0,
+        })
         # Create Shipping Account
         self.shipping_account = self.env['partner.shipping.account'].create({
             'name': '123123',
@@ -20,6 +25,26 @@ class TestDeliveryHibou(common.TransactionCase):
         self.carrier = self.env['delivery.carrier'].create({
             'name': 'Test Carrier1',
             'product_id': self.delivery_product.id,
+            'delivery_type': 'fixed',
+        })
+        # update all other package types to have 
+        self.package_type_large = self.env['stock.package.type'].create({
+            'name': 'Large 15x15x15',
+            'packaging_length': 15.0,
+            'height': 15.0,
+            'width': 15.0,
+            'max_weight': 50.0,
+            'package_carrier_type': 'none',
+            'use_in_package_selection': True,
+        })
+        self.package_type_small = self.env['stock.package.type'].create({
+            'name': 'Small 2x2x4',
+            'packaging_length': 4.0,
+            'height': 2.0,
+            'width': 2.0,
+            'max_weight': 1.0,
+            'package_carrier_type': 'none',
+            'use_in_package_selection': True,
         })
 
     def test_delivery_hibou(self):
@@ -40,6 +65,7 @@ class TestDeliveryHibou(common.TransactionCase):
             'shipping_account_id': self.shipping_account.id,
             'order_line': [(0, 0, {
                 'product_id': self.product.id,
+                'product_uom_qty': 2.0,
             })]
         })
         self.assertFalse(sale_order.carrier_id)
@@ -61,6 +87,35 @@ class TestDeliveryHibou(common.TransactionCase):
         # 3rd party Shipping Account copied from Sale Order
         self.assertEqual(sale_order.picking_ids.shipping_account_id, self.shipping_account)
         self.assertEqual(sale_order.carrier_id.get_third_party_account(order=sale_order), self.shipping_account)
+
+        # Test Package selection
+        default_package_type = sale_order.carrier_id.get_package_type_for_order(sale_order)
+        self.assertFalse(default_package_type, 'Fixed should not have a default packaging type.')
+        
+        # by product weight
+        sale_order.carrier_id.package_by_field = 'weight'
+
+        default_package_type = sale_order.carrier_id.get_package_type_for_order(sale_order)
+        self.assertTrue(default_package_type)
+        self.assertEqual(default_package_type, self.package_type_large)
+        
+        # change qty ordered to try to get the small package type
+        sale_order.order_line.write({
+            'product_uom_qty': 1.0,
+        })
+        default_package_type = sale_order.carrier_id.get_package_type_for_order(sale_order)
+        self.assertEqual(default_package_type, self.package_type_small)
+        
+        # by product volume
+        sale_order.carrier_id.package_by_field = 'volume'
+        default_package_type = sale_order.carrier_id.get_package_type_for_order(sale_order)
+        self.assertEqual(default_package_type, self.package_type_small)
+        
+        sale_order.order_line.write({
+            'product_uom_qty': 2.0,
+        })
+        default_package_type = sale_order.carrier_id.get_package_type_for_order(sale_order)
+        self.assertEqual(default_package_type, self.package_type_large)
 
         # Test attn
         test_ref = 'TEST100'
