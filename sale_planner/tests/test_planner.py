@@ -358,7 +358,7 @@ class TestPlanner(common.TransactionCase):
         self.assertTrue(planner.planning_option_ids.sub_options)
 
         sub_options = json_decode(planner.planning_option_ids.sub_options)
-        _logger.error(sub_options)
+        _logger.warning(sub_options)
         wh_1_ids = sorted([self.product_both.id, self.product_1.id, self.product_12.id])
         wh_2_ids = sorted([self.product_2.id, self.product_22.id])
         self.assertEqual(sorted(sub_options[str(self.warehouse_1.id)]['product_ids']), wh_1_ids)
@@ -407,7 +407,7 @@ class TestPlanner(common.TransactionCase):
         self.assertTrue(planner.planning_option_ids.sub_options)
 
         sub_options = json_decode(planner.planning_option_ids.sub_options)
-        _logger.error(sub_options)
+        _logger.warning(sub_options)
         wh_1_ids = sorted([self.product_1.id, self.product_12.id])
         wh_2_ids = sorted([self.product_both.id, self.product_2.id, self.product_22.id])
         self.assertEqual(sorted(sub_options[str(self.warehouse_1.id)]['product_ids']), wh_1_ids)
@@ -457,7 +457,7 @@ class TestPlanner(common.TransactionCase):
         self.assertTrue(planner.planning_option_ids.sub_options)
 
         sub_options = json_decode(planner.planning_option_ids.sub_options)
-        _logger.error(sub_options)
+        _logger.warning(sub_options)
         wh_1_ids = sorted([self.product_1.id, self.product_12.id])
         wh_2_ids = sorted([self.product_both.id, self.product_2.id, self.product_22.id])
         self.assertEqual(sorted(sub_options[str(self.warehouse_1.id)]['product_ids']), wh_1_ids)
