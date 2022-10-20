@@ -32,7 +32,13 @@ class AccountMove(models.Model):
         return self.env.ref('account_exception.action_account_move_exception_confirm')
 
     def action_post(self):
-        self.ensure_one()
-        if self.detect_exceptions():
-            return self._popup_exceptions()
-        return super().action_post()
+        if len(self) == 1:
+            if self.detect_exceptions():
+                return self._popup_exceptions()
+            else:
+                return super().action_post()
+        else:
+            moves_with_exceptions = self.filtered(lambda m: m.detect_exceptions())
+            other_moves = self - moves_with_exceptions
+            return super(AccountMove, other_moves).action_post()
+        return False
