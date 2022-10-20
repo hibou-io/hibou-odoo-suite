@@ -7,6 +7,16 @@ class TestInvoiceMargin(TestSaleMargin):
     def setUp(self):
         super(TestInvoiceMargin, self).setUp()
         self.AccountMove = self.env['account.move']
+        self.SaleOrder = self.env['sale.order']
+        self.product_uom_id = self.ref('uom.product_uom_unit')
+        self.product = self.env['product.product'].create({'name': 'Individual Workplace'})
+        self.product_id = self.product.id
+        self.partner_id = self.env['res.partner'].create({'name': 'A test partner'}).id
+        self.partner_invoice_address_id = self.env['res.partner'].create({
+            'name': 'A test partner address',
+            'parent_id': self.partner_id,
+        }).id
+        self.pricelist_id = self.ref('product.list0')
 
     def test_invoice_margin(self):
         """ Test the sale_margin module in Odoo. """
