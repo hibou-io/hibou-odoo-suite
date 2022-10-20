@@ -2,7 +2,7 @@
     'name': 'BoM Mass Add',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'category': 'Hidden',
-    'version': '15.0.1.0.0',
+    'version': '16.0.1.0.0',
     'description':
         """
 Bill of Materials Mass Component Adder
