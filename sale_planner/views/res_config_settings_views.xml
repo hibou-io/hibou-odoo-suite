@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="49"/>
+        <field name="inherit_id" ref="delivery.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='sale_management']" position="inside">
+                <h2>Sale Order Planner</h2>
+                <div class="col-lg-6 col-12 o_setting_box" id="sale_planner_carriers">
+                    <div class="o_setting_left_pane"/>
+                    <div class="o_setting_right_pane">
+                        <label for="sale_planner_carrier_ids" />
+                        <div class="text-muted">
+                            Add a carrier that represents the 'base rate' for a carrier's type. <br/>
+                            For example, you should add 1 FedEx carrier here and let us build up the
+                            rates for your other FedEx shipping methods.
+                        </div>
+                        <field name="sale_planner_carrier_ids" class="oe_inline" options="{'no_create_edit': True, 'no_create': True}" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 o_setting_box" id="sale_planner_warehouses">
+                    <div class="o_setting_left_pane"/>
+                    <div class="o_setting_right_pane">
+                        <label for="sale_planner_warehouse_ids" />
+                        <div class="text-muted">
+                            Warehouses you typically ship inventory out of that you want to
+                            include in the planning of sale orders.
+                        </div>
+                        <field name="sale_planner_warehouse_ids" class="oe_inline" options="{'no_create_edit': True, 'no_create': True}" />
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
