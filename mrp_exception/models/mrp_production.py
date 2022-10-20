@@ -25,7 +25,7 @@ class MrpProduction(models.Model):
 
     @api.model
     def _get_popup_action(self):
-        return self.env.ref('omf_mrp.action_mrp_production_exception_confirm')
+        return self.env.ref('mrp_exception.action_mrp_production_exception_confirm')
 
     def action_confirm(self):
         self.ensure_one()

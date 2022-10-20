@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_mrp_production_exception" model="ir.actions.act_window">
+        <field name="name">Manufacturing Order Exceptions</field>
+        <field name="res_model">exception.rule</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="base_exception.view_exception_rule_tree"/>
+        <field name="domain">[('model', '=', 'mrp.production')]</field>
+        <field name="context">{'active_test': False, 'default_model' : 'mrp.production'}</field>
+    </record>
+
+    <menuitem
+        action="action_mrp_production_exception"
+        id="menu_mrp_production_exception"
+        sequence="10"
+        parent="mrp.menu_mrp_configuration"
+        groups="base_exception.group_exception_rule_manager"
+    />
+
+    <record id="mrp_production_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit.exception</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <sheet position="before">
+                <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
+                     attrs="{'invisible': [('exceptions_summary','=',False)]}">
+                    <p><strong>There are exceptions blocking the confirmation of this Delivery Order:</strong></p>
+                    <field name="exceptions_summary"/>
+                    <button name="action_ignore_exceptions" type="object" class="btn-danger"
+                            string="Ignore Exceptions" help="Click here to be able to confirm this Delivery Order regardless of the exceptions."
+                            groups="base_exception.group_exception_rule_manager"/>
+                </div>
+            </sheet>
+            <xpath expr="//field[@name='bom_id']/.." position="inside">
+                <field name="ignore_exception" states="done" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_tree" model="ir.ui.view">
+        <field name="name">stock.picking.tree.inherit.exception</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="main_exception_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_picking_internal_search" model="ir.ui.view">
+        <field name="name">stock.picking.internal.search.inherit.exception</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search" />
+        <field name="arch" type="xml">
+            <filter name="backorder" position="after">
+                <separator orientation="vertical"/>
+                <filter icon="terp-emblem-important" name="tofix" string="Blocked by exceptions" domain="[('main_exception_id','!=',False)]"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

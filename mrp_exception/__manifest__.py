@@ -16,13 +16,12 @@ Custom exceptions on journal entries
         'mrp',
     ],
     'data': [
-        # 'demo/mrp_production_exception.xml',
-        # 'security/ir.model.access.csv',
-        # 'views/account_move_views.xml',
-        # 'wizard/account_move_exception_confirm_views.xml',
+        'security/ir.model.access.csv',
+        'views/mrp_production_views.xml',
+        'wizard/mrp_production_exception_confirm_views.xml',
     ],
     'demo': [
-        'demo/account_exception_demo.xml',
+        'demo/mrp_production_exception.xml',
     ],
     'installable': True,
     'auto_install': False,

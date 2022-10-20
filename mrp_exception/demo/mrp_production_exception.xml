@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="excep_wrong_label_type" model="exception.rule">
-        <field name="name">Wrong Label Type</field>
-        <field name="description">Please, ensure thet the correct Label Type is confirmed.</field>
+    <record id="except_mrp_product_not_storable" model="exception.rule">
+        <field name="name">Finished product is not storable</field>
+        <field name="description">Please, ensure thet the finished product is of Storable type.</field>
         <field name="sequence">50</field>
         <field name="model">mrp.production</field>
-        <field name="code">if production.label_type == 'ORG' and any(production.po_lot_id.order_line.mapped(lambda l: l.organic_status == 'NON-ORG')): failed=True</field>
+        <field name="code">failed = self.product_id.detailed_type != 'storable'</field>
+        <field name="active" eval="True"/>
   </record>
 
 </odoo>
