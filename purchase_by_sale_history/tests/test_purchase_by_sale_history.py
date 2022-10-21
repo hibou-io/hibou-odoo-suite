@@ -53,12 +53,12 @@ class TestPurchaseBySaleHistory(common.TransactionCase):
 
         # Assign vendor to products created earlier.
         self.env['product.supplierinfo'].create({
-            'name': purchase_partner.id,
+            'partner_id': purchase_partner.id,
             'product_tmpl_id': product11.product_tmpl_id.id,
             'product_id': product11.id,
         })
         self.env['product.supplierinfo'].create({
-            'name': purchase_partner.id,
+            'partner_id': purchase_partner.id,
             'product_tmpl_id': product2.product_tmpl_id.id,
         })
         # New wizard picks up the correct number of products supplied by this vendor.

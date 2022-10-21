@@ -40,8 +40,8 @@ class PurchaseBySaleHistory(models.TransientModel):
                 self.env.cr.execute("""SELECT COUNT(DISTINCT(psi.product_id)) + COUNT(DISTINCT(p.id)) 
                                        FROM product_supplierinfo psi 
                                        LEFT JOIN product_product p ON p.product_tmpl_id = psi.product_tmpl_id AND psi.product_id IS NULL
-                                       WHERE psi.name = %d;"""
-                                    % (wiz.purchase_id.partner_id.id, ))
+                                       WHERE psi.partner_id = %s;""",
+                                       (wiz.purchase_id.partner_id.id,))
                 wiz.product_count = self.env.cr.fetchall()[0][0]
 
     def _history_product_ids(self):
@@ -51,8 +51,8 @@ class PurchaseBySaleHistory(models.TransientModel):
         self.env.cr.execute("""SELECT DISTINCT(COALESCE(psi.product_id, p.id))
                                FROM product_supplierinfo psi 
                                LEFT JOIN product_product p ON p.product_tmpl_id = psi.product_tmpl_id AND psi.product_id IS NULL
-                               WHERE psi.name = %d;"""
-                                    % (self.purchase_id.partner_id.id, ))
+                               WHERE psi.partner_id = %s;""",
+                               (self.purchase_id.partner_id.id,))
         rows = self.env.cr.fetchall()
         return [r[0] for r in rows if r[0]]
 
