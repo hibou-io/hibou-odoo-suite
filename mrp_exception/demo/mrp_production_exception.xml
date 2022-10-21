@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="except_mrp_product_not_storable" model="exception.rule">
+        <field name="name">Finished product is not storable</field>
+        <field name="description">Please, ensure thet the finished product is of Storable type.</field>
+        <field name="sequence">50</field>
+        <field name="model">mrp.production</field>
+        <field name="code">failed = self.product_id.detailed_type != 'product'</field>
+        <field name="active" eval="True"/>
+  </record>
+
+</odoo>
