@@ -9,7 +9,7 @@
             <xpath expr="//kanban/field[@name='hr_presence_state']" position="after">
                 <field name="attendance_state"/>
             </xpath>
-            <xpath expr="//strong[@class='o_kanban_record_title']/div[1]" position="before">
+            <xpath expr="//strong[@class='o_kanban_record_title']/t[1]/div[1]" position="before">
                 <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_in'">
                     <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_green" role="img" aria-label="Available" title="Available"></span>
                 </div>
