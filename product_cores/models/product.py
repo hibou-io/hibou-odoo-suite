@@ -48,7 +48,7 @@ class ProductProduct(models.Model):
     product_core_id = fields.Many2one('product.product', string='Product Core')
 
     def get_purchase_core_service(self, vendor):
-        seller_line = self.seller_ids.filtered(lambda l: l.name == vendor and l.product_core_service_id)
+        seller_line = self.seller_ids.filtered(lambda l: l.partner_id == vendor and l.product_core_service_id)
         # only want to return the first one
         for l in seller_line:
             return l.product_core_service_id

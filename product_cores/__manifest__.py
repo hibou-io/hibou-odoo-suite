@@ -3,7 +3,7 @@
 {
     'name': 'Product Cores',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '15.0.1.0.0',
+    'version': '16.0.1.0.0',
     'category': 'Tools',
     'license': 'OPL-1',
     'summary': 'Charge customers core deposits.',
@@ -12,6 +12,7 @@ Charge customers core deposits.
     """,
     'website': 'https://hibou.io/',
     'depends': [
+        'delivery',
         'sale_stock',
         'purchase_stock',
     ],

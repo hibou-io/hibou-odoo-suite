@@ -77,7 +77,7 @@ class TestProductCores(common.TransactionCase):
 
         # Create a supplierinfo for this vendor with a core service product
         self.env['product.supplierinfo'].create({
-            'name': self.vendor.id,
+            'partner_id': self.vendor.id,
             'price': 10.0,
             'product_core_service_id': self.product_core_service.id,
             'product_tmpl_id': self.product.product_tmpl_id.id,
@@ -111,7 +111,7 @@ class TestProductCores(common.TransactionCase):
         self.assertEqual(purchase.state, 'purchase')
         self.assertEqual(len(purchase.picking_ids), 1)
         self.assertEqual(len(purchase.picking_ids.move_line_ids), 1)  # shouldn't have the service
-        purchase.picking_ids.move_line_ids.qty_done = purchase.picking_ids.move_line_ids.product_uom_qty
+        purchase.picking_ids.move_line_ids.qty_done = purchase.picking_ids.move_line_ids.reserved_uom_qty
         purchase.picking_ids.button_validate()
         purchase.flush()
 
@@ -195,13 +195,13 @@ class TestProductCores(common.TransactionCase):
         sale.action_confirm()
         self.assertTrue(sale.state in ('sale', 'done'))
         self.assertEqual(len(sale.picking_ids), 1)
-        self.assertEqual(len(sale.picking_ids.move_lines), 1)
-        self.assertEqual(sale.picking_ids.move_lines.product_id, self.product)
+        self.assertEqual(len(sale.picking_ids.move_ids), 1)
+        self.assertEqual(sale.picking_ids.move_ids.product_id, self.product)
         sale.picking_ids.action_assign()
 
-        self.assertEqual(so_line.product_uom_qty, sale.picking_ids.move_lines.reserved_availability)
-        for move_line in sale.picking_ids.mapped('move_lines.move_line_ids'):
-            move_line.qty_done = move_line.product_uom_qty
+        self.assertEqual(so_line.product_uom_qty, sale.picking_ids.move_ids.reserved_availability)
+        for move_line in sale.picking_ids.mapped('move_ids.move_line_ids'):
+            move_line.qty_done = move_line.reserved_uom_qty
         sale.picking_ids.button_validate()
         self.assertEqual(sale.picking_ids.state, 'done')
         self.assertEqual(so_line.qty_delivered, so_line.product_uom_qty)
@@ -235,8 +235,8 @@ class TestProductCores(common.TransactionCase):
 
         return_picking = sale.picking_ids.filtered(lambda p: p.state != 'done')
         self.assertTrue(return_picking)
-        for move_line in return_picking.mapped('move_lines.move_line_ids'):
-            move_line.qty_done = move_line.product_uom_qty
+        for move_line in return_picking.mapped('move_ids.move_line_ids'):
+            move_line.qty_done = move_line.reserved_uom_qty
         return_picking.button_validate()
 
         self.assertTrue(all(l.qty_delivered == 0.0 for l in sale.order_line))
