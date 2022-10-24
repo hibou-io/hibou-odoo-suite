@@ -3,7 +3,7 @@
 {
     'name': 'Hibou Commissions',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '15.0.1.1.0',
+    'version': '16.0.1.1.0',
     'category': 'Accounting/Commissions',
     'license': 'OPL-1',
     'website': 'https://hibou.io/',
