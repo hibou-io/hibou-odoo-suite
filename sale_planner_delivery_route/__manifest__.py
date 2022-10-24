@@ -1,7 +1,7 @@
 {
     'name': 'Sale Order Planner - Delivery Route',
     'summary': 'Plans to the closest delivery route.',
-    'version': '15.0.1.0.0',
+    'version': '16.0.1.0.0',
     'author': "Hibou Corp.",
     'category': 'Sale',
     'license': 'LGPL-3',
