@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 from odoo.addons.queue_job.exception import NothingToDoJob, RetryableJobError
 from odoo.addons.component.core import Component
 
@@ -17,7 +18,57 @@ class OpencartProductTemplate(models.Model):
                                                    'opencart_product_tmpl_id',
                                                    string='Opencart Product Attribute Values')
 
+    def opencart_sale_line_custom_value_commands(self, options):
+        """Receives 'custom options' and returns commands for SO lines to link to.
+        This method will setup the product template to support the supplied commands."""
+        commands = []
+        for option in options:
+            c_attr_name = option.get('name')
+            c_attr_value = option.get('value')
+            if not all((c_attr_name, c_attr_value)):
+                raise UserError('Mapping sale order custom values cannot happen if the option is missing name or value. Original option payload: ' + str(option))
+            # note this is a weak binding because the name could change, even due to translation
+            attr_line = self.odoo_id.attribute_line_ids.filtered(lambda l: l.attribute_id.name == c_attr_name)
+            if not attr_line:
+                attribute = self.env['product.attribute'].search([('name', '=', c_attr_name)], limit=1)
+                if not attribute:
+                    # we will have to assume some things about the attribute
+                    attribute = self.env['product.attribute'].create({
+                        'name': c_attr_name,
+                        'create_variant': 'no_variant',
+                        # 'visibility': 'hidden',  # TODO who adds this field
+                        'value_ids': [(0, 0, {
+                            'attribute_id': attribute.id,
+                            'name': 'opencart-custom',  # people can rename it.
+                            'is_custom': True,
+                        })],
+                    })
+                value = attribute.value_ids.filtered('is_custom')
+                if len(value) > 1:
+                    value = value[0]
+                # while we may not have a value here, the exception should tell us as much as us raising one ourself
+                # now we have an attribute, we can make an attribute value line with one custom va
+                self.odoo_id.write({
+                    'attribute_line_ids': [(0, 0, {
+                        'attribute_id': attribute.id,
+                        'value_ids': [(4, value.id)]
+                    })]
+                })
+                attr_line = self.odoo_id.attribute_line_ids.filtered(lambda l: l.attribute_id == attribute)
+            # now we have a product template attribute line, it should have a custom value
+            attr_line_value = attr_line.product_template_value_ids.filtered(lambda v: v.is_custom)
+            if len(attr_line_value) > 1:
+                attr_line_value = attr_line_value[0]
+            # again we may not have a value, but the exception will be on the SOL side
+            commands.append((0, 0, {
+                'custom_product_template_attribute_value_id': attr_line_value.id,
+                'custom_value': c_attr_value,
+            }))
+        return commands
+
     def opencart_sale_get_combination(self, options, reentry=False):
+        # note we EXPECT every option passed in here to have a 'product_option_value_id'
+        # filtering them out at this step is not desirable because of the recursive entry with options
         if not options:
             return self.odoo_id.product_variant_id
         selected_attribute_values = self.env['product.template.attribute.value']
