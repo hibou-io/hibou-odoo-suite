@@ -2,13 +2,14 @@
 
 from copy import copy
 from html import unescape
+from datetime import datetime, timedelta
 import logging
 
 from odoo import fields, _
 from odoo.addons.component.core import Component
 from odoo.addons.connector.components.mapper import mapping
 from odoo.exceptions import ValidationError
-from odoo.addons.queue_job.exception import RetryableJobError
+from odoo.addons.queue_job.exception import RetryableJobError, NothingToDoJob, FailedJobError
 
 
 _logger = logging.getLogger(__name__)
@@ -131,7 +132,6 @@ class SaleOrderImportMapper(Component):
         onchange = self.component(
             usage='ecommerce.onchange.manager.sale.order'
         )
-        # will I need more?!
         return onchange.play(values, values['opencart_order_line_ids'])
 
     @mapping
@@ -228,8 +228,8 @@ class SaleOrderImporter(Component):
             return _('Already imported')
 
     def _before_import(self):
-        # Check if status is ok, etc. on self.opencart_record
-        pass
+        rules = self.component(usage='sale.import.rule')
+        rules.check(self.opencart_record)
 
     def _create_partner(self, values):
         return self.env['res.partner'].create(values)
@@ -422,6 +422,85 @@ class SaleOrderImporter(Component):
             raise RetryableJobError('Products need setup. OpenCart Product IDs:' + str(products_need_setup), seconds=3600)
 
 
+class SaleImportRule(Component):
+    _name = 'opencart.sale.import.rule'
+    _inherit = 'base.opencart.connector'
+    _apply_on = 'opencart.sale.order'
+    _usage = 'sale.import.rule'
+    
+    _status_no_import = [
+        'Canceled',
+        'Canceled Reversal',
+        'Chargeback',
+        'Denied',
+        'Expired',
+        'Failed',
+        'Refunded',
+        'Reversed',
+        'Voided',
+    ]
+    
+    _status_import_later = [
+        'Pending',
+        'Processing',
+    ]
+
+    def _rule_always(self, record, method):
+        """ Always import the order """
+        return True
+    
+    def _rule_check_status(self, record, method):
+        if record['order_status'] in self._status_import_later:
+            raise RetryableJobError('Order %s is in %s and will be re-tried later.')
+        return True
+
+    def _rule_never(self, record, method):
+        """ Never import the order """
+        raise NothingToDoJob('Orders with payment method %s are never imported.' % method.name)
+
+    # currently, no good way of knowing if an order is paid or authorized
+    # we use these both to indicate you only want to import it if it makes it 
+    # past a pending/processing state (the order itself)
+    _rules = {'always': _rule_always,
+              'paid': _rule_check_status,
+              'authorized': _rule_check_status,
+              'never': _rule_never,
+              }
+    
+    def _rule_global(self, record, method):
+        """ Rule always executed, whichever is the selected rule.
+        Discards orders based on it being in a canceled state or status.
+        Discards orders based on order date being outside of import window."""
+        order_id = record['order_id']
+        order_status = record['order_status']
+        if order_status in self._status_no_import:
+            raise NothingToDoJob('Order %s not imported for status %s' % (order_id, order_status))
+        max_days = method.days_before_cancel
+        if max_days:
+            order_date = self.backend_record.date_to_odoo(record['date_added'])
+            if order_date + timedelta(days=max_days) < datetime.now():
+                raise NothingToDoJob('Import of the order %s canceled '
+                                     'because it has not been paid since %d '
+                                     'days' % (order_id, max_days))
+
+    def check(self, record):
+        """ Check whether the current sale order should be imported
+        or not. It will actually use the payment method configuration
+        and see if the choosed rule is fullfilled.
+        :returns: True if the sale order should be imported
+        :rtype: boolean
+        """
+        record_method = record['payment_method']
+        method = self.env['account.payment.mode'].search(
+            [('name', '=', record_method)],
+            limit=1,
+        )
+        if not method:
+            raise FailedJobError('Payment Mode named "%s", cannot be found.' % (record_method, ))
+        self._rule_global(record, method)
+        self._rules[method.import_rule](self, record, method)
+
+
 class SaleOrderLineImportMapper(Component):
 
     _name = 'opencart.sale.order.line.mapper'
@@ -433,10 +512,8 @@ class SaleOrderLineImportMapper(Component):
               ('order_product_id', 'external_id'),
               ]
 
-    @mapping
-    def name(self, record):
-        return {'name': unescape(record['name'])}
-
+    # Note mapping for name is removed due to desire to get 
+    # custom attr values to display via computed sol description
     @mapping
     def product_id(self, record):
         product_id = record['product_id']
@@ -445,5 +522,14 @@ class SaleOrderLineImportMapper(Component):
         # connector bindings are found with `active_test=False` but that also means computed fields
         # like `product.template.product_variant_id` could find different products because of archived variants
         opencart_product_template = binder.to_internal(product_id, unwrap=False).with_context(active_test=True)
-        product = opencart_product_template.opencart_sale_get_combination(record.get('option'))
-        return {'product_id': product.id, 'product_uom': product.uom_id.id}
+        line_options = record.get('option') or []
+        options_for_product = list(filter(lambda o: o.get('product_option_value_id'), line_options))
+        options_for_line = list(filter(lambda o: not o.get('product_option_value_id'), line_options))
+        product = opencart_product_template.opencart_sale_get_combination(options_for_product)
+
+        custom_option_commands = opencart_product_template.opencart_sale_line_custom_value_commands(options_for_line)
+        return {
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_custom_attribute_value_ids': custom_option_commands,
+        }
