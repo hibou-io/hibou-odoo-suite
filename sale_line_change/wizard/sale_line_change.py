@@ -38,7 +38,7 @@ class SaleLineChangeOrderLine(models.TransientModel):
     line_reserved_qty = fields.Float(string='Reserved Qty')
     line_date_planned = fields.Datetime(string='Planned Date')
     line_warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
-    line_route_id = fields.Many2one('stock.location.route', string='Route')
+    line_route_id = fields.Many2one('stock.route', string='Route')
 
     def values_from_so_line(self, so_line):
         move_ids = so_line.move_ids
