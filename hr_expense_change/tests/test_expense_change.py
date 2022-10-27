@@ -27,7 +27,9 @@ class TestAccountEntry(test_expenses.TestExpenses):
                     'product_id': self.product_a.id,
                     'unit_amount': 1000.0,
                     'tax_ids': [(6, 0, self.company_data['default_tax_purchase'].ids)],
-                    'analytic_account_id': self.analytic_account_1.id,
+                    # analytic_account_id not exist in 16v the new field seems to be analytic_distribution a json field
+                    # 'analytic_account_id': self.analytic_account_1.id,
+                    'analytic_distribution': {self.analytic_account_1.id: 100},
                     'employee_id': self.expense_employee.id,
                 }),
                 (0, 0, {
@@ -37,7 +39,8 @@ class TestAccountEntry(test_expenses.TestExpenses):
                     'product_id': self.product_b.id,
                     'unit_amount': 1500.0,
                     'tax_ids': [(6, 0, self.company_data['default_tax_purchase'].ids)],
-                    'analytic_account_id': self.analytic_account_2.id,
+                    # 'analytic_account_id': self.analytic_account_2.id,
+                    'analytic_distribution': {self.analytic_account_2.id: 100},
                     'currency_id': self.currency_data['currency'].id,
                     'employee_id': self.expense_employee.id,
                 }),
@@ -61,8 +64,9 @@ class TestAccountEntry(test_expenses.TestExpenses):
                 'account_id': self.company_data['default_account_payable'].id,
                 'product_id': False,
                 'currency_id': self.company_data['currency'].id,
-                'tax_line_id': False,
-                'analytic_account_id': False,
+                'tax_line_id': False,                
+                # 'analytic_account_id': False,
+                'analytic_distribution': False,
             },
             # Receivable line (foreign currency):
             {
@@ -73,7 +77,8 @@ class TestAccountEntry(test_expenses.TestExpenses):
                 'product_id': False,
                 'currency_id': self.currency_data['currency'].id,
                 'tax_line_id': False,
-                'analytic_account_id': False,
+                # 'analytic_account_id': False,
+                'analytic_distribution': False,
             },
             # Tax line (foreign currency):
             {
@@ -84,7 +89,8 @@ class TestAccountEntry(test_expenses.TestExpenses):
                 'product_id': False,
                 'currency_id': self.currency_data['currency'].id,
                 'tax_line_id': self.company_data['default_tax_purchase'].id,
-                'analytic_account_id': False,
+                # 'analytic_account_id': False,
+                'analytic_distribution': False,
             },
             # Tax line (company currency):
             {
@@ -95,7 +101,8 @@ class TestAccountEntry(test_expenses.TestExpenses):
                 'product_id': False,
                 'currency_id': self.company_data['currency'].id,
                 'tax_line_id': self.company_data['default_tax_purchase'].id,
-                'analytic_account_id': False,
+                # 'analytic_account_id': False,
+                'analytic_distribution': False,
             },
             # Product line (foreign currency):
             {
@@ -106,7 +113,8 @@ class TestAccountEntry(test_expenses.TestExpenses):
                 'product_id': self.product_b.id,
                 'currency_id': self.currency_data['currency'].id,
                 'tax_line_id': False,
-                'analytic_account_id': self.analytic_account_2.id,
+                # 'analytic_account_id': self.analytic_account_2.id,
+                'analytic_distribution': {self.analytic_account_2.id: 100},
             },
             # Product line (company currency):
             {
@@ -117,7 +125,8 @@ class TestAccountEntry(test_expenses.TestExpenses):
                 'product_id': self.product_a.id,
                 'currency_id': self.company_data['currency'].id,
                 'tax_line_id': False,
-                'analytic_account_id': self.analytic_account_1.id,
+                # 'analytic_account_id': self.analytic_account_1.id,
+                'analytic_distribution': {self.analytic_account_1.id: 100},
             },
         ])
 
