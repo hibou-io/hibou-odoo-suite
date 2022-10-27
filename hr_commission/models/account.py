@@ -31,8 +31,8 @@ class AccountMove(models.Model):
             self.env['hr.commission'].invoice_validated(invoices)
         return res
 
-    def action_invoice_paid(self):
-        res = super(AccountMove, self).action_invoice_paid()
+    def _invoice_paid_hook(self):
+        res = super(AccountMove, self)._invoice_paid_hook()
         self.env['hr.commission'].invoice_paid(self)
         return res
 
