@@ -1,0 +1,530 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_commission
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-30 01:21+0000\n"
+"PO-Revision-Date: 2021-10-30 01:21+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Los valores establecidos aquí"
+" son especifica a la compañía.\" groups=\"base.group_multi_company\"/>"
+
+#. module: hr_commission
+#: model:ir.model.fields.selection,name:hr_commission.selection__hr_commission__rate_type__admin
+msgid "Admin"
+msgstr "Admin"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_contract__admin_commission_rate
+msgid "Admin Commission %"
+msgstr "& de Comisión de Admin"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__amount
+msgid "Amount"
+msgstr "Monto"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__base_amount
+msgid "Base Amount"
+msgstr "Monto Base"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__base_total
+msgid "Base Total"
+msgstr "Base Total"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: hr_commission
+#: model:ir.model.fields.selection,name:hr_commission.selection__hr_commission__state__cancel
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_search
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: hr_commission
+#: model:ir.model.fields,help:hr_commission.field_hr_commission__accounting_date
+msgid ""
+"Choose the accounting date at which you want to value the commission moves "
+"created by the commission instead of the default one."
+msgstr ""
+"Elija la fecha contable en la que desea valorar los movimientos de comisión "
+"creados por la comisión en lugar de la predeterminada"
+
+#. module: hr_commission
+#: model:ir.model,name:hr_commission.model_hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_form
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_tree
+msgid "Commission"
+msgstr "Comisión"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure_line__rate
+#: model:ir.model.fields,field_description:hr_commission.field_hr_contract__commission_rate
+msgid "Commission %"
+msgstr "% de Comisión"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_payment__commission_amount
+msgid "Commission Amount"
+msgstr "Monto de Comisión"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_payment_tree
+msgid "Commission Amount Total"
+msgstr "Monto Total de Comisión"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_res_company__commission_amount_type
+#: model:ir.model.fields,field_description:hr_commission.field_res_config_settings__commission_amount_type
+#: model_terms:ir.ui.view,arch_db:hr_commission.res_config_settings_view_form
+msgid "Commission Base"
+msgstr "Comisión Base"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_payment__commission_count
+msgid "Commission Count"
+msgstr "Recuento de comisiones"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_payment_tree
+msgid "Commission Count Total"
+msgstr "Total del Recuento de Comisiones"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_res_company__commission_journal_id
+#: model:ir.model.fields,field_description:hr_commission.field_res_config_settings__commission_journal_id
+msgid "Commission Journal"
+msgstr "Libro Diario de Comisiones"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_res_company__commission_liability_id
+#: model:ir.model.fields,field_description:hr_commission.field_res_config_settings__commission_liability_id
+msgid "Commission Liability Account"
+msgstr "Cuenta de Pasivo de Comisión"
+
+#. module: hr_commission
+#: model:ir.model,name:hr_commission.model_hr_commission_payment
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__payment_id
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_payment_form
+msgid "Commission Payment"
+msgstr "Pago de comisiones"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_payment_form
+msgid "Commission Payment Description"
+msgstr "Descripción del Pago de Comisión"
+
+#. module: hr_commission
+#: model:ir.actions.act_window,name:hr_commission.action_hr_commission_payment
+#: model:ir.ui.menu,name:hr_commission.menu_action_account_commission_payment_form
+msgid "Commission Payments"
+msgstr "Pagos de Comisión"
+
+#. module: hr_commission
+#: model:ir.model,name:hr_commission.model_hr_commission_structure
+#: model:ir.model.fields,field_description:hr_commission.field_res_partner__commission_structure_id
+#: model:ir.model.fields,field_description:hr_commission.field_res_users__commission_structure_id
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_structure_form
+msgid "Commission Structure"
+msgstr "Estructura de Comisión"
+
+#. module: hr_commission
+#: model:ir.model,name:hr_commission.model_hr_commission_structure_line
+msgid "Commission Structure Line"
+msgstr "Línea de estructura de comisión"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_tree
+msgid "Commission Total"
+msgstr "Total de comisión"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.res_config_settings_view_form
+msgid ""
+"Commission journal default accounts can be thought of as the 'expense' side of the commission. If a Liability account\n"
+"                                is not chosen, then the employee's home address partner's Account Payable will be used instead."
+msgstr ""
+"Las cuentas predeterminado del libro diario de la comision se puede "
+"considerar como el 'coste' de la comision. Si no se ha definido la cuenta "
+"pasiva, entonces se utilizará la cuenta a pagar del socio del la direccion "
+"de casa del empleado"
+
+#. module: hr_commission
+#: code:addons/hr_commission/models/commission.py:0
+#, python-format
+msgid ""
+"Commission liability account must be configured if employee's don't have AP "
+"setup."
+msgstr ""
+"Se debe configurar la cuenta pasiva de la comisión si los empleados no tienen"
+" la cuenta a pagar configurada"
+
+#. module: hr_commission
+#: model:ir.actions.act_window,name:hr_commission.action_hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_account_bank_statement_line__commission_ids
+#: model:ir.model.fields,field_description:hr_commission.field_account_move__commission_ids
+#: model:ir.model.fields,field_description:hr_commission.field_account_payment__commission_ids
+#: model:ir.ui.menu,name:hr_commission.menu_action_account_commission_form
+#: model:ir.ui.menu,name:hr_commission.menu_action_account_commission_form2
+#: model_terms:ir.ui.view,arch_db:hr_commission.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_pivot
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_pivot_graph
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_move_form_inherit
+msgid "Commissions"
+msgstr "Comisiones"
+
+#. module: hr_commission
+#: model:ir.model,name:hr_commission.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: hr_commission
+#: model:ir.model,name:hr_commission.model_res_config_settings
+msgid "Config Settings"
+msgstr "Opciones de configuración"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_form
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: hr_commission
+#: model:ir.model.fields.selection,name:hr_commission.selection__hr_commission__state__done
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_search
+msgid "Confirmed"
+msgstr "Confirmado"
+
+#. module: hr_commission
+#: model:ir.model,name:hr_commission.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__contract_id
+msgid "Contract"
+msgstr "Contrato"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__create_uid
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_payment__create_uid
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure__create_uid
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure_line__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__create_date
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_payment__create_date
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure__create_date
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure_line__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__move_date
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_payment__date
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_payment_search
+msgid "Date"
+msgstr "Fecha"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__display_name
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_payment__display_name
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure__display_name
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure_line__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__employee_id
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_payment__employee_id
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure_line__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_payment_search
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_search
+msgid "Employee"
+msgstr "Empleado"
+
+#. module: hr_commission
+#: model:ir.model,name:hr_commission.model_hr_contract
+msgid "Employee Contract"
+msgstr "Contrato del empleado"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__accounting_date
+msgid "Force Accounting Date"
+msgstr "Forzar Fecha de Contabilidad"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_payment_search
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_search
+msgid "Group By"
+msgstr "Agrupar Por"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__id
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_payment__id
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure__id
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_search
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_tree
+msgid "Invoice Total"
+msgstr "Total de la Factura"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.res_config_settings_view_form
+msgid "Journal"
+msgstr "Libro Diario"
+
+#. module: hr_commission
+#: model:ir.model,name:hr_commission.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission____last_update
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_payment____last_update
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure____last_update
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure_line____last_update
+msgid "Last Modified on"
+msgstr "Última Modificación en"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__write_uid
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_payment__write_uid
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure__write_uid
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure_line__write_uid
+msgid "Last Updated by"
+msgstr "Última Actualización por"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__write_date
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_payment__write_date
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure__write_date
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure_line__write_date
+msgid "Last Updated on"
+msgstr "Última Actualización en"
+
+#. module: hr_commission
+#: model:ir.model.fields,help:hr_commission.field_hr_commission_structure_line__rate
+msgid "Leave 0.0 to use the employee's current contract rate."
+msgstr ""
+"Déjelo como 0.0 para utilizar la tarifa actual del contrato del empleado"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.res_config_settings_view_form
+msgid "Liability Account"
+msgstr "Cuenta Pasiva"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure__line_ids
+msgid "Lines"
+msgstr "Líneas"
+
+#. module: hr_commission
+#: model:ir.model.fields.selection,name:hr_commission.selection__hr_commission__rate_type__manual
+msgid "Manual"
+msgstr "Manual"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_tree
+msgid "Margin"
+msgstr "Margen"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_tree
+msgid "Margin Total"
+msgstr "Margen Total"
+
+#. module: hr_commission
+#: model:ir.actions.server,name:hr_commission.action_commission_mark_paid
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_form
+msgid "Mark Paid"
+msgstr "Marcar como Pagado"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__memo
+msgid "Memo"
+msgstr "Nota"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__move_id
+msgid "Move"
+msgstr "Movimiento"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_payment__name
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: hr_commission
+#: model:ir.model.fields.selection,name:hr_commission.selection__hr_commission__state__draft
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_search
+msgid "New"
+msgstr "Nuevo"
+
+#. module: hr_commission
+#: model:ir.model.fields.selection,name:hr_commission.selection__hr_commission__rate_type__normal
+msgid "Normal"
+msgstr "Normal"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_account_bank_statement_line__commission_count
+#: model:ir.model.fields,field_description:hr_commission.field_account_move__commission_count
+#: model:ir.model.fields,field_description:hr_commission.field_account_payment__commission_count
+msgid "Number of Commissions"
+msgstr "Número de Comisiones"
+
+#. module: hr_commission
+#: model:ir.model.fields.selection,name:hr_commission.selection__res_company__commission_amount_type__on_invoice_margin
+msgid "On Invoice Margin"
+msgstr "En el margen de factura"
+
+#. module: hr_commission
+#: model:ir.model.fields.selection,name:hr_commission.selection__res_company__commission_type__on_invoice_paid
+msgid "On Invoice Paid"
+msgstr "En factura pagada"
+
+#. module: hr_commission
+#: model:ir.model.fields.selection,name:hr_commission.selection__res_company__commission_amount_type__on_invoice_total
+msgid "On Invoice Total"
+msgstr "En el total de factura"
+
+#. module: hr_commission
+#: model:ir.model.fields.selection,name:hr_commission.selection__res_company__commission_amount_type__on_invoice_untaxed
+msgid "On Invoice Total Tax Excluded"
+msgstr "En total de factura con impuestos excluidos"
+
+#. module: hr_commission
+#: model:ir.model.fields.selection,name:hr_commission.selection__res_company__commission_type__on_invoice
+msgid "On Invoice Validation"
+msgstr "En la validación de factura"
+
+#. module: hr_commission
+#: model:ir.model.fields.selection,name:hr_commission.selection__hr_commission__state__paid
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_search
+msgid "Paid"
+msgstr "Pagado"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_payment__commission_ids
+msgid "Paid Commissions"
+msgstr "Comisión Pagada"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_res_company__commission_type
+#: model:ir.model.fields,field_description:hr_commission.field_res_config_settings__commission_type
+#: model_terms:ir.ui.view,arch_db:hr_commission.res_config_settings_view_form
+msgid "Pay Commission"
+msgstr "Pagar Comisión"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__rate
+msgid "Rate"
+msgstr "Tarifa"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__rate_type
+msgid "Rate Type"
+msgstr "Tipo de Tarifa"
+
+#. module: hr_commission
+#: model:ir.model.fields,help:hr_commission.field_hr_commission__user_id
+#: model:ir.model.fields,help:hr_commission.field_hr_commission_payment__user_id
+msgid "Related user name for the resource to manage its access."
+msgstr ""
+"Nombre del usuario relacionada para que el recurso administre su acceso."
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_search
+msgid "Search Commission"
+msgstr "Buscar Comisiones"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_payment_search
+msgid "Search Commission Payment"
+msgstr "Buscar Pago de Comisiones"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_form
+msgid "Set Draft"
+msgstr "Establecer Borrador"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__source_move_id
+msgid "Source Move"
+msgstr "Movimiento de Origen"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__state
+#: model_terms:ir.ui.view,arch_db:hr_commission.view_hr_commission_search
+msgid "Status"
+msgstr "Estado"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__structure_id
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_structure_line__structure_id
+#: model:ir.model.fields.selection,name:hr_commission.selection__hr_commission__rate_type__structure
+msgid "Structure"
+msgstr "Estructura"
+
+#. module: hr_commission
+#: model_terms:ir.ui.view,arch_db:hr_commission.res_config_settings_view_form
+msgid "These taxes are set in any new product created."
+msgstr "Estos impuestos se establecen en cualquier producto nuevo creado"
+
+#. module: hr_commission
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission__user_id
+#: model:ir.model.fields,field_description:hr_commission.field_hr_commission_payment__user_id
+msgid "User"
+msgstr "Usuario"
+
+#. module: hr_commission
+#: code:addons/hr_commission/models/commission.py:0
+#, python-format
+msgid "You cannot delete a commission when it has an accounting entry."
+msgstr "No puede eliminar una comisión cuando tiene un asiento contable"
+
+#. module: hr_commission
+#: code:addons/hr_commission/models/commission.py:0
+#, python-format
+msgid "You cannot mark a commission \"paid\" if it is not already \"done\"."
+msgstr "Usted no puede marcar un comisión \"pagada\" si no está ya \"completada\".
+
+#. module: hr_commission
+#: code:addons/hr_commission/models/commission.py:0
+#, python-format
+msgid "You must have at least one \"done\" commission."
+msgstr "Usted debe tener al menos una comisión \"completada\"."

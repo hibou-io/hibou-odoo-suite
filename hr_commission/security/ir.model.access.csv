@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_commission_user,commission user,model_hr_commission,base.group_user,1,0,0,0
+access_commission_manager,commission manager,model_hr_commission,account.group_account_manager,1,1,1,1
+access_commission_payment_user,commission payment user,model_hr_commission_payment,base.group_user,1,0,0,0
+access_commission_payment_manager,commission payment manager,model_hr_commission_payment,account.group_account_manager,1,1,1,1
+access_commission_structure_user,commission structure user,model_hr_commission_structure,base.group_user,1,0,0,0
+access_commission_structure_manager,commission structure manager,model_hr_commission_structure,account.group_account_manager,1,1,1,1
+access_commission_structure_line_user,commission structure line user,model_hr_commission_structure_line,base.group_user,1,0,0,0
+access_commission_structure_line_manager,commission structure line manager,model_hr_commission_structure_line,account.group_account_manager,1,1,1,1

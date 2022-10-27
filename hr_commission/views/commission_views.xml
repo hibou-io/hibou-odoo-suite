@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_commission_form" model="ir.ui.view">
+        <field name="name">hr.commission.form</field>
+        <field name="model">hr.commission</field>
+        <field name="arch" type="xml">
+            <form string="Commission" class="oe_form_nomargin">
+                <header>
+                    <button name="action_confirm" string="Confirm" class="btn-primary" type="object" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_draft" string="Set Draft" class="btn-default" type="object" attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
+                    <button name="action_mark_paid" string="Mark Paid" class="btn-default" type="object" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                    <button name="action_cancel" string="Cancel" class="btn-default" type="object" attrs="{'invisible': [('state', '=', 'cancel')]}" context="{'force_delete': True}"/>
+                    <field name="state" widget="statusbar" on_change="1" modifiers="{'readonly': true}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    </div>
+                    <div class="oe_title">
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" modifiers="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="contract_id" domain="[('employee_id', '=', employee_id)]" modifiers="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="structure_id" modifiers="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="source_move_id" modifiers="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="company_id" groups="base.group_multi_company" modifiers="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="memo" modifiers="{'readonly': [('state', 'not in', ('draft', 'done'))]}"/>
+                        </group>
+                        <group>
+                            <field name="rate_type" modifiers="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="rate" attrs="{'readonly': [('contract_id', '!=', False), ('rate_type', '!=', 'manual')]}"/>
+                            <field name="base_total" modifiers="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="base_amount" modifiers="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="amount" readonly="1" force_save="1"/>
+                            <field name="move_date" readonly="1" attrs="{'invisible': [('move_date', '=', False)]}"/>
+                            <field name="accounting_date"
+                                   attrs="{'invisible': ['|', ('rate_type', '!=', 'manual'), ('move_date', '!=', False)], 'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="move_id" attrs="{'invisible': [('move_id', '=', False)], 'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="payment_id" attrs="{'invisible': [('payment_id', '=', False)]}" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_commission_tree" model="ir.ui.view">
+        <field name="name">hr.commission.tree</field>
+        <field name="model">hr.commission</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+                <field name="create_date"/>
+                <field name="source_move_id"/>
+                <field name="employee_id"/>
+                <field name="contract_id"/>
+                <field name="base_total" string="Invoice Total" sum="Invoice Total"/>
+                <field name="base_amount" string="Base" sum="Base Total"/>
+                <field name="amount" string="Commission" sum="Commission Total"/>
+                <field name="state"/>
+                <field name="move_date"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hr_commission_pivot" model="ir.ui.view">
+        <field name="name">hr.commission.pivot</field>
+        <field name="model">hr.commission</field>
+        <field name="arch" type="xml">
+            <pivot string="Commissions">
+                <field name="create_date" type="row" interval="week"/>
+                <field name="state" type="row"/>
+                <field name="employee_id" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_hr_commission_pivot_graph" model="ir.ui.view">
+        <field name="name">hr.commission.graph</field>
+        <field name="model">hr.commission</field>
+        <field name="arch" type="xml">
+            <graph string="Commissions" stacked="True">
+                <field name="create_date" type="row" interval="week"/>
+                <field name="state" type="row"/>
+                <field name="amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_hr_commission_search" model="ir.ui.view">
+        <field name="name">hr.commission.search</field>
+        <field name="model">hr.commission</field>
+        <field name="arch" type="xml">
+            <search string="Search Commission">
+                <field name="source_move_id"/>
+                <field name="employee_id"/>
+                <field name="contract_id"/>
+                <separator/>
+                <filter string="New" name="new" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'done')]"/>
+                <filter string="Paid" name="paid" domain="[('state', '=', 'paid')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancel')]"/>
+                <group expand="0" name="group_by" string="Group By">
+                    <filter name="group_state" string="Status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter name="group_employee" string="Employee" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_invoice" string="Invoice" domain="[]" context="{'group_by': 'source_move_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hr_commission" model="ir.actions.act_window">
+        <field name="name">Commissions</field>
+        <field name="res_model">hr.commission</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+    </record>
+
+    <menuitem
+        action="action_hr_commission"
+        id="menu_action_account_commission_root"
+        parent="account.menu_finance_receivables"
+        sequence="120"
+        />
+
+    <menuitem
+        action="action_hr_commission"
+        id="menu_action_account_commission_form"
+        parent="menu_action_account_commission_root"
+        sequence="10"
+        />
+
+    <record id="action_commission_mark_paid" model="ir.actions.server">
+        <field name="name">Mark Paid</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="model_id" ref="hr_commission.model_hr_commission"/>
+        <field name="binding_model_id" ref="hr_commission.model_hr_commission"/>
+        <field name="code">
+action = records.action_mark_paid()
+        </field>
+    </record>
+
+    <!-- Commission Payments -->
+    <record id="view_hr_commission_payment_form" model="ir.ui.view">
+        <field name="name">hr.commission.payment.form</field>
+        <field name="model">hr.commission.payment</field>
+        <field name="arch" type="xml">
+            <form string="Commission Payment">
+                <header/>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <h1><field name="name" placeholder="Commission Payment Description"/></h1>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="employee_id" readonly="1"/>
+                            <field name="commission_count"/>
+                            <field name="commission_amount"/>
+                        </group>
+                        <group>
+                            <field name="commission_ids" nolabel="1" readonly="1">
+                                <tree>
+                                    <field name="source_move_id"/>
+                                    <field name="amount"/>
+                                    <field name="move_date"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_commission_payment_tree" model="ir.ui.view">
+        <field name="name">hr.commission.payment.tree</field>
+        <field name="model">hr.commission.payment</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="name"/>
+                <field name="commission_count" sum="Commission Count Total"/>
+                <field name="commission_amount" sum="Commission Amount Total"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hr_commission_payment_search" model="ir.ui.view">
+        <field name="name">hr.commission.payment.search</field>
+        <field name="model">hr.commission.payment</field>
+        <field name="arch" type="xml">
+            <search string="Search Commission Payment">
+                <field name="employee_id"/>
+                <group expand="0" name="group_by" string="Group By">
+                    <filter name="group_employee" string="Employee" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_date" string="Date" domain="[]" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hr_commission_payment" model="ir.actions.act_window">
+        <field name="name">Commission Payments</field>
+        <field name="res_model">hr.commission.payment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        action="action_hr_commission_payment"
+        id="menu_action_account_commission_payment_form"
+        parent="menu_action_account_commission_root"
+        sequence="10"
+        />
+
+    <!-- Commission Structure -->
+    <record id="view_hr_commission_structure_form" model="ir.ui.view">
+        <field name="name">hr.commission.structure.form</field>
+        <field name="model">hr.commission.structure</field>
+        <field name="arch" type="xml">
+            <form string="Commission Structure" class="oe_form_nomargin">
+                <header/>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <field name="name"/>
+                    </div>
+                    <group>
+                        <field name="line_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="structure_id" invisible="1"/>
+                                <field name="employee_id"/>
+                                <field name="rate"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_commission_structure" model="ir.actions.act_window">
+        <field name="name">Commission Structures</field>
+        <field name="res_model">hr.commission.structure</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        action="action_commission_structure"
+        id="menu_action_account_commission_structure"
+        parent="menu_action_account_commission_root"
+        sequence="30"
+        />
+
+</odoo>

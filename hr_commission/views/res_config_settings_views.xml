@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="50"/>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <h2>Commissions</h2>
+                <div class="row mt16 o_settings_container" id="commission_settings" groups="account.group_account_manager">
+                    <div class="col-xs-12 col-md-6 o_setting_box" title="These taxes are set in any new product created.">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                            <div class="text-muted">
+                                Commission journal default accounts can be thought of as the 'expense' side of the commission. If a Liability account
+                                is not chosen, then the employee's home address partner's Account Payable will be used instead.
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label string="Journal" for="commission_journal_id" class="col-md-3 o_light_label"/>
+                                    <field name="commission_journal_id" domain="[('company_id', '=', company_id)]"/>
+                                </div>
+                                <div class="row">
+                                    <label string="Liability Account" for="commission_liability_id" class="col-md-3 o_light_label"/>
+                                    <field name="commission_liability_id" domain="[('company_id', '=', company_id)]"/>
+                                </div>
+                                <div class="row">
+                                    <label string="Pay Commission" for="commission_type" class="col-md-3 o_light_label"/>
+                                    <field name="commission_type"/>
+                                </div>
+                                <div class="row">
+                                    <label string="Commission Base" for="commission_amount_type" class="col-md-3 o_light_label"/>
+                                    <field name="commission_amount_type"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
