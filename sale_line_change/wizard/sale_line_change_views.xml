@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="sale_line_change_order_form" model="ir.ui.view">
+        <field name="name">sale.line.change.order.form</field>
+        <field name="model">sale.line.change.order</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <p>Changing Date Planned alone should be done on any existing Pickings or POs.</p>
+                <field name="order_id" invisible="1"/>
+                <field name="line_ids">
+                    <tree editable="top" create="false" delete="false">
+                        <field name="sale_line_id" string="Line" readonly="1" force_save="1"/>
+                        <field name="line_ordered_qty" string="Ordered" readonly="1"/>
+                        <field name="line_delivered_qty" string="Delivered" readonly="1"/>
+                        <field name="line_reserved_qty" string="Reserved" readonly="1"/>
+                        <field name="line_date_planned"/>
+                        <field name="line_warehouse_id" options="{'no_create': True,}"/>
+                        <field name="line_route_id" domain="[('sale_selectable', '=', True)]" options="{'no_create': True,}"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button name="apply" type="object" string="Apply Changes" class="btn-primary"/>
+                    <button class="oe_link"
+                            special="cancel"
+                            string="Cancel" />
+
+                </footer>
+            </form>
+        </field>
+    </record>
+     <record id="action_sale_line_change_order" model="ir.actions.act_window">
+        <field name="name">Sale Line Change Order</field>
+        <field name="res_model">sale.line.change.order</field>
+<!--        <field name="view_type">form</field> Not a valid field in Odoo 13 ir.actions.act_window -->
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="sale_line_change_order_form" />
+        <field name="target">new</field>
+    </record>
+</odoo>
