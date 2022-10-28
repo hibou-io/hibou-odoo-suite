@@ -84,7 +84,7 @@ class StockPicking(models.Model):
         cost = sum([(l.product_id.standard_price * l.qty_done) for l in self.move_line_ids] or [0.0])
         if not cost:
             # Assume Full Value
-            cost = sum([(l.product_id.standard_price * l.product_uom_qty) for l in self.move_lines] or [0.0])
+            cost = sum([(l.product_id.standard_price * l.product_uom_qty) for l in self.move_ids] or [0.0])
         return cost
 
     def clear_carrier_tracking_ref(self):
