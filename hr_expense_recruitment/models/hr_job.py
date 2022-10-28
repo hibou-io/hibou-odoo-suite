@@ -11,7 +11,6 @@ class HRJob(models.Model):
                                         compute_sudo=True)
     expense_ids = fields.One2many('hr.expense', 'job_id', string='Expenses')
 
-    @api.multi
     @api.depends('expense_ids.total_amount')
     def _compute_expense_total_amount(self):
         for job in self:
