@@ -1,7 +1,7 @@
 {
     'name': 'Golden State Overnight (gso.com) Shipping',
     'summary': 'Send your shippings through gso.com and track them online.',
-    'version': '15.0.1.0.1',
+    'version': '16.0.1.0.1',
     'author': "Hibou Corp.",
     'category': 'Warehouse',
     'license': 'OPL-1',
