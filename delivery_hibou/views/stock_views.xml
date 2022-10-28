@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hibou_view_quant_package_form" model="ir.ui.view">
+        <field name="name">hibou.stock.quant.package.form</field>
+        <field name="model">stock.quant.package</field>
+        <field name="inherit_id" ref="stock.view_quant_package_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_id']" position="after">
+                <label for="carrier_id"/>
+                <div name="carrier">
+                    <field name="carrier_id" class="oe_inline"/>
+                    <button type="object" class="fa fa-arrow-right oe_link" name="send_to_shipper" string="Ship" attrs="{'invisible':['|',('carrier_tracking_ref','!=',False),('carrier_id','=', False)]}"/>
+                </div>
+                <label for="carrier_tracking_ref"/>
+                <div name="tracking">
+                    <field name="carrier_tracking_ref" class="oe_inline" />
+                    <button type="object" class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|',('carrier_tracking_ref','=',False),('carrier_id','=', False)]}"/>
+                </div>
+                <field name="declared_value" />
+                <field name="require_insurance" />
+                <field name="require_signature" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_withcarrier_out_form" model="ir.ui.view">
+        <field name="name">hibou.delivery.stock.picking_withcarrier.form.view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="delivery.view_picking_withcarrier_out_form" />
+        <field name="priority" eval="200" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='carrier_id']" position="before">
+                <field name="commercial_partner_id" invisible="1" />
+                <field name="require_insurance" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                <field name="require_signature" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                <field name="shipping_account_id" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"
+                       options="{'no_create': True, 'no_open': True}"
+                       domain="[('partner_id', 'in', (False, partner_id, commercial_partner_id))]"/>
+                <field name="package_carrier_tracking_ref" attrs="{'invisible': [('package_carrier_tracking_ref', '=', False)]}" />
+                <button name="clear_carrier_tracking_ref" type="object" string="Clear Tracking" attrs="{'invisible': [('carrier_tracking_ref', '!=', False)]}" />
+                <button name="reset_carrier_tracking_ref" type="object" string="Reset Tracking" attrs="{'invisible': [('package_carrier_tracking_ref', '!=', False)]}" />
+                <field name="package_ids" attrs="{'invisible': [('package_carrier_tracking_ref', '=', False)]}" context="{'active_id': id, 'active_model': 'stock.picking'}" nolabel="1" colspan="2">
+                    <tree>
+                        <field name="name" />
+                        <field name="carrier_id" />
+                        <field name="carrier_tracking_ref" />
+                        <button type="object" name="cancel_shipment" string="Cancel" />
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
