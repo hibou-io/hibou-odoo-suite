@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_delivery_carrier_form_with_provider_gso" model="ir.ui.view">
+        <field name="name">delivery.carrier.form.provider.gso</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='destination']" position='before'>
+                <page string="gso.com Configuration" attrs="{'invisible': [('delivery_type', '!=', 'gso')]}">
+                    <group>
+                        <group>
+                            <field name="gso_username" attrs="{'required': [('delivery_type', '=', 'gso')]}" />
+                            <field name="gso_password" attrs="{'required': [('delivery_type', '=', 'gso')]}" password="True"/>
+                            <field name="gso_account_number" attrs="{'required': [('delivery_type', '=', 'gso')]}" />
+                        </group>
+                        <group>
+                            <field name="gso_service_type" attrs="{'required': [('delivery_type', '==', 'gso')]}"/>
+                            <field name="gso_default_packaging_id" attrs="{'required': [('delivery_type', '==', 'gso')]}"/>
+                            <field name="gso_image_type" attrs="{'required': [('delivery_type', '==', 'gso')]}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
