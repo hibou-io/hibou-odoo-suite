@@ -35,7 +35,7 @@ class TestPicking(TransactionCase):
 
     # def test_creation(self):
     #     self.productA.tracking = 'serial'
-    #     lot = self.env['stock.production.lot'].create({
+    #     lot = self.env['stock.lot'].create({
     #         'product_id': self.productA.id,
     #         'name': '123456789',
     #     })
@@ -49,7 +49,7 @@ class TestPicking(TransactionCase):
     #     self.productA.tracking = 'serial'
     #     picking_pick, picking_pack, picking_ship = self.create_pick_pack_ship()
     #     stock_location = self.env['stock.location'].browse(self.stock_location)
-    #     lot = self.env['stock.production.lot'].create({
+    #     lot = self.env['stock.lot'].create({
     #         'product_id': self.productA.id,
     #         'name': '123456789',
     #         'catch_weight_ratio': 0.8,
@@ -58,7 +58,7 @@ class TestPicking(TransactionCase):
 
     def test_so_invoice(self):
         ref_weight = 45.0
-        lot = self.env['stock.production.lot'].create({
+        lot = self.env['stock.lot'].create({
             'product_id': self.product1.id,
             'name': '123456789',
             'catch_weight': ref_weight,
@@ -89,12 +89,12 @@ class TestPicking(TransactionCase):
     def test_so_invoice2(self):
         ref_weight1 = 45.0
         ref_weight2 = 51.0
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'product_id': self.product1.id,
             'name': '1-low',
             'catch_weight': ref_weight1,
         })
-        lot2 = self.env['stock.production.lot'].create({
+        lot2 = self.env['stock.lot'].create({
             'product_id': self.product1.id,
             'name': '1-high',
             'catch_weight': ref_weight2,

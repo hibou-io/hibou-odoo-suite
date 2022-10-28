@@ -4,13 +4,12 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class AccountInvoiceLine(models.Model):
-    _inherit = 'account.invoice.line'
+class AccountMoveLine(models.Model):
+    _name = "account.move.line"
 
     catch_weight = fields.Float(string='Catch Weight', digits=(10, 4), compute='_compute_price', store=True)
     catch_weight_uom_id = fields.Many2one('uom.uom', related='product_id.catch_weight_uom_id')
 
-    @api.one
     @api.depends('price_unit', 'discount', 'invoice_line_tax_ids', 'quantity',
                  'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id', 'invoice_id.company_id',
                  'invoice_id.date_invoice', 'invoice_id.date')

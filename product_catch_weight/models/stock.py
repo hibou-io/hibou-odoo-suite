@@ -2,7 +2,7 @@ from odoo import api, fields, models
 
 
 class StockProductionLot(models.Model):
-    _inherit = 'stock.production.lot'
+    _inherit = 'stock.lot'
 
     catch_weight_ratio = fields.Float(string='Catch Weight Ratio', digits=(10, 6), compute='_compute_catch_weight_ratio')
     catch_weight = fields.Float(string='Catch Weight', digits=(10, 4))

@@ -42,7 +42,7 @@ def _action_done(self):
                         # `use_create_lots` and `use_existing_lots`.
                         if ml.lot_name and not ml.lot_id:
                             lot_catch_weight = ml.catch_weight_uom_id._compute_quantity(ml.catch_weight, ml.product_id.catch_weight_uom_id, rounding_method='DOWN')
-                            lot = self.env['stock.production.lot'].create(
+                            lot = self.env['stock.lot'].create(
                                 {'name': ml.lot_name, 'product_id': ml.product_id.id, 'catch_weight': lot_catch_weight}
                             )
                             ml.write({'lot_id': lot.id})
