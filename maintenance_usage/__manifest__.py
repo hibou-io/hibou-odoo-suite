@@ -1,6 +1,6 @@
 {
     'name': 'Equipment Usage',
-    'version': '13.0.1.0.0',
+    'version': '16.0.1.0.0',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'category': 'Human Resources',
     'summary': 'Keep track of usage on different types of equipment.',
