@@ -88,7 +88,7 @@ class TestDeliveryHibou(common.TransactionCase):
         # This relies heavily on the 'stock' demo data.
         # Should only have a single move_line_ids and it should not be done at all.
         self.assertEqual(picking_out.move_line_ids.mapped('qty_done'), [0.0])
-        self.assertEqual(picking_out.move_line_ids.mapped('product_uom_qty'), [15.0])
+        self.assertEqual(picking_out.move_line_ids.mapped('reserved_uom_qty'), [15.0])
         self.assertEqual(picking_out.move_line_ids.mapped('product_id.standard_price'), [100.0])
         test_whole_value = 15.0 * 100.0
         test_one_value = 100.0
@@ -138,7 +138,7 @@ class TestDeliveryHibou(common.TransactionCase):
         # This relies heavily on the 'stock' demo data.
         # Should only have a single move_line_ids and it should not be done at all.
         self.assertEqual(picking_in.move_line_ids.mapped('qty_done'), [0.0])
-        self.assertEqual(picking_in.move_line_ids.mapped('product_uom_qty'), [35.0])
+        self.assertEqual(picking_in.move_line_ids.mapped('reserved_uom_qty'), [35.0])
         self.assertEqual(picking_in.move_line_ids.mapped('product_id.standard_price'), [55.0])
 
         self.assertEqual(picking_in.carrier_id._classify_picking(picking=picking_in), 'in')
