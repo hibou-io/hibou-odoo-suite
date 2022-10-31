@@ -1,7 +1,12 @@
-from odoo import api, fields, models
+import logging
+from math import ceil
+from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_compare
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.exceptions import UserError
+
+
+_logger = logging.getLogger(__name__)
 
 
 class DeliveryCarrier(models.Model):
@@ -17,9 +22,86 @@ class DeliveryCarrier(models.Model):
                                             string='Procurement Priority',
                                             help='Priority for this carrier. Will affect pickings '
                                                  'and procurements related to this carrier.')
+    package_by_field = fields.Selection([
+        ('', 'Use Default Package Type'),
+        ('weight', 'Weight'),
+        ('volume', 'Volume'),
+    ], string='Packaging by Product Field')
+
+    # Package selection
+    def get_package_type_for_order(self, order):
+        if self.package_by_field == 'weight':
+            res = self._get_package_type_for_order(order, 'max_weight', 'weight')
+            _logger.info('  get_package_type_for_order package by weight (%s) %s' % (res.id, res.name))
+            return res
+        elif self.package_by_field == 'volume':
+            res = self._get_package_type_for_order(order, 'package_volume', 'volume')
+            _logger.info('  get_package_type_for_order package by volume (%s) %s' % (res.id, res.name))
+            return res
+        attr = getattr(self, '%s_default_packaging_id' % (self.delivery_type, ), None)
+        if attr:
+            _logger.info('  get_package_type_for_order package by default_packaging_id (%s) %s' % (attr.id, attr.name))
+            return attr
+        attr = getattr(self, '%s_default_package_type_id' % (self.delivery_type, ), None)
+        if attr:
+            _logger.info('  get_package_type_for_order package by default_package_type_id (%s) %s' % (attr.id, attr.name))
+            return attr
+        _logger.info('  package by NULL')
+        return self.env['product.packaging']
+    
+    def get_package_count_for_order(self, order, package_type=None):
+        if package_type is None:
+            package_type = self.get_package_type_for_order(order)
+        
+        if self.package_by_field == 'volume':
+            return self._get_package_count_for_order(order, package_type, 'package_volume', 'volume')
+        return self._get_package_count_for_order(order, package_type, 'max_weight', 'weight')
+
+    def _get_package_type_for_order(self, order, package_type_field, product_field):
+        # NOTE do not optimize this into non-loop.
+        # this may be an orderfake
+        order_total = 0.0
+        for ol in order.order_line.filtered(lambda ol: ol.product_id.type in ('product', 'consu')):
+            order_total += ol.product_id[product_field] * ol.product_uom_qty
+        _logger.info('    _get_package_type_for_order order_total ' + str(order_total))
+        if order_total:
+            package_types = self.env['product.packaging'].search([
+                ('package_carrier_type', 'in', ('none', False, self.delivery_type)),
+                ('use_in_package_selection', '=', True),
+            ], order=package_type_field)
+            package_type = None
+            for package_type in package_types:
+                if package_type[package_type_field] >= order_total:
+                    return package_type
+            return package_types if not package_type else package_type
+        return self.env['product.packaging']
+    
+    def _get_package_count_for_order(self, order, package_type, package_type_field, product_field):
+        # NOTE do not optimize this into non-loop.
+        # this may be an orderfake
+        order_total = 0.0
+        for ol in order.order_line.filtered(lambda ol: ol.product_id.type in ('product', 'consu')):
+            order_total += ol.product_id[product_field] * ol.product_uom_qty
+        package_type_field_value = package_type[package_type_field]
+        if not package_type_field_value or package_type_field_value >= order_total:
+            return 1
+        return ceil(order_total / package_type_field_value)
 
     # Utility
+    def get_to_ship_picking_packages(self, picking):
+        # Will return a stock.quant.package record set if the picking has packages
+        # in the case of multi-packing and none applicable, will return None
+        # Additionally, will not return packages that have a tracking number (because they have shipped)
+        picking_packages = picking.package_ids
+        package_carriers = picking_packages.mapped('carrier_id')
+        if package_carriers:
+            # only ship ours
+            picking_packages = picking_packages.filtered(lambda p: p.carrier_id == self and not p.carrier_tracking_ref)
 
+            if package_carriers and not picking_packages:
+                return None
+        return picking_packages
+    
     def get_insurance_value(self, order=None, picking=None, package=None):
         value = 0.0
         if order:
@@ -142,7 +224,7 @@ class DeliveryCarrier(models.Model):
 
     def _get_shipper_warehouse_dropship_in(self, picking):
         if picking.sale_id:
-            picking.sale_id.partner_shipping_id
+            return picking.sale_id.partner_shipping_id
         return self._get_shipper_warehouse_dropship_in_no_sale(picking)
 
     def _get_shipper_warehouse_dropship_in_no_sale(self, picking):
@@ -222,8 +304,8 @@ class DeliveryCarrier(models.Model):
                 packages = picking.package_ids
         else:
             if packages:
-                raise UserError('Cannot rate package without picking.')
-            self = self.with_context(date_planned=(order.date_planned or fields.Datetime.now()))
+                raise UserError(_('Cannot rate package without picking.'))
+            self = self.with_context(date_planned=('date_planned' in self.env['sale.order']._fields and order.date_planned or fields.Datetime.now()))
 
         res = []
         for carrier in self:
@@ -232,16 +314,16 @@ class DeliveryCarrier(models.Model):
                                                               p.packaging_id.package_carrier_type in (False, '', 'none', carrier.delivery_type))
             if packages and not carrier_packages:
                 continue
-            if hasattr(carrier, '%s_rate_shipment_multi' % self.delivery_type):
+            attr = getattr(carrier, '%s_rate_shipment_multi' % self.delivery_type, None)
+            if attr:
                 try:
-                    res += getattr(carrier, '%s_rate_shipment_multi' % carrier.delivery_type)(order=order,
-                                                                                                   picking=picking,
-                                                                                                   packages=carrier_packages)
+                    res += attr(order=order, picking=picking, packages=carrier_packages)
                 except TypeError:
                     # TODO remove catch if after Odoo 14
                     # This is intended to find ones that don't support packages= kwarg
-                    res += getattr(carrier, '%s_rate_shipment_multi' % carrier.delivery_type)(order=order,
-                                                                                                   picking=picking)
+                    res2 = attr(order=order, picking=picking)
+                    if res2:
+                        res += res2
 
         return res
 
@@ -252,11 +334,12 @@ class DeliveryCarrier(models.Model):
         :param packages: Optional recordset of packages (should be for this carrier)
         '''
         self.ensure_one()
-        if hasattr(self, '%s_cancel_shipment' % self.delivery_type):
+        attr = getattr(self, '%s_cancel_shipment' % self.delivery_type, None)
+        if attr:
             # No good way to tell if this method takes the kwarg for packages
             if packages:
                 try:
-                    return getattr(self, '%s_cancel_shipment' % self.delivery_type)(pickings, packages=packages)
+                    return attr(pickings, packages=packages)
                 except TypeError:
                     # we won't be able to cancel the packages properly
                     # here we will TRY to make a good call here where we put the package references into the picking
@@ -267,7 +350,7 @@ class DeliveryCarrier(models.Model):
                         'carrier_tracking_ref': tracking_ref,
                     })
 
-            return getattr(self, '%s_cancel_shipment' % self.delivery_type)(pickings)
+            return attr(pickings)
 
 
 class ChooseDeliveryPackage(models.TransientModel):
@@ -313,16 +396,18 @@ class ChooseDeliveryPackage(models.TransientModel):
             picking_move_lines = self.picking_id.move_line_nosuggest_ids
 
         move_line_ids = picking_move_lines.filtered(lambda ml:
-            float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
-            and not ml.result_package_id
-        )
+                                                    float_compare(ml.qty_done, 0.0,
+                                                                  precision_rounding=ml.product_uom_id.rounding) > 0
+                                                    and not ml.result_package_id
+                                                    )
         if not move_line_ids:
             move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
-                                 precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
-                                 precision_rounding=ml.product_uom_id.rounding) == 0)
+                                                                                 precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(
+                ml.qty_done, 0.0,
+                precision_rounding=ml.product_uom_id.rounding) == 0)
 
         delivery_package = self.picking_id._put_in_pack(move_line_ids)
-        # write shipping weight and product_packaging on 'stock_quant_package' if needed
+        # write shipping weight and package type on 'stock_quant_package' if needed
         if self.delivery_packaging_id:
             delivery_package.packaging_id = self.delivery_packaging_id
         if self.shipping_weight:

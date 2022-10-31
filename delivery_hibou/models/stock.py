@@ -2,6 +2,18 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
+class StockPackageType(models.Model):
+    _inherit = 'product.packaging'
+    
+    use_in_package_selection = fields.Boolean()
+    package_volume = fields.Float(compute='_compute_package_volume', store=True)
+    
+    @api.depends('packaging_length', 'width', 'height')
+    def _compute_package_volume(self):
+        for pt in self:
+            pt.package_volume = pt.packaging_length * pt.width * pt.height
+
+
 class StockQuantPackage(models.Model):
     _inherit = 'stock.quant.package'
 
@@ -15,7 +27,7 @@ class StockQuantPackage(models.Model):
         picking_id = self._context.get('active_id')
         picking_model = self._context.get('active_model')
         if not picking_id or picking_model != 'stock.picking':
-            raise UserError('Cannot cancel package other than through shipment/picking.')
+            raise UserError(_('Cannot cancel package other than through shipment/picking.'))
         return self.env['stock.picking'].browse(picking_id)
 
     def send_to_shipper(self):

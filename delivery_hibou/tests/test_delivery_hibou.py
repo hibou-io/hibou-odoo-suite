@@ -7,6 +7,11 @@ class TestDeliveryHibou(common.TransactionCase):
         super(TestDeliveryHibou, self).setUp()
         self.partner = self.env.ref('base.res_partner_address_13')
         self.product = self.env.ref('product.product_product_7')
+        self.product.write({
+            'type': 'product',
+            'weight': 1.0,
+            'volume': 15.0,
+        })
         # Create Shipping Account
         self.shipping_account = self.env['partner.shipping.account'].create({
             'name': '123123',
@@ -20,6 +25,26 @@ class TestDeliveryHibou(common.TransactionCase):
         self.carrier = self.env['delivery.carrier'].create({
             'name': 'Test Carrier1',
             'product_id': self.delivery_product.id,
+            'delivery_type': 'fixed',
+        })
+        # update all other package types to have 
+        self.package_type_large = self.env['product.packaging'].create({
+            'name': 'Large 15x15x15',
+            'packaging_length': 15.0,
+            'height': 15.0,
+            'width': 15.0,
+            'max_weight': 50.0,
+            'package_carrier_type': 'none',
+            'use_in_package_selection': True,
+        })
+        self.package_type_small = self.env['product.packaging'].create({
+            'name': 'Small 2x2x4',
+            'packaging_length': 4.0,
+            'height': 2.0,
+            'width': 2.0,
+            'max_weight': 1.0,
+            'package_carrier_type': 'none',
+            'use_in_package_selection': True,
         })
 
     def test_delivery_hibou(self):
@@ -28,10 +53,8 @@ class TestDeliveryHibou(common.TransactionCase):
 
         # Assign values to new Carrier
         test_insurance_value = 600
-        test_sig_req_value = 300
         test_procurement_priority = '1'
         self.carrier.automatic_insurance_value = test_insurance_value
-        self.carrier.automatic_sig_req_value = test_sig_req_value
         self.carrier.procurement_priority = test_procurement_priority
 
 
@@ -42,6 +65,7 @@ class TestDeliveryHibou(common.TransactionCase):
             'shipping_account_id': self.shipping_account.id,
             'order_line': [(0, 0, {
                 'product_id': self.product.id,
+                'product_uom_qty': 2.0,
             })]
         })
         self.assertFalse(sale_order.carrier_id)
@@ -64,6 +88,35 @@ class TestDeliveryHibou(common.TransactionCase):
         self.assertEqual(sale_order.picking_ids.shipping_account_id, self.shipping_account)
         self.assertEqual(sale_order.carrier_id.get_third_party_account(order=sale_order), self.shipping_account)
 
+        # Test Package selection
+        default_package_type = sale_order.carrier_id.get_package_type_for_order(sale_order)
+        self.assertFalse(default_package_type, 'Fixed should not have a default packaging type.')
+        
+        # by product weight
+        sale_order.carrier_id.package_by_field = 'weight'
+
+        default_package_type = sale_order.carrier_id.get_package_type_for_order(sale_order)
+        self.assertTrue(default_package_type)
+        self.assertEqual(default_package_type, self.package_type_large)
+        
+        # change qty ordered to try to get the small package type
+        sale_order.order_line.write({
+            'product_uom_qty': 1.0,
+        })
+        default_package_type = sale_order.carrier_id.get_package_type_for_order(sale_order)
+        self.assertEqual(default_package_type, self.package_type_small)
+        
+        # by product volume
+        sale_order.carrier_id.package_by_field = 'volume'
+        default_package_type = sale_order.carrier_id.get_package_type_for_order(sale_order)
+        self.assertEqual(default_package_type, self.package_type_small)
+        
+        sale_order.order_line.write({
+            'product_uom_qty': 2.0,
+        })
+        default_package_type = sale_order.carrier_id.get_package_type_for_order(sale_order)
+        self.assertEqual(default_package_type, self.package_type_large)
+
         # Test attn
         test_ref = 'TEST100'
         self.assertEqual(sale_order.carrier_id.get_attn(order=sale_order), False)
@@ -79,9 +132,7 @@ class TestDeliveryHibou(common.TransactionCase):
 
     def test_carrier_hibou_out(self):
         test_insurance_value = 4000
-        test_sig_req_value = 4000
         self.carrier.automatic_insurance_value = test_insurance_value
-        self.carrier.automatic_sig_req_value = test_sig_req_value
 
         picking_out = self.env.ref('stock.outgoing_shipment_main_warehouse')
         picking_out.action_assign()
@@ -92,35 +143,32 @@ class TestDeliveryHibou(common.TransactionCase):
         # This relies heavily on the 'stock' demo data.
         # Should only have a single move_line_ids and it should not be done at all.
         self.assertEqual(picking_out.move_line_ids.mapped('qty_done'), [0.0])
-        self.assertEqual(picking_out.move_line_ids.mapped('product_uom_qty'), [15.0])
-        self.assertEqual(picking_out.move_line_ids.mapped('product_id.standard_price'), [3300.0])
+        test_one_value = 3300.0
+        test_qty = 15.0
+        test_whole_value = test_qty * test_one_value
+
+        self.assertEqual(picking_out.move_line_ids.mapped('product_uom_qty'), [test_qty])
+        self.assertEqual(picking_out.move_line_ids.mapped('product_id.standard_price'), [test_one_value])
+
 
         # The 'value' is assumed to be all of the product value from the initial demand.
-        self.assertEqual(picking_out.declared_value(), 15.0 * 3300.0)
+        self.assertEqual(picking_out.declared_value(), test_whole_value)
         self.assertEqual(picking_out.carrier_id.get_insurance_value(picking=picking_out), picking_out.declared_value())
-        self.assertTrue(picking_out.carrier_id.get_signature_required(picking=picking_out))
 
         # Workflow where user explicitly opts out of insurance on the picking level.
         picking_out.require_insurance = 'no'
-        picking_out.require_signature = 'no'
         self.assertEqual(picking_out.carrier_id.get_insurance_value(picking=picking_out), 0.0)
-        self.assertFalse(picking_out.carrier_id.get_signature_required(picking=picking_out))
         picking_out.require_insurance = 'auto'
-        picking_out.require_signature = 'auto'
 
         # Lets choose to only delivery one piece at the moment.
         # This does not meet the minimum on the carrier to have insurance value.
         picking_out.move_line_ids.qty_done = 1.0
-        self.assertEqual(picking_out.declared_value(), 3300.0)
+        self.assertEqual(picking_out.declared_value(), test_one_value)
         self.assertEqual(picking_out.carrier_id.get_insurance_value(picking=picking_out), 0.0)
-        self.assertFalse(picking_out.carrier_id.get_signature_required(picking=picking_out))
         # Workflow where user opts in to insurance.
         picking_out.require_insurance = 'yes'
-        picking_out.require_signature = 'yes'
-        self.assertEqual(picking_out.carrier_id.get_insurance_value(picking=picking_out), 3300.0)
-        self.assertTrue(picking_out.carrier_id.get_signature_required(picking=picking_out))
+        self.assertEqual(picking_out.carrier_id.get_insurance_value(picking=picking_out), test_one_value)
         picking_out.require_insurance = 'auto'
-        picking_out.require_signature = 'auto'
 
         # Test with picking having 3rd party account.
         self.assertEqual(picking_out.carrier_id.get_third_party_account(picking=picking_out), None)
