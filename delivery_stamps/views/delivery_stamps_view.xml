@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_delivery_carrier_form_with_provider_stamps" model="ir.ui.view">
+        <field name="name">delivery.carrier.form.provider.stamps</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='destination']" position='before'>
+                <page string="Stamps.com Configuration" attrs="{'invisible': [('delivery_type', '!=', 'stamps')]}">
+                    <group>
+                        <group>
+                            <field name="stamps_username" attrs="{'required': [('delivery_type', '=', 'stamps')]}" />
+                            <field name="stamps_password" attrs="{'required': [('delivery_type', '=', 'stamps')]}" password="True"/>
+                        </group>
+                        <group>
+                            <field name="stamps_service_type" attrs="{'required': [('delivery_type', '==', 'stamps')]}"/>
+                            <field name="stamps_default_packaging_id" attrs="{'required': [('delivery_type', '==', 'stamps')]}"/>
+                            <field name="stamps_image_type" attrs="{'required': [('delivery_type', '==', 'stamps')]}"/>
+                            <field name="stamps_addon_sc"/>
+                            <field name="stamps_addon_dc"/>
+                            <field name="stamps_addon_hp"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_package_type_form_delivery" model="ir.ui.view">
+        <field name="name">stamps.stock.package.type.form.delivery</field>
+        <field name="model">stock.package.type</field>
+        <field name="inherit_id" ref="delivery.stock_package_type_form_delivery"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='barcode']" position='before'>
+                <field name="stamps_cubic_pricing"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
