@@ -1,7 +1,7 @@
 {
     'name': 'Account Invoice Change',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '13.0.1.0.0',
+    'version': '16.0.1.0.0',
     'category': 'Accounting',
     'sequence': 95,
     'summary': 'Technical foundation for changing invoices.',
@@ -23,6 +23,7 @@ the invoice is currently in.
         'account',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'wizard/invoice_change_views.xml',
     ],
     'installable': True,

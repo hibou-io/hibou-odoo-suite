@@ -1,36 +1,35 @@
-from odoo.addons.account.tests.account_test_users import AccountTestUsers
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests import tagged
 from odoo import fields
+from odoo import Command
 
 
-class TestInvoiceChange(AccountTestUsers):
+@tagged('post_install', '-at_install')
+class TestInvoiceChange(AccountTestInvoicingCommon):
 
     def test_invoice_change_basic(self):
         self.account_invoice_obj = self.env['account.move']
         self.payment_term = self.env.ref('account.account_payment_term_advance')
         self.journalrec = self.env['account.journal'].search([('type', '=', 'sale')])[0]
         self.partner3 = self.env.ref('base.res_partner_3')
-        self.invoice_basic = self.account_invoice_obj.with_user(self.account_user).create({
-            'type': 'out_invoice',
+        self.invoice_basic = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
             'name': "Test Customer Invoice",
             'invoice_payment_term_id': self.payment_term.id,
             'journal_id': self.journalrec.id,
             'partner_id': self.partner3.id,
-            # account_id=self.account_rec1_id.id,
-            'line_ids': [(0, 0, {
-                'product_id': self.env.ref('product.product_product_5').id,
+            'line_ids':[Command.create({
+                'product_id': self.product_a.id,
                 'quantity': 10.0,
-                'account_id': self.env['account.account'].search(
-                    [('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id,
-                'name': 'product test 5',
                 'price_unit': 100.00,
             })],
-        })
+        }])
         self.assertEqual(self.invoice_basic.state, 'draft')
         self.invoice_basic.action_post()
         self.assertEqual(self.invoice_basic.state, 'posted')
         self.assertEqual(self.invoice_basic.date, fields.Date.today())
         self.assertEqual(self.invoice_basic.invoice_date, fields.Date.today())
-        self.assertEqual(self.invoice_basic.invoice_user_id, self.account_user)
+        # self.assertEqual(self.invoice_basic.invoice_user_id, self.account_user)
         self.assertEqual(self.invoice_basic.line_ids[0].date, fields.Date.today())
 
         ctx = {'active_model': 'account.move', 'active_ids': [self.invoice_basic.id]}
