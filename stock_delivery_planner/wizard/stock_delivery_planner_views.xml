@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_stock_delivery_planner" model="ir.ui.view">
+        <field name="name">view.stock.delivery.planner</field>
+        <field name="model">stock.delivery.planner</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="packages_planned" invisible="1" />
+                <group>
+                    <field name="plan_option_ids" nolabel="1">
+                        <tree decoration-info="selection == 'selected'"
+                              decoration-muted="selection == 'deselected'"
+                              decoration-bf="days_different == 0.0"
+                              default_order="package_id, price"
+                              create="false" edit="false" delete="false">
+                            <field name="package_id" />
+                            <field name="carrier_id" />
+                            <field name="date_planned" invisible="1" />
+                            <field name="requested_date" decoration-danger="days_different &gt; 1.0" decoration-warning="days_different &gt; 0.0" decoration-success="days_different &lt; 0.0" />
+                            <field name="transit_days" decoration-warning="transit_days > 2.0" decoration-success="transit_days == 1.0"/>
+                            <field name="sale_requested_date" decoration-danger="days_different &gt; 1.0" decoration-warning="days_different &gt; 0.0" decoration-success="days_different &lt; 0.0" />
+                            <field name="days_different" decoration-danger="days_different &gt; 1.0" decoration-warning="days_different &gt; 0.0" decoration-success="days_different &lt; 0.0" />
+                            <field name="price" decoration-success="price &lt; 10.99" decoration-warning="price > 31.00 and price &lt; 50.00" decoration-danger="price >= 50.00" />
+                            <field name="selection" invisible="1" />
+                            <button class="eo_highlight"
+                                    name="select_plan"
+                                    string="Select"
+                                    type="object" />
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button type="object" name="action_plan" string="Plan" class="btn-primary" attrs="{'invisible': [('packages_planned', '=', False)]}"/>
+                    <button string="Discard" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

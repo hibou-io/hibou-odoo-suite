@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="50"/>
+        <field name="inherit_id" ref="delivery.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='shipping_setting_container']" position="after">
+                <h2 class="mt32">Delivery Planner</h2>
+                <div class="row mt16 o_settings_container" name="shipping_setting_container">
+                    <div class="col-lg-6 col-12 o_setting_box" id="stock_delivery_planner">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="stock_delivery_planner_base_carrier_ids" />
+                            <div class="text-muted">
+                                Add a carrier that represents the 'base rate' for a carrier's type. <br/>
+                                For example, you should add 1 FedEx carrier here and let us build up the
+                                rates for your other FedEx shipping methods.
+                            </div>
+                            <field name="stock_delivery_planner_base_carrier_ids" class="oe_inline" />
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
