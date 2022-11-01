@@ -88,6 +88,8 @@ class CommonTestCarrier(TransactionCase):
         self.sale_order.action_confirm()
         picking = self.sale_order.picking_ids
         self.assertEqual(len(picking), 1)
+        self.assertEqual(picking.shipping_weight, 0.0)
+        self.assertEqual(picking.weight, 1.5*3)
         rates = self.carrier.rate_shipment_multi(picking=picking)
         self._test_01_assert_rate_shipment_multi_rates_picking(rates, picking)
         
@@ -104,6 +106,7 @@ class CommonTestCarrier(TransactionCase):
         package = picking.move_line_ids.mapped('result_package_id')
         self.assertEqual(len(package), 1)
         
+        self.assertEqual(package.shipping_weight, 1.5)
         rates = self.carrier.rate_shipment_multi(picking=picking, packages=package)
         self._test_01_assert_rate_shipment_multi_rates_package(rates, picking, package)
 
