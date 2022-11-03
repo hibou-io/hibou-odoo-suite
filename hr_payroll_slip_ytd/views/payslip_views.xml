@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_payslip_inherit" name="Payslip YTD" inherit_id="hr_payroll.report_payslip">
+        <!-- Add YTD to basic salary summary -->
+        <xpath expr="//table[2]/tr" position="inside">
+            <t t-set="ytd" t-value="o.ytd('BASIC', allow_draft=True)"/>
+            <td><strong>YTD</strong></td>
+            <td><span t-esc="ytd.get('total', 0.0)" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.company_id.currency_id}"/></td>
+        </xpath>
+
+        <!-- Revert the way quantity is represented on the payslip -->
+        <xpath expr="//div[@id='total']/table/thead/tr//th[3]" position="replace">
+            <th>Quantity/Number of Days</th>
+        </xpath>
+        <xpath expr="//div[@id='total']/table/tbody/span[2]//td[3]/span" position="attributes">
+            <attribute name="t-if"/>
+        </xpath>
+
+        <!-- Add YTD to the table head-->
+        <xpath expr="//div[@id='total']/table/thead/tr//th[last()]" position="after">
+            <th>Total</th>
+            <th>YTD Quantity</th>
+            <th>YTD Amount</th>
+            <th>YTD Total</th>
+        </xpath>
+
+
+        <!-- Add YTD worked days data -->
+        <xpath expr="//div[@id='total']/table/tbody/span[1]//td[last()]" position="after">
+            <t t-set="worked_ytd" t-value="o.worked_ytd(worked_days.code, allow_draft=True)"/>
+            <td/>
+            <td/>
+            <td><span t-esc="worked_ytd.get('amount', 0.0)" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.company_id.currency_id}"/></td>
+            <td/>
+        </xpath>
+
+        <!-- Re-add column for line amount -->
+        <xpath expr="//div[@id='total']/table/tbody/span[2]//td[last()]" position="before">
+            <td><span t-esc="line.amount"
+                      t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+        </xpath>
+
+        <!-- Add YTD table data-->
+        <xpath expr="//div[@id='total']/table/tbody/span[2]//td[last()]" position="after">
+             <t t-set="ytd" t-value="o.ytd(line.code, allow_draft=True)"/>
+             <td><span t-esc="ytd.get('quantity', 0.0)"/></td>
+             <td><span t-esc="ytd.get('amount', 0.0)" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.company_id.currency_id}"/></td>
+             <td><span t-esc="ytd.get('total', 0.0)" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.company_id.currency_id}"/></td>
+        </xpath>
+    </template>
+</odoo>
