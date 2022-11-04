@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="partner_view_form_view_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="signifyd_case_count" invisible="1"/>
+                <field name="signifyd_average_score" invisible="1"/>
+                <button class="oe_stat_button text-success" icon="fa-flag-checkered"
+                        attrs="{'invisible': [('signifyd_average_score', '&lt;=', 600)]}">
+                    <field string="Signifyd Score" name="signifyd_average_score" widget="statinfo"/>
+                </button>
+                <button class="oe_stat_button text-warning" icon="fa-flag"
+                        attrs="{'invisible': [ '|', ('signifyd_average_score', '&gt;', 600), ('signifyd_average_score', '&lt;', 300)]}">
+                    <field string="Signifyd Score" name="signifyd_average_score" widget="statinfo"/>
+                </button>
+                <button class="oe_stat_button text-danger" icon="fa-flag"
+                        attrs="{'invisible': [('signifyd_average_score', '&gt;', 300)]}">
+                    <field string="Signifyd Score" name="signifyd_average_score" widget="statinfo"/>
+                </button>
+            </xpath>
+            <!-- Page for Signifyd info -->
+            <xpath expr="//notebook//page[last()]" position="after">
+                <page string="Signifyd Cases">
+                    <field name="signifyd_case_ids" widget="section_and_note_one2many" mode="tree">
+                        <tree create="false" delete="false">
+                            <field name="create_date" readonly="1"/>
+                            <field name="name" string="ID" readonly="1"/>
+                            <field name="order_id" readonly="1"/>
+                            <field name="score" readonly="1"/>
+                            <field name="guarantee_disposition" readonly="1"/>
+                            <field name="last_update" string="Last Update" readonly="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

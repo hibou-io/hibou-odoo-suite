@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="provider_form_website_inherit" model="ir.ui.view">
+        <field name="name">provider.form.inherit.website.inherit</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="website_payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='website_id']" position="after">
+                <field name="signifyd_case_type"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
