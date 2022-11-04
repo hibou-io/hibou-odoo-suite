@@ -3,8 +3,8 @@
 from odoo import api, fields, models
 
 
-class PaymentAcquirer(models.Model):
-    _inherit = 'payment.acquirer'
+class PaymentProvider(models.Model):
+    _inherit = 'payment.provider'
 
     signifyd_case_type = fields.Selection([
         ('', 'No Case'),
