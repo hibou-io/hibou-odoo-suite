@@ -79,6 +79,14 @@ class ProductImporter(Component):
         binding = super(ProductImporter, self)._create(data)
         self.backend_record.add_checkpoint(binding, summary=checkpoint_summary)
         return binding
+    
+    def _update(self, binding, data):
+        checkpoint_summary = data.get('checkpoint_summary', '')
+        if 'checkpoint_summary' in data:
+            del data['checkpoint_summary']
+        if checkpoint_summary:
+            self.backend_record.add_checkpoint(binding, summary=checkpoint_summary)
+        return super()._update(binding, data)
 
     def _after_import(self, binding):
         self._sync_options(binding)
