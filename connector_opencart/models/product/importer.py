@@ -55,6 +55,16 @@ class ProductImportMapper(Component):
             if name:
                 template = product_template.search([('name', '=', unescape(name))], limit=1)
         return {'odoo_id': template.id}
+    
+    @mapping
+    def checkpoint_summary(self, record):
+        pieces = [
+            str(record.get('model') or '').strip(),
+            str(record.get('sku') or '').strip(),
+            str(record.get('product_description', [{}])[0].get('name') or '').strip(),
+        ]
+        pieces = [t for t in pieces if t]
+        return {'checkpoint_summary': ' : '.join(pieces)}
 
 
 class ProductImporter(Component):
@@ -63,8 +73,11 @@ class ProductImporter(Component):
     _apply_on = ['opencart.product.template']
 
     def _create(self, data):
+        checkpoint_summary = data.get('checkpoint_summary', '')
+        if 'checkpoint_summary' in data:
+            del data['checkpoint_summary']
         binding = super(ProductImporter, self)._create(data)
-        self.backend_record.add_checkpoint(binding)
+        self.backend_record.add_checkpoint(binding, summary=checkpoint_summary)
         return binding
 
     def _after_import(self, binding):
