@@ -451,7 +451,7 @@ class SaleImportRule(Component):
     
     def _rule_check_status(self, record, method):
         if record['order_status'] in self._status_import_later:
-            raise RetryableJobError('Order %s is in %s and will be re-tried later.')
+            raise RetryableJobError('Order %s is in %s and will be re-tried later.' % (order_id, order_status))
         return True
 
     def _rule_never(self, record, method):
