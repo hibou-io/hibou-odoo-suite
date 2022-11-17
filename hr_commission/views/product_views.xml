@@ -8,8 +8,8 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='options']" position="inside">
                 <span class="d-inline-block">
-                    <field name="no_commission" readonly="1"/>
-                    <label for="no_commission"/>
+                    <field name="is_commission_exempt" readonly="1"/>
+                    <label for="is_commission_exempt"/>
                 </span>
             </xpath>
         </field>
@@ -21,7 +21,7 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='no_commission']" position="attributes">
+            <xpath expr="//field[@name='is_commission_exempt']" position="attributes">
                 <attribute name="readonly">0</attribute>
             </xpath>
         </field>

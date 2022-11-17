@@ -5,7 +5,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class TestNoCommission(common.TransactionCase):
+class TestIsCommissionExempt(common.TransactionCase):
     def setUp(self):
         super().setUp()
 
@@ -49,10 +49,10 @@ class TestNoCommission(common.TransactionCase):
             'invoice_policy': 'order',
             'taxes_id': [],
         })
-        self.product_no_commission = self.env['product.product'].create({
+        self.product_is_commission_exempt = self.env['product.product'].create({
             'name': 'Test Product No Commission',
             'invoice_policy': 'order',
-            'no_commission': True,
+            'is_commission_exempt': True,
             'taxes_id': [],
         })
 
@@ -69,9 +69,9 @@ class TestNoCommission(common.TransactionCase):
                 'tax_id': False,
             }), (0, 0, {
                 'name': 'test product no commission',
-                'product_id': self.product_no_commission.id,
+                'product_id': self.product_is_commission_exempt.id,
                 'product_uom_qty': 1.0,
-                'product_uom': self.product_no_commission.uom_id.id,
+                'product_uom': self.product_is_commission_exempt.uom_id.id,
                 'price_unit': 20.0,
                 'tax_id': False,
             })]
@@ -79,12 +79,12 @@ class TestNoCommission(common.TransactionCase):
         self.assertEqual(order.amount_total, 120.0)
         return order
 
-    def test_00_no_commission_total(self):
+    def test_00_is_commission_exempt_total(self):
         # TODO: test refunds
 
         # New attribute
-        self.assertFalse(self.product.no_commission)
-        self.assertTrue(self.product_no_commission.no_commission)
+        self.assertFalse(self.product.is_commission_exempt)
+        self.assertTrue(self.product_is_commission_exempt.is_commission_exempt)
 
         # Calculate commission based on invoice total
         self.env.user.company_id.commission_amount_type = 'on_invoice_total'
@@ -105,7 +105,7 @@ class TestNoCommission(common.TransactionCase):
         # commmission should be 10.0
         self.assertEqual(user_commission.amount, 10.0)
 
-    def test_10_no_commission_margin(self):
+    def test_10_is_commission_exempt_margin(self):
         self.env['ir.config_parameter'].set_param('commission.margin.threshold', '51.0')
         low_margin_product = self.env['product.product'].create({
             'name': 'Test Low Margin Product',
@@ -114,7 +114,7 @@ class TestNoCommission(common.TransactionCase):
         })
         self.env.user.company_id.commission_amount_type = 'on_invoice_margin'
         self.product.standard_price = 50.0 # margin is 100%, margin = $50.0
-        self.product_no_commission.standard_price = 10.0 # margin is 100%
+        self.product_is_commission_exempt.standard_price = 10.0 # margin is 100%
 
         sale = self._createSaleOrder()
         sale.write({
@@ -147,7 +147,7 @@ class TestNoCommission(common.TransactionCase):
     def test_20_test_zero_price(self):
         self.env.user.company_id.commission_amount_type = 'on_invoice_margin'
         self.product.standard_price = 0.0  # margin_percent is NaN
-        self.product_no_commission.standard_price = 10.0  # margin is 100%
+        self.product_is_commission_exempt.standard_price = 10.0  # margin is 100%
 
         sale = self._createSaleOrder()
         sale.action_confirm()

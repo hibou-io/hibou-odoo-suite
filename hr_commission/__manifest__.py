@@ -8,7 +8,7 @@
     'license': 'OPL-1',
     'website': 'https://hibou.io/',
     'depends': [
-        'account_invoice_margin',
+        # 'account_invoice_margin',  # optional
         'account',
         'hr_contract',
     ],

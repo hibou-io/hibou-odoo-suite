@@ -4,4 +4,4 @@ from odoo import fields, models
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    no_commission = fields.Boolean('Exclude from Commissions')
+    is_commission_exempt = fields.Boolean('Exclude from Commissions')
