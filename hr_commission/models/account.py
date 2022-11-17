@@ -37,15 +37,32 @@ class AccountMove(models.Model):
         return res
 
     def amount_for_commission(self, commission=None):
+        # Override to exclude ineligible products
+        amount = 0.0
+        invoice_lines = self.invoice_line_ids.filtered(lambda l: not l.product_id.is_commission_exempt)
+        sign = -1 if self.move_type in ['in_refund', 'out_refund'] else 1
         if hasattr(self, 'margin') and self.company_id.commission_amount_type == 'on_invoice_margin':
-            sign = -1 if self.move_type in ['in_refund', 'out_refund'] else 1
-            return self.margin * sign
+            margin_threshold = float(self.env['ir.config_parameter'].sudo().get_param('commission.margin.threshold', 0.0))
+            if margin_threshold:
+                invoice_lines = invoice_lines.filtered(lambda l: l.get_margin_percent() > margin_threshold)
+            amount = sum(invoice_lines.mapped('margin'))
         elif self.company_id.commission_amount_type == 'on_invoice_untaxed':
-            return self.amount_untaxed_signed
-        return self.amount_total_signed
+            amount = sum(invoice_lines.mapped('price_subtotal'))
+        else:
+            amount = sum(invoice_lines.mapped('price_total'))
+        return amount * sign
 
     def action_cancel(self):
         res = super(AccountMove, self).action_cancel()
         for move in self:
             move.sudo().commission_ids.unlink()
         return res
+
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    def get_margin_percent(self):
+        if not self.price_subtotal:
+            return 0.0
+        return ((self.margin or 0.0) / self.price_subtotal) * 100.0

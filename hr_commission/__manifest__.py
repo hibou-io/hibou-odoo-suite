@@ -19,6 +19,7 @@
         'views/commission_views.xml',
         'views/hr_views.xml',
         'views/partner_views.xml',
+        'views/product_views.xml',
         'views/res_config_settings_views.xml',
     ],
     'installable': True,
