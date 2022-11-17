@@ -39,19 +39,18 @@ class AccountMove(models.Model):
     def amount_for_commission(self, commission=None):
         # Override to exclude ineligible products
         amount = 0.0
-        if self.is_invoice():
-            invoice_lines = self.invoice_line_ids.filtered(lambda l: not l.product_id.no_commission)
-            if self.company_id.commission_amount_type == 'on_invoice_margin':
-                margin_threshold = float(self.env['ir.config_parameter'].sudo().get_param('commission.margin.threshold', default=0.0))
-                if margin_threshold:
-                    invoice_lines = invoice_lines.filtered(lambda l: l.get_margin_percent() > margin_threshold)
-                sign = -1 if self.move_type in ['in_refund', 'out_refund'] else 1
-                margin = sum(invoice_lines.mapped('margin'))
-                amount = margin * sign
-            else:
-                amount = sum(invoice_lines.mapped('balance'))
-                amount = abs(amount) if self.move_type == 'entry' else -amount
-        return amount
+        invoice_lines = self.invoice_line_ids.filtered(lambda l: not l.product_id.is_commission_exempt)
+        sign = -1 if self.move_type in ['in_refund', 'out_refund'] else 1
+        if hasattr(self, 'margin') and self.company_id.commission_amount_type == 'on_invoice_margin':
+            margin_threshold = float(self.env['ir.config_parameter'].sudo().get_param('commission.margin.threshold', 0.0))
+            if margin_threshold:
+                invoice_lines = invoice_lines.filtered(lambda l: l.get_margin_percent() > margin_threshold)
+            amount = sum(invoice_lines.mapped('margin'))
+        elif self.company_id.commission_amount_type == 'on_invoice_untaxed':
+            amount = sum(invoice_lines.mapped('price_subtotal'))
+        else:
+            amount = sum(invoice_lines.mapped('price_total'))
+        return amount * sign
 
     def action_cancel(self):
         res = super(AccountMove, self).action_cancel()
@@ -64,15 +63,6 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     def get_margin_percent(self):
-        for line in self:
-            currency = line.move_id.currency_id
-            price = line.purchase_price
-            if line.product_id and not price:
-                date = line.move_id.date if line.move_id.date else fields.Date.context_today(line.move_id)
-                from_cur = line.move_id.company_currency_id.with_context(date=date)
-                price = from_cur._convert(line.product_id.standard_price, currency, line.company_id, date, round=False)
-            total_price = price * line.quantity
-            if total_price == 0.0:
-                return -1.0
-            else:
-                return (line.margin / total_price) * 100.0
+        if not self.price_subtotal:
+            return 0.0
+        return ((self.margin or 0.0) / self.price_subtotal) * 100.0
