@@ -88,7 +88,12 @@ class OpencartProductTemplate(models.Model):
                         raise RetryableJobError('Product imported, but selected option is not available.')
             if not opencart_attribute_value.odoo_id:
                 raise RetryableJobError('Order Product (%s) has option (%s) "%s" that is not mapped to an Odoo Attribute Value.' % (self, opencart_attribute_value.external_id, opencart_attribute_value.opencart_name))
-            selected_attribute_values += opencart_attribute_value.odoo_id
+            selected_attribute_values |= opencart_attribute_value.odoo_id
+        # we always need to 'select' template attr values for 'no variant' options
+        # this is only need if it creates the variant because this value cannot be skipped otherwise it is an invalid variant
+        for line in self.odoo_id.attribute_line_ids.filtered(lambda pal: pal.attribute_id.create_variant == 'no_variant'):
+            # and there must always bee at least one
+            selected_attribute_values |= line.product_template_value_ids[0]
         # Now that we know what options are selected, we can load a variant with those options
         product = self.odoo_id._create_product_variant(selected_attribute_values, log_warning=True)
         if not product:
