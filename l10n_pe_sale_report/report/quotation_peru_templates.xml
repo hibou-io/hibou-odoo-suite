@@ -127,7 +127,8 @@
                         <p>*Módulos implementados/configurados: Uso general de Odoo</p>
                         <p>**Precios cambian de acuerdo a la implementación de nuevos módulos</p>
                         <!-- REVIEW insert QR code -->
-                        <t t-set="sale_report_url" t-value="'/my/orders/%s' % (o.id)"/>
+                        <t t-set="base_url" t-value="o.get_base_url()"/>
+                        <t t-set="sale_report_url" t-value="'%s/my/orders/%s' % (base_url, o.id)"/>
                         <div name="footer_left_column" position="inside" style="text-align:right;">
                             <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', sale_report_url, 400, 400)" alt="QR Code" style="height:100px"/>
                         </div>
