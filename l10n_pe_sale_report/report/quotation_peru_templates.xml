@@ -95,12 +95,18 @@
                                 </tr>
                                 <t t-set="payroll" t-value="o.order_line.filtered(lambda line: line.product_id.default_code == 'payroll')"/>
                                 <t t-set="qty" t-value="payroll.product_uom_qty"/>
+                                <t t-set="qty_default" t-value="50"/>
                                 <t t-set="p_unit_odoo" t-value="10.90"/>
                                 <t t-set="total_month_odoo" t-value="qty*p_unit_odoo"/>
                                 <t t-set="total_year_odoo" t-value="total_month_odoo*12"/>
                                 <tr>
                                     <td style="background-color:#FAD7A0;">Licencia de Odoo</td>
-                                    <td style="background-color:#FAD7A0;"><span t-esc="qty"/></td>
+                                    <t t-if="qty > 0">
+                                        <td style="background-color:#FAD7A0;"><span t-esc="qty"/></td>
+                                    </t>
+                                    <t t-else="">
+                                        <td style="background-color:#FAD7A0;"><span t-esc="qty_default"/></td>
+                                    </t>
                                     <td style="background-color:#FAD7A0;"><span t-esc="p_unit_odoo" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/></td>
                                     <td style="background-color:#FAD7A0;"><span t-esc="total_month_odoo" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/></td>
                                     <td style="background-color:#FAD7A0;"><span t-esc="total_year_odoo" t-options='{"widget": "monetary", "display_currency": line.currency_id}'/></td>
@@ -123,12 +129,16 @@
                                     <td></td>
                                 </tr>
                             </tbody>
-                        </table>
+                        </table>                        
                         <p>*Módulos implementados/configurados: Uso general de Odoo</p>
+                        <t t-set="module_list" t-value="(o.client_order_ref or '').split(',')"/>
+                        <t t-set="modules" t-value="o.env['ir.module.module'].sudo().search([('name', 'in', module_list)])"/>
+                        <t t-foreach="modules" t-as="m">
+                          <span style="margin-right: 8px;"><img t-att-src="'data:image/png;base64,%s' % to_text(m.icon_image)" width="20" height="20" alt="Document"/> <span t-field="m.shortdesc"/></span>
+                        </t><br/><br/>
                         <p>**Precios cambian de acuerdo a la implementación de nuevos módulos</p>
-                        <!-- REVIEW insert QR code -->
                         <t t-set="base_url" t-value="o.get_base_url()"/>
-                        <t t-set="sale_report_url" t-value="'%s/my/orders/%s' % (base_url, o.id)"/>
+                        <t t-set="sale_report_url" t-value="'%s/my/orders/%s/%s' % (base_url, o.id, o.access_token)"/>
                         <div name="footer_left_column" position="inside" style="text-align:right;">
                             <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', sale_report_url, 400, 400)" alt="QR Code" style="height:100px"/>
                         </div>
