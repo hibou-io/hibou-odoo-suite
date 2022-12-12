@@ -8,6 +8,10 @@ _logger = logging.getLogger(__name__)
 
 
 def ir_5ta_cat(payslip, categories, worked_days, inputs):
+    if inputs.EE_PE_IR_5TA_CAT:
+        # cannot look for amount because it could be forced to zero
+        return inputs.EE_PE_IR_5TA_CAT.amount, 100.0
+    
     basic_wage = categories.BASIC
     if payslip.dict.contract_id.pe_payroll_config_value('ee_5ta_cat_exempt'):
         return 0.0, 0.0
