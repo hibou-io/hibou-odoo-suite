@@ -89,7 +89,7 @@
         <field name="condition_select">python</field>
         <field name="condition_python">result = contract.pe_payroll_config_value('has_minor_dependent')</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result, result_rate = payslip.rule_parameter('pe_min_wage'), payslip.rule_parameter('pe_minor_dependent_rate')</field>
+        <field name="amount_python_compute">result, result_rate = (payslip.rule_parameter('pe_min_wage')*inputs.MONTHS.amount / 6.0), payslip.rule_parameter('pe_minor_dependent_rate')</field>
         <field name="appears_on_payslip" eval="True"/>
     </record>
 
