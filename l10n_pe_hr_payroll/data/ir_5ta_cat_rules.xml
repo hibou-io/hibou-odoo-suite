@@ -44,6 +44,15 @@
 
 
     <!-- EE Rules -->
+    <record id="input_type_ee_ir_5ta_cat" model="hr.payslip.input.type">
+        <field name="name">Manual IR 5th Cat.</field>
+        <field name="code">EE_PE_IR_5TA_CAT</field>
+        <field name="country_id" ref="base.pe" />
+        <field name="struct_ids" eval="[
+            (4, ref('l10n_pe_hr_payroll.hr_payroll_structure')),
+        ]" />
+    </record>
+
     <record id="hr_payroll_rule_ee_ir_5ta_cat" model="hr.salary.rule">
         <field name="sequence" eval="196"/>
         <field name="struct_id" ref="hr_payroll_structure"/>
