@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="account_invoice_change_form_inherit" model="ir.ui.view">
+        <field name="name">account.invoice.change.form.inherit</field>
+        <field name="model">account.invoice.change</field>
+        <field name="inherit_id" ref="account_invoice_change.account_invoice_change_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_right']" position="inside">
+                <field name="analytic_account_id" domain="[('company_id', '=', move_company_id)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
