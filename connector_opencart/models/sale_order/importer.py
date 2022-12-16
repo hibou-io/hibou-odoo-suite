@@ -450,7 +450,8 @@ class SaleImportRule(Component):
         return True
     
     def _rule_check_status(self, record, method):
-        if record['order_status'] in self._status_import_later:
+        order_status = record['order_status']
+        if order_status in self._status_import_later:
             order_id = record['order_id']
             raise RetryableJobError('Order %s is in %s and will be re-tried later.' % (order_id, order_status))
         return True
