@@ -10,3 +10,6 @@
 [submodule ".vendor/oca-connector"]
 	path = .vendor/oca-connector
 	url = https://github.com/hibou-io/oca-connector.git
+[submodule ".vendor/oca-sale-workflow"]
+	path = .vendor/oca-sale-workflow
+	url = https://github.com/hibou-io/oca-sale-workflow.git
