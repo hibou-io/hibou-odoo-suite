@@ -7,3 +7,15 @@
 [submodule ".vendor/oca-queue"]
 	path = .vendor/oca-queue
 	url = https://github.com/hibou-io/oca-queue.git
+[submodule ".vendor/oca-connector"]
+	path = .vendor/oca-connector
+	url = https://github.com/hibou-io/oca-connector.git
+[submodule ".vendor/oca-sale-workflow"]
+	path = .vendor/oca-sale-workflow
+	url = https://github.com/hibou-io/oca-sale-workflow.git
+[submodule ".vendor/oca-connector-ecommerce"]
+	path = .vendor/oca-connector-ecommerce
+	url = https://github.com/hibou-io/oca-connector-ecommerce.git
+[submodule ".vendor/oca-bank-payment"]
+	path = .vendor/oca-bank-payment
+	url = https://github.com/hibou-io/oca-bank-payment.git

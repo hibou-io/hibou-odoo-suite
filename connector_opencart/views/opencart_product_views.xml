@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_opencart_product_template_form" model="ir.ui.view">
+        <field name="name">opencart.product.template.form</field>
+        <field name="model">opencart.product.template</field>
+        <field name="arch" type="xml">
+            <form string="Opencart Product">
+                <header/>
+                <sheet>
+                    <group>
+                        <field name="odoo_id"/>
+                        <field name="opencart_attribute_value_ids" options="{'no_create': True}">
+                            <tree editable="top" decoration-warning="not odoo_id">
+                                <field name="external_id" readonly="1"/>
+                                <field name="opencart_name" readonly="1"/>
+                                <field name="opencart_product_tmpl_id" invisible="1"/>
+                                <field name="product_tmpl_id" invisible="1"/>
+                                <field name="odoo_id" domain="[('product_tmpl_id', '=', product_tmpl_id)]"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_opencart_product_template_tree" model="ir.ui.view">
+        <field name="name">opencart.product.template.tree</field>
+        <field name="model">opencart.product.template</field>
+        <field name="arch" type="xml">
+            <tree string="Opencart Products">
+                <field name="backend_id"/>
+                <field name="external_id" string="Opencart ID"/>
+                <field name="odoo_id" string="Product Template"/>
+                <field name="create_date"/>
+                <field name="write_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_opencart_product_template_search" model="ir.ui.view">
+        <field name="name">opencart.product.template.search</field>
+        <field name="model">opencart.product.template</field>
+        <field name="arch" type="xml">
+            <search string="Search Purchase Order">
+                <field name="odoo_id" string="Odoo Product"/>
+                <field name="external_id" string="External ID"/>
+                <separator/>
+                <filter string="My Activities" name="activities_my" domain="[('activity_ids.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Has Activities" name="activities_all" domain="[('activity_ids', '!=', False)]" />
+            </search>
+        </field>
+    </record>
+
+    <record id="action_opencart_product_template" model="ir.actions.act_window">
+        <field name="name">Opencart Products</field>
+        <field name="res_model">opencart.product.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_opencart_product_template_tree"/>
+    </record>
+
+    <menuitem id="menu_opencart_product"
+        name="Products"
+        parent="menu_opencart_root"
+        sequence="50"
+        action="action_opencart_product_template"/>
+
+</odoo>
