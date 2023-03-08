@@ -250,7 +250,15 @@ var HibouProfessionalSystrayWidget = Widget.extend({
         this.is_admin = status.is_admin;
         this.allow_admin_message = status.allow_admin_message;
         this.allow_message = status.allow_message;
-        this.renderElement();
+        this.tryRenderElement();
+    },
+
+    tryRenderElement: function() {
+        if (this._has_rendered) {
+            setTimeout(this.renderElement.bind(this), 10);
+        } else {
+            setTimeout(this.tryRenderElement.bind(this), 100);
+        }
     },
 
 });
