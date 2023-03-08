@@ -21,7 +21,6 @@ var HibouProfessionalSystrayWidget = Widget.extend({
         self.is_admin = false;
         self.allow_admin_message = false;
         self.allow_message = false;
-        self._has_rendered = false;
         this._rpc({
             model: 'publisher_warranty.contract',
             method: 'hibou_professional_status',
@@ -264,8 +263,14 @@ var HibouProfessionalSystrayWidget = Widget.extend({
         this.is_admin = status.is_admin;
         this.allow_admin_message = status.allow_admin_message;
         this.allow_message = status.allow_message;
+        this.tryRenderElement();
+    },
+
+    tryRenderElement: function() {
         if (this._has_rendered) {
-            this.renderElement();
+            setTimeout(this.renderElement.bind(this), 10);
+        } else {
+            setTimeout(this.tryRenderElement.bind(this), 100);
         }
     },
 
