@@ -177,8 +177,8 @@ class OpencartBackend(models.Model):
         return self._date_plus_hours(date, -(self.server_offset_hours or 0))
 
     def _date_plus_hours(self, date, hours):
+        if date and isinstance(date, str):
+            date = fields.Datetime.from_string(date)
         if not hours:
             return date
-        if isinstance(date, str):
-            date = fields.Datetime.from_string(date)
         return date + timedelta(hours=hours)

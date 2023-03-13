@@ -100,7 +100,7 @@ class OpencartImporter(AbstractComponent):
                     binding_model._name, external_id
                 )
             # Or the binding may not have its external_id set if you raise an exception.
-            self.env['base'].flush()
+            self.env.flush_all()
             return True
         if binding_model == 'opencart.product.template' and record.backend_id.so_require_product_setup:
             # Though this is not the "right" place to do this,
