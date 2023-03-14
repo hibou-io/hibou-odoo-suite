@@ -1,5 +1,5 @@
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
 
@@ -22,11 +22,10 @@ class TestCheckVendor(TestExpenseCommon):
         expense_form = Form(self.env['hr.expense'])
         expense_form.name = 'Car Travel Expenses'
         expense_form.employee_id = self.expense_employee
-        expense_form.product_id = self.product_a
-        expense_form.unit_amount = 700.00
+        expense_form.product_id = self.product_zero_cost
+        expense_form.total_amount = 700.00
         expense_form.tax_ids.clear()
         expense_form.tax_ids.add(self.tax)
-        expense_form.analytic_account_id = self.analytic_account_1
         expense_form.payment_mode = 'company_account'
         expense = expense_form.save()
 
@@ -42,7 +41,7 @@ class TestCheckVendor(TestExpenseCommon):
         expense_sheet.approve_expense_sheets()
         self.assertEqual(expense_sheet.state, 'approve', 'Expense is not in Approved state')
         # Create Expense Entries
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
             expense_sheet.action_sheet_move_create()
 
         expense.vendor_id = self.vendor_id
