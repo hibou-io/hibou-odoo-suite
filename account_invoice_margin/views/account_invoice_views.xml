@@ -8,6 +8,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='amount_residual']" position="after">
                 <field name="margin" groups="base.group_user"/>
+                <span class="oe_inline" groups="base.group_user">
+                    (<field name="margin_percent" nolabel="1" class="oe_inline" widget="percentage"/>)
+                </span>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']//field[@name='price_unit']" position="after">
                 <field name="purchase_price" groups="base.group_user"/>
