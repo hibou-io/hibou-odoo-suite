@@ -4,9 +4,14 @@ from odoo import api, fields, models
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    margin = fields.Float(compute='_product_margin', digits='Product Price', store=True)
-    purchase_price = fields.Float(string='Cost', digits='Product Price')
+    margin = fields.Monetary(compute='_compute_product_margin', digits='Product Price', store=True,
+                             groups='base.group_user')
+    margin_percent = fields.Float(compute='_product_margin', store=True, string='Margin (%)',
+                                  groups='base.group_user')
+    purchase_price = fields.Monetary(string='Cost', digits='Product Price',
+                                     groups='base.group_user')
 
+    # Note we are keeping this API because it is easy to customize and extend the purchase price/margin calculation
     def _compute_margin(self, move, product, product_uom, sale_lines):
         # if sale_line_ids and don't re-browse
         for line in sale_lines:
@@ -25,7 +30,7 @@ class AccountMoveLine(models.Model):
     def product_id_change_margin(self):
         for line in self:
             if not line.product_id:
-                line.purchase_price = 0
+                line.purchase_price = 0.0
             else:
                 line.purchase_price = line._compute_margin(line.move_id, line.product_id, line.product_uom_id, line.sale_line_ids)
 
@@ -37,7 +42,7 @@ class AccountMoveLine(models.Model):
         return lines
 
     @api.depends('product_id', 'purchase_price', 'quantity', 'price_unit', 'price_subtotal')
-    def _product_margin(self):
+    def _compute_product_margin(self):
         for line in self:
             currency = line.move_id.currency_id
             price = line.purchase_price
@@ -49,18 +54,21 @@ class AccountMoveLine(models.Model):
                 margin = line.price_subtotal - (price * line.quantity)
  
             line.margin = currency.round(margin) if currency else margin
+            line.margin_percent =  1.0 if not line.price_subtotal else line.margin / line.price_subtotal
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    margin = fields.Monetary(compute='_product_margin',
-                             help="It gives profitability by calculating the difference between the Unit Price and the cost.",
-                             currency_field='currency_id',
-                             digits='Product Price',
-                             store=True)
+    margin = fields.Monetary(compute='_compute_product_margin', store=True, digits='Product Price',
+                             help="Profitability by calculating the difference between the Unit Price and the cost.",
+                             groups='base.group_user')
+    margin_percent = fields.Float(compute='_compute_product_margin', store=True, string='Margin (%)',
+                                  groups='base.group_user')
 
-    @api.depends('invoice_line_ids.margin')
-    def _product_margin(self):
+    @api.depends('invoice_line_ids.margin', 'invoice_line_ids.price_subtotal')
+    def _compute_product_margin(self):
         for invoice in self:
             invoice.margin = sum(invoice.invoice_line_ids.mapped('margin'))
+            total_price_subtotal = sum(invoice.invoice_line_ids.mapped('price_subtotal'))
+            invoice.margin_percent = 1.0 if not total_price_subtotal else invoice.margin / total_price_subtotal
