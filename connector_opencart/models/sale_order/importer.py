@@ -399,10 +399,6 @@ class SaleOrderImporter(Component):
 
     def _create(self, data):
         binding = super(SaleOrderImporter, self)._create(data)
-        # Without this, it won't map taxes with the fiscal position.
-        if binding.fiscal_position_id:
-            binding.odoo_id._compute_tax_id()
-
         self._order_comment_review(binding)
 
         return binding
