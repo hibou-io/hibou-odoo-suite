@@ -1,7 +1,7 @@
 FROM hibou/hibou-odoo:16.0
 
 USER odoo
-COPY --from=registry.gitlab.com/hibou-io/athene:next /opt/athene /opt/athene
+COPY --from=registry.gitlab.com/hibou-io/athene /opt/athene /opt/athene
 COPY --from=hibou/flow /flow /flow
 COPY --chown=104 entrypoint.sh /entrypoint.sh
 COPY --chown=104 . /opt/odoo/hibou-suite
