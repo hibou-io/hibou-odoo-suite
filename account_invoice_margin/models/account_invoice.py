@@ -6,7 +6,7 @@ class AccountMoveLine(models.Model):
 
     margin = fields.Monetary(compute='_compute_product_margin', digits='Product Price', store=True,
                              groups='base.group_user')
-    margin_percent = fields.Float(compute='_product_margin', store=True, string='Margin (%)',
+    margin_percent = fields.Float(compute='_compute_product_margin', store=True, string='Margin (%)',
                                   groups='base.group_user')
     purchase_price = fields.Monetary(string='Cost', digits='Product Price',
                                      groups='base.group_user')
