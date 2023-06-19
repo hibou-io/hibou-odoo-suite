@@ -84,14 +84,6 @@ class SaleOrderLine(models.Model):
         inverse_name='odoo_id',
         string="Opencart Bindings",
     )
-    
-    def _get_display_price(self):
-        # WARNING do NOT remove the line to read the currency_id
-        # in 16.0 as of 2023-03-13
-        # this fixes a res.currency bug on computing price
-        # the statement has very little effect other than that
-        self.read(['currency_id'])
-        return super()._get_display_price()
 
 
 class SaleOrderAdapter(Component):
