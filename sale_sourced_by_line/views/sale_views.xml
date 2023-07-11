@@ -10,12 +10,12 @@
                 <field name="warehouse_id"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree/field[@name='route_id']" position="before">
-                <field name="date_planned"/>
-                <field name="warehouse_id"/>
+                <field name="date_planned" optional="hide"/>
+                <field name="warehouse_id" optional="hide"/>
             </xpath>
             <xpath expr="//label[@for='commitment_date']" position="before">
-                <field name="date_planned" optional="hide" />
-                <field name="requested_date" optional="hide" />
+                <field name="date_planned"/>
+                <field name="requested_date"/>
             </xpath>
         </field>
     </record>
