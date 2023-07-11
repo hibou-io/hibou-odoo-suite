@@ -14,8 +14,8 @@
                 <field name="warehouse_id"/>
             </xpath>
             <xpath expr="//label[@for='commitment_date']" position="before">
-                <field name="date_planned" />
-                <field name="requested_date" />
+                <field name="date_planned" optional="hide"/>
+                <field name="requested_date" optional="hide" />
             </xpath>
         </field>
     </record>
