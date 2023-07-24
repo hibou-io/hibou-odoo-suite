@@ -1,0 +1,83 @@
+image: docker:stable
+services:
+  - docker:dind
+
+stages:
+  - build
+  - release
+  - trigger
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  CONTAINER_IMAGE: registry.gitlab.com/hibou-io/hibou-odoo/suite
+  DOCKERHUB_IMAGE: hibou/hibou-odoo-suite
+  GITLAB_BASE_URL: https://gitlab.com
+  ENTERPRISE_PROJECT_ID: 40326521
+
+before_script:
+  - RELEASE=$(echo $CI_COMMIT_REF_NAME | sed "s{.*\/\(.*\)\/.*{\1{g")
+  - RELEASE_DATE="$(date '+%Y-%m-%d')"
+  - IMAGE_TAG=$(echo $CI_COMMIT_REF_SLUG | sed "s/^\([[:digit:]]\)-\([[:digit:]]\)/\1\.\2/g")
+  - IMAGE_TAG_DATE="${IMAGE_TAG}-${RELEASE_DATE}"
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+
+merge_request:
+  variables:
+    GIT_STRATEGY: none
+  stage: build
+  only:
+    - /(^add\/)|(^new\/)|(^mig\/)|(^imp\/)|(^fix\/)/i
+  script:
+    - docker pull registry.gitlab.com/hibou-io/hibou-odoo/flow
+    - docker tag registry.gitlab.com/hibou-io/hibou-odoo/flow flow
+    - ENVS=`env | grep "CI_\|GITLAB_" | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' '`
+    - docker run $ENVS flow gitlab-automerge --target-branch "${RELEASE}-test" --automerge
+    - docker run $ENVS flow gitlab-automerge --remove-source
+
+build:
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  stage: build
+  script:
+    - sed -i "s/RELEASE/$RELEASE/g" Dockerfile-GitLab
+    - docker build --pull -t $CONTAINER_IMAGE:$IMAGE_TAG -f Dockerfile-GitLab .
+    - docker push $CONTAINER_IMAGE:$IMAGE_TAG
+
+release:
+  stage: release
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - apk add python3
+    - docker pull registry.gitlab.com/hibou-io/hibou-odoo/flow
+    - docker tag registry.gitlab.com/hibou-io/hibou-odoo/flow flow
+    - docker run -v "${PWD}/.local:/dest" flow self-install /dest
+    - cd .local/flow
+    - ./entrypoint.sh docker-release $CONTAINER_IMAGE:$IMAGE_TAG $CONTAINER_IMAGE:$IMAGE_TAG_DATE
+    - docker login -u "${DOCKERHUB_USERNAME}" -p "${DOCKERHUB_PASSWORD}"
+    - docker tag $CONTAINER_IMAGE:$IMAGE_TAG $DOCKERHUB_IMAGE:$IMAGE_TAG
+    - docker push $DOCKERHUB_IMAGE:$IMAGE_TAG
+    - ./entrypoint.sh docker-release $DOCKERHUB_IMAGE:$IMAGE_TAG $DOCKERHUB_IMAGE:$IMAGE_TAG_DATE
+  only:
+    - /^\d+\.\d+$/
+
+publish:
+  stage: build
+  script:
+    - docker pull registry.gitlab.com/hibou-io/hibou-odoo/flow
+    - docker tag registry.gitlab.com/hibou-io/hibou-odoo/flow flow
+    - ENVS=`env | grep "CI_\|GITLAB_" | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' '`
+    - docker run -v $PWD:/src $ENVS flow odoo-publish -n "Hibou Odoo Suite" -v $RELEASE
+  only:
+    - /^\d\d\.\d+$/
+
+trigger:
+  variables:
+    GIT_STRATEGY: none
+  stage: trigger
+  script:
+    - docker run byrnedo/alpine-curl curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=$RELEASE $GITLAB_BASE_URL/api/v4/projects/$ENTERPRISE_PROJECT_ID/trigger/pipeline
+  only:
+    - /^\d\d\.\d+/
+
