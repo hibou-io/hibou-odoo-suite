@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account_invoice_change.account_invoice_change_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='group_right']" position="inside">
-                <field name="analytic_account_id" domain="[('company_id', '=', invoice_company_id)]"/>
+                <field name="analytic_account_id" domain="[('company_id', '=', move_company_id)]"/>
             </xpath>
         </field>
     </record>

@@ -16,7 +16,7 @@ class TestInvoiceChange(AccountTestUsers):
             'journal_id': self.journalrec.id,
             'partner_id': self.partner3.id,
             # account_id=self.account_rec1_id.id,
-            'line_ids': [(0, 0, {
+            'invoice_line_ids': [(0, 0, {
                 'product_id': self.env.ref('product.product_product_5').id,
                 'quantity': 10.0,
                 'account_id': self.env['account.account'].search(

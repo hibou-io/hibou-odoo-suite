@@ -39,7 +39,7 @@
             <xpath expr="//field[@name='state']" position="before">
                 <button name="%(action_view_account_invoice_change)d" string="Change"
                         type="action" class="btn-secondary"
-                        attrs="{'invisible': ['|', ('state', 'in', ('sale', 'done', 'cancel')), ('type', 'not in', ('out_invoice', 'out_refund'))]}"
+                        attrs="{'invisible': ['|', ('state', 'in', ('draft', 'cancel')), ('type', 'not in', ('out_invoice', 'out_refund'))]}"
                         context="{'default_move_id': id}"
                         groups="account.group_account_manager" />
             </xpath>
