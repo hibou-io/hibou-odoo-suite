@@ -1,10 +1,11 @@
-from odoo.addons.account.tests.account_test_users import AccountTestUsers
 from odoo import fields
+from odoo.tests import tagged
+from odoo.addons.account.tests.account_test_users import AccountTestUsers
 
 
-class TestInvoiceChange(AccountTestUsers):
-
-    def test_invoice_change_basic(self):
+class InvoiceChangeCommon(AccountTestUsers):
+    def setUp(self):
+        super().setUp()
         self.account_invoice_obj = self.env['account.move']
         self.payment_term = self.env.ref('account.account_payment_term_advance')
         self.journalrec = self.env['account.journal'].search([('type', '=', 'sale')])[0]
@@ -25,6 +26,11 @@ class TestInvoiceChange(AccountTestUsers):
                 'price_unit': 100.00,
             })],
         })
+
+
+@tagged('post_install', '-at_install')
+class TestInvoiceChange(InvoiceChangeCommon):
+    def test_invoice_change_basic(self):
         self.assertEqual(self.invoice_basic.state, 'draft')
         self.invoice_basic.action_post()
         self.assertEqual(self.invoice_basic.state, 'posted')
