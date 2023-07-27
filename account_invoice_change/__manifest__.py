@@ -23,6 +23,7 @@ the invoice is currently in.
         'account',
     ],
     'data': [
+        'data/server_actions.xml',
         'wizard/invoice_change_views.xml',
     ],
     'installable': True,

@@ -67,8 +67,6 @@ class TestWizard(InvoiceChangeCommon):
         self.assertFalse(invoice_lines.analytic_account_id)
         self.assertFalse(other_lines.analytic_account_id)
         self.assertFalse(invoice_lines.analytic_line_ids)
-
-        
     
     def test_invoice_change_analytic_tags(self):
         invoice_lines = self.invoice_basic.invoice_line_ids
@@ -114,3 +112,23 @@ class TestWizard(InvoiceChangeCommon):
         self.assertEqual(invoice_lines.analytic_line_ids.mapped(lambda l: (l.account_id, l.amount)), 
                          [(self.analytic_account, 600.0),
                           (self.analytic_account3, 400.0)])
+    
+    def test_invoice_change_tags_multiple(self):
+        other_invoice = self.invoice_basic.copy()
+        self.invoice_basic.invoice_line_ids.analytic_account_id = self.analytic_account
+        self.invoice_basic.action_post()
+        other_invoice.invoice_line_ids.analytic_account_id = self.analytic_account2
+        other_invoice.action_post()
+        
+        ctx = {'active_model': 'account.move', 'active_ids': [self.invoice_basic.id, other_invoice.id]}
+        change = Form(self.env['account.invoice.change'].with_context(ctx))
+        change.update_tags = 'set'
+        change.analytic_tag_ids.add(self.analytic_tag1)
+        change.save().affect_change()
+        
+        # Unchanged unless user chooses to set the value
+        self.assertEqual(self.invoice_basic.invoice_line_ids.analytic_account_id, self.analytic_account)
+        self.assertEqual(other_invoice.invoice_line_ids.analytic_account_id, self.analytic_account2)
+        
+        self.assertEqual(self.invoice_basic.invoice_line_ids.analytic_tag_ids, self.analytic_tag1)
+        self.assertEqual(other_invoice.invoice_line_ids.analytic_tag_ids, self.analytic_tag1)

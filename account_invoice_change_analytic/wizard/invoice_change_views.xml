@@ -6,8 +6,10 @@
         <field name="inherit_id" ref="account_invoice_change.account_invoice_change_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='group_right']" position="inside">
+                <field name="set_analytic_account_id" attr="('invisible': [('is_single_move', '=', True)]}" groups="analytic.group_analytic_accounting"/>
                 <field name="analytic_account_id"
                        domain="['|', ('company_id', '=', False), ('company_id', '=', move_company_id)]"
+                       attrs="{'readonly': [('set_analytic_account_id', '=', False)]}"
                        groups="analytic.group_analytic_accounting"/>
                 <field name="update_tags" groups="analytic.group_analytic_tags"/>
                 <field name="analytic_tag_ids"
