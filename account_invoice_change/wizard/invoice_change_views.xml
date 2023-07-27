@@ -7,11 +7,15 @@
             <form string="Invoice Change">
                 <group>
                     <group name="group_left">
-                        <field name="move_id" invisible="1"/>
+                        <field name="move_ids" invisible="1"/>
+                        <field name="is_single_move" invisible="1"/>
                         <field name="move_company_id" invisible="1"/>
-                        <field name="invoice_user_id"/>
-                        <field name="invoice_date"/>
-                        <field name="date"/>
+                        <field name="set_invoice_user_id" attrs="{'invisible': [('is_single_move', '=', True)]}"/>
+                        <field name="invoice_user_id" attrs="{'readonly': [('set_invoice_user_id', '=', False)]}"/>
+                        <field name="set_invoice_date" attrs="{'invisible': [('is_single_move', '=', True)]}"/>
+                        <field name="invoice_date" attrs="{'readonly': [('set_invoice_date', '=', False)]}"/>
+                        <field name="set_date" attrs="{'invisible': [('is_single_move', '=', True)]}"/>
+                        <field name="date" attrs="{'readonly': [('set_date', '=', False)]}"/>
                     </group>
                     <group name="group_right"/>
                 </group>
@@ -39,8 +43,7 @@
             <xpath expr="//field[@name='state']" position="before">
                 <button name="%(action_view_account_invoice_change)d" string="Change"
                         type="action" class="btn-secondary"
-                        attrs="{'invisible': ['|', ('state', 'in', ('sale', 'done', 'cancel')), ('type', 'not in', ('out_invoice', 'out_refund'))]}"
-                        context="{'default_move_id': id}"
+                        attrs="{'invisible': ['|', ('state', 'in', ('draft', 'cancel')), ('type', 'not in', ('out_invoice', 'out_refund'))]}"
                         groups="account.group_account_manager" />
             </xpath>
        </field>
