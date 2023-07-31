@@ -7,8 +7,9 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='amount_residual']" position="after">
-                <field name="margin" groups="base.group_user"/>
-                <span class="oe_inline" groups="base.group_user">
+                <span class="oe_inline oe_right" groups="base.group_user" colspan="2">
+                    <span>Margin:</span>
+                    <field name="margin" class="oe_inline"/>
                     (<field name="margin_percent" nolabel="1" class="oe_inline" widget="percentage"/>)
                 </span>
             </xpath>

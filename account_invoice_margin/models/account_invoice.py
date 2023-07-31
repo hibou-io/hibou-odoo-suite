@@ -5,7 +5,7 @@ class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
     margin = fields.Monetary(compute='_compute_product_margin', digits='Product Price', store=True,
-                             groups='base.group_user')
+                             string='Margin', groups='base.group_user')
     margin_percent = fields.Float(compute='_compute_product_margin', store=True, string='Margin (%)',
                                   groups='base.group_user')
     purchase_price = fields.Monetary(string='Cost', digits='Product Price',
