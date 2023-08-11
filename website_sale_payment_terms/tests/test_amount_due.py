@@ -5,9 +5,12 @@ from odoo.tests import tagged, TransactionCase
 class TestWebsiteSalePaymentTerms(TransactionCase):
     def setUp(self):
         super(TestWebsiteSalePaymentTerms, self).setUp()
+        self.partner = self.browse_ref('base.res_partner_12')
+        self.partner.property_payment_term_id = False
         self.env.company.currency_id = self.browse_ref('base.USD')
         self.so = self.env['sale.order'].create({
-            'partner_id': self.ref('base.res_partner_12'),
+            'partner_id': self.partner.id,
+            'website_id': self.ref('website.default_website'),
             'order_line': [(0, 0, {
                 'product_id': self.env['product.product'].create({'name': 'Product A', 'list_price': 100}).id,
                 'product_uom_qty': 1,

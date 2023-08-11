@@ -2,10 +2,10 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
     "use strict";
 
     require('web.dom_ready');
-    var concurrency = require('web.concurrency');
-    var core = require('web.core');
-    var dp = new concurrency.DropPrevious();
-    var publicWidget = require('web.public.widget');
+    const concurrency = require('web.concurrency');
+    const core = require('web.core');
+    
+    const publicWidget = require('web.public.widget');
     require('website_sale_delivery.checkout');
 
 
@@ -15,27 +15,31 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
             "click input[name='payment_term_id']": '_onPaymentTermClick',
             "click #btn_accept_payment_terms": '_acceptPaymentTerms',
         },
+        
+        init: function (parent, options) {
+            this._super.apply(this, arguments);
+            this.dp = new concurrency.DropPrevious();
+        },
 
         /**
          * @override
          */
-        start: function () {
-            console.log('Payment Terms V10.4');
-            return this._super.apply(this, arguments).then(function () {
-                var available_term = $('input[name="payment_term_id"]').length;
-                if (available_term > 0) {
-                    var $payButton = $('button[name="o_payment_submit_button"]');
-                    $payButton.prop('disabled', true);
-                    var disabledReasons = $payButton.data('disabled_reasons') || {};
-                    if ($('input[name="payment_term_id"]:checked').length > 0) {
-                        disabledReasons.payment_terms_selection = false;
-                    } else {
-                        disabledReasons.payment_terms_selection = true;
-                    }
-                    $payButton.data('disabled_reasons', disabledReasons);
-                    $payButton.prop('disabled', _.contains($payButton.data('disabled_reasons'), true));
+        start: async function () {
+            const res = await this._super.apply(this, arguments)
+            const available_term = $('input[name="payment_term_id"]').length;
+            if (available_term > 0) {
+                const $payButton = $('button[name="o_payment_submit_button"]');
+                $payButton.prop('disabled', true);
+                const disabledReasons = $payButton.data('disabled_reasons') || {};
+                if ($('input[name="payment_term_id"]:checked').length > 0) {
+                    disabledReasons.payment_terms_selection = false;
+                } else {
+                    disabledReasons.payment_terms_selection = true;
                 }
-            });
+                $payButton.data('disabled_reasons', disabledReasons);
+                $payButton.prop('disabled', _.contains($payButton.data('disabled_reasons'), true));
+            }
+            return res;
         },
 
         //--------------------------------------------------------------------------
@@ -46,19 +50,20 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
          * @private
          * @param {object} ev
          */
-        _onPaymentTermClick: function (ev) {
+        _onPaymentTermClick: async function (ev) {
             ev.preventDefault();
             $('button[name="o_payment_submit_button"]').prop('disabled', true);
             // Get Payment Term note/description for modal
-            var selected_term = $(ev.currentTarget);
-            var note = $.parseHTML(selected_term.attr('data-note'));
+            const selected_term = $(ev.currentTarget);
+            let note = $.parseHTML(selected_term.data('note'));
             if (!$(note).text()) {
-                note = $.parseHTML('<p>' + selected_term.attr('data-name') + '</p>');
+                note = $.parseHTML('<p>' + selected_term.data('name') + '</p>');
             }
             // Open agreement modal with message
             $('#payment_term_agreement_modal .success-modal-note').html(note);
             $('#btn_accept_payment_terms').data('payment_term_id', selected_term.val());
-            $('#payment_term_agreement_modal').modal();
+            const modal = new Modal($('#payment_term_agreement_modal'));
+            await modal.show();
         },
 
         /**
@@ -68,9 +73,9 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
          * @param {Object} result
          */
         _acceptPaymentTerms: function (ev) {
-            var payment_term_id = $(ev.currentTarget).data('payment_term_id');
+            const payment_term_id = $(ev.currentTarget).data('payment_term_id');
             if (payment_term_id) {
-                dp.add(this._rpc({
+                this.dp.add(this._rpc({
                     'route': '/shop/update_payment_term',
                     'params': {'payment_term_id': payment_term_id},
                 }).then(this._onPaymentTermUpdateAmount.bind(this)));
@@ -102,8 +107,8 @@ odoo.define('website_sale_payment_terms.payment_terms', function (require) {
                     $('#payment_method').show();
                     $('#non_payment_method').hide();
                 }
-                var $payButton = $('button[name="o_payment_submit_button"]');
-                var disabledReasons = $payButton.data('disabled_reasons') || {};
+                const $payButton = $('button[name="o_payment_submit_button"]');
+                const disabledReasons = $payButton.data('disabled_reasons') || {};
                 disabledReasons.payment_terms_selection = false;
                 $payButton.data('disabled_reasons', disabledReasons);
                 $payButton.prop('disabled', _.contains($payButton.data('disabled_reasons'), true));              

@@ -1,4 +1,9 @@
+from odoo import tools, _
+from odoo.exceptions import AccessError, MissingError, ValidationError
+from odoo.fields import Command
 from odoo.http import request, route
+from odoo.addons.payment.controllers import portal as payment_portal
+from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
 from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
 
 
@@ -21,6 +26,44 @@ class WebsiteSalePaymentTerms(WebsiteSaleDelivery):
             if payment_term_id:
                 return request.redirect("/shop/payment")
         return super(WebsiteSalePaymentTerms, self).shop_payment(**post)
+    
+    @route()
+    def shop_payment_validate(self, sale_order_id=None, **post):
+        """ 
+        OVERRIDE: amount_total -> amount_due_today
+        Method that should be called by the server when receiving an update
+        for a transaction. State at this point :
+
+         - UDPATE ME
+        """
+        if sale_order_id is None:
+            order = request.website.sale_get_order()
+            if not order and 'sale_last_order_id' in request.session:
+                # Retrieve the last known order from the session if the session key `sale_order_id`
+                # was prematurely cleared. This is done to prevent the user from updating their cart
+                # after payment in case they don't return from payment through this route.
+                last_order_id = request.session['sale_last_order_id']
+                order = request.env['sale.order'].sudo().browse(last_order_id).exists()
+        else:
+            order = request.env['sale.order'].sudo().browse(sale_order_id)
+            assert order.id == request.session.get('sale_last_order_id')
+
+        tx = order.get_portal_last_transaction() if order else order.env['payment.transaction']
+
+        if not order or (order.amount_due_today and not tx):
+            return request.redirect('/shop')
+
+        if order and not order.amount_due_today and not tx:
+            order.with_context(send_email=True).action_confirm()
+            return request.redirect(order.get_portal_url())
+
+        # clean context and session, then redirect to the confirmation page
+        request.website.sale_reset()
+        if tx and tx.state == 'draft':
+            return request.redirect('/shop')
+
+        PaymentPostProcessing.remove_transactions(tx)
+        return request.redirect('/shop/confirmation')
 
     # Main JS driven payment term updater.
     @route(['/shop/update_payment_term'], type='json', auth='public', methods=['POST'], website=True, csrf=False)
@@ -55,25 +98,6 @@ class WebsiteSalePaymentTerms(WebsiteSaleDelivery):
             order.payment_term_id = False
         return request.redirect('/shop/cart')
 
-    # Confirm order without taking payment
-    @route(['/shop/confirm_without_payment'], type='http', auth='public', website=True)
-    def confirm_without_payment(self, **post):
-        order = request.website.sale_get_order()
-        if not order:
-            return request.redirect('/shop')
-        if order.amount_due_today:
-            return request.redirect('/shop/payment')
-
-        # made it this far, lets confirm
-        order.sudo().action_confirm()
-        request.session['sale_last_order_id'] = order.id
-
-        # cleans session/context
-        # This should always exist, but it is possible to
-        if request.website and request.website.sale_reset:
-            request.website.sale_reset()
-        return request.redirect('/shop/confirmation')
-
     def _update_website_sale_delivery_return(self, order, **post):
         res = super(WebsiteSalePaymentTerms, self)._update_website_sale_delivery_return(order, **post)
         Monetary = request.env['ir.qweb.field.monetary']
@@ -82,3 +106,57 @@ class WebsiteSalePaymentTerms(WebsiteSaleDelivery):
             res['amount_due_today'] = Monetary.value_to_html(order.amount_due_today, {'display_currency': currency})
             res['amount_due_today_raw'] = order.amount_due_today
         return res
+
+
+class PaymentPortal(payment_portal.PaymentPortal):
+    
+    @route()
+    def shop_payment_transaction(self, order_id, access_token, **kwargs):
+        """ Create a draft transaction and return its processing values.
+        OVERRIDE: use order.amount_due_today instead of order.amount_total
+
+        :param int order_id: The sales order to pay, as a `sale.order` id
+        :param str access_token: The access token used to authenticate the request
+        :param dict kwargs: Locally unused data passed to `_create_transaction`
+        :return: The mandatory values for the processing of the transaction
+        :rtype: dict
+        :raise: ValidationError if the invoice id or the access token is invalid
+        """
+        # Check the order id and the access token
+        try:
+            order_sudo = self._document_check_access('sale.order', order_id, access_token)
+        except MissingError as error:
+            raise error
+        except AccessError:
+            raise ValidationError(_("The access token is invalid."))
+
+        if order_sudo.state == "cancel":
+            raise ValidationError(_("The order has been canceled."))
+
+        kwargs.update({
+            'reference_prefix': None,  # Allow the reference to be computed based on the order
+            'partner_id': order_sudo.partner_invoice_id.id,
+            'sale_order_id': order_id,  # Include the SO to allow Subscriptions to tokenize the tx
+        })
+        kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
+        if not kwargs.get('amount'):
+            kwargs['amount'] = order_sudo.amount_due_today
+
+        if tools.float_compare(kwargs['amount'], order_sudo.amount_due_today, precision_rounding=order_sudo.currency_id.rounding):
+            raise ValidationError(_("The cart has been updated. Please refresh the page."))
+
+        tx_sudo = self._create_transaction(
+            custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs,
+        )
+
+        # Store the new transaction into the transaction list and if there's an old one, we remove
+        # it until the day the ecommerce supports multiple orders at the same time.
+        last_tx_id = request.session.get('__website_sale_last_tx_id')
+        last_tx = request.env['payment.transaction'].browse(last_tx_id).sudo().exists()
+        if last_tx:
+            PaymentPostProcessing.remove_transactions(last_tx)
+        request.session['__website_sale_last_tx_id'] = tx_sudo.id
+
+        self._validate_transaction_for_order(tx_sudo, order_id)
+
+        return tx_sudo._get_processing_values()

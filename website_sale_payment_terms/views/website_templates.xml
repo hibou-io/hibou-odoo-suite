@@ -59,21 +59,10 @@
         <xpath expr="//div[@id='payment_method']" position="attributes">
             <attribute name="t-att-style">'display: block;' if website_sale_order.amount_due_today else 'display: none;'</attribute>
         </xpath>
-        <xpath expr="//div[@id='payment_method']" position="after">
-            <!-- Bypass Validation for users with 0 deposit payment terms -->
-            <div class="mt-3" t-if="website_sale_order.amount_total" t-att-style="'display: none;' if website_sale_order.amount_due_today else 'display: block;'" id="non_payment_method">
-                <div class="float-left mt-2">
-                    <a role="button" href="/shop/cart" class="btn btn-secondary">
-                        <i class="fa fa-chevron-left"/>
-                        Return to Cart
-                    </a>
-                </div>
-                <div class="float-right mt-2" >
-                    <a href="/shop/confirm_without_payment" class="float-right btn btn-primary">
-                        <span>Confirm Order <span class="fa fa-chevron-right"/></span>
-                    </a>
-                </div>
-            </div>
+        <xpath expr="//div[@name='o_website_sale_free_cart']" position="attributes">
+            <attribute name="t-if"/>
+            <attribute name="id">non_payment_method</attribute>
+            <attribute name="t-att-style">'display: none;' if website_sale_order.amount_due_today else 'display: block;'</attribute>
         </xpath>
     </template>
 
@@ -83,10 +72,8 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title text-info">User Agreement</h4>
-                        <button type="button" class="close" data-dismiss="modal">
-                            <i class="fa fa-times"/>
-                        </button>
+                        <h1 class="modal-title text-info fs-4">User Agreement</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <p>By clicking Confirm you are agreeing to the payment terms indicated below:</p>
@@ -94,14 +81,14 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button"
-                                class="btn btn-default"
+                                class="btn btn-primary"
                                 id="btn_accept_payment_terms"
-                                data-dismiss="modal">Accept
+                                data-bs-dismiss="modal">Accept
                         </button>
                         <button type="button"
-                                class="btn btn-default"
+                                class="btn btn-secondary"
                                 id="btn_deny_payment_terms"
-                                data-dismiss="modal">Deny
+                                data-bs-dismiss="modal">Deny
                         </button>
                     </div>
                 </div>
@@ -138,10 +125,10 @@
     <template id="amount_due_today" inherit_id="website_sale.total">
         <xpath expr="//tr[@id='order_total']" position="after">
             <tr id="order_due_today">
-                <td class="text-right text-info">
+                <td class="text-end border-0 text-info">
                     <strong>Due Now:</strong>
                 </td>
-                <td class="text-xl-right">
+                <td class="text-end border-0">
                     <strong t-field="website_sale_order.amount_due_today" class="monetary_field"
                             t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
                 </td>
@@ -149,15 +136,12 @@
         </xpath>
     </template>
 
-    <template id="confirmation" inherit_id="website_sale.confirmation">
-        <xpath expr="//strong[@t-field='order.amount_total']" position="replace">
-            <strong t-esc="payment_tx_id.amount" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}" />
-        </xpath>
-    </template>
-
     <template id="payment_confirmation_status" inherit_id="website_sale.payment_confirmation_status">
-        <xpath expr="//div[hasclass('oe_website_sale_tx_status')]/div[1]" position="attributes">
-            <attribute name="t-if">payment_tx_id</attribute>
+        <xpath expr="//div[hasclass('card-header')]/t[3]" position="attributes">
+            <attribute name="t-if">payment_tx_id.state == 'done' and order.amount_due_today != payment_tx_id.amount</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='qr_code']" position="attributes">
+            <attribute name="t-value">payment_tx_id.company_id.partner_id.bank_ids[:1].build_qr_code_base64(order.amount_due_today,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)</attribute>
         </xpath>
     </template>
 

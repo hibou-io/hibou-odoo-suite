@@ -6,7 +6,7 @@
         <field name="model">website</field>
         <field name="inherit_id" ref="website.view_website_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='other']" position="inside">
+            <xpath expr="//group[@name='domain']" position="inside">
                 <field name="currency_id" invisible="1"/>
                 <field name="payment_deposit_threshold"/>
             </xpath>

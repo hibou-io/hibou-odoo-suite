@@ -9,11 +9,21 @@ class SaleOrder(models.Model):
 
     @api.depends('amount_total', 'payment_term_id')
     def _compute_amount_due_today(self):
-        today_string = fields.Date.to_string(fields.Date.context_today(self))
+        date_today = fields.Date.today()
         for order in self:
             amount = order.amount_total
             if order.website_id and order.amount_total > order.website_id.payment_deposit_threshold and order.payment_term_id:
-                term_amount = [amt for date_string, amt in order.payment_term_id.compute(order.amount_total) if date_string == today_string]
+                terms = order.payment_term_id._compute_terms(
+                    date_ref=date_today,
+                    currency=order.currency_id,
+                    tax_amount_currency=order.amount_tax,
+                    tax_amount=order.amount_tax,
+                    untaxed_amount_currency=order.amount_untaxed,
+                    untaxed_amount=order.amount_untaxed,
+                    company=order.company_id,
+                    sign=1,
+                )
+                term_amount = [term['foreign_amount'] for term in terms if term['date'] == date_today]
                 term_amount = term_amount and term_amount[0] or 0.0
                 amount = term_amount if term_amount > order.amount_total_deposit else order.amount_total_deposit
             order.amount_due_today = amount
