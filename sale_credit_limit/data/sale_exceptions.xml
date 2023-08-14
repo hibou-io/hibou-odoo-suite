@@ -4,7 +4,7 @@
     <record id="excep_sale_credit_limit" model="exception.rule">
         <field name="name">Invoice Partner credit limit exceeded.</field>
         <field name="description">The Customer or Invoice Address has a credit limit.
-            This sale order, or the customer has an outstanding balance that, exceeds their credit limit.</field>
+This sale order, or the customer has an outstanding balance that, exceeds their credit limit.</field>
         <field name="sequence">50</field>
         <field name="model">sale.order</field>
         <field name="code">

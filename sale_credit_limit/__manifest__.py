@@ -1,13 +1,12 @@
 {
     'name': 'Sale Credit Limit',
-    'summary': 'Uses credit limit on Partners to warn salespeople if they are over their limit.',
-    'version': '15.0.1.0.0',
-    'author': "Hibou Corp.",
+    'author': "Hibou Corp. <hello@hibou.io>",
+    'website': "https://hibou.io",
+    'version': '16.0.1.0.0',
     'category': 'Sale',
-    'license': 'OPL-1',
     'complexity': 'expert',
     'images': [],
-    'website': "https://hibou.io",
+    'summary': 'Uses credit limit on Partners to warn salespeople if they are over their limit.',
     'description': """
 Uses credit limit on Partners to warn salespeople if they are over their limit.
 
@@ -26,4 +25,5 @@ will be created if the total would put them over their credit limit.
     ],
     'auto_install': False,
     'installable': True,
+    'license': 'OPL-1',
 }
