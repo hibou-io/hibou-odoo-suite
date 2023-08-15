@@ -25,7 +25,8 @@
 
 
     <template id="task_tag_grid" inherit_id='project.portal_tasks_list' customize_show="True" name="Task Tags on table">
-        <xpath expr="//t/t/t/t/thead/tr/th[2]" position="after">
+        <!-- <xpath expr="//t/t/t/t/thead/tr/th[2]" position="after"> -->
+        <xpath expr="//t/t/thead/tr/th[2]" position="after">
             <th>Tags</th>
         </xpath>
         <!-- Strange number of columns -->
@@ -39,7 +40,8 @@
     </template>
 
     <template id="my_task" inherit_id='project.portal_my_task' name="Stage Colors etc.">
-        <xpath expr="//span[hasclass('badge-info')]" position="attributes">
+        <!-- <xpath expr="//span[hasclass('badge-info')]" position="attributes"> -->
+        <xpath expr="//span[hasclass('badge')]" position="attributes">
             <attribute name="t-attf-class">badge badge-pill badge-info stage stage-{{ task.stage_id.name }}</attribute>
         </xpath>
         <xpath expr="//h4" position="after">
