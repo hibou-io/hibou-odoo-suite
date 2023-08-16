@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_exception_rule_user" model="res.groups">
+        <field name="name">Exception user</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="base_exception.group_exception_rule_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('base_exception_user.group_exception_rule_user'))]"/>
+    </record>
+
+</odoo>
