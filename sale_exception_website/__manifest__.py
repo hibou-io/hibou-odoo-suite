@@ -1,7 +1,7 @@
 {
     'name': 'Sale Exception Website',
     'summary': 'Display sale exceptions on eCommerce site',
-    'version': '15.0.1.0.0',
+    'version': '16.0.1.0.0',
     'author': "Hibou Corp.",
     'category': 'Sale',
     'license': 'AGPL-3',
