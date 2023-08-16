@@ -16,21 +16,12 @@
         </field>
     </record>
 
-
-    <template id="my_tasks" inherit_id='project.portal_tasks_list' name="Stage Colors etc.">
-        <xpath expr="//t[@t-foreach='tasks']/tr/td/span[@t-esc='task.stage_id.name']" position="attributes">
-            <attribute name="t-attf-class">badge badge-pill badge-info stage stage-{{ task.stage_id.name }}</attribute>
-        </xpath>
-    </template>
-
-
     <template id="task_tag_grid" inherit_id='project.portal_tasks_list' customize_show="True" name="Task Tags on table">
-        <!-- <xpath expr="//t/t/t/t/thead/tr/th[2]" position="after"> -->
         <xpath expr="//t/t/thead/tr/th[2]" position="after">
             <th>Tags</th>
         </xpath>
         <!-- Strange number of columns -->
-        <xpath expr="//tbody/t/tr/td[2]" position="after">
+        <xpath expr="//tbody/t/tr/td[3]" position="after">
             <td>
                 <t t-foreach="task.tag_ids" t-as="tag">
                     <span t-attf-class="label tag tag-color-{{ tag.color }} tag-{{ tag.name }}"><t t-esc="tag.name"/></span>
@@ -40,10 +31,6 @@
     </template>
 
     <template id="my_task" inherit_id='project.portal_my_task' name="Stage Colors etc.">
-        <!-- <xpath expr="//span[hasclass('badge-info')]" position="attributes"> -->
-        <xpath expr="//span[hasclass('badge')]" position="attributes">
-            <attribute name="t-attf-class">badge badge-pill badge-info stage stage-{{ task.stage_id.name }}</attribute>
-        </xpath>
         <xpath expr="//h4" position="after">
             <p t-if="task.tag_ids">
                 <span t-foreach="task.tag_ids" t-as="tag" t-attf-class="label tag tag-color-{{ tag.color }} tag-{{ tag.name }}" t-field="tag.name" />
