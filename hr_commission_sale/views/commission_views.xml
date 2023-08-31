@@ -4,7 +4,7 @@
     <menuitem id="menu_commission"
         name="Commissions"
         parent="sale.sale_menu_root"
-        sequence="5"
+        sequence="15"
         />
     <menuitem id="menu_commission_commission"
         name="Commissions"
