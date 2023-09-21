@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event_view_event_form_inherit" model="ir.ui.view">
+        <field name="name">event.view.event.form.inherit</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group/field[@name='tag_ids']" position="after">
+                <field name="weather"/>
+                <field name="lat"/>
+                <field name="long"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]/button" position="after">
+                <button name="get_weather" type="object" class="oe_stat_button" icon="fa-sun" help="Weather location">
+                    <field name="weather" string="Weather"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
