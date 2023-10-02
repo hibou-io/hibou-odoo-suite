@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+
     <record id="auth_admin_view_users_tree" model="ir.ui.view">
         <field name="name">auth_admin.res.users.tree</field>
         <field name="model">res.users</field>
@@ -11,4 +12,5 @@
             </xpath>
         </field>
     </record>
+    
 </odoo>
