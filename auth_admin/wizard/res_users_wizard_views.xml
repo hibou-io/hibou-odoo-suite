@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="res_users_wizard" model="ir.ui.view">
+        <field name="name">Generate Login URL</field>
+        <field name="model">res.users.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Login URL">
+                <sheet>
+                    <group>
+                        <field name="force_login_url" widget="CopyClipboardChar"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>
