@@ -420,8 +420,8 @@ class SaleOrderImporter(Component):
     def _after_import(self, binding):
         super(SaleOrderImporter, self)._after_import(binding)
         # Recompute taxes and prices
-        binding._recompute_taxes()
-        binding._recompute_prices()
+        binding.odoo_id._recompute_taxes()
+        binding.odoo_id._recompute_prices()
 
 class SaleImportRule(Component):
     _name = 'opencart.sale.import.rule'
