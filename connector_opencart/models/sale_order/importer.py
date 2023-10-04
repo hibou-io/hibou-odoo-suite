@@ -417,6 +417,12 @@ class SaleOrderImporter(Component):
             # There are products that were either just imported, or
             raise RetryableJobError('Products need setup. OpenCart Product IDs:' + str(products_need_setup), seconds=3600)
 
+    def _after_import(self, binding):
+        super(SaleOrderImporter, self)._after_import(binding)
+        # Recompute taxes
+        binding.odoo_id._recompute_taxes()
+        # Recompute prices? not for now, use the prices from the original order
+        # binding.odoo_id._recompute_prices()
 
 class SaleImportRule(Component):
     _name = 'opencart.sale.import.rule'
