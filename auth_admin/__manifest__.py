@@ -23,8 +23,6 @@ Out of the box, only allows you to generate a login for an 'External User', e.g.
     'auto_install': False,
     'data': [
         'views/res_users.xml',
-        'security/ir.model.access.csv',
         'wizard/portal_wizard_views.xml',
-        'wizard/res_users_wizard_views.xml',
     ],
 }
