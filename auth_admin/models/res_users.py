@@ -1,4 +1,4 @@
-from odoo import models, api, exceptions, fields, _
+from odoo import models, api, exceptions
 from odoo.http import request
 from datetime import datetime
 from time import mktime
@@ -77,17 +77,7 @@ class ResUsers(models.Model):
 
         login_url = admin_auth_generate_login(self.env, self)
         if login_url:
-            wizard = self.env['res.users.wizard'].create({
-                'force_login_url': login_url,
-            })
-            return {
-                'name': _('Generate Login URL'),
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'res_model': 'res.users.wizard',
-                'res_id': wizard.id,
-                'target': 'new',
-            }
+            raise exceptions.UserError(login_url)
 
         return False
 
@@ -100,9 +90,3 @@ class ResUsers(models.Model):
                              str(request.session.uid) + ' original user id: ' + str(request.session.auth_admin))
             else:
                 raise
-            
-          
-class ResUsersWizard(models.TransientModel):
-    _name = 'res.users.wizard'
-    
-    force_login_url = fields.Char(string='Force Login URL')         

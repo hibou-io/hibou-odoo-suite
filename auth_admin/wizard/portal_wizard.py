@@ -2,21 +2,6 @@ from odoo import api, fields, models, _
 from ..models.res_users import admin_auth_generate_login
 
 
-class PortalWizard(models.TransientModel):
-    _inherit = 'portal.wizard'
-
-    def admin_auth_generate_login(self):
-        self.ensure_one()
-        self.user_ids.admin_auth_generate_login()
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": self._name,
-            "views": [[False, "form"]],
-            "res_id": self.id,
-            "target": "new",
-        }
-
-
 class PortalWizardUser(models.TransientModel):
     _inherit = 'portal.wizard.user'
 
