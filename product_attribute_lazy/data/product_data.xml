@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="action_product_attribute_index" model="ir.actions.server">
+            <field name="name">Reindex Related Products</field>
+            <field name="model_id" ref="product.model_product_attribute"/>
+            <field name="binding_model_id" ref="product.model_product_attribute"/>
+            <field name="state">code</field>
+            <field name="code">
+records.run_indexer_manual()
+            </field>
+        </record>
+
+        <!-- Product Attribute Indexer -->
+        <record forcecreate="True" id="ir_cron_product_attribute_indexer" model="ir.cron">
+            <field name="name">Product Attribute Indexer</field>
+            <field name="model_id" ref="model_product_attribute"/>
+            <field name="state">code</field>
+            <field name="code">
+model.run_indexer(True)
+            </field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field name="priority" eval="5"/>
+        </record>
+
+        <!-- Product Attribute Indexer -->
+        <record forcecreate="True" id="ir_cron_product_attribute_rel_query_watchdog" model="ir.cron">
+            <field name="name">Query Watchdog: product_attribute_product_template_rel</field>
+            <field name="model_id" ref="model_product_attribute"/>
+            <field name="state">code</field>
+            <field name="code">
+dbname = env.cr.dbname
+query = f'select pg_cancel_backend(pid) from pg_stat_activity where state=\'active\' and datname = \'{dbname}\' and pid != pg_backend_pid() and query like \'%product_attribute_product_template_rel%\';'
+env.cr.execute(query)                
+            </field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field name="priority" eval="10"/>
+        </record>
+
+    </data>
+</odoo>
