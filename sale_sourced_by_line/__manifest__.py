@@ -1,7 +1,7 @@
 {
     'name': 'Sale Sourced by Line',
     'summary': 'Multiple warehouse source locations for Sale order',
-    'version': '16.0.1.0.0',
+    'version': '17.0.1.0.0',
     'author': "Hibou Corp.,Odoo Community Association (OCA)",
     'category': 'Warehouse',
     'license': 'AGPL-3',
