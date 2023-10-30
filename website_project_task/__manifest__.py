@@ -2,7 +2,7 @@
     'name': 'Website Project Tasks',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'website': 'https://hibou.io/',
-    'version': '16.0.1.0.0',
+    'version': '17.0.1.0.0',
     'license': 'AGPL-3',
     'category': 'Tools',
     'complexity': 'easy',
@@ -16,6 +16,7 @@ This module adds options to Website Project:
     """,
     'depends': [
         'project',
+        'website',
     ],
     'data': [
         'views/project_task_templates.xml',
