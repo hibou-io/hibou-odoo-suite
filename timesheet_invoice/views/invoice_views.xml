@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
-        <xpath expr="//div[@class='page']" position="inside">
+        <xpath expr="//div[hasclass('page')]" position="inside">
             <div class="container" t-if="o.timesheet_ids">
                 <hr/>
                 <h3>Timesheets</h3>
