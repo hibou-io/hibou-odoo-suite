@@ -31,7 +31,7 @@
     </template>
 
     <template id="my_task" inherit_id='project.portal_my_task' name="Stage Colors etc.">
-        <xpath expr="//h4" position="after">
+        <xpath expr="//div[@id='task_chat']/h3" position="after">
             <p t-if="task.tag_ids">
                 <span t-foreach="task.tag_ids" t-as="tag" t-attf-class="label tag tag-color-{{ tag.color }} tag-{{ tag.name }}" t-field="tag.name" />
             </p>
