@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="hr_equipment_view_form_inherited">
+        <field name="name">equipment.form.inherited</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='warranty_date']" position="after">
+                <field name="purchase_date"/>
+                <field name="purchase_condition"/>
+                <field name="purchase_note"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
