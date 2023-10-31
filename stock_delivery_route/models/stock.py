@@ -36,6 +36,3 @@ class WarehouseDeliveryRoute(models.Model):
         for route in self:
             res.append((route.id, '[%s] %s' % (route.warehouse_id.code, route.name)))
         return res
-
-
-
