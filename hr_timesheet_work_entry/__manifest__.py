@@ -1,9 +1,9 @@
 {
     'name': 'Timesheet Work Entry Type',
     'description': 'Set work types on timesheet records.',
-    'version': '16.0.1.0.0',
+    'version': '17.0.1.0.0',
     'website': 'https://hibou.io/',
-    'author': 'Hibou Corp. <hello@hibou.io>',
+    'author': 'Hibou Corp.',
     'license': 'AGPL-3',
     'category': 'Human Resources',
     'depends': [
