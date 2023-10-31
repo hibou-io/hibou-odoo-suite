@@ -7,10 +7,10 @@
         <field name="inherit_id" ref="stock.view_warehouse" />
         <field name="arch" type="xml">
             <xpath expr="//page[1]" position="after">
-                <page string="Delivery Routes" colspan="4">
-                    <group colspan="4">
+                <page string="Delivery Routes">
+                    <group>
                         <field name="id" invisible="1"/>
-                        <field name="delivery_route_ids" context="{'default_warehouse_id': id}" nolabel="1">
+                        <field name="delivery_route_ids" context="{'default_warehouse_id': id}" colspan="2" nolabel="1">
                             <tree>
                                 <field name="name"/>
                             </tree>
@@ -72,7 +72,7 @@
     </record>
 
     <!-- Picking Batch -->
-    <record id="view_picking_tree_batch_inherit" model="ir.ui.view">
+    <!-- <record id="view_picking_tree_batch_inherit" model="ir.ui.view">
         <field name="name">stock_picking_batch.picking.tree.batch.inherit</field>
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock_picking_batch.view_picking_tree_batch"/>
@@ -82,6 +82,6 @@
                 <field name="partner_address" />
             </xpath>
         </field>
-    </record>
+    </record> -->
 
 </odoo>
