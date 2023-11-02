@@ -1,7 +1,7 @@
 {
     'name': 'Invoice Margin',
-    'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '16.0.1.1.0',
+    'version': '17.0.1.1.0',
+    'author': 'Hibou Corp.',
     'license': 'AGPL-3',
     'category': 'Accounting',
     'sequence': 95,
