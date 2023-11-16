@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_task_form2_inherit" model="ir.ui.view">
+        <field name="name">project.task.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(project.project_task_action_sub_task)d']" position="attributes">
+                <attribute name="context">{'default_name': name + ':', 'default_user_ids': user_ids, 'default_project_id': project_id, 'default_milestone_id': milestone_id, 'subtask_action': True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='description_page']" position="after">
+                <page name="task_lines" string="Todo List">
+                    <field name="line_ids" context="{'default_task_id': active_id}">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                            <field name="state" widget="selection"/>
+                            <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False), ('active', '=', True)]"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
