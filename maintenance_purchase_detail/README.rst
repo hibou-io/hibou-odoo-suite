@@ -16,8 +16,6 @@ Adds the following fields to Maintenance Equipment:
 * Purchase Condition (dropdown)
 * Purchase Note
 
-Additionally, adds a smart button to archive Equipments.
-
 =======
 License
 =======
