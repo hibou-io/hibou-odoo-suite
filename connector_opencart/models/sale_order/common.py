@@ -31,6 +31,13 @@ class OpencartSaleOrder(models.Model):
     )
 
     @api.model
+    def create(self, values):
+        res = super().create(values)
+        # this is unfortunate, but the initial fiscal position gets set incorrectly
+        res.odoo_id._compute_fiscal_position_id()
+        return res
+
+    @api.model
     def import_batch(self, backend, filters=None):
         """ Prepare the import of Sales Orders from Opencart """
         return super(OpencartSaleOrder, self).import_batch(backend, filters=filters)
