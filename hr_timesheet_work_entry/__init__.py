@@ -1,7 +1,7 @@
 from . import models
 
 
-def ts_work_type_pre_init_hook(cr):
+def ts_work_type_pre_init_hook(env):
     """
     This module installs a Work Entry Type with code "TS"
     If you have undergone a migration (either for this module
@@ -9,7 +9,7 @@ def ts_work_type_pre_init_hook(cr):
     then the uniqueness constraint will prevent this module
     from installing.
     """
-    cr.execute("UPDATE hr_work_entry_type "
+    env.cr.execute("UPDATE hr_work_entry_type "
                "SET code = 'TS-PRE-INSTALL-14' "
                "WHERE code = 'TS';"
                )
