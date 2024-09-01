@@ -51,6 +51,7 @@
         <field name="default" eval="True"/>
         <field name="description">Signifyd Status Updated</field>
         <field name="relation_field">signifyd_case_id.checkpoint_action</field>
+        <field name="internal" eval="True"/>
     </record>
 
 </odoo>
