@@ -49,7 +49,7 @@ class SaleOrderLine(models.Model):
             line.qty_available_today = 0
             line.virtual_available_at_date = 0
             for move in moves:
-                line.qty_available_today += move.product_uom._compute_quantity(move.reserved_availability, line.product_uom)
+                line.qty_available_today += move.product_uom._compute_quantity(move.quantity, line.product_uom)
                 line.virtual_available_at_date += move.product_id.uom_id._compute_quantity(move.forecast_availability, line.product_uom)
             line.scheduled_date = line.order_id.commitment_date or line._expected_date()
             line.free_qty_today = False
