@@ -1,9 +1,0 @@
-"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"manage_rma_sale","manage rma","rma.model_rma_rma","sales_team.group_sale_salesman",1,1,1,1
-"manage_rma_line_sale","manage rma line","rma.model_rma_line","sales_team.group_sale_salesman",1,1,1,1
-"manage_rma_template_sale","manage rma template","rma.model_rma_template","sales_team.group_sale_manager",1,1,1,1
-"manage_rma_tag_sale","manage rma tag","rma.model_rma_tag","sales_team.group_sale_manager",1,1,1,1
-"access_rma_template_sale","access rma template","rma.model_rma_template","sales_team.group_sale_salesman",1,1,0,0
-"access_rma_tag_sale","access rma tag","rma.model_rma_tag","sales_team.group_sale_salesman",1,0,0,0
-"access_rma_sale_make_lines","access rma.sale.make.lines","rma_sale.model_rma_sale_make_lines","sales_team.group_sale_salesman",1,1,1,1
-"access_rma_sale_make_lines_line","access rma.sale.make.lines.line","rma_sale.model_rma_sale_make_lines_line","sales_team.group_sale_salesman",1,1,1,1
