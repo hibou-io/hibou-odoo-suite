@@ -1,3 +1,0 @@
-"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_rma_product_cores_make_lines","access rma.product_cores.make.lines","rma_product_cores.model_rma_product_cores_make_lines","stock.group_stock_user",1,1,1,1
-"access_rma_product_cores_make_lines_line","access rma.product_cores.make.lines.line","rma_product_cores.model_rma_product_cores_make_lines_line","stock.group_stock_user",1,1,1,1
