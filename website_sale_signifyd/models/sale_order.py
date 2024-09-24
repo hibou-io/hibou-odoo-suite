@@ -17,7 +17,7 @@ class SaleOrder(models.Model):
     signifyd_case_id = fields.Many2one('signifyd.case', readonly=1, copy=False)
     singifyd_score = fields.Float(related='signifyd_case_id.score')
     signifyd_checkpoint_action = fields.Selection(string='Signifyd Action', related='signifyd_case_id.checkpoint_action')
-    source_ip = fields.Char(default=_get_source_ip, help='IP address of the customer, used for signifyd case creation.')
+    source_ip = fields.Char(default=_get_source_ip, copy=False, help='IP address of the customer, used for signifyd case creation.')
 
     def action_view_signifyd_case(self):
         self.ensure_one()
