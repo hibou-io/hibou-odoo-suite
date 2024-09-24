@@ -8,15 +8,16 @@ from odoo.http import request
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    # Source IP for case creation - determination attempted at order creation and if necessary at confirmation
     def _get_source_ip(self):
-        if request and request.env.user._is_public():
+        if request:
             return request.httprequest.environ['REMOTE_ADDR']
         return ''
 
     signifyd_case_id = fields.Many2one('signifyd.case', readonly=1, copy=False)
     singifyd_score = fields.Float(related='signifyd_case_id.score')
     signifyd_checkpoint_action = fields.Selection(string='Signifyd Action', related='signifyd_case_id.checkpoint_action')
-    source_ip = fields.Char(default=_get_source_ip)
+    source_ip = fields.Char(default=_get_source_ip, help='IP address of the customer, used for signifyd case creation.')
 
     def action_view_signifyd_case(self):
         self.ensure_one()
@@ -109,6 +110,7 @@ class SaleOrder(models.Model):
                 "orderSessionId": order_session_id,
                 "orderId": self.id,
                 "checkoutToken": checkout_token,
+                "browserIpAddress": browser_ip_address,
                 "currency": self.partner_id.currency_id.name,
                 "orderChannel": "WEB",
                 "totalPrice": self.amount_total,
@@ -177,8 +179,5 @@ class SaleOrder(models.Model):
                 for tx in self.transaction_ids
             ],
         }
-
-        if browser_ip_address:
-            new_case_vals['purchase']['browserIpAddress'] = browser_ip_address
 
         return new_case_vals
