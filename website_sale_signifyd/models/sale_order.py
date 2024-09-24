@@ -179,6 +179,6 @@ class SaleOrder(models.Model):
         }
 
         if browser_ip_address:
-            new_case_vals['purchase']['browserIpAddress'] = browser_ip_address,
+            new_case_vals['purchase']['browserIpAddress'] = browser_ip_address
 
         return new_case_vals
