@@ -8,9 +8,15 @@ from odoo.http import request
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    def _get_source_ip(self):
+        if request and request.env.user._is_public():
+            return request.httprequest.environ['REMOTE_ADDR']
+        return ''
+
     signifyd_case_id = fields.Many2one('signifyd.case', readonly=1, copy=False)
     singifyd_score = fields.Float(related='signifyd_case_id.score')
     signifyd_checkpoint_action = fields.Selection(string='Signifyd Action', related='signifyd_case_id.checkpoint_action')
+    source_ip = fields.Char(default=_get_source_ip)
 
     def action_view_signifyd_case(self):
         self.ensure_one()
@@ -30,6 +36,8 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         res = super().action_confirm()
+        if not self.source_ip:
+            self.source_ip = self._get_source_ip()
         for sale in self.filtered(lambda so: so._should_post_signifyd()):
             _case = sale.post_signifyd_case()
         return res
@@ -44,16 +52,16 @@ class SaleOrder(models.Model):
         return self.state in ('sale', 'done') and not self.signifyd_case_id and case_required
 
     def post_signifyd_case(self):
+        self.ensure_one()
         if not self.website_id.signifyd_connector_id:
             return
-        browser_ip_address = request.httprequest.environ['REMOTE_ADDR']
-        if request.session:
+        if request and request.session:
             checkout_token = request.session.session_token
             order_session_id = checkout_token
         else:
             checkout_token = ''
         # Session values for Signifyd post
-        sig_vals = self._prepare_signifyd_case_values(order_session_id, checkout_token, browser_ip_address)
+        sig_vals = self._prepare_signifyd_case_values(order_session_id, checkout_token, self.source_ip)
 
         case = self.env['signifyd.case'].post_case(self.website_id.signifyd_connector_id, sig_vals)
 
@@ -101,7 +109,6 @@ class SaleOrder(models.Model):
                 "orderSessionId": order_session_id,
                 "orderId": self.id,
                 "checkoutToken": checkout_token,
-                "browserIpAddress": browser_ip_address,
                 "currency": self.partner_id.currency_id.name,
                 "orderChannel": "WEB",
                 "totalPrice": self.amount_total,
@@ -170,5 +177,8 @@ class SaleOrder(models.Model):
                 for tx in self.transaction_ids
             ],
         }
+
+        if browser_ip_address:
+            new_case_vals['purchase']['browserIpAddress'] = browser_ip_address,
 
         return new_case_vals
