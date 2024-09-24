@@ -54,7 +54,7 @@ class SaleOrder(models.Model):
 
     def post_signifyd_case(self):
         self.ensure_one()
-        if not self.website_id.signifyd_connector_id:
+        if not self.website_id.signifyd_connector_id or not self.source_ip:
             return
         if request and request.session:
             checkout_token = request.session.session_token
