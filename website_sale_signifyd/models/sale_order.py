@@ -37,11 +37,19 @@ class SaleOrder(models.Model):
     def _should_post_signifyd(self):
         # If we have no transaction/acquirer we will still send!
         # this case is useful for admin or free orders but could be customized here.
+        # case_required = bool(self.website_id.signifyd_connector_id.signifyd_case_type)
+        # a_case_types = self.transaction_ids.mapped('acquirer_id.signifyd_case_type')
+        # if a_case_types:
+        #     case_required = any(a_case_types)
+        # return self.state in ('sale', 'done') and not self.signifyd_case_id and case_required
+
         case_required = bool(self.website_id.signifyd_connector_id.signifyd_case_type)
-        a_case_types = self.transaction_ids.mapped('acquirer_id.signifyd_case_type')
-        if a_case_types:
-            case_required = any(a_case_types)
-        return self.state in ('sale', 'done') and not self.signifyd_case_id and case_required
+        case_required = self.website_id.signifyd_connector_id.signifyd_case_type not in [
+            self.env.ref('website_sale_signifyd.signifyd_coverage_none').id,
+            False
+        ]
+        coverage_types = self.transaction_ids.signifyd_coverage_ids
+
 
     def post_signifyd_case(self):
         if not self.website_id.signifyd_connector_id:
@@ -93,6 +101,47 @@ class SaleOrder(models.Model):
             'error': 'ERROR',
         }
         recipients = self.partner_invoice_id + self.partner_shipping_id
+
+        new_case_vals = {
+            # FIXME: UUID?
+            'orderId': self.id,
+            'purchase': {
+                'createdAt': self.date_order.isoformat(timespec='seconds'),
+                'orderChannel': 'WEB',
+                'totalPrice': self.amount_total,
+                'totalShippingCost': self.amount_delivery,
+                # TODO: check - previously used partner_id.currency_id, but then wouldn't the amount_total be in the wrong currency?
+                'currency': self.currency_id.name,
+                'confirmationEmail': self.partner_id.email,
+                'confirmationPhone': self.partner_id.phone,
+                'products': [
+                    'itemName': line.product_id.name,
+                    'itemPrice': line.price_unit,
+                    'itemQuantity': line.product_uom_qty,
+                    'itemIsDigital': line.product_id.is_digital,
+                    'itemCategory': line.product_id.categ_id.name,
+                    # 'itemSubCategory'?
+                    'itemId': line.product_id.id,
+                    'itemUrl': line.product_id.website_url,
+                    'itemWeight': line.product_id.weight,
+                    for line in self.order_line if line.product_id
+                ],
+                'shipments': [
+                    {
+                        'carrier': carrier.name,
+                        'fulfillmentMethod': carrier.signifyd_fulfillment_method,
+                    } for carrier in self.carrier_id
+                ],
+                'coverageRequests'
+
+        }
+
+        for line in new_case_vals['purchase']['products']:
+            optional_keys = ['itemUrl', 'itemWeight']
+            for key in optional_keys:
+                if not line[key]:
+                    line.pop(key)            
+
         new_case_vals = {
             'decisionRequest': {
                 'paymentFraud': decision_request,

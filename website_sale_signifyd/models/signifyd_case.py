@@ -11,6 +11,8 @@ class SignifydCase(models.Model):
     _name = 'signifyd.case'
     _description = 'Stores Signifyd case information on orders.'
 
+    # flow_type = fields.Selection([('pre', 'PreAuth'), ('post', 'PostAuth')], default='post', required=True)
+
     order_id = fields.Many2one('sale.order', required=True)
     partner_id = fields.Many2one('res.partner')
     case_id = fields.Char(string='Case ID')
@@ -52,6 +54,9 @@ class SignifydCase(models.Model):
         ('HOLD', 'Hold'),
         ('REJECT', 'Reject'),
     ], string='Checkpoint Action')
+
+    coverage_ids = fields.Many2many('signifyd.coverage', string='Requested Coverage Types')
+    # TODO add to view
 
     def _get_connector(self):
         return self.order_id.website_id.signifyd_connector_id

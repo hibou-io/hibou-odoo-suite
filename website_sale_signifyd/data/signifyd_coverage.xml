@@ -1,0 +1,27 @@
+<odoo>
+    <record id="signifyd_coverage_fraud" model="signifyd.coverage">
+        <field name="name">Fraud</field>
+        <field name="description">Use when you need a financial guarantee for Payment Fraud.</field>
+        <field name="code">FRAUD</field>
+    </record>
+    <record id="signifyd_coverage_inr" model="signifyd.coverage">
+        <field name="name">Item not received</field>
+        <field name="description">Use when you need a financial guarantee for Item Not Received.</field>
+        <field name="code">INR</field>
+    </record>
+    <record id="signifyd_coverage_snad" model="signifyd.coverage">
+        <field name="name">Significantly Not As Described</field>
+        <field name="description">Use when you need a financial guarantee for fraud alleging items are Significantly Not As Described. </field>
+        <field name="code">SNAD</field>
+    </record>
+    <record id="signifyd_coverage_all" model="signifyd.coverage">
+        <field name="name">All</field>
+        <field name="description">Use when you need a financial guarantee on all chargebacks.</field>
+        <field name="code">ALL</field>
+    </record>
+    <record id="signifyd_coverage_none" model="signifyd.coverage">
+        <field name="name">None</field>
+        <field name="description">Use when you do not need a financial guarantee.</field>
+        <field name="code">NONE</field>
+    </record>
+</odoo>

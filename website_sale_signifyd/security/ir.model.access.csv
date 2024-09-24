@@ -7,3 +7,4 @@ manage_signifyd_case,manage_signifyd_case,model_signifyd_case,base.group_erp_man
 access_signifyd_case,access_signifyd_case,model_signifyd_case,base.group_user,1,0,0,0
 public_signifyd_case,public_signifyd_case,model_signifyd_case,base.group_public,1,0,0,0
 portal_signifyd_case,portal_signifyd_case,model_signifyd_case,base.group_portal,1,0,0,0
+access_signifyd_coverage,access_signifyd_coverage,model_signifyd_coverage,base.group_user,1,0,0,0

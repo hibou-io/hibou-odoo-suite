@@ -19,6 +19,7 @@ class SignifydConnector(models.Model):
     webhooks_registered = fields.Boolean(string='Successfully Registered Webhooks')
     notify_user_ids = fields.Many2many('res.users', string='Receive decline notifications')
     website_ids = fields.One2many('website', 'signifyd_connector_id', string='Used on Websites')
+    # TODO: remove options no longer available in api v3
     signifyd_case_type = fields.Selection([
         ('', 'No Case'),
         ('SCORE', 'Score'),
@@ -26,10 +27,11 @@ class SignifydConnector(models.Model):
         ('GUARANTEE', 'Guarantee'),
     ], string='Default Case Creation', help='Used for internal/admin orders, overridden by payment acquirer.',
         required=True, default='')
+    signifyd_coverage_ids = fields.Many2many('signifyd.coverage', string='Available Coverage Types')
 
     # TODO ideally this would be a regular constant
     # however other entities currently use this by reference
-    API_URL = 'https://api.signifyd.com/v2'
+    API_URL = 'https://api.signifyd.com/v3'
 
     def get_headers(self):
         self.ensure_one()

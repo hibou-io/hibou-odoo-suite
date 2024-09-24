@@ -7,7 +7,8 @@
         <field name="inherit_id" ref="website_payment.acquirer_form_website"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='website_id']" position="after">
-                <field name="signifyd_case_type"/>
+                <!-- <field name="signifyd_case_type"/> -->
+                <field name="signifyd_coverage_type_ids"/>
             </xpath>
         </field>
     </record>
