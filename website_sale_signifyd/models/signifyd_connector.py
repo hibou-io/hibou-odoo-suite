@@ -27,7 +27,12 @@ class SignifydConnector(models.Model):
         ('GUARANTEE', 'Guarantee'),
     ], string='Default Case Creation', help='Used for internal/admin orders, overridden by payment acquirer.',
         required=True, default='')
-    signifyd_coverage_ids = fields.Many2many('signifyd.coverage', string='Available Coverage Types')
+    signifyd_coverage_ids = fields.Many2many('signifyd.coverage', string='Available Coverage Types',
+        help='Note that exclusive coverage types will only allow one to be selected.')
+
+    @api.onchange('signifyd_coverage_ids')
+    def _onchange_signifyd_coverage_ids(self):
+        self.signifyd_coverage_ids = self.signifyd_coverage_ids._apply_exclusivity()
 
     # TODO ideally this would be a regular constant
     # however other entities currently use this by reference

@@ -18,10 +18,12 @@
         <field name="name">All</field>
         <field name="description">Use when you need a financial guarantee on all chargebacks.</field>
         <field name="code">ALL</field>
+        <field name="exclusive">True</field>
     </record>
     <record id="signifyd_coverage_none" model="signifyd.coverage">
         <field name="name">None</field>
         <field name="description">Use when you do not need a financial guarantee.</field>
         <field name="code">NONE</field>
+        <field name="exclusive">True</field>
     </record>
 </odoo>

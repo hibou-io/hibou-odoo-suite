@@ -37,19 +37,10 @@ class SaleOrder(models.Model):
     def _should_post_signifyd(self):
         # If we have no transaction/acquirer we will still send!
         # this case is useful for admin or free orders but could be customized here.
-        # case_required = bool(self.website_id.signifyd_connector_id.signifyd_case_type)
-        # a_case_types = self.transaction_ids.mapped('acquirer_id.signifyd_case_type')
-        # if a_case_types:
-        #     case_required = any(a_case_types)
-        # return self.state in ('sale', 'done') and not self.signifyd_case_id and case_required
-
-        case_required = bool(self.website_id.signifyd_connector_id.signifyd_case_type)
-        case_required = self.website_id.signifyd_connector_id.signifyd_case_type not in [
-            self.env.ref('website_sale_signifyd.signifyd_coverage_none').id,
-            False
-        ]
-        coverage_types = self.transaction_ids.signifyd_coverage_ids
-
+        acquirers = self.transaction_ids.acquirer_id
+        if acquirers and not any(acquirers.mapped('signifyd_case_required')):
+            return False
+        return True
 
     def post_signifyd_case(self):
         if not self.website_id.signifyd_connector_id:
@@ -78,8 +69,26 @@ class SaleOrder(models.Model):
         # TODO do we need to raise an exception?
         return None
 
+    def _get_coverage_types(self):
+        coverage_none = self.env.ref('website_sale_signifyd.signifyd_coverage_none')
+        coverage_all = self.env.ref('website_sale_signifyd.signifyd_coverage_all')
+        acquirer_coverage_types = self.transaction_ids.acquirer_id.signifyd_coverage_ids
+        # 'ALL' if specified by any acquirer
+        if coverage_all in acquirer_coverage_types:
+            return coverage_all
+        # 'NONE' if specified by all acquirers
+        if all(self.transaction_ids.acquirer_id.mapped(lambda a: a.signifyd_coverage_ids) == coverage_none):
+            return coverage_none
+        # Specific acquirer-level coverage types
+        if acquirer_coverage_types - coverage_none:
+            return acquirer_coverage_types - coverage_none
+        # Default: connector-level
+        return self.website_id.signifyd_connector_id.signifyd_coverage_ids or coverage_none
+
     @api.model
     def _prepare_signifyd_case_values(self, order_session_id, checkout_token, browser_ip_address):
+        coverage_codes = self._get_coverage_types().mapped('code')
+
         decision_request = self.website_id.signifyd_connector_id.signifyd_case_type or 'DECISION'
 
         # find the highest 'acquirer override'
@@ -102,6 +111,7 @@ class SaleOrder(models.Model):
         }
         recipients = self.partner_invoice_id + self.partner_shipping_id
 
+        # API v3 WIP
         new_case_vals = {
             # FIXME: UUID?
             'orderId': self.id,
@@ -132,7 +142,7 @@ class SaleOrder(models.Model):
                         'fulfillmentMethod': carrier.signifyd_fulfillment_method,
                     } for carrier in self.carrier_id
                 ],
-                'coverageRequests'
+                'coverageRequests': coverage_codes,
 
         }
 
@@ -142,82 +152,83 @@ class SaleOrder(models.Model):
                 if not line[key]:
                     line.pop(key)            
 
-        new_case_vals = {
-            'decisionRequest': {
-                'paymentFraud': decision_request,
-            },
-            'purchase': {
-                "orderSessionId": order_session_id,
-                "orderId": self.id,
-                "checkoutToken": checkout_token,
-                "browserIpAddress": browser_ip_address,
-                "currency": self.partner_id.currency_id.name,
-                "orderChannel": "WEB",
-                "totalPrice": self.amount_total,
-                'products': [
-                    {
-                        "itemId": line.product_id.id,
-                        "itemName": line.product_id.name,
-                        "itemIsDigital": False,
-                        "itemCategory": line.product_id.categ_id.name,
-                        "itemUrl": line.product_id.website_url or '',
-                        "itemQuantity": line.product_uom_qty,
-                        "itemPrice": line.price_unit,
-                        "itemWeight": line.product_id.weight or 0.1,
-                    }
-                    for line in self.order_line if line.product_id
-                ],
-                'shipments': [{
-                        "shipper": carrier.name,
-                        "shippingMethod": "ground",
-                        "shippingPrice": self.amount_delivery,
-                    }
-                    for carrier in self.carrier_id
-                ],
-            },
-            'recipients': [
-                {
-                    "fullName": partner.name,
-                    "confirmationEmail": partner.email,
-                    "confirmationPhone": partner.phone,
-                    "organization": partner.company_id.name,
-                    "deliveryAddress": {
-                        "streetAddress": partner.street,
-                        "unit": partner.street2,
-                        "city": partner.city,
-                        "provinceCode": partner.state_id.code,
-                        "postalCode": partner.zip,
-                        "countryCode": partner.country_id.code,
-                    }
-                }
-                for partner in recipients
-            ],
-            'transactions': [
-                {
-                    "parentTransactionId": None,
-                    "transactionId": tx.id,
-                    "gateway": tx.acquirer_id.name,
-                    "paymentMethod": "CREDIT_CARD",
-                    "gatewayStatusCode": tx_status_type.get(tx.state, 'PENDING'),
-                    "type": "AUTHORIZATION",
-                    "currency": self.partner_id.currency_id.name,
-                    "amount": tx.amount,
-                    # "avsResponseCode": "Y",
-                    # "cvvResponseCode": "N",
-                    "checkoutPaymentDetails": {
-                        "holderName": tx.partner_id.name,
-                        "billingAddress": {
-                            "streetAddress": tx.partner_id.street,
-                            "unit": tx.partner_id.street2,
-                            "city": tx.partner_id.city,
-                            "provinceCode": tx.partner_id.state_id.code,
-                            "postalCode": tx.partner_id.zip,
-                            "countryCode": tx.partner_id.country_id.code,
-                        }
-                    }
-                }
-                for tx in self.transaction_ids
-            ],
-        }
+        # API v2
+        # new_case_vals = {
+        #     'decisionRequest': {
+        #         'paymentFraud': decision_request,
+        #     },
+        #     'purchase': {
+        #         "orderSessionId": order_session_id,
+        #         "orderId": self.id,
+        #         "checkoutToken": checkout_token,
+        #         "browserIpAddress": browser_ip_address,
+        #         "currency": self.partner_id.currency_id.name,
+        #         "orderChannel": "WEB",
+        #         "totalPrice": self.amount_total,
+        #         'products': [
+        #             {
+        #                 "itemId": line.product_id.id,
+        #                 "itemName": line.product_id.name,
+        #                 "itemIsDigital": False,
+        #                 "itemCategory": line.product_id.categ_id.name,
+        #                 "itemUrl": line.product_id.website_url or '',
+        #                 "itemQuantity": line.product_uom_qty,
+        #                 "itemPrice": line.price_unit,
+        #                 "itemWeight": line.product_id.weight or 0.1,
+        #             }
+        #             for line in self.order_line if line.product_id
+        #         ],
+        #         'shipments': [{
+        #                 "shipper": carrier.name,
+        #                 "shippingMethod": "ground",
+        #                 "shippingPrice": self.amount_delivery,
+        #             }
+        #             for carrier in self.carrier_id
+        #         ],
+        #     },
+        #     'recipients': [
+        #         {
+        #             "fullName": partner.name,
+        #             "confirmationEmail": partner.email,
+        #             "confirmationPhone": partner.phone,
+        #             "organization": partner.company_id.name,
+        #             "deliveryAddress": {
+        #                 "streetAddress": partner.street,
+        #                 "unit": partner.street2,
+        #                 "city": partner.city,
+        #                 "provinceCode": partner.state_id.code,
+        #                 "postalCode": partner.zip,
+        #                 "countryCode": partner.country_id.code,
+        #             }
+        #         }
+        #         for partner in recipients
+        #     ],
+        #     'transactions': [
+        #         {
+        #             "parentTransactionId": None,
+        #             "transactionId": tx.id,
+        #             "gateway": tx.acquirer_id.name,
+        #             "paymentMethod": "CREDIT_CARD",
+        #             "gatewayStatusCode": tx_status_type.get(tx.state, 'PENDING'),
+        #             "type": "AUTHORIZATION",
+        #             "currency": self.partner_id.currency_id.name,
+        #             "amount": tx.amount,
+        #             # "avsResponseCode": "Y",
+        #             # "cvvResponseCode": "N",
+        #             "checkoutPaymentDetails": {
+        #                 "holderName": tx.partner_id.name,
+        #                 "billingAddress": {
+        #                     "streetAddress": tx.partner_id.street,
+        #                     "unit": tx.partner_id.street2,
+        #                     "city": tx.partner_id.city,
+        #                     "provinceCode": tx.partner_id.state_id.code,
+        #                     "postalCode": tx.partner_id.zip,
+        #                     "countryCode": tx.partner_id.country_id.code,
+        #                 }
+        #             }
+        #         }
+        #         for tx in self.transaction_ids
+        #     ],
+        # }
 
         return new_case_vals
