@@ -1,7 +1,7 @@
 {
     'name': 'Signifyd Connector',
     'author': 'Hibou Corp. <hello@hibou.io>',
-    'version': '15.0.1.1.0',
+    'version': '15.0.2.0.0',
     'category': 'Sale',
     'description': """
 Automate Order Fraud Detection with the Signifyd API.
@@ -16,6 +16,7 @@ Automate Order Fraud Detection with the Signifyd API.
     ],
     'data': [
         'security/ir.model.access.csv',
+        'data/signifyd_coverage.xml',
         'views/partner_views.xml',
         'views/payment_views.xml',
         'views/sale_views.xml',

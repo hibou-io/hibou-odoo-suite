@@ -89,17 +89,17 @@ class SaleOrder(models.Model):
     def _prepare_signifyd_case_values(self, order_session_id, checkout_token, browser_ip_address):
         coverage_codes = self._get_coverage_types().mapped('code')
 
-        decision_request = self.website_id.signifyd_connector_id.signifyd_case_type or 'DECISION'
+        # decision_request = self.website_id.signifyd_connector_id.signifyd_case_type or 'DECISION'
 
-        # find the highest 'acquirer override'
-        # note that we shouldn't be here if the override would prevent sending
-        a_case_types = self.transaction_ids.mapped('acquirer_id.signifyd_case_type')
-        if a_case_types and 'GUARANTEE' in a_case_types:
-            decision_request = 'GUARANTEE'
-        elif a_case_types and 'SCORE' in a_case_types:
-            decision_request = 'SCORE'
-        elif a_case_types and 'DECISION' in a_case_types:
-            decision_request = 'DECISION'
+        # # find the highest 'acquirer override'
+        # # note that we shouldn't be here if the override would prevent sending
+        # a_case_types = self.transaction_ids.mapped('acquirer_id.signifyd_case_type')
+        # if a_case_types and 'GUARANTEE' in a_case_types:
+        #     decision_request = 'GUARANTEE'
+        # elif a_case_types and 'SCORE' in a_case_types:
+        #     decision_request = 'SCORE'
+        # elif a_case_types and 'DECISION' in a_case_types:
+        #     decision_request = 'DECISION'
 
         tx_status_type = {
             'draft': 'FAILURE',
