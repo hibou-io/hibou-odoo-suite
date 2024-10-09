@@ -143,7 +143,32 @@ class SaleOrder(models.Model):
                     } for carrier in self.carrier_id
                 ],
                 'coverageRequests': coverage_codes,
-
+            },
+            'transactions': [
+                {
+                    "parentTransactionId": None,
+                    "transactionId": tx.id,
+                    "gateway": tx.acquirer_id.name,
+                    "paymentMethod": "CREDIT_CARD",
+                    "gatewayStatusCode": tx_status_type.get(tx.state, 'PENDING'),
+                    "currency": tx.currency_id.name,
+                    "amount": tx.amount,
+                    # "avsResponseCode": "Y",
+                    # "cvvResponseCode": "N",
+                    "checkoutPaymentDetails": {
+                        "accountHolderName": tx.partner_id.name,
+                        "billingAddress": {
+                            "streetAddress": tx.partner_id.street,
+                            "unit": tx.partner_id.street2,
+                            "city": tx.partner_id.city,
+                            "provinceCode": tx.partner_id.state_id.code,
+                            "postalCode": tx.partner_id.zip,
+                            "countryCode": tx.partner_id.country_id.code,
+                        }
+                    }
+                }
+                for tx in self.transaction_ids
+            ],
         }
 
         for line in new_case_vals['purchase']['products']:
