@@ -125,16 +125,17 @@ class SaleOrder(models.Model):
                 'confirmationEmail': self.partner_id.email,
                 'confirmationPhone': self.partner_id.phone,
                 'products': [
-                    'itemName': line.product_id.name,
-                    'itemPrice': line.price_unit,
-                    'itemQuantity': line.product_uom_qty,
-                    'itemIsDigital': line.product_id.is_digital,
-                    'itemCategory': line.product_id.categ_id.name,
-                    # 'itemSubCategory'?
-                    'itemId': line.product_id.id,
-                    'itemUrl': line.product_id.website_url,
-                    'itemWeight': line.product_id.weight,
-                    for line in self.order_line if line.product_id
+                    {
+                        'itemName': line.product_id.name,
+                        'itemPrice': line.price_unit,
+                        'itemQuantity': line.product_uom_qty,
+                        'itemIsDigital': line.product_id.is_digital,
+                        'itemCategory': line.product_id.categ_id.name,
+                        # 'itemSubCategory'?
+                        'itemId': line.product_id.id,
+                        'itemUrl': line.product_id.website_url,
+                        'itemWeight': line.product_id.weight,
+                    } for line in self.order_line if line.product_id
                 ],
                 'shipments': [
                     {
@@ -146,24 +147,24 @@ class SaleOrder(models.Model):
             },
             'transactions': [
                 {
-                    "parentTransactionId": None,
-                    "transactionId": tx.id,
-                    "gateway": tx.acquirer_id.name,
-                    "paymentMethod": "CREDIT_CARD",
-                    "gatewayStatusCode": tx_status_type.get(tx.state, 'PENDING'),
-                    "currency": tx.currency_id.name,
-                    "amount": tx.amount,
+                    'parentTransactionId': None,
+                    'transactionId': tx.id,
+                    'gateway': tx.acquirer_id.name,
+                    'paymentMethod': 'CREDIT_CARD',
+                    'gatewayStatusCode': tx_status_type.get(tx.state, 'PENDING'),
+                    'currency': tx.currency_id.name,
+                    'amount': tx.amount,
                     # "avsResponseCode": "Y",
                     # "cvvResponseCode": "N",
-                    "checkoutPaymentDetails": {
-                        "accountHolderName": tx.partner_id.name,
-                        "billingAddress": {
-                            "streetAddress": tx.partner_id.street,
-                            "unit": tx.partner_id.street2,
-                            "city": tx.partner_id.city,
-                            "provinceCode": tx.partner_id.state_id.code,
-                            "postalCode": tx.partner_id.zip,
-                            "countryCode": tx.partner_id.country_id.code,
+                    'checkoutPaymentDetails': {
+                        'accountHolderName': tx.partner_id.name,
+                        'billingAddress': {
+                            'streetAddress': tx.partner_id.street,
+                            'unit': tx.partner_id.street2,
+                            'city': tx.partner_id.city,
+                            'provinceCode': tx.partner_id.state_id.code,
+                            'postalCode': tx.partner_id.zip,
+                            'countryCode': tx.partner_id.country_id.code,
                         }
                     }
                 }
@@ -175,7 +176,7 @@ class SaleOrder(models.Model):
             optional_keys = ['itemUrl', 'itemWeight']
             for key in optional_keys:
                 if not line[key]:
-                    line.pop(key)            
+                    line.pop(key)
 
         # API v2
         # new_case_vals = {
