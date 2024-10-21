@@ -107,7 +107,7 @@
                             <field name="secret_key" attrs="{'invisible': [('test_mode', '=', True)]}"/>
                             <field name="secret_key_test" attrs="{'invisible': [('test_mode', '!=', True)]}"/>
                             <!-- <field name="signifyd_case_type" /> -->
-                            <field name="signifyd_coverage_ids"/>
+                            <field name="signifyd_coverage_ids" widget="many2many_tags"/>
                             <p class="text-muted">
                                 Optional: Add users to be notified if a sale order is declined by Signifyd.
                             </p>

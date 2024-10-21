@@ -43,20 +43,23 @@ class SaleOrder(models.Model):
         return True
 
     def post_signifyd_case(self):
-        if not self.website_id.signifyd_connector_id:
+        signifyd_api = self.website_id.signifyd_connector_id.get_connection()
+        if not signifyd_api:
             return
+
+
         browser_ip_address = request.httprequest.environ['REMOTE_ADDR']
         if request.session:
             checkout_token = request.session.session_token
             order_session_id = checkout_token
         else:
             checkout_token = ''
+
         # Session values for Signifyd post
         sig_vals = self._prepare_signifyd_case_values(order_session_id, checkout_token, browser_ip_address)
 
-        case = self.env['signifyd.case'].post_case(self.website_id.signifyd_connector_id, sig_vals)
-
-        success_response = case.get('investigationId')
+        response = signifyd_api.post_case(sig_vals)
+        success_response = response.get('signifydId')
         if success_response:
             new_case = self.env['signifyd.case'].create({
                 'order_id': self.id,
@@ -77,7 +80,7 @@ class SaleOrder(models.Model):
         if coverage_all in acquirer_coverage_types:
             return coverage_all
         # 'NONE' if specified by all acquirers
-        if all(self.transaction_ids.acquirer_id.mapped(lambda a: a.signifyd_coverage_ids) == coverage_none):
+        if all(self.transaction_ids.acquirer_id.mapped(lambda a: a.signifyd_coverage_ids == coverage_none)):
             return coverage_none
         # Specific acquirer-level coverage types
         if acquirer_coverage_types - coverage_none:
@@ -116,7 +119,7 @@ class SaleOrder(models.Model):
             # FIXME: UUID?
             'orderId': self.id,
             'purchase': {
-                'createdAt': self.date_order.isoformat(timespec='seconds'),
+                'createdAt': self.date_order.isoformat(timespec='seconds') + '+00:00',
                 'orderChannel': 'WEB',
                 'totalPrice': self.amount_total,
                 'totalShippingCost': self.amount_delivery,
@@ -143,8 +146,8 @@ class SaleOrder(models.Model):
                         'fulfillmentMethod': carrier.signifyd_fulfillment_method,
                     } for carrier in self.carrier_id
                 ],
-                'coverageRequests': coverage_codes,
             },
+            'coverageRequests': coverage_codes,
             'transactions': [
                 {
                     'parentTransactionId': None,

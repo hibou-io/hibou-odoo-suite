@@ -78,18 +78,14 @@ class SignifydCase(models.Model):
                                        subtype_xmlid='website_sale_signifyd.disposition_change')
         return res
 
-    @api.model
-    def post_case(self, connector, values):
-        headers = connector.get_headers()
-        data = json.dumps(values, indent=4, sort_keys=True, default=str)
-
-        # TODO this should be in `signifyd.connector`
-        r = requests.post(
-            connector.API_URL + '/cases',
-            headers=headers,
-            data=data,
-        )
-        return r.json()
+    # @api.model
+    # def post_case(self, connector, values):
+    #     headers = connector.get_headers()
+    #     # data = json.dumps(values, indent=4, sort_keys=True, default=str)
+    #     url = connector.API_URL + '/orders/events/sales'
+    #     # TODO this should be in `signifyd.connector`
+    #     r = requests.post(url=url, headers=headers, json=values)
+    #     return r.json()
 
     def get_case(self):
         self.ensure_one()

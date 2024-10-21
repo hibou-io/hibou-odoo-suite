@@ -6,6 +6,7 @@ from base64 import b64encode
 import json
 
 from odoo import api, fields, models
+from .signifyd_api import SignifydAPI
 
 
 class SignifydConnector(models.Model):
@@ -20,40 +21,26 @@ class SignifydConnector(models.Model):
     notify_user_ids = fields.Many2many('res.users', string='Receive decline notifications')
     website_ids = fields.One2many('website', 'signifyd_connector_id', string='Used on Websites')
     # TODO: remove options no longer available in api v3
-    signifyd_case_type = fields.Selection([
-        ('', 'No Case'),
-        ('SCORE', 'Score'),
-        ('DECISION', 'Decision'),
-        ('GUARANTEE', 'Guarantee'),
-    ], string='Default Case Creation', help='Used for internal/admin orders, overridden by payment acquirer.',
-        required=True, default='')
+    # signifyd_case_type = fields.Selection([
+    #     ('', 'No Case'),
+    #     ('SCORE', 'Score'),
+    #     ('DECISION', 'Decision'),
+    #     ('GUARANTEE', 'Guarantee'),
+    # ], string='Default Case Creation', help='Used for internal/admin orders, overridden by payment acquirer.',
+    #     required=True, default='')
     signifyd_coverage_ids = fields.Many2many('signifyd.coverage', string='Available Coverage Types',
         help='Note that exclusive coverage types will only allow one to be selected.')
+    teamid = fields.Char(string='Signifyd Team ID')
 
     @api.onchange('signifyd_coverage_ids')
     def _onchange_signifyd_coverage_ids(self):
         self.signifyd_coverage_ids = self.signifyd_coverage_ids._apply_exclusivity()
 
-    # TODO ideally this would be a regular constant
-    # however other entities currently use this by reference
-    API_URL = 'https://api.signifyd.com/v3'
 
-    def get_headers(self):
-        self.ensure_one()
-        # Check for prod or test mode
-        if self.test_mode:
-            api_key = self.secret_key_test
-        else:
-            api_key = self.secret_key
-
-        b64_auth_key = b64encode(api_key.encode()).decode().replace('=', '')
-
-        headers = {
-            'Authorization': 'Basic ' + b64_auth_key,
-            'Content-Type': 'application/json',
-        }
-
-        return headers
+    def get_connection(self):
+        if not self:
+            return
+        return SignifydAPI(self.name, self.secret_key, self.teamid)
 
     def register_webhooks(self):
         self.ensure_one()
@@ -69,27 +56,27 @@ class SignifydConnector(models.Model):
         if not base_url:
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         values = {
-            "webhooks": [
+            'webhooks': [
                 # Given we are creating the cases, we do not need to know about it
                 # {
                 #     "event": "CASE_CREATION",
                 #     "url": base_url + "/signifyd/cases/update"
                 # },
                 {
-                    "event": "CASE_RESCORE",
-                    "url": base_url + "/signifyd/cases/update"
+                    'event': 'CASE_RESCORE',
+                    'url': base_url + '/signifyd/cases/update'
                 },
                 {
-                    "event": "CASE_REVIEW",
-                    "url": base_url + "/signifyd/cases/update"
+                    'event': 'CASE_REVIEW',
+                    'url': base_url + '/signifyd/cases/update'
                 },
                 {
-                    "event": "GUARANTEE_COMPLETION",
-                    "url": base_url + "/signifyd/cases/update"
+                    'event': 'GUARANTEE_COMPLETION',
+                    'url': base_url + '/signifyd/cases/update'
                 },
                 {
-                    "event": "DECISION_MADE",
-                    "url": base_url + "/signifyd/cases/update"
+                    'event': 'DECISION_MADE',
+                    'url': base_url + '/signifyd/cases/update'
                 },
             ]
         }

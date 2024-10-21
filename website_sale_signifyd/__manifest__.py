@@ -8,10 +8,9 @@ Automate Order Fraud Detection with the Signifyd API.
     """,
     'website': 'https://hibou.io/',
     'depends': [
-        'delivery',
         'hibou_professional',
         'stock',
-        'website_sale',
+        'website_sale_delivery',
         'website_payment',
     ],
     'data': [
