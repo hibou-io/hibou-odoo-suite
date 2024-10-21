@@ -8,9 +8,16 @@ from odoo.http import request
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    # Source IP for case creation - determination attempted at order creation and if necessary at confirmation
+    def _get_source_ip(self):
+        if request:
+            return request.httprequest.environ['REMOTE_ADDR']
+        return ''
+
     signifyd_case_id = fields.Many2one('signifyd.case', readonly=1, copy=False)
     singifyd_score = fields.Float(related='signifyd_case_id.score')
     signifyd_checkpoint_action = fields.Selection(string='Signifyd Action', related='signifyd_case_id.checkpoint_action')
+    source_ip = fields.Char(default=_get_source_ip, copy=False, help='IP address of the customer, used for signifyd case creation.')
 
     def action_view_signifyd_case(self):
         self.ensure_one()
@@ -30,6 +37,8 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         res = super().action_confirm()
+        if not self.source_ip:
+            self.source_ip = self._get_source_ip()
         for sale in self.filtered(lambda so: so._should_post_signifyd()):
             _case = sale.post_signifyd_case()
         return res
@@ -43,20 +52,18 @@ class SaleOrder(models.Model):
         return True
 
     def post_signifyd_case(self):
+        self.ensure_one()
         signifyd_api = self.website_id.signifyd_connector_id.get_connection()
-        if not signifyd_api:
+        if not signifyd_api or not self.source_ip:
             return
-
-
-        browser_ip_address = request.httprequest.environ['REMOTE_ADDR']
-        if request.session:
+        if request and request.session:
             checkout_token = request.session.session_token
             order_session_id = checkout_token
         else:
             checkout_token = ''
 
         # Session values for Signifyd post
-        sig_vals = self._prepare_signifyd_case_values(order_session_id, checkout_token, browser_ip_address)
+        sig_vals = self._prepare_signifyd_case_values(order_session_id, checkout_token, self.source_ip)
 
         response = signifyd_api.post_case(sig_vals)
         success_response = response.get('signifydId')
