@@ -14,4 +14,4 @@ License
 
 Please see `LICENSE <https://github.com/hibou-io/hibou-odoo-suite/blob/master/LICENSE>`_.
 
-Copyright Hibou Corp. 2018
+Copyright Hibou Corp. 2024
