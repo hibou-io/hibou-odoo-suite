@@ -1,7 +1,7 @@
 {
     'name': 'Web Hibou Color',
     'category': 'Hidden',
-    'version': '17.0.1.0.0',
+    'version': '18.0.1.0.0',
     'description': """
 Hibou Colors
 ============
