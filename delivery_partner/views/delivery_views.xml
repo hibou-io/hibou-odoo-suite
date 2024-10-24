@@ -4,12 +4,12 @@
         <field name="name">partner.shipping.account.tree</field>
         <field name="model">partner.shipping.account</field>
         <field name="arch" type="xml">
-            <tree string="Shipping Accounts">
+            <list string="Shipping Accounts">
                 <field name="description"/>
                 <field name="name"/>
                 <field name="delivery_type"/>
                 <field name="partner_id"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -50,7 +50,7 @@
     <record id="partner_shipping_account_action_main" model="ir.actions.act_window">
         <field name="name">Shipping Accounts</field>
         <field name="res_model">partner.shipping.account</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p>
                 No accounts
@@ -70,11 +70,11 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='property_delivery_carrier_id']" position="after">
                 <field name="shipping_account_ids">
-                    <tree>
+                    <list>
                         <field name="description"/>
                         <field name="name"/>
                         <field name="delivery_type"/>
-                    </tree>
+                    </list>
                 </field>
             </xpath>
         </field>
