@@ -9,7 +9,7 @@
                 <field name="date_planned"/>
                 <field name="warehouse_id"/>
             </xpath>
-            <xpath expr="//field[@name='order_line']/tree/field[@name='route_id']" position="before">
+            <xpath expr="//field[@name='order_line']/list/field[@name='route_id']" position="before">
                 <field name="date_planned" optional="hide"/>
                 <field name="warehouse_id" optional="hide"/>
             </xpath>
