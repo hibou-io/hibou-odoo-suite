@@ -11,9 +11,9 @@
                     <group>
                         <field name="id" invisible="1"/>
                         <field name="delivery_route_ids" context="{'default_warehouse_id': id}" colspan="2" nolabel="1">
-                            <tree>
+                            <list>
                                 <field name="name"/>
-                            </tree>
+                            </list>
                             <form>
                                 <group>
                                     <group>
