@@ -8,7 +8,7 @@
             <xpath expr="//field[@name='timesheet_ids']" position="attributes">
                 <attribute name="context">{'default_project_id': project_id, 'default_task_id': active_id}</attribute>
             </xpath>
-            <xpath expr="//field[@name='timesheet_ids']/tree" position="attributes">
+            <xpath expr="//field[@name='timesheet_ids']/list" position="attributes">
                 <attribute name="editable"/>
             </xpath>
             <xpath expr="//field[@name='timesheet_ids']/form//field[@name='project_id']" position="before">

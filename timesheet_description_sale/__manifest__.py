@@ -1,6 +1,6 @@
 {
     'name': 'Timesheet Description Sale',
-    'version': '17.0.1.0.0',
+    'version': '18.0.1.0.0',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'website': 'https://hibou.io/',
     'license': 'AGPL-3',
