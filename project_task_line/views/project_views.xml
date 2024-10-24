@@ -10,13 +10,13 @@
             </xpath>
             <xpath expr="//page[@name='description_page']" position="after">
                 <page name="task_lines" string="Todo List">
-                    <field name="line_ids" context="{'default_task_id': active_id}">
-                        <tree editable="bottom">
+                    <field name="line_ids">
+                        <list editable="bottom">
                             <field name="sequence" widget="handle"/>
                             <field name="name"/>
                             <field name="state" widget="selection"/>
                             <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False), ('active', '=', True)]"/>
-                        </tree>
+                        </list>
                     </field>
                 </page>
             </xpath>
