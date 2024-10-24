@@ -17,7 +17,7 @@ def admin_auth_generate_login(env, user):
     :param user: `res.users` in
     :return:
     """
-    if not env['res.partner'].check_access_rights('write'):
+    if not env['res.partner'].has_access('write'):
         return None
     u = str(user.id)
     now = datetime.utcnow()
