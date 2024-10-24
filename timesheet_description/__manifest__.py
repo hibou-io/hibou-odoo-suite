@@ -1,6 +1,6 @@
 {
     'name': 'Timesheet Description',
-    'version': '17.0.1.0.0',
+    'version': '18.0.1.0.0',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'website': 'https://hibou.io/',
     'license': 'AGPL-3',
@@ -12,7 +12,6 @@ Timesheet entries will be made in a form view, allowing the end user to enter mo
 Optionally, allows you to display your timesheet entries in markdown on the front end of the website.
     """,
     'depends': [
-        'website_project_task',
         'project',
         'hr_timesheet',
     ],
