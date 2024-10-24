@@ -1,0 +1,135 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_partner
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-12 01:08+0000\n"
+"PO-Revision-Date: 2021-10-12 01:08+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: delivery_partner
+#: model:ir.model.fields,field_description:delivery_partner.field_partner_shipping_account__name
+msgid "Account Num."
+msgstr "Número de Cuenta"
+
+#. module: delivery_partner
+#: model_terms:ir.ui.view,arch_db:delivery_partner.partner_shipping_account_view_form
+msgid "Any additional notes..."
+msgstr "Notas adicionales..."
+
+#. module: delivery_partner
+#: model:ir.model.fields,field_description:delivery_partner.field_partner_shipping_account__delivery_type
+msgid "Carrier"
+msgstr "Transportista"
+
+#. module: delivery_partner
+#: model:ir.model,name:delivery_partner.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: delivery_partner
+#: model:ir.model.fields,field_description:delivery_partner.field_partner_shipping_account__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: delivery_partner
+#: model:ir.model.fields,field_description:delivery_partner.field_partner_shipping_account__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: delivery_partner
+#: model:ir.model.fields,field_description:delivery_partner.field_partner_shipping_account__description
+msgid "Description"
+msgstr "Descripción"
+
+#. module: delivery_partner
+#: model:ir.model.fields,field_description:delivery_partner.field_partner_shipping_account__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: delivery_partner
+#: model:ir.model.fields,field_description:delivery_partner.field_partner_shipping_account__id
+msgid "ID"
+msgstr "ID"
+
+#. module: delivery_partner
+#: model:ir.model.fields,field_description:delivery_partner.field_partner_shipping_account__note
+msgid "Internal Note"
+msgstr "Nota Interna"
+
+#. module: delivery_partner
+#: model:ir.model.fields,field_description:delivery_partner.field_partner_shipping_account____last_update
+msgid "Last Modified on"
+msgstr "Última Modificación el"
+
+#. module: delivery_partner
+#: model:ir.model.fields,field_description:delivery_partner.field_partner_shipping_account__write_uid
+msgid "Last Updated by"
+msgstr "Última Actualización por"
+
+#. module: delivery_partner
+#: model:ir.model.fields,field_description:delivery_partner.field_partner_shipping_account__write_date
+msgid "Last Updated on"
+msgstr "Última Actualización el"
+
+#. module: delivery_partner
+#: model:ir.model.fields,help:delivery_partner.field_partner_shipping_account__partner_id
+msgid "Leave blank to allow as a generic 3rd party shipper."
+msgstr "Déjelo en blanco para permitirlo como una Transportista genérica de terceros"
+
+#. module: delivery_partner
+#: model_terms:ir.actions.act_window,help:delivery_partner.partner_shipping_account_action_main
+msgid "No accounts"
+msgstr "Sin Cuentas"
+
+#. module: delivery_partner
+#: model:ir.model.fields.selection,name:delivery_partner.selection__partner_shipping_account__delivery_type__other
+msgid "Other"
+msgstr "Otro"
+
+#. module: delivery_partner
+#: model:ir.model.fields,field_description:delivery_partner.field_partner_shipping_account__partner_id
+msgid "Partner"
+msgstr "Socio"
+
+#. module: delivery_partner
+#: model:ir.model,name:delivery_partner.model_partner_shipping_account
+msgid "Partner Shipping Account"
+msgstr "Cuenta de Envío del Socio"
+
+#. module: delivery_partner
+#: model:ir.ui.menu,name:delivery_partner.partner_shipping_account_menu_main
+msgid "Partner Shipping Accounts"
+msgstr "Cuentas de Envío del Socio"
+
+#. module: delivery_partner
+#: model:ir.model,name:delivery_partner.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venta"
+
+#. module: delivery_partner
+#: model:ir.model.fields,field_description:delivery_partner.field_sale_order__shipping_account_id
+#: model_terms:ir.ui.view,arch_db:delivery_partner.partner_shipping_account_view_form
+msgid "Shipping Account"
+msgstr "Cuenta de Envío"
+
+#. module: delivery_partner
+#: model_terms:ir.ui.view,arch_db:delivery_partner.partner_shipping_account_view_search
+msgid "Shipping Account Search"
+msgstr "Busqueda de Cuenta de Envío"
+
+#. module: delivery_partner
+#: model:ir.actions.act_window,name:delivery_partner.partner_shipping_account_action_main
+#: model:ir.model.fields,field_description:delivery_partner.field_res_partner__shipping_account_ids
+#: model:ir.model.fields,field_description:delivery_partner.field_res_users__shipping_account_ids
+#: model_terms:ir.ui.view,arch_db:delivery_partner.partner_shipping_account_view_tree
+msgid "Shipping Accounts"
+msgstr "Cuentas de Envío"
