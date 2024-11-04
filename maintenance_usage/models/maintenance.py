@@ -11,8 +11,8 @@ class MaintenanceEquipmentCategory(models.Model):
 class MaintenanceEquipment(models.Model):
     _inherit = 'maintenance.equipment'
 
-    employee_id = fields.Many2one(track_visibility=False)
-    department_id = fields.Many2one(track_visibility=False)
+    employee_id = fields.Many2one(tracking=False)
+    department_id = fields.Many2one(tracking=False)
     usage_qty = fields.Float(string='Usage', default=0.0)
     usage_uom_id = fields.Many2one('uom.uom', related='category_id.usage_uom_id')
     usage_log_ids = fields.One2many('maintenance.usage.log', 'equipment_id', string='Usage')
