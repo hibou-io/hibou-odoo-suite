@@ -31,7 +31,7 @@
         <field name="inherit_id" ref="maintenance_notebook.hr_equipment_request_view_form_notebook"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
-                <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}">
+                <page string="Timesheets" invisible="not project_id">
                     <field name="timesheet_ids" context="{'default_project_id': project_id}">
                         <tree editable="bottom" string="Timesheet Activities" default_order="date">
                             <field name="date"/>

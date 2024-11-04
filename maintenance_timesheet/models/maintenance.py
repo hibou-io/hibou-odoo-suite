@@ -31,6 +31,8 @@ class MaintenanceRequest(models.Model):
                                    help="Computed using the sum of the maintenance work done.")
     remaining_hours = fields.Float(compute='_hours_get', store=True, string='Remaining Hours',
                                    help="Total remaining time.")
+    department_id = fields.Many2one('hr.department')
+
 
     @api.model
     def create(self, values):
