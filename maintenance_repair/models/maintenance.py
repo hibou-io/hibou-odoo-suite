@@ -28,9 +28,9 @@ class MaintenanceRequest(models.Model):
         ], string='Repair Status', compute='_get_repaired', store=True, readonly=True)
     repair_location_id = fields.Many2one('stock.location', string='Source Location')
     repair_location_dest_id = fields.Many2one('stock.location', string='Destination Location')
-    total_lst_price = fields.Float(string='Total Price', compute='_compute_repair_totals', stored=True)
-    total_standard_price = fields.Float(string='Total Est. Cost', compute='_compute_repair_totals', stored=True)
-    total_cost = fields.Float(string='Total Cost', compute='_compute_repair_totals', stored=True)
+    total_lst_price = fields.Float(string='Total Price', compute='_compute_repair_totals', store=True)
+    total_standard_price = fields.Float(string='Total Est. Cost', compute='_compute_repair_totals', store=True)
+    total_cost = fields.Float(string='Total Cost', compute='_compute_repair_totals', store=True)
 
     @api.depends('repair_line_ids.lst_price', 'repair_line_ids.standard_price', 'repair_line_ids.cost')
     def _compute_repair_totals(self):
@@ -64,23 +64,20 @@ class MaintenanceRequest(models.Model):
 
 class MaintenanceRequestRepairLine(models.Model):
     _name = 'maintenance.request.repair.line'
+    _description = 'Maintenance Request Repair Lines'
 
     request_id = fields.Many2one('maintenance.request', copy=False)
-    product_id = fields.Many2one('product.product', 'Product', required=True,
-                                 states={'done': [('readonly', True)]})
-    product_uom_qty = fields.Float('Quantity', default=1.0,
-                                   digits=dp.get_precision('Product Unit of Measure'), required=True,
-                                   states={'done': [('readonly', True)]})
-    product_uom_id = fields.Many2one('uom.uom', 'Product Unit of Measure', required=True,
-                                     states={'done': [('readonly', True)]})
+    product_id = fields.Many2one('product.product', 'Product', required=True)
+    product_uom_qty = fields.Float('Quantity', default=1.0, digits='Product Unit of Measure', required=True)
+    product_uom_id = fields.Many2one('uom.uom', 'Product Unit of Measure', required=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done'),
     ], string='State', copy=False, default='draft')
     move_id = fields.Many2one('stock.move', string='Stock Move')
-    lst_price = fields.Float(string='Sale Price', states={'done': [('readonly', True)]})
-    standard_price = fields.Float(string='Est. Cost', states={'done': [('readonly', True)]})
-    cost = fields.Float(string='Cost', compute='_compute_actual_cost', stored=True)
+    lst_price = fields.Float(string='Sale Price')
+    standard_price = fields.Float(string='Est. Cost')
+    cost = fields.Float(string='Cost', compute='_compute_actual_cost', store=True)
     
     def unlink(self):
         if self.filtered(lambda l: l.state == 'done'):
@@ -129,7 +126,8 @@ class MaintenanceRequestRepairLine(models.Model):
             if move.state != 'assigned':
                 raise ValidationError(_('Unable to reserve inventory.'))
 
-            move.quantity_done = line.product_uom_qty
+            move.quantity = line.product_uom_qty
+            move.picked = True
             move._action_done()
             if move.state != 'done':
                 raise ValidationError(_('Unable to move inventory.'))
