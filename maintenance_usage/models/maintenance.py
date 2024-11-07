@@ -1,5 +1,6 @@
 from math import floor
 from odoo import _, api, fields, models
+from odoo.tools import get_timedelta
 
 
 class MaintenanceEquipmentCategory(models.Model):
@@ -27,8 +28,8 @@ class MaintenanceEquipment(models.Model):
 
     def _compute_period(self):
         for equipment in self:
-            recurring = equipment.maintenance_ids.filtered('recurring_maintenance')
-            equipment.period = min(recurring.mapped('period'), default=0)
+            recurring = equipment.maintenance_ids.filtered('repeat_unit')
+            equipment.period = min([get_timedelta(r.repeat_interval, r.repeat_unit).days for r in recurring], default=0)
 
     @api.model_create_multi
     def create(self, vals_list):
