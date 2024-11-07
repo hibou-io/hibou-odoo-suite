@@ -38,8 +38,11 @@
             <xpath expr="//group[@name='statistics']" position="inside">
                 <field name="maintenance_usage"/>
             </xpath>
-            <xpath expr="//field[@name='mttr']" position="after">
-                <field name="period"/>
+            <xpath expr="//field[@name='mttr']/.." position="after">
+                <label for="period"/>
+                <div class="o_row">
+                    <field name="period" /> days
+                </div>
             </xpath>
             <xpath expr="//field[@name='maintenance_team_id']" position="attributes">
                 <attribute name="required">period != 0 or maintenance_usage != 0</attribute>
