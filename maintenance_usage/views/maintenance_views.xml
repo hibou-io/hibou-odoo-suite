@@ -28,7 +28,7 @@
                     <field string="Usage" name="usage_count" widget="statinfo"/>
                 </button>
             </xpath>
-            <xpath expr="//form/sheet/group/group[1]" position="inside">
+            <xpath expr="//field[@name='equipment_assign_to']/.." position="inside">
                 <label for="usage_qty"/>
                 <div class="o_row" name="usage">
                     <field name="usage_qty" nolabel="1"/>
@@ -38,8 +38,11 @@
             <xpath expr="//group[@name='statistics']" position="inside">
                 <field name="maintenance_usage"/>
             </xpath>
-            <xpath expr="//field[@name='mttr']" position="after">
-                <field name="period"/>
+            <xpath expr="//field[@name='mttr']/.." position="after">
+                <label for="period"/>
+                <div class="o_row">
+                    <field name="period" /> days
+                </div>
             </xpath>
             <xpath expr="//field[@name='maintenance_team_id']" position="attributes">
                 <attribute name="required">period != 0 or maintenance_usage != 0</attribute>
