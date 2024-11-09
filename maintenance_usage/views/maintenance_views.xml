@@ -28,7 +28,7 @@
                     <field string="Usage" name="usage_count" widget="statinfo"/>
                 </button>
             </xpath>
-            <xpath expr="//form/sheet/group/group[1]" position="inside">
+            <xpath expr="//field[@name='equipment_assign_to']/.." position="inside">
                 <label for="usage_qty"/>
                 <div class="o_row" name="usage">
                     <field name="usage_qty" nolabel="1"/>
