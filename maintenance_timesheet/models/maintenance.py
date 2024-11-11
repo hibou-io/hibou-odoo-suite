@@ -34,13 +34,14 @@ class MaintenanceRequest(models.Model):
     department_id = fields.Many2one('hr.department')
 
 
-    @api.model
-    def create(self, values):
-        if not values.get('project_id') and values.get('department_id'):
-            department = self.env['hr.department'].browse(values.get('department_id'))
-            if department and department.project_ids:
-                values.update({'project_id': department.project_ids.ids[0]})
-        return super(MaintenanceRequest, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('project_id') and vals.get('department_id'):
+                department = self.env['hr.department'].browse(vals.get('department_id'))
+                if department.project_ids:
+                    vals['project_id'] = department.project_ids.ids[0]
+        return super(MaintenanceRequest, self).create(vals_list)
 
     @api.depends('duration', 'timesheet_ids.unit_amount')
     def _hours_get(self):

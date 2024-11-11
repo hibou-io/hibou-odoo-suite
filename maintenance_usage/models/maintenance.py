@@ -16,7 +16,7 @@ class MaintenanceEquipment(models.Model):
     department_id = fields.Many2one(tracking=False)
     usage_qty = fields.Float(string='Usage', default=0.0)
     usage_uom_id = fields.Many2one('uom.uom', related='category_id.usage_uom_id')
-    usage_log_ids = fields.One2many('maintenance.usage.log', 'equipment_id', string='Usage')
+    usage_log_ids = fields.One2many('maintenance.usage.log', 'equipment_id', string='Usage Logs')
     usage_count = fields.Integer(string='Usage Count', compute='_compute_usage_count')
     maintenance_usage = fields.Float(string='Preventative Usage')
     period = fields.Integer(compute='_compute_period', string='Days betweeen each preventive maintenance',
@@ -31,12 +31,13 @@ class MaintenanceEquipment(models.Model):
             recurring = equipment.maintenance_ids.filtered('repeat_unit')
             equipment.period = min([get_timedelta(r.repeat_interval, r.repeat_unit).days for r in recurring], default=0)
 
-    @api.model
-    def create(self, values):
-        record = super(MaintenanceEquipment, self).create(values)
-        # create first usage record
-        record._log_usage()
-        return record
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super(MaintenanceEquipment, self).create(vals_list)
+        for equipment in res:
+            # create first usage record
+            equipment._log_usage()
+        return res
 
     def write(self, values):
         usage_qty = values.get('usage_qty')
@@ -117,6 +118,7 @@ class MaintenanceUsageLog(models.Model):
     _name = 'maintenance.usage.log'
     _order = 'date DESC'
     _log_access = False
+    _description = 'Maintenance Usage Log'
 
     date = fields.Datetime(string='Date', default=fields.Datetime.now)
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment', required=True)
@@ -125,13 +127,14 @@ class MaintenanceUsageLog(models.Model):
     qty = fields.Float(string='Quantity')
     uom_id = fields.Many2one(string='Unit of Measure', related='equipment_id.category_id.usage_uom_id')
 
-    @api.model
-    def create(self, values):
-        equipment = self.env['maintenance.equipment'].browse(values.get('equipment_id'))
-        if not values.get('employee_id'):
-            values['employee_id'] = equipment.employee_id.id
-        if not values.get('department_id'):
-            values['department_id'] = equipment.department_id.id
-        if not values.get('qty'):
-            values['qty'] = equipment.usage_qty
-        return super(MaintenanceUsageLog, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            equipment = self.env['maintenance.equipment'].browse(vals.get('equipment_id'))
+            if not vals.get('employee_id'):
+                vals['employee_id'] = equipment.employee_id.id
+            if not vals.get('department_id'):
+                vals['department_id'] = equipment.department_id.id
+            if not vals.get('qty'):
+                vals['qty'] = equipment.usage_qty
+        return super(MaintenanceUsageLog, self).create(vals_list)
