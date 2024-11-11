@@ -28,7 +28,7 @@
                     <field string="Usage" name="usage_count" widget="statinfo"/>
                 </button>
             </xpath>
-            <xpath expr="//field[@name='equipment_assign_to']/.." position="inside">
+            <xpath expr="//field[@name='location']/.." position="inside">
                 <label for="usage_qty"/>
                 <div class="o_row" name="usage">
                     <field name="usage_qty" nolabel="1"/>
@@ -83,7 +83,7 @@
                             <field name="employee_id"/>
                             <field name="department_id"/>
                         </group>
-                        <group name="usage_info" string="Usage">
+                        <group name="usage_info">
                             <label for="qty"/>
                             <div class="o_row" name="usage">
                                 <field name="qty" nolabel="1"/>
