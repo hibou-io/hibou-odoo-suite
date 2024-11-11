@@ -32,6 +32,14 @@ class MaintenanceRequest(models.Model):
     total_standard_price = fields.Float(string='Total Est. Cost', compute='_compute_repair_totals', store=True)
     total_cost = fields.Float(string='Total Cost', compute='_compute_repair_totals', store=True)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        for request in res:
+            request.repair_location_id = request.repair_location_id or request.maintenance_team_id.repair_location_id
+            request.repair_location_dest_id = request.repair_location_id or request.maintenance_team_id.repair_location_dest_id
+        return res
+
     @api.depends('repair_line_ids.lst_price', 'repair_line_ids.standard_price', 'repair_line_ids.cost')
     def _compute_repair_totals(self):
         for repair in self:
@@ -134,26 +142,3 @@ class MaintenanceRequestRepairLine(models.Model):
 
             line.write({'move_id': move.id, 'state': 'done'})
         return True
-
-
-class MaintenanceEquipment(models.Model):
-    _inherit = 'maintenance.equipment'
-
-    def _create_new_request(self, date):
-        # Added repair_location_id and repair_location_dest_id
-        # Cannot call super() because it does not return the object
-        self.ensure_one()
-        return self.env['maintenance.request'].create({
-            'name': _('Preventive Maintenance - %s') % self.name,
-            'request_date': date,
-            'schedule_date': date,
-            'category_id': self.category_id.id,
-            'equipment_id': self.id,
-            'maintenance_type': 'preventive',
-            'owner_user_id': self.owner_user_id.id,
-            'user_id': self.technician_user_id.id,
-            'maintenance_team_id': self.maintenance_team_id.id,
-            'duration': self.maintenance_duration,
-            'repair_location_id': self.maintenance_team_id.repair_location_id.id,
-            'repair_location_dest_id': self.maintenance_team_id.repair_location_dest_id.id
-        })
