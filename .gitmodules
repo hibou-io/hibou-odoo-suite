@@ -19,3 +19,6 @@
 [submodule ".vendor/oca-bank-payment"]
 	path = .vendor/oca-bank-payment
 	url = https://github.com/hibou-io/oca-bank-payment.git
+[submodule ".vendor/oca-social"]
+	path = .vendor/oca-social
+	url = https://github.com/hibou-io/oca-social.git
