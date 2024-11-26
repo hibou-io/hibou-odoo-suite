@@ -61,6 +61,7 @@ class SaleOrder(models.Model):
             order_session_id = checkout_token
         else:
             checkout_token = ''
+            order_session_id = 'Manual'
         # Session values for Signifyd post
         sig_vals = self._prepare_signifyd_case_values(order_session_id, checkout_token, self.source_ip)
 
