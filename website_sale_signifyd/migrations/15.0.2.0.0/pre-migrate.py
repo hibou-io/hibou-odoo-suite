@@ -11,3 +11,8 @@ def migrate(cr, version):
         WHERE signifyd_case_type IS NOT NULL
         SET signifyd_case_required = TRUE;
     ''')
+
+    cr.execute('''
+        ALTER TABLE signifyd_case
+        RENAME COLUMN uuid TO ref;
+    ''')

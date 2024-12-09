@@ -3,12 +3,13 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.http import request
-
+import logging
+_logger = logging.getLogger(__name__)
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    # Source IP for case creation - determination attempted at order creation and if necessary at confirmation
+    # Source IP for case creation - determination attempted at order creation and, if necessary, at confirmation
     def _get_source_ip(self):
         if request:
             return request.httprequest.environ['REMOTE_ADDR']
@@ -49,36 +50,46 @@ class SaleOrder(models.Model):
         acquirers = self.transaction_ids.acquirer_id
         if acquirers and not any(acquirers.mapped('signifyd_case_required')):
             return False
+        if not self.website_id.signifyd_connector_id:
+            return False
+        if not self.source_ip:
+            _logger.warning(f'{self.name}: no source IP for Signifyd Case creation')
+            return False
         return True
 
     def post_signifyd_case(self):
         self.ensure_one()
         signifyd_api = self.website_id.signifyd_connector_id.get_connection()
-        if not signifyd_api or not self.source_ip:
-            return
+
+        # Session values for Signifyd post
         if request and request.session:
             checkout_token = request.session.session_token
             order_session_id = checkout_token
         else:
             checkout_token = ''
-
-        # Session values for Signifyd post
         sig_vals = self._prepare_signifyd_case_values(order_session_id, checkout_token, self.source_ip)
 
         response = signifyd_api.post_case(sig_vals)
-        success_response = response.get('signifydId')
-        if success_response:
-            new_case = self.env['signifyd.case'].create({
-                'order_id': self.id,
-                'case_id': success_response,
-                'name': success_response,
-                'partner_id': self.partner_id.id,
-            })
-            self.write({'signifyd_case_id': new_case.id})
-            return new_case
-        # TODO do we need to raise an exception?
-        return None
+        case_id = response.get('signifydId')
+        
+        if not case_id:
+            _logger.warning(f'{self.name}: Signifyd Case creation failed')
+            return None
 
+        new_case = self.env['signifyd.case'].create({
+            'connector_id': self.website_id.signifyd_connector_id.id,
+            'order_id': self.id,
+            'partner_id': self.partner_id.id,
+            'name': f'{self.name} ({case_id})',
+            'case_id': case_id,
+            'ref': response.get('orderId'),
+            # Unused response fields in async mode:
+            # decision
+            # coverage
+        })
+        self.write({'signifyd_case_id': new_case.id})
+        return new_case
+    
     def _get_coverage_types(self):
         coverage_none = self.env.ref('website_sale_signifyd.signifyd_coverage_none')
         coverage_all = self.env.ref('website_sale_signifyd.signifyd_coverage_all')
@@ -87,7 +98,7 @@ class SaleOrder(models.Model):
         if coverage_all in acquirer_coverage_types:
             return coverage_all
         # 'NONE' if specified by all acquirers
-        if all(self.transaction_ids.acquirer_id.mapped(lambda a: a.signifyd_coverage_ids == coverage_none)):
+        if acquirer_coverage_types and all(self.transaction_ids.acquirer_id.mapped(lambda a: a.signifyd_coverage_ids == coverage_none)):
             return coverage_none
         # Specific acquirer-level coverage types
         if acquirer_coverage_types - coverage_none:
@@ -123,8 +134,7 @@ class SaleOrder(models.Model):
 
         # API v3 WIP
         new_case_vals = {
-            # FIXME: UUID?
-            'orderId': self.id,
+            'orderId': self.name,
             'purchase': {
                 'createdAt': self.date_order.isoformat(timespec='seconds') + '+00:00',
                 'orderChannel': 'WEB',
@@ -147,12 +157,24 @@ class SaleOrder(models.Model):
                         'itemWeight': line.product_id.weight,
                     } for line in self.order_line if line.product_id
                 ],
-                'shipments': [
-                    {
-                        'carrier': carrier.name,
-                        'fulfillmentMethod': carrier.signifyd_fulfillment_method,
-                    } for carrier in self.carrier_id
-                ],
+                'shipments': [{
+                    'destination': {
+                        'fullName': self.partner_shipping_id.name,
+                        'organization': self.partner_shipping_id.commercial_partner_id.name or '',
+                        # 'email': self.partner_shipping_id.email,
+                        # 'phone': self.partner_shipping_id.phone,
+                        'address': {
+                            'streetAddress': self.partner_shipping_id.street or '',
+                            'unit': self.partner_shipping_id.street2 or '',
+                            'postalCode': self.partner_shipping_id.zip or '',
+                            'city': self.partner_shipping_id.city or '',
+                            'provinceCode': self.partner_shipping_id.state_id.code or '',
+                            'countryCode': self.partner_shipping_id.country_id.code or ''
+                        }
+                    },
+                    'carrier': self.carrier_id.name or '',
+                    'fulfillmentMethod': self.carrier_id.signifyd_fulfillment_method,
+                }],
             },
             'coverageRequests': coverage_codes,
             'transactions': [

@@ -40,12 +40,10 @@ class SignifydConnector(models.Model):
     def get_connection(self):
         if not self:
             return
-        return SignifydAPI(self.name, self.secret_key, self.teamid)
+        return SignifydAPI(self.secret_key, self.teamid)
 
     def register_webhooks(self):
         self.ensure_one()
-        headers = self.get_headers()
-        # This should come from the website...
         # we may need a better way to link the connector to the website.
         base_url = None
         website = self.env['website'].search([('signifyd_connector_id', '=', self.id)], limit=1)
@@ -55,38 +53,9 @@ class SignifydConnector(models.Model):
                 base_url = 'http://' + base_url
         if not base_url:
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        values = {
-            'webhooks': [
-                # Given we are creating the cases, we do not need to know about it
-                # {
-                #     "event": "CASE_CREATION",
-                #     "url": base_url + "/signifyd/cases/update"
-                # },
-                {
-                    'event': 'CASE_RESCORE',
-                    'url': base_url + '/signifyd/cases/update'
-                },
-                {
-                    'event': 'CASE_REVIEW',
-                    'url': base_url + '/signifyd/cases/update'
-                },
-                {
-                    'event': 'GUARANTEE_COMPLETION',
-                    'url': base_url + '/signifyd/cases/update'
-                },
-                {
-                    'event': 'DECISION_MADE',
-                    'url': base_url + '/signifyd/cases/update'
-                },
-            ]
-        }
-        data = json.dumps(values, indent=4)
-        r = requests.post(
-            self.API_URL + '/teams/webhooks',
-            headers=headers,
-            data=data,
-        )
-        # r.raise_for_status()
+        api = self.get_connection()
+        r = api.register_webhook(base_url + '/signifyd/cases/update')
+        r.raise_for_status()
         return r
 
     def action_register_webhooks(self):

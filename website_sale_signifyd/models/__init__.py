@@ -6,6 +6,7 @@ from . import payment_acquirer
 from . import product_template
 from . import sale_order
 from . import signifyd_case
+from . import signifyd_case_coverage
 from . import signifyd_coverage
 from . import signifyd_connector
 from . import stock_picking
