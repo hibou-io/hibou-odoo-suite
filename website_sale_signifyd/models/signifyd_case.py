@@ -73,32 +73,14 @@ class SignifydCase(models.Model):
                                        subtype_xmlid='website_sale_signifyd.disposition_change')
         return res
 
-    # @api.model
-    # def post_case(self, connector, values):
-    #     headers = connector.get_headers()
-    #     # data = json.dumps(values, indent=4, sort_keys=True, default=str)
-    #     url = connector.API_URL + '/orders/events/sales'
-    #     # TODO this should be in `signifyd.connector`
-    #     r = requests.post(url=url, headers=headers, json=values)
-    #     return r.json()
-
-    # def get_case(self):
-    #     self.ensure_one()
-    #     if not self.case_id:
-    #         raise UserError(_('Case not represented in Signifyd.'))
-    #     connector = self._get_connector()
-    #     headers = connector.get_headers()
-    #     r = requests.get(
-    #         connector.API_URL + '/cases/' + str(self.case_id),
-    #         headers=headers
-    #     )
-    #     return r.json()
-    def get_decision_vals(self):
+    def get_decision_vals(self, data=None):
         self.ensure_one()
-        api = self.connector_id.get_connection()
-        response = api.get_decision(self.ref)
-        response.raise_for_status()
-        data = response.json()
+
+        if not data:
+            api = self.connector_id.get_connection()
+            response = api.get_decision(self.ref)
+            response.raise_for_status()
+            data = response.json()
 
         decision = data['decision']
         case_vals = {
@@ -116,21 +98,10 @@ class SignifydCase(models.Model):
                 'snadChargebacks': self.env.ref('website_sale_signifyd.signifyd_coverage_snad').id,
                 'allChargebacks': self.env.ref('website_sale_signifyd.signifyd_coverage_all').id
             }
-            # coverage_ids = []
-            # if coverage.get('inrChargebacks'):
-            #     coverage_ids += self.env.ref('website_sale_signifyd.signifyd_coverage_inr').ids
-            # if coverage.get('fraudChargebacks'):
-            #     coverage_ids += self.env.ref('website_sale_signifyd.signifyd_coverage_fraud').ids
-            # if coverage.get('snadChargebacks'):
-            #     coverage_ids += self.env.ref('website_sale_signifyd.signifyd_coverage_snad').ids
-            # if coverage.get('allChargebacks'):
-            #     coverage_ids = self.env.ref('website_sale_signifyd.signifyd_coverage_all').ids
-            # vals['coverage_ids'] = coverage_ids
             for name, vals in coverage.items():
                 if not vals:
                     continue
                 case_vals['coverage_line_ids'] += [(0, 0, {
-                    # 'case_id': self.id,
                     'coverage_type_id': coverage_map[name],
                     'amount': vals.get('amount'),
                     'currency_id': self.env['res.currency'].search(
@@ -143,47 +114,12 @@ class SignifydCase(models.Model):
         for record in self:
             record.update_case_info()
 
-    def update_case_info(self, vals=None):
+    def update_case_info(self, data=None):
         self.ensure_one()
         if not self.case_id:
             raise UserError(_('Case not represented in Signifyd.'))
-        if not vals:
-            vals = self.get_decision_vals()
-            # case_id = case.get('caseId')
-            # if not case_id:
-            #     raise ValueError(_('Signifyd Case has no ID?'))
-            # team_id = case.get('teamId', self.team_id)
-            # team_name = case.get('teamName', self.team_name)
-            # ref = case.get('ref', self.ref)
-            # status = case.get('status', self.status)
-            # review_disposition = case.get('reviewDisposition', self.review_disposition)
-            # order_outcome = case.get('orderOutcome', self.order_outcome)
-            # guarantee_disposition = case.get('guaranteeDisposition', self.guarantee_disposition)
-            # adjusted_score = case.get('adjustedScore', self.adjusted_score)
-            # score = case.get('score', self.score)
-            # checkpoint_action = case.get('checkpointAction', self.checkpoint_action)
-            # if not checkpoint_action and guarantee_disposition:
-            #     if guarantee_disposition == 'APPROVED':
-            #         checkpoint_action = 'ACCEPT'
-            #     elif guarantee_disposition == 'DECLINED':
-            #         checkpoint_action = 'REJECT'
-            #     else:
-            #         checkpoint_action = 'HOLD'
 
-            # vals = {
-            #     'case_id': case_id,
-            #     'team_id': team_id,
-            #     'team_name': team_name,
-            #     'ref': ref,
-            #     'status': status,
-            #     'review_disposition': review_disposition,
-            #     'order_outcome': order_outcome,
-            #     'adjusted_score': adjusted_score,
-            #     'guarantee_disposition': guarantee_disposition,
-            #     'score': score,
-            #     'last_update': dt.now(),  # why not just use
-            #     'checkpoint_action': checkpoint_action,
-            # }
+        vals = self.get_decision_vals(data)
 
         outcome = vals.get('guarantee_disposition')
         checkpoint_action = vals.get('checkpoint_action')

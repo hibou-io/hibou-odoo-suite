@@ -2,8 +2,11 @@
 
 import requests
 from datetime import datetime as dt
-from base64 import b64encode
+from base64 import b64encode, b64decode
 import json
+
+import hmac
+import hashlib
 
 from odoo import api, fields, models
 from .signifyd_api import SignifydAPI
@@ -14,9 +17,7 @@ class SignifydConnector(models.Model):
     _description = 'Interact with Signifyd API'
 
     name = fields.Char(string='Connector Name', required=True)
-    test_mode = fields.Boolean(string='Test Mode')
     secret_key = fields.Char(string='API Key', required=True)
-    secret_key_test = fields.Char(string='TEST API Key')
     webhooks_registered = fields.Boolean(string='Successfully Registered Webhooks')
     notify_user_ids = fields.Many2many('res.users', string='Receive decline notifications')
     website_ids = fields.One2many('website', 'signifyd_connector_id', string='Used on Websites')
@@ -87,6 +88,16 @@ class SignifydConnector(models.Model):
                 pass
             self.webhooks_registered = False
             return notification
+
+    def _check_webhook_signature(self, request):
+        signature = b64decode(request.httprequest.headers.get('SIGNIFYD-SEC-HMAC-SHA256'))
+        if not signature:
+            raise Exception('Signifyd webhook missing signature')
+
+        key = self.secret_key.encode()
+        digest = hmac.new(key, request.httprequest.data, hashlib.sha256).digest()
+        if signature != digest:
+            raise Exception('Signifyd webhook signature does not match')
 
     def process_post_values(self, post):
         # Construct dict from request data for endpoints
