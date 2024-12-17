@@ -155,8 +155,9 @@
                         <t t-foreach="rma.lines" t-as="line">
                             <div class="row purchases_vertical_align">
                                 <div class="col-lg-3 text-center">
-                                    <img class="mr4 float-left o_portal_product_img" t-if="line.product_id.image_128" t-att-src="image_data_uri(line.product_id.image_128)" alt="Product Image" width="64"/>
-                                    <img class="mr4 float-left o_portal_product_img" t-if="not line.product_id.image_128" src="/web/static/src/img/placeholder.png" alt="Product Image" width="64"/>
+                                    <img class="mr4 float-left o_portal_product_img"
+                                         t-att-src="image_data_uri(product.image_128) if product.image_128 else '/' + product._get_placeholder_filename('image_128')"
+                                         alt="Product Image" width="64"/>
                                 </div>
                                 <div class="col-lg-7">
                                     <span t-esc="line.product_id.name"/>
@@ -254,8 +255,9 @@
                             <t t-foreach="picking.move_lines" t-as="line">
                                 <div class="row purchases_vertical_align">
                                     <div class="col-lg-2 text-center">
-                                        <img class="mr4 float-left o_portal_product_img" t-if="line.product_id.image_128" t-att-src="image_data_uri(line.product_id.image_128)" alt="Product Image" width="64"/>
-                                        <img class="mr4 float-left o_portal_product_img" t-if="not line.product_id.image_128" src="/web/static/src/img/placeholder.png" alt="Product Image" width="64"/>
+                                        <img class="mr4 float-left o_portal_product_img"
+                                            t-att-src="image_data_uri(product.image_128) if product.image_128 else '/' + product._get_placeholder_filename('image_128')"
+                                            alt="Product Image" width="64"/>
                                     </div>
                                     <div class="col-lg-4">
                                         <span t-esc="line.product_id.name"/>
