@@ -75,6 +75,7 @@
                             </div>
                             <t t-foreach="rma_sale_order.order_line" t-as="line">
                                 <t t-set="validity" t-value="rma_template._rma_sale_line_validity(line)"/>
+                                <t t-set="product" t-value="line.product_id"/>
                                 <div class="row" t-attf-class="row #{'' if validity == 'valid' else 'text-muted'}">
                                     <div class="col-lg-1 text-center">
                                     <img class="mr4 float-left o_portal_product_img"
