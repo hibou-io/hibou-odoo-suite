@@ -27,6 +27,11 @@
         'wizard/rma_lines_views.xml',
         'wizard/rma_make_rtv_views.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'rma/static/**/*',
+        ],
+    },
     'installable': True,
     'application': True,
     'auto_install': False,
