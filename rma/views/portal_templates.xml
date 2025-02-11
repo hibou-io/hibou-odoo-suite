@@ -234,7 +234,7 @@
                             </li>
                         </ul>
                         <p t-if="not pickings and not picking">No Transfers to choose from.</p>
-                        <form t-if="picking" method="post" t-attf-action="/my/rma/new/#{rma_template.id}/res/#{picking.id}">
+                        <form t-if="picking" method="post" t-attf-action="/my/rma/new/#{rma_template.id}/res/#{picking.id}" class="rma-form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="row">
                                 <div class="col-lg-2">
@@ -270,11 +270,11 @@
                                         <span t-esc="line.product_qty"/>
                                     </div>
                                     <div class="col-lg-2 text-right">
-                                        <input type="text"  t-attf-name="move_#{line.id}" class="form-control"/>
+                                        <input type="text" t-attf-name="move_#{line.id}" t-att-data-qty-eligible="line.product_qty" class="form-control rma-qty"/>
                                     </div>
                                 </div>
                             </t>
-                            <input type="submit" class="btn btn-primary mt16 float-right" name="submit"/>
+                            <input type="submit" class="btn btn-primary mt16 float-right rma-submit" name="submit"/>
                         </form>
                     </div>
                 </div>

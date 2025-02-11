@@ -18,7 +18,7 @@
                     </div>
                     <div class="card-body">
                         <p t-if="not rma_product_core_lines">No product cores in your purchase history.</p>
-                        <form t-if="rma_product_core_lines" method="post" t-attf-action="/my/rma/new/#{rma_template.id}/res/1">
+                        <form t-if="rma_product_core_lines" method="post" t-attf-action="/my/rma/new/#{rma_template.id}/res/1" class="rma-form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="row">
                                 <div class="col-lg-5">
@@ -61,7 +61,7 @@
                                         <span t-esc="core_lines['qty_delivered']"/>
                                     </div>
                                     <div class="col-lg-1 text-right">
-                                        <input type="text"  t-attf-name="product_#{product.id}" class="form-control"/>
+                                        <input type="text" t-attf-name="product_#{product.id}" t-att-data-qty-eligible="core_lines['qty_delivered']" class="form-control rma-qty"/>
                                     </div>
                                 </div>
                                 <div class="collapse text-muted" t-attf-id="product_detail_#{product.id}">
@@ -88,7 +88,7 @@
                                     </div>
                                 </div>
                             </t>
-                            <input type="submit" class="btn btn-primary mt16 float-right" name="submit"/>
+                            <input type="submit" class="btn btn-primary mt16 float-right rma-submit" name="submit"/>
                         </form>
                     </div>
                 </div>
