@@ -1,7 +1,7 @@
 {
     'name': 'Purolator Shipping',
     'summary': 'Send your shippings through Purolator and track them online.',
-    'version': '15.0.1.0.1',
+    'version': '15.0.1.1.0',
     'author': "Hibou Corp.",
     'category': 'Warehouse',
     'license': 'OPL-1',

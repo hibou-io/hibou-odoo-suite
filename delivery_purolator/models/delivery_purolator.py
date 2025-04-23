@@ -263,6 +263,8 @@ class ProviderPurolator(models.Model):
     def _purolator_address_street(self, partner):
         # assume we don't have base_address_extended
         street = partner.street or ''
+        if partner.street2:
+            street += f" {partner.street2}"
         street_pieces = [t.strip() for t in street.split(' ')]
         len_street_pieces = len(street_pieces)
         if len_street_pieces >= 3:
