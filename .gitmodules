@@ -4,3 +4,6 @@
 [submodule ".vendor/oca-queue"]
 	path = .vendor/oca-queue
 	url = https://github.com/hibou-io/oca-queue.git
+[submodule ".vendor/oca-server-tools"]
+	path = .vendor/oca-server-tools
+	url = https://github.com/hibou-io/oca-server-tools.git
