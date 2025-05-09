@@ -2,6 +2,15 @@
 
 from odoo import api, fields, models
 
+class ExceptionRuleTest(models.Model):
+    _inherit = "exception.rule"
+    _name = "exception.rule"
+
+    model = fields.Selection(
+        selection_add=[("base.exception.test.purchase.line", "Purchase Test")],
+        ondelete={"base.exception.test.purchase.line": "cascade"},
+    )
+
 class PurchaseUserTest(models.Model):
     _name = 'base.exception.test.purchase'
     _inherit = 'base.exception.test.purchase'

@@ -1,19 +1,20 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
 from odoo import fields
-from odoo.tests import common, Form
-from odoo.addons.base_exception.tests.purchase_test import PurchaseTest, LineTest
+from odoo.tests import TransactionCase, tagged, Form
+from odoo.addons.base_exception.tests.purchase_test import ExceptionRule, LineTest, PurchaseTest, WizardTest
 
 from .common import setup_test_model
-from .purchase_test import PurchaseUserTest, PurchaseTestExceptionRuleConfirm
+from .purchase_test import PurchaseUserTest, PurchaseTestExceptionRuleConfirm, ExceptionRuleTest
 
 
-@common.tagged("post_install", "-at_install")
-class TestBaseExceptionUser(common.SavepointCase):
+@tagged("post_install", "-at_install")
+class TestBaseExceptionUser(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestBaseExceptionUser, cls).setUpClass()
-        setup_test_model(cls.env, [PurchaseTest, PurchaseUserTest, LineTest, PurchaseTestExceptionRuleConfirm])
+
+        setup_test_model(cls.env, [ExceptionRule, LineTest, PurchaseTest, WizardTest, ExceptionRuleTest, PurchaseUserTest, PurchaseTestExceptionRuleConfirm])
 
         group_id = cls.env.ref('base_exception_user.group_exception_rule_user').id
         user_dict = {
@@ -26,39 +27,38 @@ class TestBaseExceptionUser(common.SavepointCase):
         cls.user_test = cls.env['res.users'].create(user_dict)
 
         cls.env['ir.model.access'].create([
-            {'name': 'Test PO Access',
-             'model_id': cls.env['ir.model'].search([('model', '=', 'base.exception.test.purchase')]).id,
-             'group_id': group_id,
-             'perm_read': True,
-             'perm_write': True,
-             'perm_create': True,
-             'perm_unlink': True,
-             },
-            {'name': 'Test PO Line Access',
-             'model_id': cls.env['ir.model'].search([('model', '=', 'base.exception.test.purchase.line')]).id,
-             'group_id': group_id,
-             'perm_read': True,
-             'perm_write': True,
-             'perm_create': True,
-             'perm_unlink': True,
-             },
-            {'name': 'Test PO Wizard Access',
-             'model_id': cls.env['ir.model'].search([('model', '=', 'purchase.test.exception.rule.confirm')]).id,
-             'group_id': group_id,
-             'perm_read': True,
-             'perm_write': True,
-             'perm_create': True,
-             'perm_unlink': True,
-             },
+            {
+                'name': 'Test PO Access',
+                'model_id': cls.env['ir.model'].search([('model', '=', 'base.exception.test.purchase')]).id,
+                'group_id': group_id,
+                'perm_read': True,
+                'perm_write': True,
+                'perm_create': True,
+                'perm_unlink': True,
+            },
+            {
+                'name': 'Test PO Line Access',
+                'model_id': cls.env['ir.model'].search([('model', '=', 'base.exception.test.purchase.line')]).id,
+                'group_id': group_id,
+                'perm_read': True,
+                'perm_write': True,
+                'perm_create': True,
+                'perm_unlink': True,
+            },
+            {
+                'name': 'Test PO Wizard Access',
+                'model_id': cls.env['ir.model'].search([('model', '=', 'purchase.test.exception.rule.confirm')]).id,
+                'group_id': group_id,
+                'perm_read': True,
+                'perm_write': True,
+                'perm_create': True,
+                'perm_unlink': True,
+            },
         ])
 
 
         cls.base_exception = cls.env["base.exception"]
         cls.exception_rule = cls.env["exception.rule"]
-        if "test_purchase_ids" not in cls.exception_rule._fields:
-            field = fields.Many2many("base.exception.test.purchase")
-            cls.exception_rule._add_field("test_purchase_ids", field)
-            cls.exception_rule._fields["test_purchase_ids"].depends_context = None
         cls.exception_confirm = cls.env["exception.rule.confirm"]
         cls.exception_rule._fields["model"].selection.append(
             ("base.exception.test.purchase", "Purchase Order")
