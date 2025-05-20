@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="excep_sale_credit_limit" model="exception.rule">
+        <field name="name">Invoice Partner credit limit exceeded.</field>
+        <field name="description">The Customer or Invoice Address has a credit limit.
+This sale order, or the customer has an outstanding balance that, exceeds their credit limit.</field>
+        <field name="sequence">50</field>
+        <field name="model">sale.order</field>
+        <field name="code">
+partner = object.partner_invoice_id.commercial_partner_id
+partner_balance = partner.credit + object.amount_total
+if partner.credit_limit and partner.credit_limit &lt;= partner_balance:
+    failed = True
+        </field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="excep_sale_credit_hold" model="exception.rule">
+        <field name="name">Customer On Credit Hold.</field>
+        <field name="description">The Customer is on Credit Hold.
+            Please have the customer contact accounting.</field>
+        <field name="sequence">50</field>
+        <field name="model">sale.order</field>
+        <field name="code">
+partner = object.partner_invoice_id.commercial_partner_id
+if partner.credit_hold:
+    failed = True
+        </field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="excep_invoice_overdue" model="exception.rule">
+        <field name="name">Customer has Overdue Invoices.</field>
+        <field name="description">The Customer has unpaid overdue invoices.
+            Please have the customer contact accounting.</field>
+        <field name="sequence">55</field>
+        <field name="model">sale.order</field>
+        <field name="code">
+partner = object.partner_invoice_id.commercial_partner_id
+if partner.invoice_ids.filtered(lambda i: i.state == 'posted' and i.payment_state != 'paid' and (i.invoice_date_due and str(i.invoice_date_due) &lt; str(datetime.date.today())) and i.move_type == 'out_invoice'):
+    failed = True
+        </field>
+        <field name="active" eval="True" />
+    </record>
+
+</odoo>
