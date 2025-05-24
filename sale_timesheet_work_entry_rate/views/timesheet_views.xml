@@ -6,7 +6,7 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="after">
+            <xpath expr="//field[@name='timesheet_ids']/list/field[@name='unit_amount']" position="after">
                 <field name="work_billing_amount" widget="timesheet_uom" />
             </xpath>
             <xpath expr="//field[@name='timesheet_ids']/form//field[@name='unit_amount']" position="after">
