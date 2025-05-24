@@ -39,7 +39,7 @@
     </template>
 
     <template id="my_task_todo" inherit_id='project.portal_my_task' name="Todo List (requires project_task_line)" customize_show="True" active="False">
-        <xpath expr="//div[@t-if='task.description']" position="before">
+        <xpath expr="//div[@t-if='task.description or task.attachment_ids']" position="inside">
             <t t-if="task.sudo().line_ids">
                 <div class="col-md-12">
                     <strong>Todo List</strong>
