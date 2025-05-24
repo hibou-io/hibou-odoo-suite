@@ -45,9 +45,9 @@
                     <strong>Todo List</strong>
                     <ul class="list-unstyled">
                         <li t-foreach="task.sudo().line_ids" t-as="line">
-                            <span t-if="line.kanban_state == 'normal'" class="text-muted"><i class="fa fa-circle"></i></span>
-                            <span t-if="line.kanban_state == 'done'" class="text-success"><i class="fa fa-check-circle"></i></span>
-                            <span t-if="line.kanban_state == 'blocked'" class="text-danger"><i class="fa fa-times-circle"></i></span>
+                            <span t-if="line.state == ''" class="text-muted"><i class="fa fa-circle"></i></span>
+                            <span t-if="line.state == 'done'" class="text-success"><i class="fa fa-check-circle"></i></span>
+                            <span t-if="line.state == 'blocked'" class="text-danger"><i class="fa fa-times-circle"></i></span>
                             <span t-field="line.name"/>
                         </li>
                     </ul>
