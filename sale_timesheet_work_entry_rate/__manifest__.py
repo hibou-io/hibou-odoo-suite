@@ -2,7 +2,7 @@
 
 {
     'name': 'Timesheet Billing Rate',
-    'version': '15.0.1.1.0',
+    'version': '18.0.1.1.0',
     'category': 'Sale',
     'author': 'Hibou Corp.',
     'license': 'OPL-1',
