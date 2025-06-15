@@ -15,6 +15,7 @@ class SaleOrder(models.Model):
 
 class PartnerShippingAccount(models.Model):
     _name = 'partner.shipping.account'
+    _description = 'Partner Shipping Account'
 
     name = fields.Char(string='Account Num.', required=True)
     description = fields.Char(string='Description')
