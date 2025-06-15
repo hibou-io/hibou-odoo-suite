@@ -14,7 +14,7 @@ class SaleOrder(models.Model):
             return request.httprequest.environ['REMOTE_ADDR']
         return ''
 
-    signifyd_case_id = fields.Many2one('signifyd.case', readonly=1, copy=False)
+    signifyd_case_id = fields.Many2one('signifyd.case', readonly=True, copy=False)
     singifyd_score = fields.Float(related='signifyd_case_id.score')
     signifyd_checkpoint_action = fields.Selection(string='Signifyd Action', related='signifyd_case_id.checkpoint_action')
     source_ip = fields.Char(default=_get_source_ip, copy=False, help='IP address of the customer, used for signifyd case creation.')
@@ -46,11 +46,12 @@ class SaleOrder(models.Model):
     def _should_post_signifyd(self):
         # If we have no transaction/acquirer we will still send!
         # this case is useful for admin or free orders but could be customized here.
-        case_required = bool(self.website_id.signifyd_connector_id.signifyd_case_type)
-        a_case_types = self.transaction_ids.mapped('acquirer_id.signifyd_case_type')
-        if a_case_types:
-            case_required = any(a_case_types)
-        return self.state in ('sale', 'done') and not self.signifyd_case_id and case_required
+        a_case_types = set(self.transaction_ids.mapped('acquirer_id.signifyd_case_type'))
+        case_required = any(a_case_types) or bool(self.website_id.signifyd_connector_id.signifyd_case_type)
+        # Prevent case creation if all providers are set to 'No case'
+        if a_case_types == {'none'}:
+            case_required = False
+        return self.state in ('sale', 'done') and case_required and not self.signifyd_case_id
 
     def post_signifyd_case(self):
         self.ensure_one()
@@ -85,7 +86,7 @@ class SaleOrder(models.Model):
         decision_request = self.website_id.signifyd_connector_id.signifyd_case_type or 'DECISION'
 
         # find the highest 'acquirer override'
-        # note that we shouldn't be here if the override would prevent sending
+        # note that we shouldn't be here if the overrides would prevent sending (all 'no case')
         a_case_types = self.transaction_ids.mapped('acquirer_id.signifyd_case_type')
         if a_case_types and 'GUARANTEE' in a_case_types:
             decision_request = 'GUARANTEE'

@@ -63,11 +63,11 @@ class SignifydConnector(models.Model):
             base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         values = {
             "webhooks": [
-                # Given we are creating the cases, we do not need to know about it
-                # {
-                #     "event": "CASE_CREATION",
-                #     "url": base_url + "/signifyd/cases/update"
-                # },
+                # Skipping CASE_CREATION may result in missing immediate score updates
+                {
+                    "event": "CASE_CREATION",
+                    "url": base_url + "/signifyd/cases/update"
+                },
                 {
                     "event": "CASE_RESCORE",
                     "url": base_url + "/signifyd/cases/update"
