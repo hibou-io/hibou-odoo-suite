@@ -1,5 +1,7 @@
 # Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models
 from odoo.osv import expression
 
@@ -17,7 +19,7 @@ class SaleOrderLine(models.Model):
             analytic lines.
             :param additional_domain: domain to restrict AAL to include in computation (required since timesheet is an AAL with a project ...)
         """
-        result = {}
+        result = defaultdict(float)
 
         # avoid recomputation if no SO lines concerned
         if not self:
