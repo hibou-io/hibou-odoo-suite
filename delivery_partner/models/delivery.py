@@ -24,20 +24,18 @@ class PartnerShippingAccount(models.Model):
     ], string='Carrier', required=True, default='other')
     note = fields.Text(string='Internal Note')
 
-    def name_get(self):
+    def _compute_display_name(self):
         delivery_types = self._fields['delivery_type']._description_selection(self.env)
 
         def get_name(value):
             name = [n for v, n in delivery_types if v == value]
             return name[0] if name else 'Undefined'
 
-        res = []
         for acc in self:
             if acc.description:
-                res.append((acc.id, acc.description))
+                acc.display_name = acc.description
             else:
-                res.append((acc.id, '%s: %s' % (get_name(acc.delivery_type), acc.name)))
-        return res
+                acc.display_name = '%s: %s' % (get_name(acc.delivery_type), acc.name)
 
     @api.constrains('name', 'delivery_type')
     def _check_validity(self):
