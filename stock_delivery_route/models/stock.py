@@ -31,8 +31,6 @@ class WarehouseDeliveryRoute(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
     note = fields.Text(string='Note')
 
-    def name_get(self):
-        res = []
+    def _compute_display_name(self):
         for route in self:
-            res.append((route.id, '[%s] %s' % (route.warehouse_id.code, route.name)))
-        return res
+            route.display_name = '[%s] %s' % (route.warehouse_id.code, route.name)
