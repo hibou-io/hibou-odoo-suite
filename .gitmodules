@@ -31,3 +31,9 @@
 [submodule "external/newrelic"]
 	path = external/newrelic
 	url = https://github.com/hibou-io/odoo-newrelic.git
+[submodule "external/hibou-oca/connector-magento"]
+	path = external/hibou-oca/connector-magento
+	url = https://github.com/hibou-io/oca-connector-magento.git
+[submodule "external/hibou-oca/product-attribute"]
+	path = external/hibou-oca/product-attribute
+	url = https://github.com/hibou-io/oca-product-attribute
