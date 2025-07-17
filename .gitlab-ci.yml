@@ -52,7 +52,7 @@ release:
     - apk add python3
     - docker pull registry.gitlab.com/hibou-io/hibou-odoo/flow
     - docker tag registry.gitlab.com/hibou-io/hibou-odoo/flow flow
-    - docker -u 0 run -v "${PWD}/.local:/dest" flow self-install /dest
+    - docker run -u 0 -v "${PWD}/.local:/dest" flow self-install /dest
     - cd .local/flow
     - ./entrypoint.sh docker-release $CONTAINER_IMAGE:$IMAGE_TAG $CONTAINER_IMAGE:$IMAGE_TAG_DATE
     - docker login -u "${DOCKERHUB_USERNAME}" -p "${DOCKERHUB_PASSWORD}"
