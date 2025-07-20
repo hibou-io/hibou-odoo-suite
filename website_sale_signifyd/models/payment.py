@@ -7,8 +7,8 @@ class PaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
     signifyd_case_type = fields.Selection([
-        ('', 'No Case'),
+        ('none', 'No Case'),
         ('SCORE', 'Score'),
         ('DECISION', 'Decision'),
         ('GUARANTEE', 'Guarantee'),
-    ], string='Signifyd Case Creation', default='')
+    ], string='Signifyd Case Creation')
