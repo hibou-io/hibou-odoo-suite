@@ -1,0 +1,113 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: shell",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["shell", "--no-xmlrpc"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: TEST 'sale'",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["-i", "sale", 
+                     "-u", "sale",
+                     "--test-enable", "--no-xmlrpc", "--stop-after-init"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: INIT 'hr_commission'",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["-i", "hr_commission", 
+                     "-u", "hr_commission",
+                     "--stop-after-init"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: TEST 'hr_commission'",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["-i", "hr_commission", 
+                     "-u", "hr_commission",
+                     "--test-enable", "--no-xmlrpc", "--stop-after-init"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: INIT 'hr_payroll_hibou'",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["-i", "hr_payroll_hibou", 
+                     "-u", "hr_payroll_hibou",
+                     "--stop-after-init"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: TEST 'hr_payroll_hibou'",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": ["-i", "hr_payroll_hibou", 
+                     "-u", "hr_payroll_hibou",
+                     "--test-enable", "--no-xmlrpc", "--stop-after-init"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: server",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-run.py",
+            "args": [],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: Locust Load Testing",
+            "type": "python",
+            "request": "launch",
+            "program": "/flow/odoo/Locust/entrypoint.py",
+            "args": [
+                // -f /path/to/locustfiles.py
+                // -d more-specific-db
+                "--user", "admin",
+                "--pass", "admin",
+                "--host", "localhost",
+                "--port", "8069",
+                "--proto", "jsonrpc"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: reload foreground server",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-reload.py",
+            "args": [],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Odoo: reload foreground server, Kill Others",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/odoo/hibou-suite/odoo-reload.py",
+            "args": ["KILL_OTHER"],
+            "console": "integratedTerminal"
+        }
+    ]
+}
+
