@@ -28,13 +28,13 @@ class TestSaleSources(common.TransactionCase):
             'order_line': [(0, 0, {
                 'product_id': self.product_1.id,
                 'product_uom_qty': 1.0,
-                'product_uom': self.product_1.uom_id.id,
+                'product_uom_id': self.product_1.uom_id.id,
                 'price_unit': 10.0,
             }),
                            (0, 0, {
                                'product_id': self.product_2.id,
                                'product_uom_qty': 1.0,
-                               'product_uom': self.product_2.uom_id.id,
+                               'product_uom_id': self.product_2.uom_id.id,
                                'price_unit': 10.0,
                            })]
         })

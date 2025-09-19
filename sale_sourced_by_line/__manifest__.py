@@ -1,7 +1,7 @@
 {
     'name': 'Sale Sourced by Line',
     'summary': 'Multiple warehouse source locations for Sale order',
-    'version': '18.0.1.0.0',
+    'version': '19.0.1.0.0',
     'author': "Hibou Corp.,Odoo Community Association (OCA)",
     'category': 'Warehouse',
     'license': 'AGPL-3',
@@ -23,6 +23,7 @@ however it does not necessarily work in the same ways or have the same features.
 """,
     'depends': [
         'sale_stock',
+        'purchase_stock',
     ],
     'demo': [],
     'data': [
