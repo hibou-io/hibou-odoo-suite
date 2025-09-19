@@ -1,7 +1,7 @@
 {
     'name': 'Warehouse Delivery Routes',
     'summary': 'Assign a delivery route to a sale order or picking.',
-    'version': '18.0.1.0.0',
+    'version': '19.0.1.0.0',
     'author': "Hibou Corp.",
     'category': 'Warehouse',
     'license': 'LGPL-3',

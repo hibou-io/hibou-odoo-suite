@@ -9,7 +9,7 @@ class Warehouse(models.Model):
 
 class Picking(models.Model):
     _inherit = 'stock.picking'
-    _order = 'sequence asc, priority desc, date asc, id desc'
+    _order = 'sequence asc, priority desc, scheduled_date asc, id desc'
 
     sequence = fields.Integer(string='Sequence')
     warehouse_id = fields.Many2one('stock.warehouse', related='picking_type_id.warehouse_id')
