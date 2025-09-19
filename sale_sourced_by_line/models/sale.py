@@ -18,8 +18,8 @@ class SaleOrderLine(models.Model):
                                    compute=None, related=None, store=True)
     date_planned = fields.Datetime('Planned Date')
 
-    def _prepare_procurement_values(self, group_id=False):
-        vals = super(SaleOrderLine, self)._prepare_procurement_values(group_id=group_id)
+    def _prepare_procurement_values(self):
+        vals = super(SaleOrderLine, self)._prepare_procurement_values()
         if self.warehouse_id:
             vals.update({'warehouse_id': self.warehouse_id})
         if self.date_planned:
@@ -30,7 +30,7 @@ class SaleOrderLine(models.Model):
 
     # Needs modifications to not actually set a warehouse on the line as it is now stored
     @api.depends(
-        'product_id', 'customer_lead', 'product_uom_qty', 'product_uom', 'order_id.commitment_date',
+        'product_id', 'customer_lead', 'product_uom_qty', 'product_uom_id', 'order_id.commitment_date',
         'move_ids', 'move_ids.forecast_expected_date', 'move_ids.forecast_availability')
     def _compute_qty_at_date(self):
         """ Compute the quantity forecasted of product at delivery date. There are
@@ -49,8 +49,8 @@ class SaleOrderLine(models.Model):
             line.qty_available_today = 0
             line.virtual_available_at_date = 0
             for move in moves:
-                line.qty_available_today += move.product_uom._compute_quantity(move.quantity, line.product_uom)
-                line.virtual_available_at_date += move.product_id.uom_id._compute_quantity(move.forecast_availability, line.product_uom)
+                line.qty_available_today += move.product_uom_id._compute_quantity(move.quantity, line.product_uom_id)
+                line.virtual_available_at_date += move.product_id.uom_id._compute_quantity(move.forecast_availability, line.product_uom_id)
             line.scheduled_date = line.order_id.commitment_date or line._expected_date()
             line.free_qty_today = False
             treated |= line
