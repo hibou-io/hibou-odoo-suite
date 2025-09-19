@@ -17,6 +17,9 @@
     </record>
 
     <template id="task_tag_grid" inherit_id='project.portal_tasks_list' customize_show="True" name="Task Tags on table">
+        <xpath expr="//t[@t-set='grouped_tasks_colspan']" position="after">
+            <t t-set="grouped_tasks_colspan" t-value="grouped_tasks_colspan + 1"></t>
+        </xpath>
         <xpath expr="//t/t/thead/tr/th[2]" position="after">
             <th>Tags</th>
         </xpath>
