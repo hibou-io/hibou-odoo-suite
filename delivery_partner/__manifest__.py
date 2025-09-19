@@ -1,7 +1,7 @@
 {
     'name': 'Partner Shipping Accounts',
     'author': 'Hibou Corp.',
-    'version': '18.0.1.0.0',
+    'version': '19.0.1.0.0',
     'category': 'Stock',
     'sequence': 95,
     'summary': 'Record shipping account numbers on partners.',
