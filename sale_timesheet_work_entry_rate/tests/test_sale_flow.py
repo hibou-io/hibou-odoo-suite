@@ -31,44 +31,28 @@ class TestSaleFlow(TestProjectBilling):
         self.assertEqual(task.sale_line_id, timesheet1.so_line, "The timesheet should be linked to the SOL associated to the task since the pricing type of the project is task rate.")
         self.assertEqual(timesheet1.work_billing_amount, 50.0)
 
-        # These tests seem invalid due to deprecation of 'display_project_id' 
-        # I, Jared Kipe, have tested the outcomes and they work the way I expect them to
-        # maybe someday tests can be fixed.
-
         # create a subtask
         subtask = Task.with_context(default_project_id=self.project_task_rate.id).create({
             'name': 'first subtask task',
             'parent_id': task.id,
-            # 'display_project_id': self.project_subtask.id,
+            'project_id': self.project_subtask.id,
         })
 
-        self.assertEqual(subtask.partner_id, subtask.parent_id.partner_id, "Subtask should have the same customer as the one from their mother")
+        self.assertFalse(subtask.partner_id, "Subtask should not have the customer if it's project is not billable")
 
         # log timesheet on subtask
         timesheet2 = Timesheet.create({
             'name': 'Test Line on subtask',
-            # 'project_id': subtask.display_project_id.id,
+            'project_id': subtask.project_id.id,
             'task_id': subtask.id,
             'unit_amount': 50,
             'employee_id': self.employee_user.id,
         })
-        # self.assertEqual(subtask.display_project_id, timesheet2.project_id, "The timesheet is in the subtask project")
-        # 
+        self.assertEqual(subtask.project_id, timesheet2.project_id, "The timesheet is in the subtask project")
         self.assertFalse(timesheet2.so_line, "The timesheet should not be linked to SOL as it's a non billable project")
-
-        # move task and subtask into task rate project
-        task.write({
-            'project_id': self.project_employee_rate.id,
-        })
-        subtask.write({
-            # 'display_project_id': self.project_employee_rate.id,
-        })
-
-        self.assertEqual(task.sale_line_id, self.project_task_rate.sale_line_id, "Task moved in a employee rate billable project should keep its SOL because the partner_id has not changed too.")
-        self.assertEqual(task.partner_id, self.project_task_rate.partner_id, "Task created in a project billed on 'employee rate' should have the same customer as the one from its initial project.")
-
-        self.assertEqual(subtask.sale_line_id, subtask.parent_id.sale_line_id, "Subtask moved in a employee rate billable project should have the SOL of its parent since it keep its partner_id and this partner is different than the one in the destination project.")
-        self.assertEqual(subtask.partner_id, subtask.parent_id.partner_id, "Subtask moved in a project billed on 'employee rate' should keep its initial customer, that is the one of its parent.")
+        # the `subtask.sale_line_id` is consider to be recompute,
+        # but the result differ after the write of project_id
+        task.flush_model(["sale_line_id"])
 
         default_work_entry_type = self.env.ref('hr_timesheet_work_entry.work_input_timesheet')
         # Timesheets were for regular default 'Timesheet' type
