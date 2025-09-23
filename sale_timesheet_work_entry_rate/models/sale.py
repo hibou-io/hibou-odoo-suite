@@ -3,7 +3,6 @@
 from collections import defaultdict
 
 from odoo import api, fields, models
-from odoo.osv import expression
 
 
 class SaleOrderLine(models.Model):
@@ -26,40 +25,28 @@ class SaleOrderLine(models.Model):
             return result
 
         # group analytic lines by product uom and so line
-        domain = expression.AND([[('so_line', 'in', self.ids)], additional_domain])
-        data = self.env['account.analytic.line'].read_group(
+        domain = fields.Domain.AND([[('so_line', 'in', self.ids)], additional_domain])
+        data = self.env['account.analytic.line']._read_group(
             domain,
-            ['so_line', 'unit_amount', 'product_uom_id', 'work_type_id'], ['product_uom_id', 'so_line', 'work_type_id'], lazy=False
+            ['so_line', 'unit_amount', 'product_uom_id', 'work_type_id'],
+            ['move_line_id:count_distinct', '__count']
         )
 
         # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
         # browse so lines and product uoms here to make them share the same prefetch
-        lines = self.browse([item['so_line'][0] for item in data])
-        lines_map = {line.id: line for line in lines}
-        product_uom_ids = [item['product_uom_id'][0] for item in data if item['product_uom_id']]
-        product_uom_map = {uom.id: uom for uom in self.env['uom.uom'].browse(product_uom_ids)}
-        work_type_ids = [item['work_type_id'][0] for item in data if item['work_type_id']]
-        work_type_map = {work.id: work for work in self.env['hr.work.entry.type'].browse(work_type_ids)}
-        for item in data:
-            if not item['product_uom_id']:
+        for so_line, unit_amount, uom, work_type_id, move_line_id_count_distinct, count in data:
+            if not uom:
                 continue
-            work_type_rate = False
-            if item['work_type_id']:
-                work_type_rate = work_type_map.get(item['work_type_id'][0]).timesheet_billing_rate
-            if work_type_rate is False:
-                # unset field should be 1.0 by default, you CAN set it to 0.0 if you'd like.
-                work_type_rate = 1.0
 
-            so_line_id = item['so_line'][0]
-            so_line = lines_map[so_line_id]
-            result.setdefault(so_line_id, 0.0)
-            uom = product_uom_map.get(item['product_uom_id'][0])
-            if so_line.product_uom.category_id == uom.category_id:
-                qty = uom._compute_quantity(item['unit_amount'], so_line.product_uom, rounding_method='HALF-UP')
+            # avoid counting unit_amount twice when dealing with multiple analytic lines on the same move line
+            if move_line_id_count_distinct == 1 and count > 1:
+                qty = unit_amount / count
             else:
-                qty = item['unit_amount']
+                qty = unit_amount
+            qty = uom._compute_quantity(qty, so_line.product_uom_id, rounding_method='HALF-UP')
 
+            work_type_rate = work_type_id.timesheet_billing_rate if work_type_id else 1.0
             qty *= work_type_rate
-            result[so_line_id] += qty
+            result[so_line.id] += qty
 
         return result

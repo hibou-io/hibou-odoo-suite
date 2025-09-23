@@ -2,13 +2,12 @@
 
 {
     'name': 'Timesheet Billing Rate',
-    'version': '18.0.1.1.0',
+    'version': '19.0.1.1.0',
     'category': 'Sale',
     'author': 'Hibou Corp.',
     'license': 'OPL-1',
     'website': 'https://hibou.io/',
     'depends': [
-        'hibou_professional',
         'hr_timesheet_work_entry',
         'timesheet_invoice',
         'sale_timesheet',
