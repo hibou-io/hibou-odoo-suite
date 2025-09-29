@@ -20,8 +20,7 @@ class SaleOrderLine(models.Model):
 
     def _prepare_procurement_values(self, group_id=False):
         vals = super(SaleOrderLine, self)._prepare_procurement_values(group_id=group_id)
-        if self.warehouse_id:
-            vals.update({'warehouse_id': self.warehouse_id})
+        vals.update({'warehouse_id': self.warehouse_id or self.order_id.warehouse_id})
         if self.date_planned:
             vals.update({'date_planned': self.date_planned})
         elif self.order_id.date_planned:
