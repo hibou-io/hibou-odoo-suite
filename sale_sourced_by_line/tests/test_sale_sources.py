@@ -1,4 +1,19 @@
+from unittest.mock import patch
+
 from odoo.tests import common
+from odoo.exceptions import UserError
+from odoo.addons.sale_sourced_by_line.models.sale import SaleOrderLine
+
+
+def patch_prepare_procurement_values(self):
+    vals = super(SaleOrderLine, self)._prepare_procurement_values()
+    #don't inject warehouse_id to raise an error
+    # vals.update({'warehouse_id': self.warehouse_id or self.order_id.warehouse_id})
+    if self.date_planned:
+        vals.update({'date_planned': self.date_planned})
+    elif self.order_id.date_planned:
+        vals.update({'date_planned': self.order_id.date_planned})
+    return vals
 
 
 class TestSaleSources(common.TransactionCase):
@@ -9,10 +24,12 @@ class TestSaleSources(common.TransactionCase):
         self.product_1 = self.env['product.product'].create({
             'type': 'consu',
             'name': 'Test Product 1',
+            'is_storable': True,
         })
         self.product_2 = self.env['product.product'].create({
             'type': 'consu',
             'name': 'Test Product 2',
+            'is_storable': True,
         })
         self.wh_1 = self.env.ref('stock.warehouse0')
         self.wh_2 = self.env['stock.warehouse'].create({
@@ -38,12 +55,17 @@ class TestSaleSources(common.TransactionCase):
                                'price_unit': 10.0,
                            })]
         })
+
+        # check and error raise if warehouse is not filled on sol
+        with patch.object(SaleOrderLine, '_prepare_procurement_values', patch_prepare_procurement_values):
+            with self.assertRaises(UserError):
+                so.action_confirm()
+
         so.action_confirm()
         self.assertTrue(so.state in ('sale', 'done'))
         self.assertEqual(len(so.picking_ids), 1)
         self.assertEqual(len(so.picking_ids.filtered(lambda p: p.picking_type_id.warehouse_id == self.wh_1)), 1)
         self.assertEqual(len(so.picking_ids.filtered(lambda p: p.picking_type_id.warehouse_id == self.wh_2)), 0)
-
 
     def test_plan_two_warehouses(self):
         so = self.env['sale.order'].create({
