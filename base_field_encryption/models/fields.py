@@ -1,11 +1,8 @@
-# -*- coding: utf-8 -*-
-# Part of Hibou Suite Professional. See LICENSE_PROFESSIONAL file for full copyright and licensing details.
-
 import json
 import logging
 
 from odoo import fields, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tools.config import config
 
 _logger = logging.getLogger(__name__)
@@ -14,7 +11,9 @@ try:
     from cryptography.fernet import Fernet, InvalidToken
 except ImportError as err:  # pragma: no cover
     _logger.debug(err)
+    Fernet = None
 
+FIELD_ENCRYPTION_KEY = "field_encryption_key"
 
 def monkey_patch(cls):
     """ Return a method decorator to monkey-patch the given class. """
@@ -36,12 +35,7 @@ fields.Field.__doc__ += """
 
         .. rubric:: Encrypt fields
 
-        Encrypt fields have a very small probability of being not null. Therefore
-        many such fields can be serialized compactly into a common location, the
-        latter being a so-called "serialized" field.
-
-        :param encrypt: the name of the field where the value of this field must
-            be stored.
+        :param encrypt: the name of the field where the value of this field must be stored.
 """
 fields.Field.encrypt = None
 
@@ -82,7 +76,7 @@ def _inverse_encrypt(self, records):
 
 
 #
-# Definition and implementation of serialized fields
+# Definition and implementation of encryption fields
 #
 
 class Encryption(fields.Field):
@@ -97,14 +91,16 @@ class Encryption(fields.Field):
         force_env = name of the env key.
         Useful for encoding against one precise env
         """
-        key_name = "hibou_field_encryption_key"
-        key_str = config.get(key_name)
+        if Fernet is None:
+            raise UserError(_("The library 'cryptography' is missing, Fernet import cannot proceed."))
+
+        key_str = config.get(FIELD_ENCRYPTION_KEY)
         if not key_str:
             raise ValidationError(
                 _(
                     "No '%(key_name)s' entry found in config file. "
                     "Use a key similar to: %(key)s",
-                    key_name=key_name,
+                    key_name=FIELD_ENCRYPTION_KEY,
                     key=Fernet.generate_key().decode(),
                 )
             )
