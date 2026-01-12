@@ -1,4 +1,4 @@
-image: docker:stable
+image: docker:28
 services:
   - docker:dind
 
@@ -80,4 +80,3 @@ trigger:
     - docker run byrnedo/alpine-curl curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=$RELEASE $GITLAB_BASE_URL/api/v4/projects/$ENTERPRISE_PROJECT_ID/trigger/pipeline
   only:
     - /^\d\d\.\d+/
-
