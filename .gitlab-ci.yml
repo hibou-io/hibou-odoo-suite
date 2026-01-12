@@ -1,4 +1,4 @@
-image: docker:stable
+image: docker:28
 services:
   - docker:dind
 
@@ -52,7 +52,7 @@ release:
     - apk add python3
     - docker pull registry.gitlab.com/hibou-io/hibou-odoo/flow
     - docker tag registry.gitlab.com/hibou-io/hibou-odoo/flow flow
-    - docker run -v "${PWD}/.local:/dest" flow self-install /dest
+    - docker run -u 0 -v "${PWD}/.local:/dest" flow self-install /dest
     - cd .local/flow
     - ./entrypoint.sh docker-release $CONTAINER_IMAGE:$IMAGE_TAG $CONTAINER_IMAGE:$IMAGE_TAG_DATE
     - docker login -u "${DOCKERHUB_USERNAME}" -p "${DOCKERHUB_PASSWORD}"
@@ -80,4 +80,3 @@ trigger:
     - docker run byrnedo/alpine-curl curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=$RELEASE $GITLAB_BASE_URL/api/v4/projects/$ENTERPRISE_PROJECT_ID/trigger/pipeline
   only:
     - /^\d\d\.\d/
-
