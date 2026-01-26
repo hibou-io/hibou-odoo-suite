@@ -21,4 +21,5 @@ Record shipping account numbers on partners.
     ],
     'installable': True,
     'application': False,
+    'licence': ' ',  #FIXME
 }

@@ -60,6 +60,9 @@ class AccountMove(models.Model):
                              digits='Product Price',
                              store=True)
 
+    def _valid_field_parameter(self, field, name):
+        return name == 'digits' or super()._valid_field_parameter(field, name)
+
     @api.depends('invoice_line_ids.margin')
     def _product_margin(self):
         for invoice in self:
