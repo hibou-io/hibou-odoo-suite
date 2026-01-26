@@ -1,0 +1,37 @@
+
+<odoo>
+    <record id="view_well_known_path_tree" model="ir.ui.view">
+        <field name="name">well.known.path.tree</field>
+        <field name="model">well.known.path</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="path"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_well_known_path_form" model="ir.ui.view">
+        <field name="name">well.known.path.form</field>
+        <field name="model">well.known.path</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="path"/>
+                        <field name="value"/>
+                        <field name="file"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_well_known_path" model="ir.actions.act_window">
+        <field name="name">Well Known Paths</field>
+        <field name="res_model">well.known.path</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="well_know_paths_menu" name="Well-Known Paths" parent="base.menu_ir_property" action="action_well_known_path"/>
+
+</odoo>
