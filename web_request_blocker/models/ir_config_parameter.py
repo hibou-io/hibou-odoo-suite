@@ -1,7 +1,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from re import match, PatternError
+from re import match, error
 
 class IrConfigParameter(models.Model):
     _inherit = 'ir.config_parameter'
@@ -14,5 +14,5 @@ class IrConfigParameter(models.Model):
                 current_user_agent = request and request.httprequest.environ.get('HTTP_USER_AGENT')
                 if current_user_agent and match(icp.value, current_user_agent):
                     raise ValidationError(_('This pattern would lock you out!\n\nYour current user agent:\n%s', current_user_agent))
-            except PatternError:
+            except error:
                 raise ValidationError(_('Bad regex !'))
