@@ -19,3 +19,6 @@
 [submodule ".vendor/oca-connector-ecommerce"]
 	path = .vendor/oca-connector-ecommerce
 	url = https://github.com/hibou-io/oca-connector-ecommerce.git
+[submodule ".vendor/oca-payroll"]
+	path = .vendor/oca-payroll
+	url = https://github.com/hibou-io/oca-payroll.git
