@@ -13,3 +13,6 @@
 [submodule ".vendor/oca-account-invoicing"]
 	path = .vendor/oca-account-invoicing
 	url = https://github.com/hibou-io/oca-account-invoicing.git
+[submodule ".vendor/oca-payroll"]
+	path = .vendor/oca-payroll
+	url = https://github.com/hibou-io/oca-payroll.git
