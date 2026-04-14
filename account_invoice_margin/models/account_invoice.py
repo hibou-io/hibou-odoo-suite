@@ -62,9 +62,9 @@ class AccountMove(models.Model):
 
     margin = fields.Monetary(compute='_compute_product_margin', store=True, digits='Product Price',
                              help="Profitability by calculating the difference between the Unit Price and the cost.",
-                             groups='base.group_user')
+                             groups='base.group_user', aggregator="sum",)
     margin_percent = fields.Float(compute='_compute_product_margin', store=True, string='Margin (%)',
-                                  groups='base.group_user')
+                                  groups='base.group_user', aggregator="avg")
 
     @api.depends('invoice_line_ids.margin', 'invoice_line_ids.price_subtotal')
     def _compute_product_margin(self):
