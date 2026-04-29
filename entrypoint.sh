@@ -29,6 +29,12 @@ if [ "$DEV_MODE_PATH" == "" ]
 then
    export DEV_MODE_PATH=/opt/odoo/hibou-suite
 fi
+# Patch Theia user settings with MCP defaults (professional+ images only)
+if [[ -x "/opt/odoo-tools/init-theia-settings.py" ]]
+then
+    python3 /opt/odoo-tools/init-theia-settings.py || \
+        echo "WARNING: init-theia-settings.py failed (exit $?), continuing anyway" >&2
+fi
 if [[ -x "/opt/athene/entrypoint.sh" ]]
 then
   /opt/athene/entrypoint.sh
