@@ -2,7 +2,7 @@ import json
 import logging
 import os
 
-from odoo import fields, _
+from odoo import fields, models, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools.config import config
 
@@ -47,8 +47,6 @@ def _get_attrs(self, model_class, name):
     if attrs.get('encrypt'):
         if attrs['encrypt'] is True:
             attrs['encrypt'] = DEFAULT_ENCRYPTION_FIELD
-        if not hasattr(model_class, attrs['encrypt']):
-            setattr(model_class, attrs['encrypt'], Encryption())
         # by default, encrypt fields are not stored and not copied
         attrs['store'] = False
         attrs['copy'] = attrs.get('copy', False)
@@ -150,6 +148,31 @@ class Encryption(fields.Field):
         return json.loads(self._decrypt_data(value)) if value else {}
 
 fields.Encryption = Encryption
+
+# Monkey-patch _setup_base to inject Encryption fields into _fields.
+# In Odoo, _setup_base collects class-attribute fields into _fields.
+# Fields dynamically created via encrypt=True in _get_attrs would be
+# too late, so we inject them at the end of _setup_base instead.
+_original_setup_base = models.BaseModel._setup_base
+
+def _patched_setup_base(self):
+    _original_setup_base(self)
+    enc_names = set()
+    for field in self._fields.values():
+        enc = getattr(field, 'encrypt', None)
+        if enc:
+            enc_names.add(DEFAULT_ENCRYPTION_FIELD if enc is True else enc)
+    for enc_name in enc_names:
+        if enc_name not in self._fields:
+            enc_field = Encryption(string='Encrypted Data')
+            enc_field.args = {'string': 'Encrypted Data'}
+            enc_field.name = enc_name
+            enc_field.string = 'Encrypted Data'
+            enc_field.model_name = self._name
+            enc_field._modules = {'hibou_field_encryption'}
+            self._fields[enc_name] = enc_field
+
+models.BaseModel._setup_base = _patched_setup_base
 
 
 def migrate_fields_to_encryption(cr, table, field_names, encryption_field=None, drop_columns=False):
