@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Field Encryption README</title>
+<style type="text/css">
+/* Simple clean styles */
+body { font-family: sans-serif; line-height: 1.5; color: #333; margin: 1em; }
+h1, h2, h3 { color: #2a2a2a; }
+h1 { text-align: center; }
+h2 { margin-top: 2em; }
+pre { background-color: #f7f7f7; padding: 1em; border: 1px solid #ddd; overflow: auto; }
+code { background-color: #eeeeee; padding: 2px 4px; font-family: monospace; }
+ul { margin-left: 2em; }
+img { max-width: 100%; }
+.badge { display:inline-block; margin:0 0.3em; }
+a { color: #2a5db0; text-decoration: none; }
+a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<h1>Field Encryption</h1>
+
+<p>This module allows users to store encrypted field values in the database. Multiple fields can be stored in a single encrypted field. Values are serialized and encrypted before storing, and automatically decrypted and deserialized when read.</p>
+
+<h2>Requirements</h2>
+<pre><code>pip install cryptography</code></pre>
+
+<h2>Configuration</h2>
+<p>Set the encryption key in the server config file:</p>
+<pre><code>rec_encryption_key=&lt;YOUR_KEY&gt;</code></pre>
+
+<p>Alternatively, set it as an environment variable (useful for secret managers and container deployments):</p>
+<pre><code>export REC_ENCRYPTION_KEY=&lt;YOUR_KEY&gt;</code></pre>
+
+<p>The module checks the Odoo config file first, then falls back to the environment variable.</p>
+
+<p>Generate a key using Python:</p>
+<pre><code>from cryptography.fernet import Fernet
+Fernet.generate_key().decode()</code></pre>
+
+<h2>Usage</h2>
+<p>Protect sensitive data in your models using the <code>encrypt=True</code> shorthand. A <code>rec_encrypted</code> Encryption field is created automatically:</p>
+<pre><code>from odoo import fields, models
+
+class Partner(models.Model):
+    _inherit = 'res.partner'
+
+    secret_note = fields.Char(encrypt=True)</code></pre>
+
+<p>Multiple fields on the same model share the same encrypted blob:</p>
+<pre><code>class Partner(models.Model):
+    _inherit = 'res.partner'
+
+    secret_note = fields.Char(encrypt=True)
+    ssn = fields.Char(encrypt=True)</code></pre>
+
+<p>You can also declare the Encryption field explicitly and reference it by name:</p>
+<pre><code>class Partner(models.Model):
+    _inherit = 'res.partner'
+
+    encrypt = fields.Encryption()
+    secret_note = fields.Char(encrypt='encrypt')</code></pre>
+
+<h2>Migration Helper</h2>
+<p>When converting existing plaintext columns to encrypted storage, use the migration helper in a <code>post-migration.py</code> script or <code>post_init_hook</code>:</p>
+<pre><code>from odoo.addons.hibou_field_encryption.models.fields import migrate_fields_to_encryption
+
+def migrate(cr, installed_version):
+    migrate_fields_to_encryption(
+        cr,
+        table='res_partner',
+        field_names=['secret_note', 'ssn'],
+    )
+
+    # Optionally drop the old plaintext columns:
+    # migrate_fields_to_encryption(
+    #     cr, 'res_partner', ['secret_note', 'ssn'], drop_columns=True
+    # )</code></pre>
+
+</body>
+</html>
