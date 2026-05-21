@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import struct
 
 from odoo import fields, models, _
 from odoo.exceptions import ValidationError, UserError
@@ -9,13 +10,34 @@ from odoo.tools.config import config
 _logger = logging.getLogger(__name__)
 
 try:
-    from cryptography.fernet import Fernet, InvalidToken
+    from cryptography.fernet import Fernet, InvalidToken, MultiFernet
 except ImportError as err:  # pragma: no cover
     _logger.debug(err)
     Fernet = None
+    MultiFernet = None
+
+try:
+    from google.cloud import secretmanager
+    from google.api_core import exceptions as gcp_exceptions
+except ImportError as err:  # pragma: no cover
+    _logger.debug(err)
+    secretmanager = None
+    gcp_exceptions = None
 
 REC_ENCRYPTION_KEY = "rec_encryption_key"
+REC_ENCRYPTION_KEY_PROVIDER = "rec_encryption_key_provider"
+GCP_SECRET_NAME = "rec_encryption_gcp_secret"
+GCP_PROJECT = "rec_encryption_gcp_project"
 DEFAULT_ENCRYPTION_FIELD = "rec_encrypted"
+
+# Wire-format: encrypted blobs are prefixed with a 3-byte header
+#   byte 0   : format version (0x01)
+#   byte 1-2 : big-endian uint16 key version
+# Blobs that do NOT start with 0x01 are assumed to be legacy (pre-keyring)
+# data encrypted with key version 0.
+_HEADER_FORMAT = 0x01
+_HEADER_STRUCT = struct.Struct('>BH')  # 3 bytes: uint8 + uint16
+
 
 def monkey_patch(cls):
     """ Return a method decorator to monkey-patch the given class. """
@@ -27,9 +49,258 @@ def monkey_patch(cls):
     return decorate
 
 
-#
+# ---------------------------------------------------------------------------
+# Keyring – ordered collection of versioned Fernet keys
+# ---------------------------------------------------------------------------
+
+class EncryptionKeyring:
+    """Holds a set of versioned Fernet keys.
+
+    *keys* is an ordered mapping ``{version_int: Fernet}`` where the
+    **last** entry is the current (encryption) key and earlier entries
+    are retained only for decryption of old data.
+
+    The single-key legacy configuration (one ``REC_ENCRYPTION_KEY``) is
+    represented as ``{0: Fernet(key)}``.
+    """
+
+    def __init__(self, keys=None):
+        self._keys = dict(keys or {})
+
+    @property
+    def current_version(self):
+        if not self._keys:
+            raise ValidationError(_("Encryption keyring is empty."))
+        return max(self._keys)
+
+    @property
+    def current_fernet(self):
+        return self._keys[self.current_version]
+
+    def fernet_for_version(self, version):
+        f = self._keys.get(version)
+        if f is None:
+            raise ValidationError(
+                _(
+                    "No key found for version %(ver)s. The data may have been "
+                    "encrypted with a key that has been revoked.",
+                    ver=version,
+                )
+            )
+        return f
+
+    @property
+    def versions(self):
+        return sorted(self._keys)
+
+    def __len__(self):
+        return len(self._keys)
+
+    def __contains__(self, version):
+        return version in self._keys
+
+
+_keyring_instance = None
+
+
+# ---------------------------------------------------------------------------
+# Key providers
+# ---------------------------------------------------------------------------
+
+def _load_keyring_from_config():
+    """Build a keyring from the ``rec_encryption_key`` config/env value.
+
+    Supports two shapes:
+
+    **Single key** (backward compatible)::
+
+        rec_encryption_key = <base64-fernet-key>
+
+    **Multi-key keyring** (for rotation)::
+
+        rec_encryption_key = 0:<key0>,1:<key1>,2:<key2>
+    """
+    key_str = config.get(REC_ENCRYPTION_KEY) or os.environ.get(REC_ENCRYPTION_KEY.upper())
+    if not key_str:
+        raise ValidationError(
+            _(
+                "No '%(key_name)s' entry found in config file or "
+                "%(env_var)s environment variable. "
+                "Use a key similar to: %(key)s",
+                key_name=REC_ENCRYPTION_KEY,
+                env_var=REC_ENCRYPTION_KEY.upper(),
+                key=Fernet.generate_key().decode(),
+            )
+        )
+
+    key_str = key_str.strip()
+    keys = {}
+
+    if ':' in key_str and ',' in key_str:
+        for part in key_str.split(','):
+            part = part.strip()
+            if not part:
+                continue
+            ver_str, _, k = part.partition(':')
+            try:
+                ver = int(ver_str)
+            except ValueError:
+                raise ValidationError(
+                    _(
+                        "Invalid key version '%(ver)s' in keyring configuration.",
+                        ver=ver_str,
+                    )
+                )
+            keys[ver] = Fernet(k.strip().encode())
+    else:
+        keys[0] = Fernet(key_str.encode())
+
+    return EncryptionKeyring(keys)
+
+
+def _load_keyring_from_gcp():
+    """Build a keyring from a Google Cloud Secret Manager secret.
+
+    Each **enabled** version of the GCP secret becomes a key in the
+    keyring.  The GCP version number maps directly to the keyring
+    version.  The version payload must be a raw Fernet key (base64).
+
+    Required configuration (config file or env):
+
+    - ``rec_encryption_gcp_project`` / ``REC_ENCRYPTION_GCP_PROJECT``
+    - ``rec_encryption_gcp_secret``  / ``REC_ENCRYPTION_GCP_SECRET``
+    """
+    if secretmanager is None:
+        raise UserError(
+            _(
+                "The library 'google-cloud-secret-manager' is missing. "
+                "Install it with: pip install google-cloud-secret-manager"
+            )
+        )
+
+    project = config.get(GCP_PROJECT) or os.environ.get(GCP_PROJECT.upper())
+    if not project:
+        raise ValidationError(
+            _(
+                "GCP key provider requires '%(key)s' in the config file or "
+                "%(env)s environment variable.",
+                key=GCP_PROJECT,
+                env=GCP_PROJECT.upper(),
+            )
+        )
+
+    secret_id = config.get(GCP_SECRET_NAME) or os.environ.get(GCP_SECRET_NAME.upper())
+    if not secret_id:
+        raise ValidationError(
+            _(
+                "GCP key provider requires '%(key)s' in the config file or "
+                "%(env)s environment variable.",
+                key=GCP_SECRET_NAME,
+                env=GCP_SECRET_NAME.upper(),
+            )
+        )
+
+    client = secretmanager.SecretManagerServiceClient()
+    parent = f"projects/{project}/secrets/{secret_id}"
+
+    versions = client.list_secret_versions(
+        request={"parent": parent, "filter": "state:ENABLED"}
+    )
+
+    keys = {}
+    for v in versions:
+        ver_num = int(v.name.rsplit("/", 1)[-1])
+        response = client.access_secret_version(request={"name": v.name})
+        key_bytes = response.payload.data.strip()
+        try:
+            keys[ver_num] = Fernet(key_bytes)
+        except Exception:
+            _logger.warning(
+                "GCP secret version %s is not a valid Fernet key, skipping.",
+                v.name,
+            )
+
+    if not keys:
+        raise ValidationError(
+            _(
+                "No valid Fernet keys found in GCP secret '%(secret)s' "
+                "(project '%(project)s').",
+                secret=secret_id,
+                project=project,
+            )
+        )
+
+    _logger.info(
+        "Loaded encryption keyring from GCP Secret Manager: "
+        "%d key(s), current version %d.",
+        len(keys), max(keys),
+    )
+    return EncryptionKeyring(keys)
+
+
+_KEY_PROVIDERS = {
+    "config": _load_keyring_from_config,
+    "gcp_secret_manager": _load_keyring_from_gcp,
+}
+
+
+def _load_keyring():
+    if Fernet is None:
+        raise UserError(_("The library 'cryptography' is missing, Fernet import cannot proceed."))
+
+    provider_name = (
+        config.get(REC_ENCRYPTION_KEY_PROVIDER)
+        or os.environ.get(REC_ENCRYPTION_KEY_PROVIDER.upper(), "config")
+    )
+    provider_fn = _KEY_PROVIDERS.get(provider_name)
+    if provider_fn is None:
+        raise ValidationError(
+            _(
+                "Unknown encryption key provider '%(name)s'. "
+                "Available: %(avail)s",
+                name=provider_name,
+                avail=", ".join(sorted(_KEY_PROVIDERS)),
+            )
+        )
+    return provider_fn()
+
+
+def get_keyring():
+    global _keyring_instance
+    if _keyring_instance is None:
+        _keyring_instance = _load_keyring()
+    return _keyring_instance
+
+
+def reset_keyring():
+    global _keyring_instance
+    _keyring_instance = None
+
+
+# ---------------------------------------------------------------------------
+# Wire-format helpers
+# ---------------------------------------------------------------------------
+
+def _pack_header(key_version):
+    return _HEADER_STRUCT.pack(_HEADER_FORMAT, key_version)
+
+
+def _unpack_header(blob):
+    """Return ``(key_version, ciphertext)`` from a stored blob.
+
+    If the blob does not carry our header (legacy data) return
+    ``(0, blob)`` so it will be decrypted with key version 0.
+    """
+    if len(blob) >= _HEADER_STRUCT.size:
+        fmt, ver = _HEADER_STRUCT.unpack_from(blob)
+        if fmt == _HEADER_FORMAT:
+            return ver, blob[_HEADER_STRUCT.size:]
+    return 0, blob
+
+
+# ---------------------------------------------------------------------------
 # Implement encrypt fields by monkey-patching fields.Field
-#
+# ---------------------------------------------------------------------------
 
 fields.Field.__doc__ += """
 
@@ -79,9 +350,9 @@ def _inverse_encrypt(self, records):
                 record[self.encrypt] = values
 
 
-#
+# ---------------------------------------------------------------------------
 # Definition and implementation of encryption fields
-#
+# ---------------------------------------------------------------------------
 
 class Encryption(fields.Field):
     """ Encryption fields provide the storage for encrypt fields. """
@@ -91,44 +362,45 @@ class Encryption(fields.Field):
     prefetch = False                    # not prefetched by default
 
     def _get_cipher(self):
-        """Return a cipher using the key from the Odoo config file
-        or the REC_ENCRYPTION_KEY environment variable.
-        """
-        if Fernet is None:
-            raise UserError(_("The library 'cryptography' is missing, Fernet import cannot proceed."))
+        """Return the *current* Fernet cipher (for backward compat).
 
-        key_str = config.get(REC_ENCRYPTION_KEY) or os.environ.get(REC_ENCRYPTION_KEY.upper())
-        if not key_str:
-            raise ValidationError(
-                _(
-                    "No '%(key_name)s' entry found in config file or "
-                    "%(env_var)s environment variable. "
-                    "Use a key similar to: %(key)s",
-                    key_name=REC_ENCRYPTION_KEY,
-                    env_var=REC_ENCRYPTION_KEY.upper(),
-                    key=Fernet.generate_key().decode(),
-                )
-            )
-        # key should be in bytes format
-        key = key_str.encode()
-        return Fernet(key)
+        Prefer :func:`get_keyring` for new code.
+        """
+        return get_keyring().current_fernet
 
     def _encrypt_data(self, data):
         if not isinstance(data, bytes):
             data = data.encode()
-        return self._get_cipher().encrypt(data or b'{}')
+        keyring = get_keyring()
+        version = keyring.current_version
+        ciphertext = keyring.current_fernet.encrypt(data or b'{}')
+        return _pack_header(version) + ciphertext
 
     def _decrypt_data(self, value):
-        cipher = self._get_cipher()
+        if not value:
+            return '{}'
+        if isinstance(value, memoryview):
+            value = bytes(value)
+        version, ciphertext = _unpack_header(value)
+        keyring = get_keyring()
         try:
-            return cipher.decrypt(value).decode()
-        except InvalidToken as exc:
+            fernet = keyring.fernet_for_version(version)
+            return fernet.decrypt(ciphertext).decode()
+        except ValidationError:
             _logger.error(
-                f"{self.name} has been encrypted with a different "
-                "key. Unless you can recover the previous key, "
-                f"this {self.name} is unreadable."
+                "%s was encrypted with revoked key version %s. "
+                "The data is unreadable.",
+                self.name, version,
             )
-            return {}
+            return '{}'
+        except InvalidToken:
+            _logger.error(
+                "%s has been encrypted with a different key "
+                "(version %s). Unless you can recover the previous key, "
+                "this %s is unreadable.",
+                self.name, version, self.name,
+            )
+            return '{}'
 
     def convert_to_column_insert(self, value, record, values=None, validate=True):
         return self.convert_to_cache(value, record, validate=validate)
@@ -174,6 +446,62 @@ def _patched_setup_base(self):
 
 models.BaseModel._setup_base = _patched_setup_base
 
+
+# ---------------------------------------------------------------------------
+# Re-encryption helper
+# ---------------------------------------------------------------------------
+
+def re_encrypt_blob(blob):
+    """Decrypt *blob* with whatever key version it carries and
+    re-encrypt with the **current** key.
+
+    Returns ``(changed, new_blob)`` where *changed* is ``True`` when
+    the blob was actually re-encrypted (i.e. it was not already using
+    the current key version).
+    """
+    if not blob:
+        return False, blob
+    if isinstance(blob, memoryview):
+        blob = bytes(blob)
+    version, ciphertext = _unpack_header(blob)
+    keyring = get_keyring()
+    if version == keyring.current_version:
+        return False, blob
+    fernet = keyring.fernet_for_version(version)
+    plaintext = fernet.decrypt(ciphertext)
+    new_ciphertext = keyring.current_fernet.encrypt(plaintext)
+    return True, _pack_header(keyring.current_version) + new_ciphertext
+
+
+def re_encrypt_table(cr, table, encryption_field=None):
+    """Re-encrypt every row in *table* to the current key version.
+
+    Returns the number of rows that were actually updated.
+    """
+    encryption_field = encryption_field or DEFAULT_ENCRYPTION_FIELD
+    cr.execute(
+        'SELECT id, "{}" FROM "{}" WHERE "{}" IS NOT NULL'.format(
+            encryption_field, table, encryption_field,
+        )
+    )
+    updated = 0
+    for rec_id, raw in cr.fetchall():
+        raw = bytes(raw) if isinstance(raw, memoryview) else raw
+        changed, new_blob = re_encrypt_blob(raw)
+        if changed:
+            cr.execute(
+                'UPDATE "{}" SET "{}" = %s WHERE id = %s'.format(
+                    table, encryption_field,
+                ),
+                (new_blob, rec_id),
+            )
+            updated += 1
+    return updated
+
+
+# ---------------------------------------------------------------------------
+# Migration helper (unchanged public API)
+# ---------------------------------------------------------------------------
 
 def migrate_fields_to_encryption(cr, table, field_names, encryption_field=None, drop_columns=False):
     """Migrate plaintext DB columns into an Encryption blob.
