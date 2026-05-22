@@ -81,11 +81,9 @@ class EncryptionKeyring:
         f = self._keys.get(version)
         if f is None:
             raise ValidationError(
-                _(
                     "No key found for version %(ver)s. The data may have been "
                     "encrypted with a key that has been revoked.",
                     ver=version,
-                )
             )
         return f
 
@@ -123,14 +121,8 @@ def _load_keyring_from_config():
     key_str = config.get(REC_ENCRYPTION_KEY) or os.environ.get(REC_ENCRYPTION_KEY.upper())
     if not key_str:
         raise ValidationError(
-            _(
-                "No '%(key_name)s' entry found in config file or "
-                "%(env_var)s environment variable. "
-                "Use a key similar to: %(key)s",
-                key_name=REC_ENCRYPTION_KEY,
-                env_var=REC_ENCRYPTION_KEY.upper(),
-                key=Fernet.generate_key().decode(),
-            )
+            # TODO FIX cannot use translated here!
+''
         )
 
     key_str = key_str.strip()
@@ -427,7 +419,48 @@ fields.Encryption = Encryption
 # too late, so we inject them at the end of _setup_base instead.
 _original_setup_base = models.BaseModel._setup_base
 
+def _inject_encryption_field(model, enc_name):
+    enc_field = Encryption(string='Encrypted Data')
+    enc_field.args = {'string': 'Encrypted Data'}
+    enc_field.name = enc_name
+    enc_field.string = 'Encrypted Data'
+    enc_field.model_name = model._name
+    enc_field._modules = {'hibou_field_encryption'}
+    model._fields[enc_name] = enc_field
+    # Also set on the model's class so _add_inherited_fields
+    # on _inherits children passes the hasattr check in _add_field.
+    try:
+        type.__setattr__(type(model), enc_name, enc_field)
+    except (TypeError, AttributeError):
+        pass
+
+
+def _collect_enc_names_from_fields(fields_dict):
+    enc_names = set()
+    for field in fields_dict.values():
+        enc = getattr(field, 'encrypt', None) or (getattr(field, 'args', None) or {}).get('encrypt')
+        if enc:
+            enc_names.add(DEFAULT_ENCRYPTION_FIELD if enc is True else enc)
+    return enc_names
+
+
 def _patched_setup_base(self):
+    # Inject encryption storage fields on self before _original_setup_base
+    # so they are available during _add_inherited_fields.
+    for enc_name in _collect_enc_names_from_fields(self._fields):
+        if enc_name not in self._fields:
+            _inject_encryption_field(self, enc_name)
+    # Also inject on _inherits parents — their encrypt fields may
+    # reference storage fields that haven't been created yet.
+    pool = getattr(self, 'pool', None)
+    if pool:
+        for parent_model_name in getattr(self, '_inherits', {}):
+            parent = pool.get(parent_model_name)
+            if parent is None:
+                continue
+            for enc_name in _collect_enc_names_from_fields(parent._fields):
+                if enc_name not in parent._fields:
+                    _inject_encryption_field(parent, enc_name)
     _original_setup_base(self)
     enc_names = set()
     for field in self._fields.values():
@@ -436,13 +469,7 @@ def _patched_setup_base(self):
             enc_names.add(DEFAULT_ENCRYPTION_FIELD if enc is True else enc)
     for enc_name in enc_names:
         if enc_name not in self._fields:
-            enc_field = Encryption(string='Encrypted Data')
-            enc_field.args = {'string': 'Encrypted Data'}
-            enc_field.name = enc_name
-            enc_field.string = 'Encrypted Data'
-            enc_field.model_name = self._name
-            enc_field._modules = {'hibou_field_encryption'}
-            self._fields[enc_name] = enc_field
+            _inject_encryption_field(self, enc_name)
 
 models.BaseModel._setup_base = _patched_setup_base
 
