@@ -11,7 +11,7 @@
             </xpath>
             <xpath expr="//field[@name='order_line']/list/field[@name='route_ids']" position="before">
                 <field name="date_planned" optional="hide"/>
-                <field name="warehouse_id" optional="hide"/>
+                <field name="warehouse_id" optional="hide" readonly="False" options="{'no_open': True, 'no_create': True}"/>
             </xpath>
             <xpath expr="//label[@for='commitment_date']" position="before">
                 <field name="date_planned" />
