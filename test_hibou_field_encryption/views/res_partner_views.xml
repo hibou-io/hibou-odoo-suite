@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- res.partner carries an explicitly named blob (my_blob), and res.users
+         delegates to it. That makes the partner form the place to exercise the
+         inherited-encrypt-field path by hand. -->
+    <record id="view_partner_form_encryption_test" model="ir.ui.view">
+        <field name="name">res.partner.form.encryption.test</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="encryption_test" string="Encryption Test"
+                      groups="base.group_system">
+                    <group>
+                        <field name="secret_note"/>
+                        <field name="secret_code"/>
+                    </group>
+                    <div class="text-muted">
+                        Both values are stored encrypted in <code>my_blob</code> on this
+                        row. Added by <code>test_hibou_field_encryption</code>; uninstall
+                        that module to remove them.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
