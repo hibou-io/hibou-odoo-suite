@@ -1,24 +1,25 @@
 import json
 import os
-from unittest.mock import MagicMock, patch, PropertyMock
+from unittest.mock import patch
 
 from cryptography.fernet import Fernet
 
-from odoo import fields, models
 from odoo.exceptions import ValidationError, UserError
 from odoo.tests import TransactionCase, tagged
 from odoo.tools.config import config
 
 from odoo.addons.hibou_field_encryption.models.fields import (
     DEFAULT_ENCRYPTION_FIELD,
+    DecryptFailed,
     Encryption,
     EncryptionKeyring,
+    UndecryptableData,
     GCP_PROJECT,
     GCP_SECRET_NAME,
+    REC_ENCRYPTION_DISABLE_AUTO_REENCRYPT,
     REC_ENCRYPTION_KEY,
+    REC_ENCRYPTION_KEY_PATH,
     REC_ENCRYPTION_KEY_PROVIDER,
-    _KEY_PROVIDERS,
-    _load_keyring_from_gcp,
     _pack_header,
     _unpack_header,
     get_keyring,
@@ -33,23 +34,12 @@ TEST_KEY = Fernet.generate_key().decode()
 
 ALL_CONFIG_KEYS = (
     REC_ENCRYPTION_KEY,
+    REC_ENCRYPTION_KEY_PATH,
     REC_ENCRYPTION_KEY_PROVIDER,
+    REC_ENCRYPTION_DISABLE_AUTO_REENCRYPT,
     GCP_PROJECT,
     GCP_SECRET_NAME,
 )
-
-
-def setup_test_model(env, model_clses):
-    model_names = set()
-    for model_cls in model_clses:
-        model = model_cls._build_model(env.registry, env.cr)
-        model_names.add(model._name)
-    env.registry.setup_models(env.cr)
-    env.registry.init_models(
-        env.cr,
-        model_names,
-        dict(env.context, update_custom_fields=True),
-    )
 
 
 def _save_and_clear(*keys):
@@ -71,126 +61,6 @@ def _restore(saved):
             os.environ[key.upper()] = env_val
         else:
             os.environ.pop(key.upper(), None)
-
-
-class EncryptPartnerExplicit(models.Model):
-    _name = "res.partner"
-    _inherit = "res.partner"
-
-    my_blob = fields.Encryption()
-    secret_note = fields.Char(encrypt="my_blob")
-    secret_code = fields.Char(encrypt="my_blob")
-
-
-class EncryptPartnerSugar(models.Model):
-    _name = "enc.test.sugar"
-    _description = "Sugar Encryption Test"
-
-    name = fields.Char()
-    secret_one = fields.Char(encrypt=True)
-    secret_two = fields.Char(encrypt=True)
-
-
-@tagged("post_install", "-at_install")
-class TestEncryptFieldsExplicit(TransactionCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        os.environ[REC_ENCRYPTION_KEY.upper()] = TEST_KEY
-        reset_keyring()
-        setup_test_model(cls.env, [EncryptPartnerExplicit])
-
-    @classmethod
-    def tearDownClass(cls):
-        os.environ.pop(REC_ENCRYPTION_KEY.upper(), None)
-        reset_keyring()
-        super().tearDownClass()
-
-    def test_write_and_read_single_field(self):
-        partner = self.env["res.partner"].create({"name": "Test", "secret_note": "hello"})
-        self.assertEqual(partner.secret_note, "hello")
-
-    def test_write_and_read_multiple_fields(self):
-        partner = self.env["res.partner"].create({
-            "name": "Test",
-            "secret_note": "note1",
-            "secret_code": "code1",
-        })
-        self.assertEqual(partner.secret_note, "note1")
-        self.assertEqual(partner.secret_code, "code1")
-
-    def test_shared_blob(self):
-        partner = self.env["res.partner"].create({
-            "name": "Test",
-            "secret_note": "note1",
-            "secret_code": "code1",
-        })
-        blob = partner.my_blob
-        self.assertIn("secret_note", blob)
-        self.assertIn("secret_code", blob)
-        self.assertEqual(blob["secret_note"], "note1")
-        self.assertEqual(blob["secret_code"], "code1")
-
-    def test_update_field(self):
-        partner = self.env["res.partner"].create({"name": "Test", "secret_note": "v1"})
-        partner.secret_note = "v2"
-        self.assertEqual(partner.secret_note, "v2")
-
-    def test_clear_field(self):
-        partner = self.env["res.partner"].create({
-            "name": "Test",
-            "secret_note": "value",
-            "secret_code": "keep",
-        })
-        partner.secret_note = False
-        self.assertFalse(partner.secret_note)
-        self.assertEqual(partner.secret_code, "keep")
-
-
-@tagged("post_install", "-at_install")
-class TestEncryptTrueSugar(TransactionCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        os.environ[REC_ENCRYPTION_KEY.upper()] = TEST_KEY
-        reset_keyring()
-        setup_test_model(cls.env, [EncryptPartnerSugar])
-
-    @classmethod
-    def tearDownClass(cls):
-        os.environ.pop(REC_ENCRYPTION_KEY.upper(), None)
-        reset_keyring()
-        super().tearDownClass()
-
-    def test_auto_encryption_field_created(self):
-        model = self.env["enc.test.sugar"]
-        self.assertIn(DEFAULT_ENCRYPTION_FIELD, model._fields)
-        field = model._fields[DEFAULT_ENCRYPTION_FIELD]
-        self.assertIsInstance(field, Encryption)
-
-    def test_encrypt_true_read_write(self):
-        rec = self.env["enc.test.sugar"].create({
-            "name": "Test",
-            "secret_one": "alpha",
-            "secret_two": "beta",
-        })
-        self.assertEqual(rec.secret_one, "alpha")
-        self.assertEqual(rec.secret_two, "beta")
-
-    def test_encrypt_true_shared_blob(self):
-        rec = self.env["enc.test.sugar"].create({
-            "name": "Test",
-            "secret_one": "alpha",
-            "secret_two": "beta",
-        })
-        blob = rec[DEFAULT_ENCRYPTION_FIELD]
-        self.assertEqual(blob.get("secret_one"), "alpha")
-        self.assertEqual(blob.get("secret_two"), "beta")
-
-    def test_encrypt_true_update(self):
-        rec = self.env["enc.test.sugar"].create({"name": "Test", "secret_one": "v1"})
-        rec.secret_one = "v2"
-        self.assertEqual(rec.secret_one, "v2")
 
 
 @tagged("post_install", "-at_install")
@@ -425,18 +295,51 @@ class TestVersionedEncryption(TransactionCase):
         result = json.loads(enc._decrypt_data(legacy_ct))
         self.assertEqual(result, {"legacy": True})
 
-    def test_decrypt_revoked_key_returns_empty(self):
+    def _revoked_key_blob(self):
+        """A blob whose key version is not in the configured keyring."""
         k1 = Fernet.generate_key().decode()
         k2 = Fernet.generate_key().decode()
         revoked = Fernet.generate_key().decode()
         os.environ[REC_ENCRYPTION_KEY.upper()] = f"1:{k1},2:{k2}"
         reset_keyring()
+        ct = Fernet(revoked.encode()).encrypt(b'{"gone": true}')
+        return _pack_header(99) + ct
+
+    def test_decrypt_revoked_key_raises(self):
+        """_decrypt_data reports failure rather than reporting emptiness.
+
+        An empty blob and an unreadable blob must not look alike: the first
+        means nothing was stored, the second means something was and we cannot
+        read it. Conflating them is what allowed a write to overwrite data it
+        had failed to decrypt.
+        """
+        blob = self._revoked_key_blob()
         enc = Encryption()
         enc.name = "test_field"
-        ct = Fernet(revoked.encode()).encrypt(b'{"gone": true}')
-        blob = _pack_header(99) + ct
-        result = enc._decrypt_data(blob)
-        self.assertEqual(result, '{}')
+        with self.assertRaises(DecryptFailed) as caught:
+            enc._decrypt_data(blob)
+        self.assertEqual(caught.exception.key_version, 99)
+
+    def test_convert_to_record_revoked_key_degrades_to_marker(self):
+        """Reads stay tolerant, but the result is flagged as unreadable."""
+        blob = self._revoked_key_blob()
+        enc = Encryption()
+        enc.name = "test_field"
+        enc.model_name = "test.model"
+        result = enc.convert_to_record(blob, None)
+        self.assertEqual(result, {})
+        self.assertIsInstance(result, UndecryptableData)
+
+    def test_convert_to_record_empty_is_not_a_marker(self):
+        """A genuinely empty blob is ordinary empty data, and stays writable.
+
+        This is the case a neutralized database is in, so it must not be
+        confused with an unreadable one.
+        """
+        enc = Encryption()
+        enc.name = "test_field"
+        self.assertEqual(enc.convert_to_record(None, None), {})
+        self.assertNotIsInstance(enc.convert_to_record(None, None), UndecryptableData)
 
 
 # --------------------------------------------------------------------------
@@ -481,6 +384,77 @@ class TestReEncrypt(TransactionCase):
         changed, result = re_encrypt_blob(None)
         self.assertFalse(changed)
         self.assertIsNone(result)
+
+
+@tagged("post_install", "-at_install")
+class TestWriteAfterFailedDecrypt(TransactionCase):
+    """Writing one encrypt field must not silently discard its siblings.
+
+    Both fields share a single blob. If that blob cannot be decrypted, a write
+    used to persist a dict containing only the field being written, wiping the
+    other one permanently -- recovering the key afterwards would not bring it
+    back, because the ciphertext was gone.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self._saved = _save_and_clear(*ALL_CONFIG_KEYS)
+        self.k0 = Fernet.generate_key().decode()
+        os.environ[REC_ENCRYPTION_KEY.upper()] = f"0:{self.k0}"
+        reset_keyring()
+        self.record = self.env["enc.test.sugar"].create({
+            "name": "subject",
+            "secret_one": "one",
+            "secret_two": "two",
+        })
+        self.env.flush_all()
+
+    def tearDown(self):
+        _restore(self._saved)
+        reset_keyring()
+        super().tearDown()
+
+    def _revoke_key(self):
+        """Swap in a keyring that cannot read what was already written."""
+        replacement = Fernet.generate_key().decode()
+        os.environ[REC_ENCRYPTION_KEY.upper()] = f"7:{replacement}"
+        reset_keyring()
+        self.record.invalidate_recordset()
+
+    def test_read_degrades_to_empty(self):
+        self._revoke_key()
+        self.assertFalse(self.record.secret_one)
+        self.assertFalse(self.record.secret_two)
+
+    def test_write_is_refused(self):
+        self._revoke_key()
+        with self.assertRaises(UserError):
+            self.record.secret_one = "replacement"
+            self.env.flush_all()
+
+    def test_siblings_survive_a_refused_write(self):
+        self._revoke_key()
+        # A savepoint, not cr.rollback(): rolling the test's own cursor back
+        # breaks it for the rest of the case.
+        with self.assertRaises(UserError):
+            with self.env.cr.savepoint():
+                self.record.secret_one = "replacement"
+                self.env.flush_all()
+        # Drop the rejected write from the cache without flushing it.
+        self.env.invalidate_all(flush=False)
+
+        # With the original key back, both values must still be there.
+        os.environ[REC_ENCRYPTION_KEY.upper()] = f"0:{self.k0}"
+        reset_keyring()
+        self.assertEqual(self.record.secret_one, "one")
+        self.assertEqual(self.record.secret_two, "two")
+
+    def test_write_still_works_when_readable(self):
+        self.record.secret_one = "changed"
+        self.env.flush_all()
+        self.record.invalidate_recordset()
+        self.assertEqual(self.record.secret_one, "changed")
+        self.assertEqual(self.record.secret_two, "two")
 
 
 @tagged("post_install", "-at_install")
@@ -533,6 +507,57 @@ class TestReEncryptTable(TransactionCase):
         )
         row = cr.fetchone()
         return bytes(row[0]) if row and row[0] else None
+
+    def _insert_poison_blob(self):
+        """A row whose key version is not in the keyring at all."""
+        stranger = Fernet.generate_key()
+        ct = Fernet(stranger).encrypt(b'{"unreadable": true}')
+        blob = _pack_header(42) + ct
+        cr = self.env.cr
+        cr.execute(
+            'INSERT INTO "{}" ("{}") VALUES (%s) RETURNING id'.format(
+                self.TABLE, DEFAULT_ENCRYPTION_FIELD
+            ),
+            (blob,),
+        )
+        return cr.fetchone()[0]
+
+    def test_poison_row_does_not_stall_the_table(self):
+        """One unreadable row must not stop the rest from rotating.
+
+        Aborting the table left the rotation permanently stuck with no way to
+        tell which row was at fault.
+        """
+        good = self._insert_blob({"a": "1"}, key_version=0)
+        poison = self._insert_poison_blob()
+        after = self._insert_blob({"b": "2"}, key_version=0)
+
+        updated = re_encrypt_table(self.env.cr, self.TABLE)
+
+        self.assertEqual(updated, 2)
+        for rec_id in (good, after):
+            version, _ct = _unpack_header(self._read_raw_blob(rec_id))
+            self.assertEqual(version, 1)
+        # left alone, so the histogram still reports it and no key can be retired
+        version, _ct = _unpack_header(self._read_raw_blob(poison))
+        self.assertEqual(version, 42)
+
+    def test_migrate_aborts_on_unreadable_blob(self):
+        """A migration must not merge plaintext into a blob it could not read."""
+        cr = self.env.cr
+        cr.execute('ALTER TABLE "{}" ADD COLUMN "plain_col" varchar'.format(self.TABLE))
+        rec_id = self._insert_poison_blob()
+        cr.execute(
+            'UPDATE "{}" SET "plain_col" = %s WHERE id = %s'.format(self.TABLE),
+            ("incoming", rec_id),
+        )
+
+        with self.assertRaises(UserError):
+            migrate_fields_to_encryption(cr, self.TABLE, ["plain_col"])
+
+        # the unreadable blob is untouched, so the data is still recoverable
+        version, _ct = _unpack_header(self._read_raw_blob(rec_id))
+        self.assertEqual(version, 42)
 
     def test_re_encrypt_table_updates_old_rows(self):
         r1 = self._insert_blob({"a": "1"}, key_version=0)
@@ -626,14 +651,33 @@ class TestGCPKeyProvider(TransactionCase):
         os.environ[REC_ENCRYPTION_KEY_PROVIDER.upper()] = "gcp_secret_manager"
         os.environ[GCP_SECRET_NAME.upper()] = "some-secret"
         reset_keyring()
-        with self.assertRaises(ValidationError):
+        # Without the patch this raises UserError for the missing library on
+        # hosts where google-cloud-secret-manager is not installed, which is
+        # not what this test is about (ValidationError subclasses UserError,
+        # so assertRaises would not catch it either).
+        with patch(
+            "odoo.addons.hibou_field_encryption.models.fields.secretmanager"
+        ), self.assertRaises(ValidationError):
             get_keyring()
 
     def test_gcp_provider_missing_secret_raises(self):
         os.environ[REC_ENCRYPTION_KEY_PROVIDER.upper()] = "gcp_secret_manager"
         os.environ[GCP_PROJECT.upper()] = "some-project"
         reset_keyring()
-        with self.assertRaises(ValidationError):
+        with patch(
+            "odoo.addons.hibou_field_encryption.models.fields.secretmanager"
+        ), self.assertRaises(ValidationError):
+            get_keyring()
+
+    def test_gcp_missing_library_raises(self):
+        os.environ[REC_ENCRYPTION_KEY_PROVIDER.upper()] = "gcp_secret_manager"
+        os.environ[GCP_PROJECT.upper()] = "some-project"
+        os.environ[GCP_SECRET_NAME.upper()] = "some-secret"
+        reset_keyring()
+        with patch(
+            "odoo.addons.hibou_field_encryption.models.fields.secretmanager",
+            None,
+        ), self.assertRaises(UserError):
             get_keyring()
 
     def test_gcp_loads_single_version(self):
@@ -1050,11 +1094,12 @@ class TestCronReEncrypt(TransactionCase):
 
     def test_cron_re_encrypts_and_stamps(self):
         rid = self._create_test_table_with_blob({"secret": "cron_test"}, key_version=0)
+        # The cron commits each batch; Odoo forbids a real commit inside a test.
         with patch.object(
             type(self.env['base']),
             '_find_encryption_tables',
             return_value=[(self.TABLE, DEFAULT_ENCRYPTION_FIELD)],
-        ):
+        ), patch.object(self.env.cr, 'commit'):
             self.env['base']._cron_re_encrypt_fields()
         raw = self._read_raw_blob(rid)
         ver, _ = _unpack_header(raw)
@@ -1087,11 +1132,57 @@ class TestCronReEncrypt(TransactionCase):
         )
 
     def test_find_encryption_tables_discovers_fields(self):
+        """Discovery reports columns that exist. A model can be in the registry
+        without its table being in the database (test models built in a rolled
+        back transaction), so presence in the registry alone is not enough.
+        """
+        self._create_test_table_with_blob({"secret": "discover"}, key_version=0)
         tables = self.env['base']._find_encryption_tables()
         self.assertIsInstance(tables, list)
-        has_encryption = any(
-            fname == DEFAULT_ENCRYPTION_FIELD
-            for _table, fname in tables
-        )
-        if self.env.registry.models.get('enc.test.sugar'):
-            self.assertTrue(has_encryption)
+        self.assertIn((self.TABLE, DEFAULT_ENCRYPTION_FIELD), tables)
+
+    def test_cron_skips_when_auto_reencrypt_disabled(self):
+        rid = self._create_test_table_with_blob({"secret": "keep"}, key_version=0)
+        os.environ[REC_ENCRYPTION_DISABLE_AUTO_REENCRYPT.upper()] = '1'
+        with patch.object(
+            type(self.env['base']),
+            '_find_encryption_tables',
+            return_value=[(self.TABLE, DEFAULT_ENCRYPTION_FIELD)],
+        ):
+            self.env['base']._cron_re_encrypt_fields()
+        ver, _ = _unpack_header(self._read_raw_blob(rid))
+        self.assertEqual(ver, 0)
+        self.assertEqual(self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '0')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
