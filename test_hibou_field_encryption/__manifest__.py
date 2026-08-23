@@ -13,6 +13,11 @@
     It also lets the suite cover an _inherits parent/child pair with a custom
     named blob, which is the shape real deployments use and the one most likely
     to break.
+
+    Installing it adds an admin-only "Encryption Tests" menu for exercising a
+    key rotation by hand. Each record shows the key version in its stored blob
+    alongside the keyring's current version, so a rotation can be watched
+    rather than inferred.
     """,
     'category': 'Hidden/Tests',
     'author': 'Hibou Corp.',
@@ -21,6 +26,9 @@
     'depends': ['hibou_field_encryption'],
     'data': [
         'security/ir.model.access.csv',
+        'views/enc_test_views.xml',
+        'views/res_partner_views.xml',
+        'views/menus.xml',
     ],
     'license': 'LGPL-3',
     'installable': True,

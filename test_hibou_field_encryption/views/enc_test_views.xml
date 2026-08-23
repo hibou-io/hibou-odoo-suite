@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         enc.test.sugar  -  encrypt=True, implicit rec_encrypted blob
+         ============================================================ -->
+
+    <record id="view_enc_test_sugar_list" model="ir.ui.view">
+        <field name="name">enc.test.sugar.list</field>
+        <field name="model">enc.test.sugar</field>
+        <field name="arch" type="xml">
+            <list decoration-warning="blob_is_pending">
+                <field name="name"/>
+                <field name="secret_one"/>
+                <field name="secret_two"/>
+                <field name="blob_key_version"/>
+                <field name="keyring_current"/>
+                <field name="blob_is_pending" string="Pending"/>
+                <field name="blob_bytes" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_enc_test_sugar_form" model="ir.ui.view">
+        <field name="name">enc.test.sugar.form</field>
+        <field name="model">enc.test.sugar</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_re_encrypt_now" type="object"
+                            string="Re-encrypt Now" class="btn-primary"
+                            confirm="Rotate every encrypted column in this database to the current key version. Continue?"/>
+                    <button name="action_refresh" type="object" string="Refresh"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Encrypted Values">
+                            <field name="name"/>
+                            <field name="secret_one"/>
+                            <field name="secret_two"/>
+                        </group>
+                        <group string="What Is Actually Stored">
+                            <field name="blob_is_empty"/>
+                            <field name="blob_key_version"/>
+                            <field name="blob_bytes"/>
+                            <field name="keyring_versions"/>
+                            <field name="keyring_current"/>
+                            <field name="blob_is_pending"/>
+                        </group>
+                    </group>
+                    <div class="text-muted">
+                        Both secrets share one <code>rec_encrypted</code> blob. Change the
+                        keyring and reload to watch <em>Stored Key Version</em> fall behind
+                        <em>Current Key Version</em>, then re-encrypt to bring it forward.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_enc_test_sugar" model="ir.actions.act_window">
+        <field name="name">Sugar (encrypt=True)</field>
+        <field name="res_model">enc.test.sugar</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a record with encrypted fields</p>
+            <p>Two <code>encrypt=True</code> fields sharing one implicit
+               <code>rec_encrypted</code> blob.</p>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         enc.test.group  -  custom named blob, _inherits parent
+         ============================================================ -->
+
+    <record id="view_enc_test_group_list" model="ir.ui.view">
+        <field name="name">enc.test.group.list</field>
+        <field name="model">enc.test.group</field>
+        <field name="arch" type="xml">
+            <list decoration-warning="blob_is_pending">
+                <field name="name"/>
+                <field name="group_secret"/>
+                <field name="group_token"/>
+                <field name="blob_key_version"/>
+                <field name="keyring_current"/>
+                <field name="blob_is_pending" string="Pending"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_enc_test_group_form" model="ir.ui.view">
+        <field name="name">enc.test.group.form</field>
+        <field name="model">enc.test.group</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_re_encrypt_now" type="object"
+                            string="Re-encrypt Now" class="btn-primary"
+                            confirm="Rotate every encrypted column in this database to the current key version. Continue?"/>
+                    <button name="action_refresh" type="object" string="Refresh"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Encrypted Values">
+                            <field name="name"/>
+                            <field name="group_secret"/>
+                            <field name="group_token"/>
+                        </group>
+                        <group string="What Is Actually Stored">
+                            <field name="blob_is_empty"/>
+                            <field name="blob_key_version"/>
+                            <field name="blob_bytes"/>
+                            <field name="keyring_versions"/>
+                            <field name="keyring_current"/>
+                            <field name="blob_is_pending"/>
+                        </group>
+                    </group>
+                    <div class="text-muted">
+                        This blob is named <code>group_blob</code> rather than the default,
+                        which is the shape production uses. Members below delegate to this
+                        record, so their encrypted values live in this row.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_enc_test_group" model="ir.actions.act_window">
+        <field name="name">Groups (custom blob)</field>
+        <field name="res_model">enc.test.group</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ============================================================
+         enc.test.member  -  _inherits child, blob on the parent
+         ============================================================ -->
+
+    <record id="view_enc_test_member_list" model="ir.ui.view">
+        <field name="name">enc.test.member.list</field>
+        <field name="model">enc.test.member</field>
+        <field name="arch" type="xml">
+            <list decoration-warning="blob_is_pending">
+                <field name="label"/>
+                <field name="group_id"/>
+                <field name="group_secret"/>
+                <field name="group_token"/>
+                <field name="blob_key_version"/>
+                <field name="keyring_current"/>
+                <field name="blob_is_pending" string="Pending"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_enc_test_member_form" model="ir.ui.view">
+        <field name="name">enc.test.member.form</field>
+        <field name="model">enc.test.member</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group string="Member">
+                            <field name="label"/>
+                            <field name="group_id"/>
+                        </group>
+                        <group string="Delegated Encrypted Values">
+                            <field name="group_secret"/>
+                            <field name="group_token"/>
+                            <field name="blob_key_version"/>
+                            <field name="keyring_current"/>
+                            <field name="blob_is_pending"/>
+                        </group>
+                    </group>
+                    <div class="text-muted">
+                        These encrypted fields are inherited through
+                        <code>_inherits</code>; the blob is stored on the parent group's
+                        row, not here. Writing one from this form is the case that breaks
+                        if the storage field stops being set on the registry class.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_enc_test_member" model="ir.actions.act_window">
+        <field name="name">Members (_inherits child)</field>
+        <field name="res_model">enc.test.member</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
