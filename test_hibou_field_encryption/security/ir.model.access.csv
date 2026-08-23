@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_enc_test_sugar,enc.test.sugar,model_enc_test_sugar,base.group_user,1,1,1,1
+access_enc_test_group,enc.test.group,model_enc_test_group,base.group_user,1,1,1,1
+access_enc_test_member,enc.test.member,model_enc_test_member,base.group_user,1,1,1,1
