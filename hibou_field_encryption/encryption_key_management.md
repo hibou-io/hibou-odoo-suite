@@ -273,12 +273,14 @@ decrypts with version `1`. Restart **every** worker — see
 
 #### 3. Re-encrypt Existing Data
 
-```python
-from odoo.addons.hibou_field_encryption.models.fields import re_encrypt_table
+Nothing to do — the restart above performs the rotation, and there is no table
+list to maintain because encryption columns are discovered by field type. See
+[Automatic Re-encryption](#automatic-re-encryption).
 
-re_encrypt_table(env.cr, 'eyrie_datasource')
-re_encrypt_table(env.cr, 'eyrie_webhook')
-re_encrypt_table(env.cr, 'res_partner')
+If you have disabled automatic re-encryption, trigger it yourself:
+
+```python
+env['base']._re_encrypt_now()
 env.cr.commit()
 ```
 
@@ -707,7 +709,7 @@ splitting the format between two implementations.
 
 | Config Key | Environment Variable | Default | Description |
 |---|---|---|---|
-| `rec_encryption_key_provider` | `REC_ENCRYPTION_KEY_PROVIDER` | `config` | Key provider: `config` or `gcp_secret_manager` |
+| `rec_encryption_key_provider` | `REC_ENCRYPTION_KEY_PROVIDER` | `config` | Key provider: `config`, `file` or `gcp_secret_manager` |
 | `rec_encryption_key` | `REC_ENCRYPTION_KEY` | *(required for config provider)* | Single Fernet key or versioned keyring |
 | `rec_encryption_key_path` | `REC_ENCRYPTION_KEY_PATH` | *(required for file provider)* | Path to a file holding the keyring |
 | `rec_encryption_disable_auto_reencrypt` | `REC_ENCRYPTION_DISABLE_AUTO_REENCRYPT` | `False` | Opt out of automatic re-encryption at startup and in the cron |
@@ -1030,9 +1032,21 @@ The blob carries a version header, but that version is not present in the
 keyring. Add the key back for that version or accept that the data is
 unreadable.
 
+### "Cannot save 'X': the encrypted data on this record could not be decrypted"
+
+Writes to a record whose blob cannot be decrypted are refused. Every encrypt
+field on a model shares one blob, so saving would re-encrypt a dict containing
+only the field being written and permanently discard the rest — data that is
+otherwise still recoverable, because the ciphertext is intact and only the key
+is missing.
+
+Restore the key version the record claims (see the ERROR logged by the read
+that preceded this), then the write succeeds normally. Reads are unaffected and
+return empty in the meantime.
+
 ### "Unknown encryption key provider"
 
-The `rec_encryption_key_provider` value is not `config` or
+The `rec_encryption_key_provider` value is not `config`, `file` or
 `gcp_secret_manager`. Check for typos.
 
 ### "No valid Fernet keys found in GCP secret"
