@@ -86,7 +86,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='payment_term_id']" position="before">
-                <field name="shipping_account_id" options="{'no_create': True, 'no_open': True}" domain="['|', ('partner_id', '=', False), ('partner_id', '=', partner_id)]"/>
+                <field name="shipping_account_id" options="{'no_create': True, 'no_open': True}" domain="['|', ('partner_id', '=', False), ('partner_id', 'parent_of', partner_id)]"/>
             </xpath>
         </field>
     </record>
