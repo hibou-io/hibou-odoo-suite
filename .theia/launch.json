@@ -7,6 +7,7 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
+            "python": "/usr/local/bin/python",
             "program": "${file}",
             "console": "integratedTerminal"
         },
@@ -14,6 +15,7 @@
             "name": "Odoo: shell",
             "type": "python",
             "request": "launch",
+            "python": "/usr/local/bin/python",
             "program": "/opt/odoo/hibou-suite/odoo-run.py",
             "args": ["shell", "--no-xmlrpc"],
             "console": "integratedTerminal"
@@ -22,6 +24,7 @@
             "name": "Odoo: TEST 'sale'",
             "type": "python",
             "request": "launch",
+            "python": "/usr/local/bin/python",
             "program": "/opt/odoo/hibou-suite/odoo-run.py",
             "args": ["-i", "sale", 
                      "-u", "sale",
@@ -32,6 +35,7 @@
             "name": "Odoo: INIT 'hr_commission'",
             "type": "python",
             "request": "launch",
+            "python": "/usr/local/bin/python",
             "program": "/opt/odoo/hibou-suite/odoo-run.py",
             "args": ["-i", "hr_commission", 
                      "-u", "hr_commission",
@@ -42,6 +46,7 @@
             "name": "Odoo: TEST 'hr_commission'",
             "type": "python",
             "request": "launch",
+            "python": "/usr/local/bin/python",
             "program": "/opt/odoo/hibou-suite/odoo-run.py",
             "args": ["-i", "hr_commission", 
                      "-u", "hr_commission",
@@ -52,6 +57,7 @@
             "name": "Odoo: INIT 'hr_payroll_hibou'",
             "type": "python",
             "request": "launch",
+            "python": "/usr/local/bin/python",
             "program": "/opt/odoo/hibou-suite/odoo-run.py",
             "args": ["-i", "hr_payroll_hibou", 
                      "-u", "hr_payroll_hibou",
@@ -62,6 +68,7 @@
             "name": "Odoo: TEST 'hr_payroll_hibou'",
             "type": "python",
             "request": "launch",
+            "python": "/usr/local/bin/python",
             "program": "/opt/odoo/hibou-suite/odoo-run.py",
             "args": ["-i", "hr_payroll_hibou", 
                      "-u", "hr_payroll_hibou",
@@ -72,6 +79,7 @@
             "name": "Odoo: server",
             "type": "python",
             "request": "launch",
+            "python": "/usr/local/bin/python",
             "program": "/opt/odoo/hibou-suite/odoo-run.py",
             "args": [],
             "console": "integratedTerminal"
@@ -80,6 +88,7 @@
             "name": "Odoo: Locust Load Testing",
             "type": "python",
             "request": "launch",
+            "python": "/usr/local/bin/python",
             "program": "/flow/odoo/Locust/entrypoint.py",
             "args": [
                 // -f /path/to/locustfiles.py
@@ -96,6 +105,7 @@
             "name": "Odoo: reload foreground server",
             "type": "python",
             "request": "launch",
+            "python": "/usr/local/bin/python",
             "program": "/opt/odoo/hibou-suite/odoo-reload.py",
             "args": [],
             "console": "integratedTerminal"
@@ -104,6 +114,7 @@
             "name": "Odoo: reload foreground server, Kill Others",
             "type": "python",
             "request": "launch",
+            "python": "/usr/local/bin/python",
             "program": "/opt/odoo/hibou-suite/odoo-reload.py",
             "args": ["KILL_OTHER"],
             "console": "integratedTerminal"
