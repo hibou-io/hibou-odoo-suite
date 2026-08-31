@@ -205,3 +205,55 @@ class TestInheritedEncryptFields(EncryptFieldsCase):
             self.env.cr, registry=self.env.registry,
         )
         self.assertIn(("enc_test_group", "group_blob"), columns)
+
+
+@tagged("post_install", "-at_install")
+class TestBlobInspector(EncryptFieldsCase):
+    """The inspector has to report the blob that is really on the row.
+
+    The form view is the only place a rotation can be watched by hand, so an
+    inspector that reports "no stored blob" for a populated row is worse than
+    having none at all.
+    """
+
+    def test_reports_the_stored_blob(self):
+        rec = self.env["enc.test.sugar"].create(
+            {"name": "g", "secret_one": "alpha"}
+        )
+        self.assertFalse(rec.blob_is_empty)
+        self.assertEqual(rec.blob_key_version, 0)
+        self.assertTrue(rec.blob_bytes)
+
+    def test_reports_an_empty_row_as_empty(self):
+        rec = self.env["enc.test.sugar"].create({"name": "no secrets"})
+        self.assertTrue(rec.blob_is_empty)
+        self.assertEqual(rec.blob_bytes, 0)
+
+    def test_reports_the_stored_blob_for_a_new_id_record(self):
+        """Onchange computes against a NewId whose id is not the row id.
+
+        This is what the form view does on every edit, and reading it through
+        record.id rather than its origin made every populated row report
+        itself as empty.
+        """
+        rec = self.env["enc.test.sugar"].create(
+            {"name": "g", "secret_one": "alpha"}
+        )
+        pseudo = self.env["enc.test.sugar"].new(
+            {"name": "edited"}, origin=rec,
+        )
+        self.assertFalse(pseudo.blob_is_empty)
+        self.assertEqual(pseudo.blob_key_version, rec.blob_key_version)
+        self.assertEqual(pseudo.blob_bytes, rec.blob_bytes)
+
+    def test_custom_named_blob_is_inspected(self):
+        group = self.env["enc.test.group"].create(
+            {"name": "g", "group_secret": "one"}
+        )
+        self.assertFalse(group.blob_is_empty)
+        self.assertTrue(group.blob_bytes)
+
+    def test_pure_new_record_has_no_stored_blob(self):
+        pseudo = self.env["enc.test.sugar"].new({"secret_one": "alpha"})
+        self.assertTrue(pseudo.blob_is_empty)
+        self.assertEqual(pseudo.blob_bytes, 0)

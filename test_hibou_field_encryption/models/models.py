@@ -43,19 +43,25 @@ class EncryptionBlobInspector(models.AbstractModel):
 
     def _compute_blob_info(self):
         blob_field = self._blob_field
+        # Onchange evaluates a form's computed fields against NewId records
+        # originating from the saved row, so record.id is a NewId while the
+        # blob is stored under the origin's integer id. self.ids already
+        # resolves to origins, so the lookup has to as well; otherwise every
+        # get() misses and a populated row reports itself as empty.
+        origins = self._origin
         # the blob is a stored column, so pending writes have to reach the
         # database before the raw read below can see them
-        self.flush_recordset([blob_field])
+        origins.flush_recordset([blob_field])
         rows = {}
-        if self.ids:
+        if origins.ids:
             self.env.cr.execute(
                 'SELECT id, "{}" FROM "{}" WHERE id IN %s'.format(
                     blob_field, self._table),
-                (tuple(self.ids),),
+                (tuple(origins.ids),),
             )
             rows = dict(self.env.cr.fetchall())
         for record in self:
-            raw = rows.get(record.id)
+            raw = rows.get(record._origin.id)
             if isinstance(raw, memoryview):
                 raw = bytes(raw)
             if not raw:
