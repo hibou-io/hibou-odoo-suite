@@ -22,10 +22,10 @@
     'category': 'Hidden/Tests',
     'author': 'Hibou Corp.',
     'website': 'https://hibou.io/',
-    'version': '18.0.1.0.0',
+    'version': '20.0.1.0.0',
     'depends': ['hibou_field_encryption'],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
         'views/enc_test_views.xml',
         'views/res_partner_views.xml',
         'views/menus.xml',
