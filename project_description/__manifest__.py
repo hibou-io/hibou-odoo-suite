@@ -1,6 +1,6 @@
 {
     'name': 'Project Description',
-    'version': '19.0.1.0.0',
+    'version': '20.0.1.0.0',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'website': 'https://hibou.io/',
     'license': 'AGPL-3',
