@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Admin-only: the ACLs grant base.group_user so the automated tests can
+         run as any user, but this menu is a developer tool and does not belong
+         in every user's app switcher. -->
+    <menuitem id="menu_enc_test_root"
+              name="Encryption Tests"
+              web_icon="base,static/description/icon.png"
+              groups="base.group_system"
+              sequence="500"/>
+
+    <menuitem id="menu_enc_test_records"
+              name="Records"
+              parent="menu_enc_test_root"
+              sequence="10"/>
+
+    <menuitem id="menu_enc_test_sugar"
+              name="Sugar (encrypt=True)"
+              parent="menu_enc_test_records"
+              action="action_enc_test_sugar"
+              sequence="10"/>
+
+    <menuitem id="menu_enc_test_group"
+              name="Groups (custom blob)"
+              parent="menu_enc_test_records"
+              action="action_enc_test_group"
+              sequence="20"/>
+
+    <menuitem id="menu_enc_test_member"
+              name="Members (_inherits child)"
+              parent="menu_enc_test_records"
+              action="action_enc_test_member"
+              sequence="30"/>
+
+</odoo>
