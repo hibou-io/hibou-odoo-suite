@@ -724,7 +724,7 @@ class TestAutoReEncryptAtBoot(TransactionCase):
         os.environ[REC_ENCRYPTION_KEY.upper()] = f"0:{self.k0},1:{self.k1}"
         reset_keyring()
         self.icp = self.env['ir.config_parameter'].sudo()
-        self.icp.set_param(ICP_ENCRYPTION_KEY_VERSION, '0')
+        self.icp.set_str(ICP_ENCRYPTION_KEY_VERSION, '0')
         cr = self.env.cr
         cr.execute(
             'CREATE TABLE IF NOT EXISTS "{}" ('
@@ -735,7 +735,7 @@ class TestAutoReEncryptAtBoot(TransactionCase):
 
     def tearDown(self):
         self.env.cr.execute('DROP TABLE IF EXISTS "{}"'.format(self.TABLE))
-        self.icp.set_param(ICP_ENCRYPTION_KEY_VERSION, False)
+        self.icp.set_str(ICP_ENCRYPTION_KEY_VERSION, False)
         _restore(self._saved)
         reset_keyring()
         super().tearDown()
@@ -776,14 +776,14 @@ class TestAutoReEncryptAtBoot(TransactionCase):
         rid = self._insert({"secret": "rotate_me"}, key_version=0)
         self._run_boot()
         self.assertEqual(self._version_of(rid), 1)
-        self.assertEqual(self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '1')
+        self.assertEqual(self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '1')
 
     def test_skipped_when_disabled(self):
         rid = self._insert({"secret": "leave_me"}, key_version=0)
         os.environ[REC_ENCRYPTION_DISABLE_AUTO_REENCRYPT.upper()] = '1'
         self._run_boot()
         self.assertEqual(self._version_of(rid), 0)
-        self.assertEqual(self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '0')
+        self.assertEqual(self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '0')
 
     def test_skipped_for_single_key(self):
         os.environ[REC_ENCRYPTION_KEY.upper()] = self.k0
@@ -791,10 +791,10 @@ class TestAutoReEncryptAtBoot(TransactionCase):
         rid = self._insert({"secret": "single"}, key_version=0)
         self._run_boot()
         self.assertEqual(self._version_of(rid), 0)
-        self.assertEqual(self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '0')
+        self.assertEqual(self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '0')
 
     def test_skipped_when_already_stamped(self):
-        self.icp.set_param(ICP_ENCRYPTION_KEY_VERSION, '1')
+        self.icp.set_str(ICP_ENCRYPTION_KEY_VERSION, '1')
         rid = self._insert({"secret": "stamped"}, key_version=0)
         self._run_boot()
         self.assertEqual(self._version_of(rid), 0)
@@ -803,7 +803,7 @@ class TestAutoReEncryptAtBoot(TransactionCase):
         os.environ.pop(REC_ENCRYPTION_KEY.upper(), None)
         reset_keyring()
         self._run_boot()
-        self.assertEqual(self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '0')
+        self.assertEqual(self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '0')
 
     def test_does_not_stamp_on_failure(self):
         rid = self._insert({"secret": "boom"}, key_version=0)
@@ -817,7 +817,7 @@ class TestAutoReEncryptAtBoot(TransactionCase):
         ):
             self.env['base']._auto_re_encrypt_fields()
         self.assertEqual(self._version_of(rid), 0)
-        self.assertEqual(self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '0')
+        self.assertEqual(self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '0')
 
     def test_second_run_is_a_noop(self):
         rid = self._insert({"secret": "once"}, key_version=0)
@@ -839,10 +839,10 @@ class TestAutoReEncryptAtBoot(TransactionCase):
         ):
             self.assertTrue(self.env['base']._re_encrypt_now())
         self.assertEqual(self._version_of(rid), 1)
-        self.assertEqual(self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '1')
+        self.assertEqual(self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '1')
 
     def test_manual_trigger_with_nothing_pending(self):
-        self.icp.set_param(ICP_ENCRYPTION_KEY_VERSION, '1')
+        self.icp.set_str(ICP_ENCRYPTION_KEY_VERSION, '1')
         self.assertTrue(self.env['base']._re_encrypt_now())
 
     def test_does_not_stamp_when_a_straggler_appears_mid_pass(self):
@@ -868,15 +868,15 @@ class TestAutoReEncryptAtBoot(TransactionCase):
             self.env['base']._auto_re_encrypt_fields()
 
         self.assertEqual(pending_re_encrypt_count(self.env.cr, self.TABLE), 1)
-        self.assertEqual(self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '0')
+        self.assertEqual(self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '0')
 
     def test_rotation_pending_reports_current_version(self):
         self.assertEqual(self.env['base']._encryption_rotation_pending(), 1)
-        self.icp.set_param(ICP_ENCRYPTION_KEY_VERSION, '1')
+        self.icp.set_str(ICP_ENCRYPTION_KEY_VERSION, '1')
         self.assertIsNone(self.env['base']._encryption_rotation_pending())
 
     def test_migrated_version_handles_garbage(self):
-        self.icp.set_param(ICP_ENCRYPTION_KEY_VERSION, 'not-a-number')
+        self.icp.set_str(ICP_ENCRYPTION_KEY_VERSION, 'not-a-number')
         self.assertEqual(self.env['base']._encryption_migrated_version(), 0)
 
     def test_advisory_lock_prevents_concurrent_run(self):
@@ -892,7 +892,7 @@ class TestAutoReEncryptAtBoot(TransactionCase):
             self.env['base']._auto_re_encrypt_fields()
         mock_run.assert_not_called()
         self.assertEqual(self._version_of(rid), 0)
-        self.assertEqual(self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '0')
+        self.assertEqual(self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '0')
 
     def test_advisory_lock_is_granted_when_free(self):
         self.assertTrue(self.env['base']._try_re_encrypt_lock())
@@ -1041,10 +1041,10 @@ class TestKeySourcePolling(TransactionCase):
         get_keyring()
         self.icp = self.env['ir.config_parameter'].sudo()
         # Already rotated, so these tests observe polling and nothing else.
-        self.icp.set_param(ICP_ENCRYPTION_KEY_VERSION, '1')
+        self.icp.set_str(ICP_ENCRYPTION_KEY_VERSION, '1')
 
     def tearDown(self):
-        self.icp.set_param(ICP_ENCRYPTION_KEY_VERSION, False)
+        self.icp.set_str(ICP_ENCRYPTION_KEY_VERSION, False)
         _restore(self._saved)
         reset_keyring()
         super().tearDown()
@@ -1094,7 +1094,7 @@ class TestKeySourcePolling(TransactionCase):
         workers have not reloaded yet.
         """
         self._add_third_version()
-        self.icp.set_param(ICP_ENCRYPTION_KEY_VERSION, '0')
+        self.icp.set_str(ICP_ENCRYPTION_KEY_VERSION, '0')
         with self._pretend_gcp(), patch.object(
             type(self.env['base']), '_signal_registry_change',
             return_value=True,
@@ -1103,7 +1103,7 @@ class TestKeySourcePolling(TransactionCase):
         ) as mock_re_encrypt:
             self.env['base']._cron_re_encrypt_fields()
         mock_re_encrypt.assert_not_called()
-        self.assertEqual(self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '0')
+        self.assertEqual(self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '0')
 
     def test_unreachable_key_source_keeps_the_cached_keyring(self):
         with self._pretend_gcp(), patch(
@@ -1140,7 +1140,7 @@ class TestCronIncremental(TransactionCase):
         os.environ[REC_ENCRYPTION_KEY.upper()] = f"0:{self.k0},1:{self.k1}"
         reset_keyring()
         self.icp = self.env['ir.config_parameter'].sudo()
-        self.icp.set_param(ICP_ENCRYPTION_KEY_VERSION, '0')
+        self.icp.set_str(ICP_ENCRYPTION_KEY_VERSION, '0')
         cr = self.env.cr
         cr.execute(
             'CREATE TABLE IF NOT EXISTS "{}" ('
@@ -1151,7 +1151,7 @@ class TestCronIncremental(TransactionCase):
 
     def tearDown(self):
         self.env.cr.execute('DROP TABLE IF EXISTS "{}"'.format(self.TABLE))
-        self.icp.set_param(ICP_ENCRYPTION_KEY_VERSION, False)
+        self.icp.set_str(ICP_ENCRYPTION_KEY_VERSION, False)
         _restore(self._saved)
         reset_keyring()
         super().tearDown()
@@ -1219,7 +1219,7 @@ class TestCronIncremental(TransactionCase):
         ):
             self.env['base']._cron_re_encrypt_fields()
         self.assertEqual(pending_re_encrypt_count(self.env.cr, self.TABLE), 1)
-        self.assertEqual(self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '0')
+        self.assertEqual(self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '0')
 
     def test_cron_resumes_after_partial_run(self):
         for i in range(4):
@@ -1236,4 +1236,4 @@ class TestCronIncremental(TransactionCase):
         with tables, commit:
             self.env['base']._cron_re_encrypt_fields()
         self.assertEqual(pending_re_encrypt_count(self.env.cr, self.TABLE), 0)
-        self.assertEqual(self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '1')
+        self.assertEqual(self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '1')

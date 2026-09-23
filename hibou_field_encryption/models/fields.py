@@ -6,6 +6,7 @@ import time
 
 from odoo import fields, models
 from odoo.exceptions import ValidationError, UserError
+from odoo.orm import model_classes
 from odoo.tools.config import config
 
 _logger = logging.getLogger(__name__)
@@ -554,7 +555,7 @@ def _inverse_encrypt(self, records):
 class Encryption(fields.Field):
     """ Encryption fields provide the storage for encrypt fields. """
     type = 'encryption'
-    column_type = ('bytea', 'bytea')
+    _column_type = ('bytea', 'bytea')
 
     prefetch = False                    # not prefetched by default
 
@@ -629,69 +630,66 @@ class Encryption(fields.Field):
 
 fields.Encryption = Encryption
 
-# Monkey-patch _setup_base to inject Encryption fields into _fields.
-# In Odoo, _setup_base collects class-attribute fields into _fields.
-# Fields dynamically created via encrypt=True in _get_attrs would be
-# too late, so we inject them at the end of _setup_base instead.
-_original_setup_base = models.BaseModel._setup_base
+# Declare the Encryption storage field on the model definition class that
+# declares an encrypt field. Since 20.0 the fields of a model are rebuilt from
+# the definition classes' _field_definitions in model_classes._setup(), and
+# add_field() refuses names that are not declared on a Python class, so the
+# storage field has to be a real definition (the same way MetaModel adds
+# create_uid & co). The ORM then shares it, propagates it to _inherit
+# children, turns it into a related field for _inherits children and reflects
+# it like any other field.
+ENCRYPTION_STORAGE_MODULE = 'hibou_field_encryption'
 
-def _inject_encryption_field(model, enc_name):
+
+def _encrypt_target(field):
+    enc = (field._args__ or {}).get('encrypt') or getattr(field, 'encrypt', None)
+    if not enc:
+        return None
+    return DEFAULT_ENCRYPTION_FIELD if enc is True else enc
+
+
+def _declare_storage_field(definition_cls, enc_name):
     enc_field = Encryption(string='Encrypted Data')
-    enc_field.args = {'string': 'Encrypted Data'}
-    enc_field.name = enc_name
-    enc_field.string = 'Encrypted Data'
-    enc_field.model_name = model._name
-    enc_field._modules = {'hibou_field_encryption'}
-    model._fields[enc_name] = enc_field
-    # Also set it on the registry class. Models that inherit this one pick the
-    # storage field up from the class, so without this an inherited encrypt
-    # field has nowhere to store its value and the reflected ir.model.fields
-    # row for the child is orphaned. It does leak the attribute into related
-    # model classes, which Registry.reset_changes() does not undo; the test
-    # suite sweeps that up rather than the other way round.
-    try:
-        type.__setattr__(type(model), enc_name, enc_field)
-    except (TypeError, AttributeError):
-        pass
+    setattr(definition_cls, enc_name, enc_field)
+    enc_field.__set_name__(definition_cls, enc_name)
+    # Keep the ir.model.fields external id under this module, as in previous
+    # versions; moving it to the declaring module would make the next update
+    # of this module drop the field, and its column with it.
+    enc_field._module = ENCRYPTION_STORAGE_MODULE
+    enc_field._modules = (ENCRYPTION_STORAGE_MODULE,)
 
 
-def _collect_enc_names_from_fields(fields_dict):
-    enc_names = set()
-    for field in fields_dict.values():
-        enc = getattr(field, 'encrypt', None) or (getattr(field, 'args', None) or {}).get('encrypt')
-        if enc:
-            enc_names.add(DEFAULT_ENCRYPTION_FIELD if enc is True else enc)
-    return enc_names
+def _ensure_storage_definitions(model_cls):
+    definition_classes = [
+        cls for cls in model_cls.mro()
+        if isinstance(cls, models.MetaModel) and getattr(cls, 'pool', None) is None
+    ]
+    declared = {
+        field.name
+        for cls in definition_classes
+        for field in cls._field_definitions
+    }
+    for cls in reversed(definition_classes):
+        for field in list(cls._field_definitions):
+            enc_name = _encrypt_target(field)
+            if enc_name and enc_name not in declared:
+                _declare_storage_field(cls, enc_name)
+                declared.add(enc_name)
 
 
-def _patched_setup_base(self):
-    # Inject encryption storage fields on self before _original_setup_base
-    # so they are available during _add_inherited_fields.
-    for enc_name in _collect_enc_names_from_fields(self._fields):
-        if enc_name not in self._fields:
-            _inject_encryption_field(self, enc_name)
-    # Also inject on _inherits parents — their encrypt fields may
-    # reference storage fields that haven't been created yet.
-    pool = getattr(self, 'pool', None)
-    if pool:
-        for parent_model_name in getattr(self, '_inherits', {}):
-            parent = pool.get(parent_model_name)
-            if parent is None:
-                continue
-            for enc_name in _collect_enc_names_from_fields(parent._fields):
-                if enc_name not in parent._fields:
-                    _inject_encryption_field(parent, enc_name)
-    _original_setup_base(self)
-    enc_names = set()
-    for field in self._fields.values():
-        enc = getattr(field, 'encrypt', None)
-        if enc:
-            enc_names.add(DEFAULT_ENCRYPTION_FIELD if enc is True else enc)
-    for enc_name in enc_names:
-        if enc_name not in self._fields:
-            _inject_encryption_field(self, enc_name)
+_original_model_setup = model_classes._setup
 
-models.BaseModel._setup_base = _patched_setup_base
+
+def _patched_model_setup(model_cls, env):
+    # _setup() calls itself (through the module global) for _inherits parents
+    # before adding their fields to the child, so parents get their storage
+    # field declared before it is needed.
+    if not model_cls._setup_done__:
+        _ensure_storage_definitions(model_cls)
+    return _original_model_setup(model_cls, env)
+
+
+model_classes._setup = _patched_model_setup
 
 
 # ---------------------------------------------------------------------------

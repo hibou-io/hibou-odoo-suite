@@ -433,7 +433,7 @@ Keep the versioned form: the blobs now carry version `1`, while a bare
 
 > **Warning**: If any row is still encrypted with the removed version, that data
 > will be **permanently unreadable**. Verify with
-> `env['ir.config_parameter'].get_param('encryption.migrated_key_version')`
+> `env['ir.config_parameter'].get_int('encryption.migrated_key_version')`
 > before removing anything — and remember that database *backups* restored later
 > still contain the old version.
 
@@ -507,7 +507,7 @@ signalling the registry — the same mechanism a module install uses. Every othe
 worker notices on its next request and rebuilds:
 
 ```python
-env.registry.signal_changes()
+env.transaction.will_change_registry()
 env.cr.commit()
 ```
 
@@ -524,7 +524,7 @@ but it will not be picked up until the next rotation. That matters at exactly
 one moment: before deleting a retired key. Restart everything, then confirm:
 
 ```python
-env['ir.config_parameter'].get_param('encryption.migrated_key_version')
+env['ir.config_parameter'].get_int('encryption.migrated_key_version')
 env['base']._encryption_rotation_pending()   # None when nothing is outstanding
 ```
 

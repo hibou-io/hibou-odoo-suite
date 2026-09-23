@@ -33,7 +33,7 @@
     'category': 'Hidden',
     'author': 'Hibou Corp.',
     'website': 'https://hibou.io/',
-    'version': '18.0.3.0.0',
+    'version': '20.0.3.0.0',
     'depends': ['base'],
     'data': [
         'data/cron_data.xml',

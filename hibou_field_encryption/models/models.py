@@ -48,10 +48,7 @@ class Base(models.AbstractModel):
     @api.model
     def _encryption_migrated_version(self):
         icp = self.env['ir.config_parameter'].sudo()
-        try:
-            return int(icp.get_param(ICP_ENCRYPTION_KEY_VERSION, '0'))
-        except (ValueError, TypeError):
-            return 0
+        return icp.get_int(ICP_ENCRYPTION_KEY_VERSION, 0)
 
     @api.model
     def _encryption_rotation_pending(self):
@@ -93,7 +90,7 @@ class Base(models.AbstractModel):
         icp = self.env['ir.config_parameter'].sudo()
         columns = self._find_encryption_tables()
         if not columns:
-            icp.set_param(ICP_ENCRYPTION_KEY_VERSION, str(current))
+            icp.set_int(ICP_ENCRYPTION_KEY_VERSION, current)
             return True
 
         deadline = None
@@ -140,7 +137,7 @@ class Base(models.AbstractModel):
             )
             return False
 
-        icp.set_param(ICP_ENCRYPTION_KEY_VERSION, str(current))
+        icp.set_int(ICP_ENCRYPTION_KEY_VERSION, current)
         _logger.info(
             "Encryption key rotation complete: %d rows re-encrypted to version %d.",
             total_updated, current,
@@ -156,9 +153,7 @@ class Base(models.AbstractModel):
         so the caller can decline to move ahead of the fleet.
         """
         try:
-            registry = self.env.registry
-            registry.registry_invalidated = True
-            registry.signal_changes()
+            self.env.transaction.will_change_registry()
             return True
         except Exception:
             _logger.exception(

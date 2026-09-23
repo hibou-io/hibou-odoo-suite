@@ -1025,11 +1025,11 @@ class TestCronReEncrypt(TransactionCase):
         os.environ[REC_ENCRYPTION_KEY.upper()] = f"0:{self.k0},1:{self.k1}"
         reset_keyring()
         self.icp = self.env['ir.config_parameter'].sudo()
-        self.icp.set_param(ICP_ENCRYPTION_KEY_VERSION, '0')
+        self.icp.set_str(ICP_ENCRYPTION_KEY_VERSION, '0')
 
     def tearDown(self):
         self.env.cr.execute('DROP TABLE IF EXISTS "{}"'.format(self.TABLE))
-        self.icp.set_param(ICP_ENCRYPTION_KEY_VERSION, False)
+        self.icp.set_str(ICP_ENCRYPTION_KEY_VERSION, False)
         _restore(self._saved)
         reset_keyring()
         super().tearDown()
@@ -1068,17 +1068,17 @@ class TestCronReEncrypt(TransactionCase):
     def test_cron_skips_single_key(self):
         os.environ[REC_ENCRYPTION_KEY.upper()] = self.k0
         reset_keyring()
-        self.icp.set_param(ICP_ENCRYPTION_KEY_VERSION, '0')
+        self.icp.set_str(ICP_ENCRYPTION_KEY_VERSION, '0')
         self.env['base']._cron_re_encrypt_fields()
         self.assertEqual(
-            self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '0',
+            self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '0',
         )
 
     def test_cron_skips_already_migrated(self):
-        self.icp.set_param(ICP_ENCRYPTION_KEY_VERSION, '1')
+        self.icp.set_str(ICP_ENCRYPTION_KEY_VERSION, '1')
         self.env['base']._cron_re_encrypt_fields()
         self.assertEqual(
-            self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '1',
+            self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '1',
         )
 
     def test_cron_stamps_version_when_no_tables(self):
@@ -1089,7 +1089,7 @@ class TestCronReEncrypt(TransactionCase):
         ):
             self.env['base']._cron_re_encrypt_fields()
         self.assertEqual(
-            self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '1',
+            self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '1',
         )
 
     def test_cron_re_encrypts_and_stamps(self):
@@ -1105,7 +1105,7 @@ class TestCronReEncrypt(TransactionCase):
         ver, _ = _unpack_header(raw)
         self.assertEqual(ver, 1)
         self.assertEqual(
-            self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '1',
+            self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '1',
         )
 
     def test_cron_does_not_stamp_on_failure(self):
@@ -1120,7 +1120,7 @@ class TestCronReEncrypt(TransactionCase):
         ):
             self.env['base']._cron_re_encrypt_fields()
         self.assertEqual(
-            self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '0',
+            self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '0',
         )
 
     def test_cron_no_keyring_gracefully_skips(self):
@@ -1128,7 +1128,7 @@ class TestCronReEncrypt(TransactionCase):
         reset_keyring()
         self.env['base']._cron_re_encrypt_fields()
         self.assertEqual(
-            self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '0',
+            self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '0',
         )
 
     def test_find_encryption_tables_discovers_fields(self):
@@ -1152,7 +1152,7 @@ class TestCronReEncrypt(TransactionCase):
             self.env['base']._cron_re_encrypt_fields()
         ver, _ = _unpack_header(self._read_raw_blob(rid))
         self.assertEqual(ver, 0)
-        self.assertEqual(self.icp.get_param(ICP_ENCRYPTION_KEY_VERSION), '0')
+        self.assertEqual(self.icp.get_str(ICP_ENCRYPTION_KEY_VERSION), '0')
 
 
 
