@@ -21,6 +21,6 @@ Force conf/env key, ignoring ir.config_paraneter:
     'data': [
         'data/ir_config_parameter.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
     'license': 'AGPL-3',
 }
