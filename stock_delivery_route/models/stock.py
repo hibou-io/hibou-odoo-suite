@@ -11,10 +11,10 @@ class Picking(models.Model):
     _inherit = 'stock.picking'
     _order = 'sequence asc, priority desc, scheduled_date asc, id desc'
 
-    sequence = fields.Integer(string='Sequence')
+    sequence = fields.Integer(string='Sequence #')
     warehouse_id = fields.Many2one('stock.warehouse', related='picking_type_id.warehouse_id')
     delivery_route_id = fields.Many2one('stock.warehouse.delivery.route', string='Delivery Route')
-    partner_address = fields.Char(string='Address', compute='_compute_partner_address')
+    partner_address = fields.Char(string='Partner Address', compute='_compute_partner_address')
 
     def _compute_partner_address(self):
         for pick in self:
@@ -26,6 +26,7 @@ class Picking(models.Model):
 
 class WarehouseDeliveryRoute(models.Model):
     _name = 'stock.warehouse.delivery.route'
+    _description = 'Stock Warehouse Delivery Route'
 
     name = fields.Char(string='Name')
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')

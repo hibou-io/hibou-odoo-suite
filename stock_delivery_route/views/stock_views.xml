@@ -52,7 +52,7 @@
         <field name="inherit_id" ref="stock.vpicktree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="before">
-                <field name="sequence" widget="handle"/>
+                <field name="sequence" widget="handle" string="Sequence"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="delivery_route_id"/>

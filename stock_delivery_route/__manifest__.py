@@ -1,7 +1,7 @@
 {
     'name': 'Warehouse Delivery Routes',
     'summary': 'Assign a delivery route to a sale order or picking.',
-    'version': '19.0.1.0.0',
+    'version': '20.0.1.0.0',
     'author': "Hibou Corp.",
     'category': 'Warehouse',
     'license': 'LGPL-3',
@@ -17,15 +17,15 @@ Additionally, set a default route on the customer level.
 
 """,
     'depends': [
+        'stock',
         'sale_stock',
-        'stock_picking_batch',
     ],
     'demo': [],
     'data': [
         'views/partner_views.xml',
         'views/sale_views.xml',
         'views/stock_views.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'auto_install': False,
     'installable': True,
