@@ -1,7 +1,7 @@
 {
     'name': 'Timesheet Work Entry Type',
     'description': 'Set work types on timesheet records.',
-    'version': '19.0.1.0.0',
+    'version': '20.0.1.0.0',
     'website': 'https://hibou.io/',
     'author': 'Hibou Corp.',
     'license': 'AGPL-3',
@@ -13,7 +13,7 @@
         'hr_work_entry',
     ],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
         'data/hr_timesheet_work_entry_data.xml',
         'views/timesheet_views.xml',
         'views/work_entry_views.xml',
