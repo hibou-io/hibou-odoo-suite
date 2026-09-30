@@ -23,7 +23,7 @@ class IrHttp(models.AbstractModel):
         # re and _get_param both handle their own caching!
         ICP = request.env['ir.config_parameter']
         # Skipping get_params's access rights check
-        pattern = (not IGNORE_ICP and ICP._get_param(KEY)) or EXTERNAL_PATTERN
+        pattern = (not IGNORE_ICP and ICP.get_str(KEY)) or EXTERNAL_PATTERN
         user_agent = request and request.httprequest.environ.get('HTTP_USER_AGENT')
         if pattern and user_agent and re.match(pattern, user_agent):
             raise Forbidden()
