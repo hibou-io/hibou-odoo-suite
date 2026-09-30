@@ -1,7 +1,8 @@
 {
     'name': 'Equipment Purchase Detail',
-    'version': '19.0.1.0.0',
+    'version': '20.0.1.0.0',
     'author': 'Hibou Corp. <hello@hibou.io>',
+    'license': 'LGPL-3',
     'category': 'Human Resources',
     'summary': 'Record purchase date and details on Equipments.',
     'description': """
