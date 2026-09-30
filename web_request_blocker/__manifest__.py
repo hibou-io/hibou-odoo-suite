@@ -1,7 +1,9 @@
 {
     'name': 'Hibou Web Request Blocker',
     'category': 'System',
-    'version': '19.0.1.0.0',
+    'version': '20.0.1.0.0',
+    'author': 'Hibou Corp.',
+    'license': 'LGPL-3',
     'description': """
 Hibou Web Request Blocker
 =========================
