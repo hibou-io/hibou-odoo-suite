@@ -2,7 +2,8 @@
     'name': 'Auth Admin',
     'author': 'Hibou Corp.',
     'category': 'Hidden',
-    'version': '19.0.1.0.0',
+    'version': '20.0.1.0.0',
+    'license': 'LGPL-3',
     'description':
         """
 Login as other user

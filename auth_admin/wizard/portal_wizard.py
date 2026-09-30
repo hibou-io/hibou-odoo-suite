@@ -23,10 +23,10 @@ class PortalWizardUser(models.TransientModel):
     force_login_url = fields.Char(string='Force Login URL')
 
     def admin_auth_generate_login(self):
-        ir_model_access = self.env['ir.model.access']
+        res_partner_obj = self.env['res.partner']
         for row in self.filtered(lambda r: r.is_portal):
             user = row.partner_id.user_ids[0] if row.partner_id.user_ids else None
-            if ir_model_access.check('res.partner', mode='unlink') and user:
+            if user and res_partner_obj.check_access("unlink"):
                 row.force_login_url = admin_auth_generate_login(self.env, user)
         self.filtered(lambda r: not r.is_portal).update({'force_login_url': ''})
         return {
