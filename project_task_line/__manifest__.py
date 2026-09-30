@@ -1,6 +1,6 @@
 {
     'name': 'Project Task Lines',
-    'version': '19.0.1.0.0',
+    'version': '20.0.1.0.0',
     'author': 'Hibou Corp. <hello@hibou.io>',
     'website': 'https://hibou.io/',
     'license': 'AGPL-3',
@@ -13,7 +13,7 @@ Adds "todo" lines onto Project Tasks, and improves sub-tasks.
         'project',
     ],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
         'views/project_views.xml',
     ],
     'installable': True,

@@ -5,9 +5,6 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_form2" />
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='%(project.project_task_action_sub_task)d']" position="attributes">
-                <attribute name="context">{'default_name': name + ':', 'default_user_ids': user_ids, 'default_project_id': project_id, 'default_milestone_id': milestone_id, 'subtask_action': True}</attribute>
-            </xpath>
             <xpath expr="//page[@name='description_page']" position="after">
                 <page name="task_lines" string="Todo List">
                     <field name="line_ids">

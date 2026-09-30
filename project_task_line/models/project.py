@@ -1,3 +1,5 @@
+import ast
+
 from odoo import api, fields, models
 
 
@@ -5,6 +7,14 @@ class ProjectTask(models.Model):
     _inherit = 'project.task'
 
     line_ids = fields.One2many('project.task.line', 'task_id', string='Todo List')
+
+    def action_open_subtasks(self):
+        """OVERRIDE: to add the default name of the project task"""
+        action = super().action_open_subtasks()
+        context = action.get('context', {})
+        context['default_name'] = self.name + ':'
+        action['context'] = context
+        return action
 
 
 class ProjectTaskLine(models.Model):
