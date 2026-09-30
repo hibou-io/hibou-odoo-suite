@@ -4,11 +4,11 @@ from odoo import api, fields, models
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    margin = fields.Monetary(compute='_compute_product_margin', digits='Product Price', store=True,
+    margin = fields.Monetary(compute='_compute_product_margin', store=True,
                              string='Margin', groups='base.group_user')
     margin_percent = fields.Float(compute='_compute_product_margin', store=True, string='Margin (%)',
                                   groups='base.group_user')
-    purchase_price = fields.Monetary(string='Cost', digits='Product Price',
+    purchase_price = fields.Monetary(string='Cost',
                                      groups='base.group_user')
 
     # Note we are keeping this API because it is easy to customize and extend the purchase price/margin calculation
@@ -60,7 +60,7 @@ class AccountMoveLine(models.Model):
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    margin = fields.Monetary(compute='_compute_product_margin', store=True, digits='Product Price',
+    margin = fields.Monetary(compute='_compute_product_margin', store=True,
                              help="Profitability by calculating the difference between the Unit Price and the cost.",
                              groups='base.group_user', aggregator="sum",)
     margin_percent = fields.Float(compute='_compute_product_margin', store=True, string='Margin (%)',

@@ -12,15 +12,16 @@ class TestInvoiceMargin(TestSaleMargin):
 
     def test_invoice_margin(self):
         self.product.standard_price = 700.0
-        order = self.empty_order
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    'price_unit': 1000.0,
+                    'product_uom_qty': 10.0,
+                    'product_id': self.product.id,
+                })
+            ]
+        )
 
-        order.order_line = [
-            Command.create({
-                'price_unit': 1000.0,
-                'product_uom_qty': 10.0,
-                'product_id': self.product.id,
-            }),
-        ]
         # Confirm the sales order.
         order.action_confirm()
         # Verify that margin field gets bind with the value.
@@ -36,7 +37,7 @@ class TestInvoiceMargin(TestSaleMargin):
 
         account = self.env['account.account'].search([('account_type', '=', 'expense')], limit=1)
         self.assertTrue(account)
-        inv = self.AccountMove.create({
+        inv = self.AccountMove.sudo().create({
             'move_type': 'in_invoice',
             'partner_id': order.partner_id.id,
             'invoice_line_ids': [
