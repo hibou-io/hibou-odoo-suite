@@ -1,7 +1,7 @@
 {
     'name': 'UPS Partner Shipping Accounts',
     'author': 'Hibou Corp.',
-    'version': '19.0.1.0.0',
+    'version': '20.0.1.0.0',
     'license': 'LGPL-3',
     'category': 'Stock',
     'sequence': 95,
