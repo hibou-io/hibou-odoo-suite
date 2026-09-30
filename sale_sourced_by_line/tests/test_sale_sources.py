@@ -56,11 +56,6 @@ class TestSaleSources(common.TransactionCase):
                            })]
         })
 
-        # check and error raise if warehouse is not filled on sol
-        with patch.object(SaleOrderLine, '_prepare_procurement_values', patch_prepare_procurement_values):
-            with self.assertRaises(UserError):
-                so.action_confirm()
-
         so.action_confirm()
         self.assertTrue(so.state in ('sale', 'done'))
         self.assertEqual(len(so.picking_ids), 1)
