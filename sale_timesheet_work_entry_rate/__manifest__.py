@@ -5,7 +5,7 @@
     'version': '20.0.1.1.0',
     'category': 'Sale',
     'author': 'Hibou Corp.',
-    'license': 'OPL-1',
+    'license': 'LGPL-3',
     'website': 'https://hibou.io/',
     'depends': [
         'hr_timesheet_work_entry',
