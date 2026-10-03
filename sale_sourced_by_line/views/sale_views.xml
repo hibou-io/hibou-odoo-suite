@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form_inherit_sale_stock_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.warehouse</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/form//field[@name='route_ids']" position="before">
+                <field name="date_planned"/>
+                <field name="warehouse_id"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list//field[@name='route_ids']" position="before">
+                <field name="date_planned" optional="hide"/>
+                <field name="warehouse_id" optional="hide" readonly="False" options="{'no_open': True, 'no_create': True}"/>
+            </xpath>
+            <xpath expr="//div[@name='commitment_date_div']" position="before">
+                <field name="date_planned" />
+                <field name="requested_date" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_line_tree" model="ir.ui.view">
+        <field name="name">sale.order.line.tree.warehouse</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_order_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='route_ids']" position="before">
+                <field name="date_planned"/>
+                <field name="warehouse_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

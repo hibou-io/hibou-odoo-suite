@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="work_input_timesheet" model="hr.work.entry.type">
+        <field name="name">Timesheet</field>
+        <field name="code">TS</field>
+        <field name="allow_timesheet" eval="True"/>
+    </record>
+
+</odoo>

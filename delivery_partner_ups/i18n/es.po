@@ -1,0 +1,47 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_partner_ups
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-12 01:10+0000\n"
+"PO-Revision-Date: 2021-10-12 01:10+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: delivery_partner_ups
+#: model:ir.model.fields,field_description:delivery_partner_ups.field_partner_shipping_account__delivery_type
+msgid "Carrier"
+msgstr "Transportista"
+
+#. module: delivery_partner_ups
+#: model:ir.model,name:delivery_partner_ups.model_partner_shipping_account
+msgid "Partner Shipping Account"
+msgstr "Cuenta de Envío del Socio"
+
+#. module: delivery_partner_ups
+#: model:ir.model.fields.selection,name:delivery_partner_ups.selection__partner_shipping_account__delivery_type__ups
+msgid "UPS"
+msgstr "UPS"
+
+#. module: delivery_partner_ups
+#: model:ir.model.fields,field_description:delivery_partner_ups.field_partner_shipping_account__ups_zip
+msgid "UPS Account ZIP"
+msgstr "Código postal de la cuenta UPS"
+#. module: delivery_partner_ups
+#: code:addons/delivery_partner_ups/models/delivery.py:0
+#, python-format
+msgid "UPS Account numbers must be 6 Alpha-numeric characters."
+msgstr "Los números de cuenta de UPS deben tener 6 caracteres alfanuméricos."
+
+#. module: delivery_partner_ups
+#: code:addons/delivery_partner_ups/models/delivery.py:0
+#, python-format
+msgid "UPS requires the 5 digit account ZIP."
+msgstr "UPS requiere el código postal de 5 dígitos de la cuenta."
