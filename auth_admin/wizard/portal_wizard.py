@@ -26,7 +26,7 @@ class PortalWizardUser(models.TransientModel):
         res_partner_obj = self.env['res.partner']
         for row in self.filtered(lambda r: r.is_portal):
             user = row.partner_id.user_ids[0] if row.partner_id.user_ids else None
-            if user and res_partner_obj.check_access("unlink"):
+            if user and res_partner_obj.has_access("unlink"):
                 row.force_login_url = admin_auth_generate_login(self.env, user)
         self.filtered(lambda r: not r.is_portal).update({'force_login_url': ''})
         return {
