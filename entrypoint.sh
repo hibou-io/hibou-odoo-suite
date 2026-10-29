@@ -22,7 +22,12 @@ then
 fi
 if [[ -x "/opt/athene/entrypoint.sh" ]]
 then
-  /opt/athene/entrypoint.sh
+  ATHENE_STATUS=0
+  /opt/athene/entrypoint.sh || ATHENE_STATUS=$?
+  if [[ "$DEV_MODE" == "exclusive" || $ATHENE_STATUS -ne 0 ]]
+  then
+    exit $ATHENE_STATUS
+  fi
 fi
 
 # set the postgres database host, port, user and password according to the environment
