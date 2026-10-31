@@ -163,24 +163,15 @@ function start_services() {
     mkdir -p "$OVERRIDE_DIR"
 
     if [[ "$enable_odoo" == "1" ]]; then
-        cat > "$OVERRIDE_DIR/odoo.ini" <<EOF
-[program:odoo]
-autostart=true
-EOF
+        printf '[program:odoo]\nautostart=true\n' > "$OVERRIDE_DIR/odoo.ini"
     fi
 
     if [[ "$enable_athene" == "1" ]]; then
-        cat > "$OVERRIDE_DIR/athene.ini" <<EOF
-    [program:athene]
-    autostart=true
-    EOF
+        printf '[program:athene]\nautostart=true\n' > "$OVERRIDE_DIR/athene.ini"
     fi
 
     if [[ "$enable_watchdog" == "1" ]]; then
-        cat > "$OVERRIDE_DIR/watchdog.ini" <<EOF
-    [eventlistener:watchdog]
-    autostart=true
-    EOF
+        printf '[eventlistener:watchdog]\nautostart=true\n' > "$OVERRIDE_DIR/watchdog.ini"
     fi
 
     echo "==> Starting supervisord..."
