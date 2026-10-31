@@ -116,7 +116,7 @@
             "request": "launch",
             "python": "/usr/local/bin/python",
             "program": "/opt/odoo/hibou-suite/odoo-reload.py",
-            "args": ["KILL_OTHER"],
+            "args": ["--kill-others"],
             "console": "integratedTerminal"
         }
     ]
