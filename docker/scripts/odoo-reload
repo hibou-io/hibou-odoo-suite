@@ -1,0 +1,7 @@
+#!/bin/sh
+# Reload the supervised Odoo server, see `odoo-reload --help`.
+PYTHON="${ODOO_PYTHON:-/usr/local/bin/python}"
+if [ ! -x "$PYTHON" ]; then
+    PYTHON="python3"
+fi
+exec "$PYTHON" /opt/odoo/hibou-suite/odoo-reload.py "$@"
