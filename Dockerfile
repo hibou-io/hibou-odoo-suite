@@ -13,10 +13,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY docker/supervisord.conf /etc/supervisor/supervisord.conf
 COPY docker/supervisor.d/odoo.conf /etc/supervisor/conf.d/odoo.conf
 COPY docker/supervisor.d/athene.conf /etc/supervisor/conf.d/athene.conf
+COPY docker/supervisor.d/watchdog.conf /etc/supervisor/conf.d/watchdog.conf
 COPY docker/scripts/odoo-env.sh /opt/odoo-scripts/odoo-env.sh
 COPY docker/scripts/odoo-server.sh /opt/odoo-scripts/odoo-server.sh
+COPY docker/scripts/log-pipe.sh /opt/odoo-scripts/log-pipe.sh
+COPY docker/scripts/log-tee.py /opt/odoo-scripts/log-tee.py
+COPY docker/scripts/supervisor-watchdog.py /opt/odoo-scripts/supervisor-watchdog.py
 COPY docker/scripts/odoo-reload /usr/local/bin/odoo-reload
-RUN chmod +x /opt/odoo-scripts/*.sh /usr/local/bin/odoo-reload \
+COPY docker/scripts/service-logs /usr/local/bin/service-logs
+RUN chmod +x /opt/odoo-scripts/*.sh /opt/odoo-scripts/*.py /usr/local/bin/odoo-reload /usr/local/bin/service-logs \
     && chown -R 104 /opt/odoo-scripts /var/log/supervisor /etc/supervisor/override.d \
     ;
 
