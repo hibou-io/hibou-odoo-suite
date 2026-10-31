@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-#    Long running services are managed by supervisord (PID 1):
+#    Long running services are managed by supervisord:
 #      odoo    Odoo server, started with the arguments of the container command
 #      athene  Athene/Theia IDE (professional+ images only)
 #
@@ -22,6 +22,11 @@ set -eo pipefail
 #    DEV_MODE=
 #      Unset to not use Athene at all.
 #
+#    HIBOUAI_PROMPT=...
+#      With DEV_MODE=exclusive: one-shot Hibou AI prompt step. Athene runs the prompt once
+#      and is not restarted; when it exits, supervisord is stopped and the container exits
+#      with the exit status of Athene.
+#
 #    DEV_MODE_PATH=/opt/odoo/addons
 #      To change the path to start Athene in, useful to get git working.
 #
@@ -33,7 +38,7 @@ set -eo pipefail
 #
 #    ODOO_EXIT_ON_FAILURE=1
 #      Default when DEV_MODE is unset: if Odoo crashes or fails to start, supervisord is stopped
-#      and the container exits, so Kubernetes counts the restart and keeps the logs
+#      and the container exits with an error, so Kubernetes counts the restart and keeps the logs
 #      (`kubectl logs --previous`). Set to 0 to let supervisord restart Odoo in place instead.
 #      Defaults to 0 when DEV_MODE is set, so the IDE survives Odoo crashes.
 #
@@ -53,6 +58,7 @@ set -eo pipefail
 
 DEV_MODE="${DEV_MODE:-}"
 DISABLE_ODOO="${DISABLE_ODOO:-0}"
+HIBOUAI_PROMPT="${HIBOUAI_PROMPT:-}"
 if [[ -z "$DEV_MODE" ]]; then
     ODOO_EXIT_ON_FAILURE="${ODOO_EXIT_ON_FAILURE:-1}"
 else
@@ -62,6 +68,7 @@ ATHENE_ENTRYPOINT="/opt/athene/entrypoint.sh"
 SUPERVISOR_CONF="/etc/supervisor/supervisord.conf"
 OVERRIDE_DIR="/etc/supervisor/override.d"
 ODOO_SCRIPTS_DIR="/opt/odoo-scripts"
+export WATCHDOG_EXIT_FILE="/tmp/supervisor-watchdog.exit"
 
 export LOG_STDOUT_PROGRAMS="${LOG_STDOUT_PROGRAMS-odoo}"
 LOG_DIR="${LOG_DIR:-${HOME:-/tmp}/logs}"
@@ -78,16 +85,16 @@ export LOG_BACKUPS="${LOG_BACKUPS:-5}"
 # ===========================================================
 if [ "${DEV_MODE_PATH:-}" != "" ] && [ -z "$(ls -A "$DEV_MODE_PATH/.theia" 2>/dev/null)" ]
 then
-   cp -R /opt/odoo/hibou-suite/.theia "$DEV_MODE_PATH" || true
+    cp -R /opt/odoo/hibou-suite/.theia "$DEV_MODE_PATH" || true
 fi
 if [ "${DEV_MODE_PATH:-}" != "" ] && [ -z "$(ls -A "$DEV_MODE_PATH/.pylintrc" 2>/dev/null)" ]
 then
-   cp -R /opt/odoo/hibou-suite/.pylintrc "$DEV_MODE_PATH" || true
+    cp -R /opt/odoo/hibou-suite/.pylintrc "$DEV_MODE_PATH" || true
 fi
 
 if [ "${DEV_MODE_PATH:-}" == "" ]
 then
-   export DEV_MODE_PATH=/opt/odoo/hibou-suite
+    export DEV_MODE_PATH=/opt/odoo/hibou-suite
 fi
 # Patch Theia user settings with MCP defaults (professional+ images only)
 if [[ -x "/opt/odoo-tools/init-theia-settings.py" ]]
@@ -124,13 +131,37 @@ function run_one_shot() {
     exec odoo "$@" "${DB_ARGS[@]}"
 }
 
+function run_supervisord() {
+    rm -f "$WATCHDOG_EXIT_FILE"
+    /usr/bin/supervisord -n -c "$SUPERVISOR_CONF" &
+    SUPERVISORD_PID=$!
+    trap 'kill -TERM "$SUPERVISORD_PID" 2>/dev/null || true' TERM INT HUP
+
+    local status=0
+    while kill -0 "$SUPERVISORD_PID" 2>/dev/null; do
+        status=0
+        wait "$SUPERVISORD_PID" || status=$?
+    done
+
+    if [[ -s "$WATCHDOG_EXIT_FILE" ]]; then
+        status="$(tr -dc '0-9' < "$WATCHDOG_EXIT_FILE")"
+        status="${status:-1}"
+        echo "==> Exiting with status $status (reported by the watchdog)"
+    fi
+    exit "$status"
+}
+
 function start_services() {
     local enable_odoo=0
     local enable_athene=0
     local enable_watchdog=0
+    local prompt_mode=0
 
     if [[ "$DEV_MODE" == "exclusive" ]]; then
         enable_athene=1
+        if [[ -n "$HIBOUAI_PROMPT" ]]; then
+            prompt_mode=1
+        fi
     else
         if [[ "$DISABLE_ODOO" != "1" ]]; then
             enable_odoo=1
@@ -141,18 +172,40 @@ function start_services() {
     fi
 
     if [[ "$enable_athene" == "1" && ! -x "$ATHENE_ENTRYPOINT" ]]; then
+        if [[ "$prompt_mode" == "1" ]]; then
+            echo "ERROR: HIBOUAI_PROMPT is set but $ATHENE_ENTRYPOINT is not available" >&2
+            exit 1
+        fi
         echo "WARNING: DEV_MODE is set but $ATHENE_ENTRYPOINT is not available, Athene will not be started" >&2
         enable_athene=0
     fi
 
+    export WATCHDOG_PROGRAMS=""
+    export WATCHDOG_EXIT_ANY=""
     if [[ "$enable_odoo" == "1" && "$ODOO_EXIT_ON_FAILURE" == "1" ]]; then
         enable_watchdog=1
+        WATCHDOG_PROGRAMS="odoo"
+    fi
+    if [[ "$prompt_mode" == "1" ]]; then
+        enable_watchdog=1
+        WATCHDOG_EXIT_ANY="athene"
+    fi
+
+    local athene_state="DISABLED"
+    if [[ "$prompt_mode" == "1" ]]; then
+        athene_state="ENABLED (one-shot HIBOUAI_PROMPT, container exits with its status)"
+    elif [[ "$enable_athene" == "1" ]]; then
+        athene_state="ENABLED"
+    fi
+    local watchdog_state="DISABLED"
+    if [[ "$enable_watchdog" == "1" ]]; then
+        watchdog_state="ENABLED (container exits when: ${WATCHDOG_PROGRAMS:+$WATCHDOG_PROGRAMS fails}${WATCHDOG_PROGRAMS:+${WATCHDOG_EXIT_ANY:+, }}${WATCHDOG_EXIT_ANY:+$WATCHDOG_EXIT_ANY exits})"
     fi
 
     echo "==> Service configuration:"
     echo "    odoo     : $([ "$enable_odoo" = "1" ] && echo ENABLED || echo DISABLED)"
-    echo "    athene   : $([ "$enable_athene" = "1" ] && echo ENABLED || echo DISABLED)"
-    echo "    watchdog : $([ "$enable_watchdog" = "1" ] && echo "ENABLED (container exits if Odoo fails)" || echo DISABLED)"
+    echo "    athene   : $athene_state"
+    echo "    watchdog : $watchdog_state"
 
     : > "$ODOO_ARGS_FILE"
     if [[ $# -gt 0 ]]; then
@@ -166,7 +219,9 @@ function start_services() {
         printf '[program:odoo]\nautostart=true\n' > "$OVERRIDE_DIR/odoo.ini"
     fi
 
-    if [[ "$enable_athene" == "1" ]]; then
+    if [[ "$prompt_mode" == "1" ]]; then
+        printf '[program:athene]\nautostart=true\nautorestart=false\nstartsecs=0\n' > "$OVERRIDE_DIR/athene.ini"
+    elif [[ "$enable_athene" == "1" ]]; then
         printf '[program:athene]\nautostart=true\n' > "$OVERRIDE_DIR/athene.ini"
     fi
 
@@ -175,6 +230,9 @@ function start_services() {
     fi
 
     echo "==> Starting supervisord..."
+    if [[ "$enable_watchdog" == "1" ]]; then
+        run_supervisord
+    fi
     exec /usr/bin/supervisord -n -c "$SUPERVISOR_CONF"
 }
 
