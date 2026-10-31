@@ -31,16 +31,47 @@ set -eo pipefail
 #    ODOO_DB_WAIT_TIMEOUT=30
 #      Seconds the supervised Odoo waits for PostgreSQL before failing (and being retried).
 #
+#    ODOO_EXIT_ON_FAILURE=1
+#      Default when DEV_MODE is unset: if Odoo crashes or fails to start, supervisord is stopped
+#      and the container exits, so Kubernetes counts the restart and keeps the logs
+#      (`kubectl logs --previous`). Set to 0 to let supervisord restart Odoo in place instead.
+#      Defaults to 0 when DEV_MODE is set, so the IDE survives Odoo crashes.
+#
+#    Logs: every program writes a rotating, gzipped log file in $LOG_DIR (NAME.log, NAME.log.1.gz, ...),
+#    read them from inside the container with `service-logs` (see `service-logs --help`).
+#    Only the programs in LOG_STDOUT_PROGRAMS are echoed to the container stdout (`kubectl logs`).
+#      LOG_STDOUT_PROGRAMS=odoo   comma/space separated program names, or `all`; with more than one
+#                                 program the stdout lines are prefixed with [NAME]
+#      LOG_DIR=$HOME/logs         falls back to /var/log/supervisor if it cannot be created
+#      LOG_MAX_BYTES=20M          rotate the file at this size
+#      LOG_BACKUPS=5              number of gzipped rotated files to keep
+#    supervisord start/exit events and watchdog messages always go to the container stdout.
+#
 #    One-shot Odoo commands (sub-commands such as `shell` or `scaffold`, `--stop-after-init`,
 #    `--help`, `--version`), `flow` jobs and arbitrary commands run in the foreground
 #    without supervisord.
 
 DEV_MODE="${DEV_MODE:-}"
 DISABLE_ODOO="${DISABLE_ODOO:-0}"
+if [[ -z "$DEV_MODE" ]]; then
+    ODOO_EXIT_ON_FAILURE="${ODOO_EXIT_ON_FAILURE:-1}"
+else
+    ODOO_EXIT_ON_FAILURE="${ODOO_EXIT_ON_FAILURE:-0}"
+fi
 ATHENE_ENTRYPOINT="/opt/athene/entrypoint.sh"
 SUPERVISOR_CONF="/etc/supervisor/supervisord.conf"
 OVERRIDE_DIR="/etc/supervisor/override.d"
 ODOO_SCRIPTS_DIR="/opt/odoo-scripts"
+
+export LOG_STDOUT_PROGRAMS="${LOG_STDOUT_PROGRAMS-odoo}"
+LOG_DIR="${LOG_DIR:-${HOME:-/tmp}/logs}"
+if ! mkdir -p "$LOG_DIR" 2>/dev/null || [[ ! -w "$LOG_DIR" ]]; then
+    echo "WARNING: cannot write to $LOG_DIR, using /var/log/supervisor for log files" >&2
+    LOG_DIR="/var/log/supervisor"
+fi
+export LOG_DIR
+export LOG_MAX_BYTES="${LOG_MAX_BYTES:-20M}"
+export LOG_BACKUPS="${LOG_BACKUPS:-5}"
 
 # ===========================================================
 # Phase 1 — Prepare the development environment
@@ -96,6 +127,7 @@ function run_one_shot() {
 function start_services() {
     local enable_odoo=0
     local enable_athene=0
+    local enable_watchdog=0
 
     if [[ "$DEV_MODE" == "exclusive" ]]; then
         enable_athene=1
@@ -113,9 +145,14 @@ function start_services() {
         enable_athene=0
     fi
 
+    if [[ "$enable_odoo" == "1" && "$ODOO_EXIT_ON_FAILURE" == "1" ]]; then
+        enable_watchdog=1
+    fi
+
     echo "==> Service configuration:"
-    echo "    odoo   : $([ "$enable_odoo" = "1" ] && echo ENABLED || echo DISABLED)"
-    echo "    athene : $([ "$enable_athene" = "1" ] && echo ENABLED || echo DISABLED)"
+    echo "    odoo     : $([ "$enable_odoo" = "1" ] && echo ENABLED || echo DISABLED)"
+    echo "    athene   : $([ "$enable_athene" = "1" ] && echo ENABLED || echo DISABLED)"
+    echo "    watchdog : $([ "$enable_watchdog" = "1" ] && echo "ENABLED (container exits if Odoo fails)" || echo DISABLED)"
 
     : > "$ODOO_ARGS_FILE"
     if [[ $# -gt 0 ]]; then
@@ -134,9 +171,16 @@ EOF
 
     if [[ "$enable_athene" == "1" ]]; then
         cat > "$OVERRIDE_DIR/athene.ini" <<EOF
-[program:athene]
-autostart=true
-EOF
+    [program:athene]
+    autostart=true
+    EOF
+    fi
+
+    if [[ "$enable_watchdog" == "1" ]]; then
+        cat > "$OVERRIDE_DIR/watchdog.ini" <<EOF
+    [eventlistener:watchdog]
+    autostart=true
+    EOF
     fi
 
     echo "==> Starting supervisord..."

@@ -1,0 +1,80 @@
+#!/bin/bash
+# Read the per-program log files written by log-tee.py, see `service-logs --help`.
+
+LOG_DIR="${LOG_DIR:-$HOME/logs}"
+
+usage() {
+    cat <<EOF
+Usage: service-logs                  list the log files
+       service-logs NAME             print the whole history of NAME, oldest first
+                                     (rotated .gz files are decompressed on the fly)
+       service-logs -n LINES NAME    print only the last LINES lines of the history
+       service-logs -f NAME          follow NAME like tail -F (starts with the last 100 lines,
+                                     or -n LINES)
+
+Log files live in $LOG_DIR:
+  NAME.log         current file
+  NAME.log.1.gz    newest rotated file
+  NAME.log.N.gz    oldest rotated file
+Rotation: \$LOG_MAX_BYTES (default 20M), kept files: \$LOG_BACKUPS (default 5).
+Programs echoed to the container log: \$LOG_STDOUT_PROGRAMS (currently: ${LOG_STDOUT_PROGRAMS:-none}).
+
+Examples:
+  service-logs -f odoo
+  service-logs odoo | grep -E ' (ERROR|CRITICAL) '
+  service-logs odoo | grep -A 30 Traceback | less
+  service-logs -n 500 athene
+  zgrep -h 'werkzeug' $LOG_DIR/odoo.log*
+EOF
+}
+
+follow=0
+lines=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -f|--follow) follow=1; shift ;;
+        -n|--lines) lines="$2"; shift 2 ;;
+        -h|--help) usage; exit 0 ;;
+        -*) echo "service-logs: unknown option $1" >&2; usage >&2; exit 2 ;;
+        *) break ;;
+    esac
+done
+
+if [[ $# -eq 0 ]]; then
+    echo "Log files in $LOG_DIR:"
+    ls -lh "$LOG_DIR"
+    echo
+    echo "Run 'service-logs --help' for usage."
+    exit 0
+fi
+
+base="$LOG_DIR/$1.log"
+if [[ ! -e "$base" ]]; then
+    echo "service-logs: no log file $base" >&2
+    echo "Available:" >&2
+    ls -1 "$LOG_DIR" >&2
+    exit 1
+fi
+
+if [[ "$follow" == "1" ]]; then
+    exec tail -n "${lines:-100}" -F "$base"
+fi
+
+history() {
+    local rotated=()
+    local i=1
+    while [[ -e "$base.$i.gz" ]]; do
+        rotated=("$base.$i.gz" "${rotated[@]}")
+        i=$((i + 1))
+    done
+    if [[ ${#rotated[@]} -gt 0 ]]; then
+        zcat "${rotated[@]}"
+    fi
+    cat "$base"
+}
+
+if [[ -n "$lines" ]]; then
+    history | tail -n "$lines"
+else
+    history
+fi
